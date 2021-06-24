@@ -10,10 +10,15 @@
  * All portions of the code written by Atypon Systems LLC are Copyright (c) 2019 Atypon Systems LLC. All Rights Reserved.
  */
 
-export type View = (
-  req: Express.Request
-) => Promise<Record<string, string | number | boolean>>
+import { Request } from 'express'
 
-export const getOk: View = () => {
+export type ParamsDict = Record<string, string | number | boolean>
+
+export type View<ReqParams extends ParamsDict, ResParams extends ParamsDict> = (
+  body: ReqParams,
+  req?: Request
+) => Promise<ResParams>
+
+export const getOk: View<ParamsDict, { ok: boolean }> = () => {
   return Promise.resolve({ ok: true })
 }

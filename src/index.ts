@@ -11,25 +11,25 @@
  */
 
 import errorHandler from 'errorhandler'
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { getReasonPhrase, getStatusCode } from 'http-status-codes'
 
-import { getOk, View } from './views'
+import { getOk, ParamsDict, View } from './views'
 
 interface Config {
   port: number
   nodeEnv: 'development' | 'test' | 'production'
 }
 
-const wrapView =
-  (view: View) =>
-  (
-    req: Express.Request,
-    res: Record<string, any>,
-    next: (err?: Error) => void
-  ) => {
+// TODO: Request and Request body validation middleware
+
+const useAsView =
+  <ReqParams extends ParamsDict, ResParams extends ParamsDict>(
+    view: View<ReqParams, ResParams>
+  ) =>
+  (req: Request, res: Response, next: NextFunction) => {
     return (
-      view(req)
+      view(req.body, req)
         .then((json) => {
           res.json(json)
         })
@@ -43,7 +43,7 @@ export default (config: Config) => {
 
   app.use(express.json())
 
-  app.get('/', wrapView(getOk))
+  app.get('/', useAsView(getOk))
 
   /**
    * Error Handler.
@@ -52,38 +52,31 @@ export default (config: Config) => {
     // only use in development
     app.use(errorHandler())
   } else {
-    app.use(
-      (
-        err: Error,
-        _: Express.Request,
-        res: Record<string, any>,
-        next: (err?: Error) => void
-      ) => {
-        // eslint-disable-next-line no-console
-        console.error(err)
+    app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
+      // eslint-disable-next-line no-console
+      console.error(err)
 
-        const statusCode = getStatusCode(err.message)
+      const statusCode = getStatusCode(err.message)
 
-        if (statusCode) {
-          res.status(statusCode)
-          res.json({
-            ok: false,
-            message: getReasonPhrase(err.message),
-          })
-        } else if (err) {
-          res.status(500).send({
-            ok: false,
-            message: 'Internal Server Error',
-          })
-        } else {
-          next()
-        }
+      if (statusCode) {
+        res.status(statusCode)
+        res.json({
+          ok: false,
+          message: getReasonPhrase(err.message),
+        })
+      } else if (err) {
+        res.status(500).send({
+          ok: false,
+          message: 'Internal Server Error',
+        })
+      } else {
+        next()
       }
-    )
+    })
   }
 
   // catch 404 (route level)
-  app.use((_, res) => {
+  app.use((_, res: Response) => {
     res.status(404).json({
       ok: false,
       message: 'URL route not defined',
