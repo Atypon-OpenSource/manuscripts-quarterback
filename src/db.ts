@@ -10,14 +10,14 @@
  * All portions of the code written by Atypon Systems LLC are Copyright (c) 2019 Atypon Systems LLC. All Rights Reserved.
  */
 
-import { getOk } from '../views'
+import { Sequelize } from 'sequelize'
 
-const req = {
-  body: {},
-} as Express.Request
+export let db: Sequelize
 
-describe('test the tests', () => {
-  it('runs tests successfully', () => {
-    return expect(getOk(req)).resolves.toHaveProperty('ok', true)
-  })
-})
+export const startDb = (cxn: string | Sequelize) => {
+  if (typeof cxn === 'string') {
+    db = new Sequelize(cxn)
+  } else {
+    db = cxn
+  }
+}

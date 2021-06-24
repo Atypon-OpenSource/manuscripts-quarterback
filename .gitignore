@@ -1,2 +1,22 @@
+###### FOLDERS ######
 node_modules
 dist
+*.DS_Store
+.directory
+.project
+.settings
+.vscode/cSpell.json
+.idea
+.tscache
+.logs
+.built
+.tmpOutput
+.vagrant
+coverage
+.vscode
+certs
+
+###### FILES ######
+npm-debug.log
+yarn-error.log
+.env

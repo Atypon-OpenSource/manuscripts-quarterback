@@ -12,6 +12,8 @@
 
 import { Request } from 'express'
 
+import { db } from './db'
+
 export type ParamsDict = Record<string, string | number | boolean>
 
 export type View<ReqParams extends ParamsDict, ResParams extends ParamsDict> = (
@@ -20,5 +22,11 @@ export type View<ReqParams extends ParamsDict, ResParams extends ParamsDict> = (
 ) => Promise<ResParams>
 
 export const getOk: View<ParamsDict, { ok: boolean }> = () => {
-  return Promise.resolve({ ok: true })
+  return db
+    .authenticate({
+      logging: false,
+    })
+    .then(() => {
+      return { ok: true }
+    })
 }

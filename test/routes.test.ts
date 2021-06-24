@@ -19,6 +19,7 @@ import appCreator from '../src/index'
 const app = appCreator({
   port: 3030,
   nodeEnv: 'test',
+  dbCxn: 'sqlite::memory:',
 })
 
 describe('/', () => {

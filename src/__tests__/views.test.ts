@@ -10,14 +10,25 @@
  * All portions of the code written by Atypon Systems LLC are Copyright (c) 2019 Atypon Systems LLC. All Rights Reserved.
  */
 
-// keeping this JS because ts-node doesn't like process.env
+import { Request } from 'express'
 
-require('dotenv').config()
+import { startDb } from '../db'
+import { getOk } from '../views'
 
-module.exports = {
-  port: parseInt(process.env.PORT, 10),
-  nodeEnv: process.env.NODE_ENV || 'development',
-  dbCxn:
-    process.env.DATABASE_CXN ||
-    'postgres://pguser:pgpassword@localhost:5432/quarterbackdb',
-}
+const req = {
+  body: {},
+} as Request
+
+const db = {
+  authenticate: jest.fn(() => Promise.resolve(true)),
+} as any
+
+describe('test the tests', () => {
+  beforeAll(() => {
+    startDb(db)
+  })
+
+  it('runs tests successfully', () => {
+    return expect(getOk(req.body)).resolves.toHaveProperty('ok', true)
+  })
+})

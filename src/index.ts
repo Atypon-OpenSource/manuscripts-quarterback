@@ -14,11 +14,13 @@ import errorHandler from 'errorhandler'
 import express, { NextFunction, Request, Response } from 'express'
 import { getReasonPhrase, getStatusCode } from 'http-status-codes'
 
+import { startDb } from './db'
 import { getOk, ParamsDict, View } from './views'
 
 interface Config {
   port: number
   nodeEnv: 'development' | 'test' | 'production'
+  dbCxn: string
 }
 
 // TODO: Request and Request body validation middleware
@@ -39,8 +41,9 @@ const useAsView =
   }
 
 export default (config: Config) => {
-  const app = express()
+  startDb(config.dbCxn)
 
+  const app = express()
   app.use(express.json())
 
   app.get('/', useAsView(getOk))
