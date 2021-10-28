@@ -1,4 +1,4 @@
-# manuscripts-quarterback
+# [manuscripts-quarterback](https://gitlab.com/mpapp-public/manuscripts-quarterback)
 
 ## How to install
 
@@ -13,4 +13,4 @@ You must have `pnpm` installed globally: `npm i -g pnpm`. Also you need Docker.
 
 ## Commands
 
-`pnpm` is pretty neat.
+You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/quarterback-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
