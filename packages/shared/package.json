@@ -1,0 +1,32 @@
+{
+  "name": "@manuscripts/quarterback-shared",
+  "version": "0.0.1",
+  "author": "Atypon Systems LLC",
+  "license": "Apache-2.0",
+  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "main": "dist/shared.js",
+  "module": "dist/shared.js",
+  "type": "module",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
+    "lint": "eslint --cache --ext .js,.ts, ./src ./types",
+    "lint:fix": "eslint --fix --ext .js,.ts, ./src ./types",
+    "watch": "rollup -cw"
+  },
+  "devDependencies": {
+    "@manuscripts/quarterback-db": "*",
+    "eslint": "^7.11.0",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.58.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.3"
+  }
+}

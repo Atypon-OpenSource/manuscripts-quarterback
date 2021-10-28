@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  firstname String   @db.VarChar(255)
+  lastname  String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      UserRole @default(USER)
+  docs      PmDoc[]
+
+  @@map("quarterback_user")
+}
+
+model PmDoc {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(500)
+  doc       Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation("PmDocToUser", fields: [user_id], references: [id])
+  user_id   String
+
+  @@map("pm_doc")
+}

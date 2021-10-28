@@ -1,0 +1,22 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph"
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "hello I'm an example ProseMirror document"
+        }
+      ]
+    }
+  ]
+}

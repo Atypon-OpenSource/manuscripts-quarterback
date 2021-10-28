@@ -1,11 +1,11 @@
-###### FOLDERS ######
 node_modules
+build
 dist
+
 *.DS_Store
 .directory
 .project
 .settings
-.vscode/cSpell.json
 .idea
 .tscache
 .logs
@@ -16,7 +16,25 @@ coverage
 .vscode
 certs
 
-###### FILES ######
-npm-debug.log
-yarn-error.log
+tmp/
+
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .env
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log
+
+.eslintcache
+
+# Prisma
+packages/db/generated
+.prisma
+
+# Postgres
+db/postgres

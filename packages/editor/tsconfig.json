@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "declaration": true,
+    "declarationDir": "./dist",
+    "baseUrl": ".",
+    "jsx": "react",
+    "paths": {
+      "$context": ["src/context"],
+      "$context/*": ["src/context/*"],
+      "$extensions": ["src/extensions"],
+      "$extensions/*": ["src/extensions/*"],
+      "$react": ["src/react"],
+      "$react/*": ["src/react/*"],
+      "$schema": ["src/schema"],
+      "$schema/*": ["src/schema/*"],
+      "$typings": ["src/typings"],
+      "$typings/*": ["src/typings/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

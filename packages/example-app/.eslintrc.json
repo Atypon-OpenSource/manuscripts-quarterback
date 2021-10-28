@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "react-app",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "../../.eslintrc.cjs"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
+}

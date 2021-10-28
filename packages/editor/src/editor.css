@@ -1,0 +1,27 @@
+#example-editor {
+  border: 1px solid black;
+}
+
+.ProseMirror {
+  min-height: 140px;
+  overflow-wrap: break-word;
+  outline: none;
+  padding: 10px;
+  white-space: pre-wrap;
+  max-width: 600px;
+  width: 100%;
+}
+
+.ProseMirror .inserted.accepted {
+  background: #92c7ff;
+}
+.ProseMirror .inserted.rejected {
+  background: #cac5c7;
+}
+.ProseMirror .deleted.accepted {
+  /* background: #ffba3c; */
+  background: #ffb747;
+}
+.ProseMirror .deleted.rejected {
+  text-decoration: none;
+}

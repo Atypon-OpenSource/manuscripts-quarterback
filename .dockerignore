@@ -1,0 +1,7 @@
+db/postgres
+**node_modules
+**dist
+**tmp
+**build
+**generated
+**.env

@@ -1,25 +1,24 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "outDir": "dist",
-    "lib": ["dom", "es2017"],
     "moduleResolution": "node",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "target": "esnext",
+    "declaration": true,
+    "declarationDir": "./dist",
     "isolatedModules": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "baseUrl": "./",
-    "typeRoots": ["./node_modules/@types"]
-  },
-  "include": ["src", "test", "bin"],
-  "files": ["./types/globals.d.ts"]
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "removeComments": false
+  }
 }
