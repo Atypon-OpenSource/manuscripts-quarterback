@@ -23,11 +23,11 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/node": "^16.10.3",
+    "@types/node": "^16.11.6",
     "bcrypt": "^5.0.1",
     "prisma": "3.1.1",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@prisma/client": "3.1.1"

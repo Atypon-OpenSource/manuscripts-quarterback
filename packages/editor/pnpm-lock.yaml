@@ -1,9 +1,9 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@manuscripts/quarterback-schema': '*'
-  '@manuscripts/quarterback-shared': '*'
-  '@rollup/plugin-alias': ^3.1.5
+  '@manuscripts/quarterback-schema': workspace:*
+  '@manuscripts/quarterback-shared': workspace:*
+  '@rollup/plugin-alias': ^3.1.8
   '@rollup/plugin-commonjs': ^20.0.0
   '@rollup/plugin-node-resolve': ^13.0.6
   '@types/prosemirror-commands': ^1.0.4
@@ -18,14 +18,14 @@ specifiers:
   '@types/prosemirror-transform': ^1.1.4
   '@types/prosemirror-view': ^1.19.1
   '@types/randomcolor': ^0.5.6
-  '@types/react': ^17.0.24
-  '@types/react-dom': ^17.0.9
+  '@types/react': ^17.0.33
+  '@types/react-dom': ^17.0.10
   '@types/react-icons': ^3.0.0
   '@zerollup/ts-transform-paths': ^1.7.18
-  eslint: ^7.11.0
+  eslint: ^7.32.0
   lib0: ^0.2.42
   node-sass: ^6.0.1
-  postcss: ^8.3.8
+  postcss: ^8.3.11
   prosemirror-commands: ^1.1.11
   prosemirror-dropcursor: ^1.3.5
   prosemirror-example-setup: ^1.1.2
@@ -33,21 +33,22 @@ specifiers:
   prosemirror-history: ^1.2.0
   prosemirror-keymap: ^1.1.4
   prosemirror-menu: ^1.1.4
-  prosemirror-model: ^1.14.3
+  prosemirror-model: ^1.15.0
   prosemirror-state: ^1.3.4
   prosemirror-tables: ^1.1.1
   prosemirror-transform: ^1.3.3
-  prosemirror-view: ^1.20.2
+  prosemirror-view: ^1.20.3
   randomcolor: ^0.6.2
-  rollup: ^2.57.0
+  rollup: ^2.58.3
   rollup-plugin-postcss: ^4.0.1
   rollup-plugin-typescript2: ^0.30.0
   ttypescript: ^1.5.12
-  typescript: ^4.4.3
+  typescript: ^4.4.4
   unique-names-generator: ^4.6.0
   y-prosemirror: ^1.0.9
-  y-websocket: ^1.3.16
-  yjs: ^13.5.12
+  y-protocols: ^1.0.5
+  y-websocket: ^1.3.17
+  yjs: ^13.5.16
 
 dependencies:
   '@manuscripts/quarterback-schema': link:../schema
@@ -67,7 +68,8 @@ dependencies:
   prosemirror-view: 1.20.3
   randomcolor: 0.6.2
   unique-names-generator: 4.6.0
-  y-prosemirror: 1.0.9_28ce358314c11f3281f75b401e982ef4
+  y-prosemirror: 1.0.9_0804e2a5cf7793c0a6cd014195bd6260
+  y-protocols: 1.0.5
   y-websocket: 1.3.17_yjs@13.5.16
   yjs: 13.5.16
 
@@ -592,8 +594,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001271
-      electron-to-chromium: 1.3.880
+      caniuse-lite: 1.0.30001272
+      electron-to-chromium: 1.3.883
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -635,13 +637,13 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.17.5
-      caniuse-lite: 1.0.30001271
+      caniuse-lite: 1.0.30001272
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: true
 
-  /caniuse-lite/1.0.30001271:
-    resolution: {integrity: sha512-BBruZFWmt3HFdVPS8kceTBIguKxu4f99n5JNp06OlPD/luoAMIaIK5ieV5YjnBLH3Nysai9sxj9rpJj4ZisXOA==}
+  /caniuse-lite/1.0.30001272:
+    resolution: {integrity: sha512-DV1j9Oot5dydyH1v28g25KoVm7l8MTxazwuiH3utWiAS6iL/9Nh//TGwqFEeqqN8nnWYQ8HHhUq+o4QPt9kvYw==}
     dev: true
 
   /caseless/0.12.0:
@@ -984,8 +986,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /electron-to-chromium/1.3.880:
-    resolution: {integrity: sha512-iwIP/6WoeSimzUKJIQtjtpVDsK8Ir8qQCMXsUBwg+rxJR2Uh3wTNSbxoYRfs+3UWx/9MAnPIxVZCyWkm8MT0uw==}
+  /electron-to-chromium/1.3.883:
+    resolution: {integrity: sha512-goyjNx4wB9j911PBteb+AXNbErug7rJVkmDXWdw5SCVn2JlARBwsqucPkvp1h5mXWxHUbBRK3bwXTrqSxSiAIQ==}
     dev: true
 
   /emoji-regex/7.0.3:
@@ -3428,7 +3430,7 @@ packages:
   /wide-align/1.1.5:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
     dependencies:
-      string-width: 4.2.3
+      string-width: 1.0.2
     dev: true
 
   /word-wrap/1.2.3:
@@ -3475,7 +3477,7 @@ packages:
     dev: false
     optional: true
 
-  /y-prosemirror/1.0.9_28ce358314c11f3281f75b401e982ef4:
+  /y-prosemirror/1.0.9_0804e2a5cf7793c0a6cd014195bd6260:
     resolution: {integrity: sha512-OM12aPx04lwiIy1IOBidb6ONAof2KFxQE/Gww26SEsMQuA2dibrJkjaMwXwY1KnYY7yOpwbIFRdwecdNXLU9yQ==}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -3488,6 +3490,7 @@ packages:
       prosemirror-model: 1.15.0
       prosemirror-state: 1.3.4
       prosemirror-view: 1.20.3
+      y-protocols: 1.0.5
       yjs: 13.5.16
     dev: false
 
