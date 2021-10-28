@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_OPERATION, TrackedAttrs } from './ChangeSet'
-import type { trackChangesExtension } from './extension'
+import type { yjsExtension } from './extension'
 
-export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
-  operation: CHANGE_OPERATION.insert
-}
-export type DeleteAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
-  operation: CHANGE_OPERATION.delete
-}
+export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
 
-export enum TrackChangesStatus {
+export interface YjsState {
+  status: YjsStatus
+}
+export enum YjsStatus {
   enabled = 'enabled',
   disabled = 'disabled',
 }
@@ -33,10 +30,18 @@ export interface UserData {
   insertColor: string
   deleteColor: string
 }
-
-export type TrackChangesExtension = ReturnType<
-  ReturnType<typeof trackChangesExtension>
->
-export interface TrackChangesOptions {
-  disabled: boolean
+export type YjsDisabled = {
+  disabled: true
 }
+export type YjsEnabled = {
+  disabled: false
+  document: {
+    id: string
+  }
+  user: {
+    id: string
+    name: string
+  }
+  ws_url: string
+}
+export type YjsOptions = YjsDisabled | YjsEnabled

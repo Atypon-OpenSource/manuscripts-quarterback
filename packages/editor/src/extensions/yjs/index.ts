@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/quarterback-schema'
+export { yjsPluginKey, yjsPlugin } from './plugin'
 
-import type { EditorProviders } from '$context'
-import type { Extension } from '$typings/extension'
+export * from './commands'
 
-import { activeNodesMarksPlugin } from './activeNodesMarksPlugin'
-import { exampleSetup } from './exampleSetup'
+export { yjsExtension, yjsExtensionName } from './extension'
 
-export const baseExtensionName = 'base' as const
-
-export const baseExtension = () => (ctx: EditorProviders) => {
-  const plugins = exampleSetup({ schema, history: false }).concat([
-    activeNodesMarksPlugin(),
-  ])
-  return {
-    name: baseExtensionName,
-    commands: {},
-    keymaps: [],
-    plugins,
-  }
-}
+export { YjsStatus } from './types'
+export * from './types'

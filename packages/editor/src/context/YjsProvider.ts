@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Observable } from '@manuscripts/quarterback-shared'
 import { yDocToProsemirrorJSON } from 'y-prosemirror'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
@@ -20,7 +21,6 @@ import * as Y from 'yjs'
 import { User } from '$typings/user'
 import { YjsEnabled } from '$typings/yjs'
 
-import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 
 export class YjsProvider {

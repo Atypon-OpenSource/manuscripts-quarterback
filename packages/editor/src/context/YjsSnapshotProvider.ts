@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Observable } from '@manuscripts/quarterback-shared'
 import { ProsemirrorBinding, ySyncPluginKey } from 'y-prosemirror'
 import * as Y from 'yjs'
 
@@ -22,7 +23,6 @@ import {
 } from '$extensions/track-changes'
 import { YjsSnapshot } from '$typings/snapshots'
 
-import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { createYjsSnapshot } from './snapshots'
 import { YjsProvider } from './YjsProvider'

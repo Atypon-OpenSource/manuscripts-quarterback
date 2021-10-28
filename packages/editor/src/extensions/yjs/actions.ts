@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/quarterback-schema'
+import type { Transaction } from 'prosemirror-state'
 
-import type { EditorProviders } from '$context'
-import type { Extension } from '$typings/extension'
-
-import { activeNodesMarksPlugin } from './activeNodesMarksPlugin'
-import { exampleSetup } from './exampleSetup'
-
-export const baseExtensionName = 'base' as const
-
-export const baseExtension = () => (ctx: EditorProviders) => {
-  const plugins = exampleSetup({ schema, history: false }).concat([
-    activeNodesMarksPlugin(),
-  ])
-  return {
-    name: baseExtensionName,
-    commands: {},
-    keymaps: [],
-    plugins,
-  }
+export enum YjsAction {
+  createSnapshot = 'yjs-create-snapshot',
 }
+
+export type YjsActionParams = {
+  [YjsAction.createSnapshot]: boolean
+}
+
+export const getAction = <K extends keyof YjsActionParams & string>(
+  tr: Transaction,
+  action: K
+) => tr.getMeta(action) as YjsActionParams[K] | undefined
+
+export const setAction = <K extends keyof YjsActionParams & string>(
+  tr: Transaction,
+  action: K,
+  payload: YjsActionParams[K]
+) => tr.setMeta(action, payload)

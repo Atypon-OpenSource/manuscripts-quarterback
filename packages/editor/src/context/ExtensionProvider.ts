@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Plugin, } from 'prosemirror-state'
 import { Observable } from '@manuscripts/quarterback-shared'
+import { Plugin } from 'prosemirror-state'
 
-import { EditorProviders } from './Providers'
 import { Commands } from '$typings/editor'
 import { CreateExtension, Extension } from '$typings/extension'
+
+import { EditorProviders } from './Providers'
 
 interface State {
   extensions: Extension[]
@@ -33,20 +34,26 @@ export class ExtensionProvider {
   commands: Commands = {}
 
   init(ctx: EditorProviders, createExtensions: CreateExtension[]) {
-    const created = createExtensions.map(ext => ext(ctx))
+    const created = createExtensions.map((ext) => ext(ctx))
     this.extensions = created
-    this.plugins = created.reduce((acc, ext) => [...acc, ...(ext.plugins || [])], [] as Plugin[])
-    this.commands = created.reduce((acc, ext) => Object.assign(acc, ext.commands), {} as Commands)
+    this.plugins = created.reduce(
+      (acc, ext) => [...acc, ...(ext.plugins || [])],
+      [] as Plugin[]
+    )
+    this.commands = created.reduce(
+      (acc, ext) => Object.assign(acc, ext.commands),
+      {} as Commands
+    )
     const state: State = {
       extensions: this.extensions,
       plugins: this.plugins,
-      commands: this.commands
+      commands: this.commands,
     }
     this._observable.emit('update', state)
   }
 
   getExtension(name: string) {
-    return this.extensions.find(e => e.name === name)
+    return this.extensions.find((e) => e.name === name)
   }
 
   onUpdate(cb: (data: State) => void) {

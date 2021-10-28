@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/quarterback-schema'
+import type { Command } from '$typings/editor'
 
-import type { EditorProviders } from '$context'
-import type { Extension } from '$typings/extension'
+import { setAction, YjsAction } from './actions'
 
-import { activeNodesMarksPlugin } from './activeNodesMarksPlugin'
-import { exampleSetup } from './exampleSetup'
-
-export const baseExtensionName = 'base' as const
-
-export const baseExtension = () => (ctx: EditorProviders) => {
-  const plugins = exampleSetup({ schema, history: false }).concat([
-    activeNodesMarksPlugin(),
-  ])
-  return {
-    name: baseExtensionName,
-    commands: {},
-    keymaps: [],
-    plugins,
+export const createSnapshot = (): Command => (state, dispatch) => {
+  if (dispatch) {
+    dispatch(setAction(state.tr, YjsAction.createSnapshot, true))
+    return true
   }
+  return false
 }

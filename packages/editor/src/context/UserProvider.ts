@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Observable } from '@manuscripts/quarterback-shared'
+
 import { User } from '$typings/user'
 
-import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { generateUser } from './user'
 import { YjsProvider } from './YjsProvider'

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorState, PluginKey } from 'prosemirror-state'
 
-import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 
 export class PluginStateProvider {

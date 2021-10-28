@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { QuarterBackSchema, schema } from '@manuscripts/quarterback-schema'
 import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
-
-import { QuarterBackSchema, schema } from '@manuscripts/quarterback-schema'
 
 import {
   CHANGE_OPERATION,

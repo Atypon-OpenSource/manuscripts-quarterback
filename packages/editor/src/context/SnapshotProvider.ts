@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorState } from 'prosemirror-state'
 
 import {
@@ -21,7 +22,6 @@ import {
 } from '$extensions/track-changes'
 import { PMSnapshot } from '$typings/snapshots'
 
-import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { createSnapshot } from './snapshots'
 

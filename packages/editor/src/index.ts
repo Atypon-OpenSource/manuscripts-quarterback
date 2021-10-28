@@ -15,6 +15,7 @@
  */
 
 import type { EditorView } from 'prosemirror-view'
+
 import type { Commands } from './typings/editor'
 
 declare global {
@@ -34,4 +35,5 @@ export { PMEditor } from './PMEditor'
 
 export { baseExtension } from './extensions/base'
 export { trackChangesExtension } from './extensions/track-changes'
+export { yjsExtension } from './extensions/yjs'
 export { pickExtension } from './extensions'
