@@ -27,7 +27,7 @@ export default {
         { find: '$typings', replacement: path.resolve(__dirname, 'src/typings') },
       ],
     }),
-    commonjs(),
     typescript(),
+    commonjs(),
   ],
 }
