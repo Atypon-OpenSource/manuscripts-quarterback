@@ -1,75 +1,89 @@
 import React, { useRef } from 'react'
 import { EditorView } from 'prosemirror-view'
 import { EditorState, Transaction } from 'prosemirror-state'
+import { schema } from '@manuscripts/quarterback-schema'
 
 import { useSSRLayoutEffect } from './react'
 
-import { schema } from './schema'
-
-import { commands } from './commands'
-import { plugins, pluginsWithoutYjs } from './plugins'
-
-import { EditorContext, useEditorContext } from './context'
+import { EditorContext as EditorProviders, useEditorContext } from './context'
 import { EditorProps } from './typings/editor'
 
-import './editor.css'
-import './prosemirror-example-setup.css'
-import './menu.css'
-import './yjs.css'
+import './styles/editor.css'
+import './styles/prosemirror-example-setup.css'
+import './styles/menu.css'
+import './styles/yjs.css'
 
 export function PMEditor(props: EditorProps) {
-  const { className = '', yjs } = props
+  const { className = '', ...editorProps } = props
   const editorDOMRef = useRef(null)
   const editorViewRef = useRef<EditorView | null>(null)
   const ctx = useEditorContext()
 
   useSSRLayoutEffect(() => {
-    const disableYjs = !yjs || yjs.disabled
-    !disableYjs && ctx.yjsProvider!.init(yjs)
-    const state = createEditorState(ctx as EditorContext, disableYjs)
     const editorViewDOM = editorDOMRef.current
-    if (editorViewDOM) {
-      editorViewRef.current = createEditorView(editorViewDOM, state)
-      ctx.viewProvider!.init(editorViewRef.current)
-      props.onEditorReady && props?.onEditorReady(ctx as EditorContext)
+    if (editorViewDOM && ctx.viewProvider) {
+      editorViewRef.current = init(editorViewDOM, ctx, editorProps, editorViewRef.current)
     }
     return () => {
       editorViewRef.current?.destroy()
     }
   }, [])
 
-  function createEditorState(ctx: EditorContext, disableYjs?: boolean) {
-    return EditorState.create({
-      schema,
-      plugins: disableYjs ? pluginsWithoutYjs(ctx) : plugins(ctx)
-    })
-  }
-
-  function createEditorView(element: HTMLDivElement, state: EditorState) {
-    const view = new EditorView({ mount: element }, {
-      state,
-      dispatchTransaction,
-    })
-    if (window) {
-      // @ts-ignore
-      window.editorView = view
-      // @ts-ignore
-      window.commands = commands
+  function init(element: HTMLElement, ctx: EditorProviders, props: EditorProps, oldView?: EditorView | null) {
+    const { viewProvider: vStore, extensionProvider: eStore } = ctx
+    eStore.init(ctx, props.extensions || [])
+    const state = createEditorState(ctx)
+    const view = oldView || createEditorView(element, state, ctx, props)
+    if (oldView) {
+      view.setProps({
+        state,
+        dispatchTransaction(tr: Transaction) {
+          const oldEditorState = this.state
+          const newState = oldEditorState.apply(tr)
+          this.updateState(newState)
+          ctx.viewProvider.updateState(newState)
+          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
+          props.onEdit && props.onEdit(newState)
+        }
+      })
     }
+    if (window) {
+      window.editorView = view
+      window.commands = ctx.extensionProvider.commands
+    }
+    vStore.init(view)
+    vStore.updateState(state)
+    props.onEditorReady && props.onEditorReady(ctx)
     return view
   }
 
-  function dispatchTransaction(tr: Transaction) {
-    if (!editorViewRef.current) {
-      return
-    }
-    const oldEditorState = editorViewRef.current.state
-    const newState = oldEditorState.apply(tr)
-    ctx.viewProvider?.updateState(newState)
-    ctx.pluginStateProvider?.updatePluginListeners(oldEditorState, newState)
-    if (props.onEdit) {
-      props.onEdit(newState)
-    }
+  function createEditorState(ctx: EditorProviders) {
+    return EditorState.create({
+      schema,
+      plugins: ctx.extensionProvider.plugins
+    })
+  }
+
+  function createEditorView(
+    element: HTMLElement,
+    state: EditorState,
+    ctx: EditorProviders,
+    props: EditorProps
+  ) {
+    return new EditorView(
+      { mount: element },
+      {
+        state,
+        dispatchTransaction(tr: Transaction) {
+          const oldEditorState = this.state
+          const newState = oldEditorState.apply(tr)
+          this.updateState(newState)
+          ctx.viewProvider.updateState(newState)
+          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
+          props.onEdit && props.onEdit(newState)
+        }
+      }
+    )
   }
 
   return (

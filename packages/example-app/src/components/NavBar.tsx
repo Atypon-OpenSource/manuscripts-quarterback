@@ -18,7 +18,7 @@ import { RouteComponentProps } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-interface IProps extends RouteComponentProps<{}> {
+interface IProps extends RouteComponentProps {
   className?: string
 }
 

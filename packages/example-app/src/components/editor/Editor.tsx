@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 import {
+  baseExtension,
   createDefaultProviders,
   EditorContext,
+  pickExtension,
   PMEditor,
   ReactEditorContext,
+  trackChangesExtension,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
 import React, { useMemo, useState } from 'react'
@@ -31,8 +34,14 @@ import { UsersList } from './UsersList'
 export function Editor() {
   const editorProviders = useMemo(() => createDefaultProviders(), [])
   const [disableYjs, setDisableYjs] = useState(true)
+  const extensions = useMemo(
+    () => [baseExtension(), trackChangesExtension()],
+    []
+  )
 
+  // eslint-disable-next-line
   function handleEdit() {}
+  // eslint-disable-next-line
   function handleEditorReady(ctx: EditorContext) {}
   return (
     <ReactEditorContext.Provider value={editorProviders}>
@@ -44,17 +53,7 @@ export function Editor() {
             <Toolbar className="toolbar full-width" />
             <div className="pm-editor full-width">
               <PMEditor
-                yjs={{
-                  disabled: false,
-                  ws_url: YJS_WS_URL,
-                  document: {
-                    id: '1234',
-                  },
-                  user: {
-                    id: 'abc',
-                    name: 'Hellow',
-                  },
-                }}
+                extensions={extensions}
                 onEdit={handleEdit}
                 onEditorReady={handleEditorReady}
               />

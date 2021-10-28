@@ -24,8 +24,6 @@ export class Stores {
     this.authStore = new AuthStore(this.reset)
     this.documentStore = new DocumentStore({
       authStore: this.authStore,
-      // editorStore: this.editorStore,
-      // toastStore: this.toastStore
     })
   }
 

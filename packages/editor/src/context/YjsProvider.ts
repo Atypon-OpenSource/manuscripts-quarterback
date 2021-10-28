@@ -20,7 +20,7 @@ import * as Y from 'yjs'
 import { User } from '$typings/user'
 import { YjsEnabled } from '$typings/yjs'
 
-import { Observable } from '../Observable'
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 
 export class YjsProvider {

@@ -14,32 +14,11 @@
  * limitations under the License.
  */
 import { Schema } from 'prosemirror-model'
+import { QuarterBackSchema, Nodes, Marks } from './types'
 
-import { TrackedAttrs } from '$extensions/track-changes'
+import { TrackedAttrs } from '@manuscripts/quarterback-editor'
 
-export type Marks =
-  | 'bold'
-  | 'code'
-  | 'italic'
-  | 'link'
-  | 'strikethrough'
-  | 'tracked_insert'
-  | 'tracked_delete'
-  | 'ychange'
-export type Nodes =
-  | 'blockquote'
-  | 'code_block'
-  | 'doc'
-  | 'hard_break'
-  | 'heading'
-  | 'horizontal_rule'
-  | 'image'
-  | 'paragraph'
-  | 'text'
-
-export type ExampleSchema = Schema<Nodes, Marks>
-
-export const schema: ExampleSchema = new Schema<Nodes, Marks>({
+export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
   nodes: {
     // :: NodeSpec The top level document node.
     doc: {

@@ -22,7 +22,7 @@ import {
 } from '$extensions/track-changes'
 import { YjsSnapshot } from '$typings/snapshots'
 
-import { Observable } from '../Observable'
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { createYjsSnapshot } from './snapshots'
 import { YjsProvider } from './YjsProvider'

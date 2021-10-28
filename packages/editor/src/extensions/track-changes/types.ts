@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { CHANGE_OPERATION, TrackedAttrs } from './ChangeSet'
+import type { trackChangesExtension } from './extension'
 
 export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
   operation: CHANGE_OPERATION.insert
@@ -31,4 +32,9 @@ export interface UserData {
   userName: string
   insertColor: string
   deleteColor: string
+}
+
+export type TrackChangesExtension = ReturnType<ReturnType<typeof trackChangesExtension>>
+export interface TrackChangesOptions {
+  disabled: boolean
 }

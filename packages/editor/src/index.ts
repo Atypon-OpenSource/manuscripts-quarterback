@@ -13,13 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import type { EditorView } from 'prosemirror-view'
+import type { Commands } from './typings/editor'
+
+declare global {
+  interface Window {
+    editorView: EditorView
+    commands: Commands
+  }
+}
+
 export * from './context'
 export * from './commands'
 export * from './react'
-export * from './extensions/active-nodes-marks'
+export * from './extensions/base'
 export * from './extensions/track-changes'
 export * from './typings'
-export { schema } from './schema'
 export { PMEditor } from './PMEditor'
 
-export type { ExampleSchema } from './schema'
+export { baseExtension } from './extensions/base'
+export { trackChangesExtension } from './extensions/track-changes'
+export { pickExtension } from './extensions'

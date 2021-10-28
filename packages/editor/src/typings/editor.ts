@@ -16,17 +16,18 @@
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
-import { IProviders } from '$context/Providers'
+import { EditorProviders } from '$context/Providers'
 
-import { YjsOptions } from './yjs'
+import type { CreateExtension } from './extension'
 
 export interface EditorProps {
   className?: string
-  yjs?: YjsOptions
-  onEditorReady?: (providers: IProviders) => void
+  extensions: CreateExtension[]
+  onEditorReady?: (providers: EditorProviders) => void
   onEdit?: (state: EditorState) => void
 }
 
+export type Commands = { [name: string]: (...args: any[]) => Command }
 export type CommandDispatch = (tr: Transaction) => void
 export type Command = (
   state: EditorState,

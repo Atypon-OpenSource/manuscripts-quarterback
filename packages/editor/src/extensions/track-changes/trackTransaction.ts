@@ -25,7 +25,7 @@ import {
   StepMap,
 } from 'prosemirror-transform'
 
-import { schema } from '$schema'
+import { schema } from '@manuscripts/quarterback-schema'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from './ChangeSet'
 import { createTrackedAttrs, shouldMergeMarks } from './node-utils'
@@ -288,8 +288,8 @@ function splitSliceIntoMergedParts(insertSlice: Slice) {
   if (firstMergedNode) {
     updatedSliceNodes = nodes.filter((_, i) => i !== 0)
     if (firstMergedNode.returnedSlice) {
-      // @ts-ignore
       updatedSliceNodes = [
+        // @ts-ignore
         ...firstMergedNode.returnedSlice.content,
         ...updatedSliceNodes,
       ]
@@ -300,9 +300,9 @@ function splitSliceIntoMergedParts(insertSlice: Slice) {
       (_, i) => i + 1 !== (updatedSliceNodes || nodes).length
     )
     if (lastMergedNode.returnedSlice) {
-      // @ts-ignore
       updatedSliceNodes = [
         ...updatedSliceNodes,
+        // @ts-ignore
         ...lastMergedNode.returnedSlice.content,
       ]
     }

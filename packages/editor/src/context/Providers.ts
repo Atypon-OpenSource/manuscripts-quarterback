@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { EditorViewProvider } from './EditorViewProvider'
+import { ExtensionProvider } from './ExtensionProvider'
 import { PluginStateProvider } from './PluginStateProvider'
 import { SnapshotProvider } from './SnapshotProvider'
 import { UserProvider } from './UserProvider'
@@ -21,14 +22,16 @@ import { YjsProvider } from './YjsProvider'
 import { YjsSnapshotProvider } from './YjsSnapshotProvider'
 
 export { EditorViewProvider } from './EditorViewProvider'
+export { ExtensionProvider } from './ExtensionProvider'
 export { PluginStateProvider } from './PluginStateProvider'
 export { SnapshotProvider } from './SnapshotProvider'
 export { UserProvider } from './UserProvider'
 export { YjsProvider } from './YjsProvider'
 export { YjsSnapshotProvider } from './YjsSnapshotProvider'
 
-export interface IProviders {
+export interface EditorProviders {
   viewProvider: EditorViewProvider
+  extensionProvider: ExtensionProvider
   pluginStateProvider: PluginStateProvider
   snapshotProvider: SnapshotProvider
   userProvider: UserProvider
@@ -40,6 +43,7 @@ export interface IProviders {
 // - first as the default value of createContext, second inside Editor
 export const emptyProviders = {
   viewProvider: undefined,
+  extensionProvider: undefined,
   pluginStateProvider: undefined,
   snapshotProvider: undefined,
   userProvider: undefined,
@@ -47,8 +51,9 @@ export const emptyProviders = {
   yjsSnapshotProvider: undefined,
 }
 
-export const createDefaultProviders = (): IProviders => {
+export const createDefaultProviders = (): EditorProviders => {
   const viewProvider = new EditorViewProvider()
+  const extensionProvider = new ExtensionProvider()
   const pluginStateProvider = new PluginStateProvider(viewProvider)
   const snapshotProvider = new SnapshotProvider(viewProvider)
   const yjsProvider = new YjsProvider(viewProvider)
@@ -56,6 +61,7 @@ export const createDefaultProviders = (): IProviders => {
   const yjsSnapshotProvider = new YjsSnapshotProvider(viewProvider, yjsProvider)
   return {
     viewProvider,
+    extensionProvider,
     pluginStateProvider,
     snapshotProvider,
     userProvider,

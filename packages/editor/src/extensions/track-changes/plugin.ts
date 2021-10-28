@@ -18,7 +18,7 @@ import { ySyncPluginKey } from 'y-prosemirror'
 
 import { EditorViewProvider } from '$context/EditorViewProvider'
 import { UserProvider } from '$context/UserProvider'
-import { ExampleSchema } from '$schema'
+import { QuarterBackSchema } from '@manuscripts/quarterback-schema'
 import { User } from '$typings/user'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
@@ -43,14 +43,14 @@ export interface TrackChangesState {
 
 export const trackChangesPluginKey = new PluginKey<
   TrackChangesState,
-  ExampleSchema
+  QuarterBackSchema
 >('track-changes')
 
 export const trackChangesPlugin = (
   viewProvider: EditorViewProvider,
   userProvider: UserProvider
 ) => {
-  return new Plugin<TrackChangesState, ExampleSchema>({
+  return new Plugin<TrackChangesState, QuarterBackSchema>({
     key: trackChangesPluginKey,
     state: {
       init(config, state) {

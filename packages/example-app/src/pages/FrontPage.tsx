@@ -22,13 +22,7 @@ export function FrontPage() {
   return (
     <Container>
       <header>
-        <h1>
-          <a href="https://teemukoivisto.github.io/prosemirror-track-and-collab/">
-            Track changes with collab
-          </a>
-        </h1>
-        <p>Using marks and attributes, similar to Fiduswriter</p>
-        {/* <p><a href="https://github.com/TeemuKoivisto/prosemirror-track-and-collab">Github repo</a></p> */}
+        <h1>Example React app to demonstrate Yjs and track changes.</h1>
       </header>
       <Editor />
     </Container>

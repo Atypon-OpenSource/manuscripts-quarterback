@@ -18,22 +18,30 @@ import { EditorView } from 'prosemirror-view'
 
 import { Command, JSONEditorState } from '$typings/editor'
 
-import { Observable } from '../Observable'
-import { ExampleSchema } from '../schema'
+import { Observable } from '@manuscripts/quarterback-shared'
+import { QuarterBackSchema } from '@manuscripts/quarterback-schema'
 
 export class EditorViewProvider {
-  _view?: EditorView<ExampleSchema>
+  _view?: EditorView<QuarterBackSchema>
+  _state?: EditorState<QuarterBackSchema>
   _observable = new Observable<'updateState'>()
 
-  init(view: EditorView<ExampleSchema>) {
-    this._view = view
-  }
-
-  get view(): EditorView<ExampleSchema> {
+  get view(): EditorView<QuarterBackSchema> {
     if (!this._view) {
       throw Error('EditorViewProvider view accessed before initialization')
     }
     return this._view
+  }
+
+  get state(): EditorState<QuarterBackSchema> {
+    if (!this._state) {
+      throw Error('EditorViewProvider state accessed before initialization')
+    }
+    return this._state
+  }
+
+  init(view: EditorView<QuarterBackSchema>) {
+    this._view = view
   }
 
   execCommand(cmd: Command) {

@@ -15,7 +15,7 @@
  */
 import { EditorState, PluginKey } from 'prosemirror-state'
 
-import { Observable } from '../Observable'
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 
 export class PluginStateProvider {

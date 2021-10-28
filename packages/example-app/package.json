@@ -4,9 +4,9 @@
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "craco build",
+    "eject": "craco eject",
     "lint": "eslint --cache --ext .js,.ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "@craco/craco": "^6.4.0",
     "@manuscripts/quarterback-editor": "*",
     "@manuscripts/quarterback-shared": "*",
     "@types/node": "16.7.12",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "^8.0.1",
-    "eslint-config-react-app": "^6.0.0"
+    "eslint-config-react-app": "^6.0.0",
+    "prettier": "^2.4.1"
   }
 }

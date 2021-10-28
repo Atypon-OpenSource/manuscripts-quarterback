@@ -15,6 +15,7 @@
  */
 import { ILoginParams } from '@manuscripts/quarterback-shared'
 import { inject, observer } from 'mobx-react'
+import React from 'react'
 import { useHistory } from 'react-router'
 
 import { LoginForm } from '../components/login-page/LoginForm'

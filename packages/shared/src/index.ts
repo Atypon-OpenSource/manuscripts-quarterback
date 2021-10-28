@@ -15,3 +15,4 @@
  */
 export * from './auth'
 export * from './utils'
+export { Observable } from './Observable'

@@ -21,7 +21,7 @@ import {
 } from '$extensions/track-changes'
 import { PMSnapshot } from '$typings/snapshots'
 
-import { Observable } from '../Observable'
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { createSnapshot } from './snapshots'
 

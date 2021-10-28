@@ -16,7 +16,7 @@
 import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
 
-import { ExampleSchema, schema } from '$schema'
+import { QuarterBackSchema, schema } from '@manuscripts/quarterback-schema'
 
 import {
   CHANGE_OPERATION,
@@ -33,10 +33,10 @@ import {
 } from './node-utils'
 
 export function updateChangeAttrs(
-  tr: Transaction<ExampleSchema>,
+  tr: Transaction<QuarterBackSchema>,
   change: PartialTrackedChange,
   trackedAttrs: Partial<TrackedAttrs>
-): Transaction<ExampleSchema> {
+): Transaction<QuarterBackSchema> {
   const node = tr.doc.nodeAt(change.from)
   if (!node) {
     throw Error('No node at the from of change' + change)
@@ -65,7 +65,7 @@ export function updateChangeAttrs(
 }
 
 export function updateDocAndRemoveChanges(
-  tr: Transaction<ExampleSchema>,
+  tr: Transaction<QuarterBackSchema>,
   changes: TrackedChange[],
   mapping?: Mapping
 ): Mapping {

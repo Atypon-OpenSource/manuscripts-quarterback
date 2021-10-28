@@ -18,7 +18,7 @@ import { Node as PMNode, Slice } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
-import { schema } from '$schema'
+import { schema } from '@manuscripts/quarterback-schema'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from './ChangeSet'
 import { DeleteAttrs, InsertAttrs } from './types'

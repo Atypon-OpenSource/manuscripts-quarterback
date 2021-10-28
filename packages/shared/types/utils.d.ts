@@ -26,3 +26,4 @@ export interface ErrorEvent {
 
 export { uuidv4 } from '../src/utils'
 export { CustomError } from '../src/utils'
+export { Observable } from '../src/Observable'

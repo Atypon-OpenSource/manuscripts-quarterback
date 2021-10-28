@@ -36,9 +36,9 @@ export class Observable<K = string> {
   }
 
   emit(key: K, ...args: any[]) {
-    // TODO the typing of this annoying thing
-    // @ts-ignore
     return Array.from((this._observers.get(key) || new Set()).values()).forEach(
+      // TODO the typing of this annoying thing
+      // @ts-ignore
       (cb) => cb(...args)
     )
   }

@@ -17,6 +17,7 @@ export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
 export type { TrackChangesState } from './plugin'
 
 export * from './commands'
+export { trackChangesExtension, trackChangesExtensionName } from './extension'
 
 export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
 export type {
@@ -26,4 +27,4 @@ export type {
   NodeChange,
 } from './ChangeSet'
 
-export { TrackChangesStatus } from './types'
+export * from './types'

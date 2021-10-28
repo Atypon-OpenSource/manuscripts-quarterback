@@ -15,7 +15,7 @@
  */
 import { User } from '$typings/user'
 
-import { Observable } from '../Observable'
+import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from './EditorViewProvider'
 import { generateUser } from './user'
 import { YjsProvider } from './YjsProvider'
