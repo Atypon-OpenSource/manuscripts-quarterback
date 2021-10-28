@@ -16,6 +16,8 @@
 import type { Command } from '$typings/editor'
 import { User } from '$typings/user'
 
+import { uuidv4 } from '@manuscripts/quarterback-shared'
+
 import { setAction, TrackChangesAction } from './actions'
 import { CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
 import { trackChangesPluginKey } from './plugin'
@@ -106,6 +108,26 @@ export const setDeleted = (): Command => (state, dispatch) => {
   )
   dispatch(tr)
   return true
+}
+
+export const addTrackedAttributesToBlockNode = (): Command => (state, dispatch) => {
+  const cursor = state.selection.head
+  const blockNodePos = state.doc.resolve(cursor).start(1) - 1
+  const tr = state.tr.setNodeMarkup(blockNodePos, undefined, {
+    dataTracked: {
+      id: uuidv4(),
+      userID: '1',
+      userName: 'John',
+      operation: CHANGE_OPERATION.insert,
+      status: CHANGE_STATUS.pending,
+      time: Date.now(),
+    },
+  })
+  if (dispatch) {
+    dispatch(tr)
+    return true
+  }
+  return false
 }
 
 export const setChangeStatuses =

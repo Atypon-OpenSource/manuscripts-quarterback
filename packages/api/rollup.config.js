@@ -14,7 +14,10 @@ export default {
       format: 'es',
     },
   ],
-  external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+  external: [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+  ],
   plugins: [
     alias({
       entries: [
@@ -24,7 +27,10 @@ export default {
           replacement: path.resolve(__dirname, 'src/middlewares'),
         },
         { find: '$routes', replacement: path.resolve(__dirname, 'src/routes') },
-        { find: '$typings', replacement: path.resolve(__dirname, 'src/typings') },
+        {
+          find: '$typings',
+          replacement: path.resolve(__dirname, 'src/typings'),
+        },
       ],
     }),
     typescript(),

@@ -30,8 +30,7 @@ export function PMEditor(props: EditorProps) {
   }, [])
 
   function init(element: HTMLElement, ctx: EditorProviders, props: EditorProps, oldView?: EditorView | null) {
-    const { viewProvider: vStore, extensionProvider: eStore } = ctx
-    eStore.init(ctx, props.extensions || [])
+    ctx.extensionProvider.init(ctx, props.extensions || [])
     const state = createEditorState(ctx)
     const view = oldView || createEditorView(element, state, ctx, props)
     if (oldView) {
@@ -51,8 +50,8 @@ export function PMEditor(props: EditorProps) {
       window.editorView = view
       window.commands = ctx.extensionProvider.commands
     }
-    vStore.init(view)
-    vStore.updateState(state)
+    ctx.viewProvider.init(view)
+    ctx.viewProvider.updateState(state)
     props.onEditorReady && props.onEditorReady(ctx)
     return view
   }
