@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarterBackSchema, schema } from '$schema'
 import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
+
+import { QuarterBackSchema, schema } from '$schema'
 
 import {
   CHANGE_OPERATION,

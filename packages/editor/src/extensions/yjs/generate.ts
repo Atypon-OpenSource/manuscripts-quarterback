@@ -19,6 +19,11 @@ import { names, uniqueNamesGenerator } from 'unique-names-generator'
 
 import { YjsUser } from '$typings/user'
 
+export const generateColor = () =>
+  randomColor({
+    luminosity: 'dark',
+  })
+
 export function generateUser(clientID?: number, name?: string): YjsUser {
   return {
     id: uuidv4(),

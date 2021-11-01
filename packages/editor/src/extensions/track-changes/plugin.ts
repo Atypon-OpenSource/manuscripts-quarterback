@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarterBackSchema } from '$schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { ySyncPluginKey } from 'y-prosemirror'
 
 import { EditorViewProvider } from '$context/EditorViewProvider'
+import { QuarterBackSchema } from '$schema'
 import { TrackedUser } from '$typings/user'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
@@ -33,7 +33,7 @@ import {
 
 const DEFAULT_USER = {
   id: '0',
-  name: 'Unknown'
+  name: 'Unknown',
 }
 
 export interface TrackChangesState {

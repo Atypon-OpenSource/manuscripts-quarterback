@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 // import { ySyncPluginKey } from 'y-prosemirror'
-import type { QuarterBackSchema } from '$schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 
 import type { EditorViewProvider } from '$context/Providers'
+import type { QuarterBackSchema } from '$schema'
 
 import type { YjsState } from './types'
 // import { getAction, setAction, YjsAction } from './actions'

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { generateUser, YjsUser } from '@manuscripts/quarterback-editor'
 import { IJwt, ILoginParams, IUser } from '@manuscripts/quarterback-shared'
 import { action, computed, observable } from 'mobx'
 
@@ -26,6 +27,7 @@ interface Persisted {
 
 export class AuthStore {
   @observable user?: IUser = undefined
+  @observable editorUser: YjsUser = generateUser()
   @observable jwt?: IJwt = undefined
   resetAllStores: () => void
   STORAGE_KEY = 'auth-store'
@@ -50,6 +52,11 @@ export class AuthStore {
 
   @computed get isLoggedIn() {
     return this.user && this.user.email
+  }
+
+  @action generateGuestUser = () => {
+    this.editorUser = generateUser()
+    return this.editorUser
   }
 
   @action login = async (params: ILoginParams) => {

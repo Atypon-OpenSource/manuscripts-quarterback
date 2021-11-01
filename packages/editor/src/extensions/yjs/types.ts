@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { YjsUser } from '$typings/user'
+
 import type { yjsExtension } from './extension'
 import type { createYjsStore } from './store'
-import { YjsUser } from '$typings/user'
 
 export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
 export type YjsOptions = YjsDisabled | YjsEnabled
@@ -30,6 +31,7 @@ export type YjsEnabled = {
   user: {
     id: string
     name: string
+    color?: string
   }
   ws_url: string
 }

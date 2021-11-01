@@ -16,6 +16,7 @@
 export { yjsPluginKey, yjsPlugin } from './plugin'
 
 export * as yjsCommands from './commands'
+export * from './generate'
 
 export { yjsExtension, yjsExtensionName } from './extension'
 export { useYjsExtension } from './useYjsExtension'

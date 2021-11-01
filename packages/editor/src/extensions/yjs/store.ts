@@ -24,9 +24,14 @@ import { EditorViewProvider } from '$context/EditorViewProvider'
 import { trackCommands } from '$extensions/track-changes'
 import { YjsUser } from '$typings/user'
 
+import { generateColor, generateUser } from './generate'
 import { createYjsSnapshot } from './snapshots'
-import { generateUser } from './generateUser'
-import type { YjsEnabled, YjsExtensionState, YjsSnapshot, AwarenessChange } from './types'
+import type {
+  AwarenessChange,
+  YjsEnabled,
+  YjsExtensionState,
+  YjsSnapshot,
+} from './types'
 
 export const createYjsStore = (
   viewProvider: EditorViewProvider,
@@ -44,8 +49,12 @@ export const createYjsStore = (
   let snapshots: YjsSnapshot[] = []
   let selectedSnapshot: YjsSnapshot | null = null
 
-  let currentUser: YjsUser = generateUser()
-  let usersMap: Map<number, YjsUser> = new Map()
+  let currentUser: YjsUser = {
+    clientID: Math.floor(Math.random() * 1000000),
+    color: generateColor(),
+    ...user,
+  }
+  const usersMap: Map<number, YjsUser> = new Map()
 
   return {
     ydoc,
@@ -58,7 +67,7 @@ export const createYjsStore = (
         // yjsStore.ydoc.getArray<YjsSnapshot>('versions').unobserve(callback)
         snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
       })
-      this.updateYjsUser()
+      this.setUser(currentUser)
       provider.awareness.on('update', this.updateUsers.bind(this))
       return this
     },
@@ -75,8 +84,13 @@ export const createYjsStore = (
     setOptions(newProps: YjsEnabled) {},
 
     setUser(user: YjsUser) {
+      const clientID = ydoc.clientID
+      currentUser.clientID = clientID
+      currentUser = user
+      usersMap.set(clientID, currentUser)
       permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
       provider.awareness.setLocalStateField('user', user)
+      this.update()
     },
 
     createSnapshot() {
@@ -154,20 +168,6 @@ export const createYjsStore = (
       }
       selectedSnapshot = null
       viewProvider.execCommand(trackCommands.refreshChanges())
-      this.update()
-    },
-
-    generateGuestUser(name?: string) {
-      currentUser = generateUser(currentUser?.clientID, name)
-      this.updateYjsUser()
-    },
-
-    updateYjsUser() {
-      const clientID = ydoc.clientID
-      currentUser.clientID = clientID
-      usersMap.set(clientID, currentUser)
-      permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
-      provider.awareness.setLocalStateField('user', user)
       this.update()
     },
 

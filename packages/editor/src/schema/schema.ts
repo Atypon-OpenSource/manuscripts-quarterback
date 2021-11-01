@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import { Schema } from 'prosemirror-model'
-import { QuarterBackSchema, Nodes, Marks } from './types'
 
 import { TrackedAttrs } from '$extensions/track-changes'
+
+import { Marks, Nodes, QuarterBackSchema } from './types'
 
 export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
   nodes: {

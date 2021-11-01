@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { TrackedUser } from '$typings/user'
+
 import { CHANGE_OPERATION, TrackedAttrs } from './ChangeSet'
 import type { trackChangesExtension } from './extension'
-import type { TrackedUser } from '$typings/user'
 
 export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
   operation: CHANGE_OPERATION.insert
@@ -39,6 +40,6 @@ export type TrackChangesExtension = ReturnType<
   ReturnType<typeof trackChangesExtension>
 >
 export interface TrackChangesOptions {
-  disabled: boolean
+  disabled?: boolean
   user: TrackedUser
 }

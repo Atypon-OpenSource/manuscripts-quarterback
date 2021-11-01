@@ -106,7 +106,7 @@ export class Connections {
     docId: string,
     { added, updated, removed }: AwarenessUpdate
   ) {
-    const connections = this.channels.get(docId) || new Set()
+    const connections = this.getChannelConnections(docId)
     connections.forEach((conn) => {
       // These assignments will mutate the original connection object, hence no
       // setting needed. HOWEVER it would be much better to do so because this is

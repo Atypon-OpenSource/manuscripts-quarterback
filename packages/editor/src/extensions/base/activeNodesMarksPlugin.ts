@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { QuarterBackSchema } from '$schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
+
+import type { QuarterBackSchema } from '$schema'
 
 import { getActiveMarks } from './commands'
 import type { ActiveNodesMarksState } from './types'

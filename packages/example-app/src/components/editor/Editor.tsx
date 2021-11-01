@@ -25,6 +25,7 @@ import {
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
 import React, { useMemo, useState } from 'react'
+import { useStores } from 'stores'
 import styled from 'styled-components'
 
 import { RightPanel } from './right-panel/RightPanel'
@@ -34,19 +35,27 @@ import { UsersList } from './UsersList'
 
 export function Editor() {
   const editorProviders = useMemo(() => createDefaultProviders(), [])
+  const {
+    authStore: { editorUser },
+  } = useStores()
   const [disableYjs, setDisableYjs] = useState(true)
   const extensions = useMemo(
     () => [
       baseExtension(),
-      trackChangesExtension(),
+      trackChangesExtension({
+        user: {
+          id: editorUser.id,
+          name: editorUser.name,
+        },
+      }),
       yjsExtension({
         disabled: false,
         document: {
           id: 'documentId',
         },
         user: {
-          id: 'user-id-1',
-          name: 'Morty',
+          id: editorUser.id,
+          name: editorUser.name,
         },
         ws_url: YJS_WS_URL,
       }),

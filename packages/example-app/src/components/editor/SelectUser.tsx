@@ -19,6 +19,7 @@ import {
   useYjsExtension,
 } from '@manuscripts/quarterback-editor'
 import React from 'react'
+import { useStores } from 'stores'
 import styled from 'styled-components'
 
 interface IProps {
@@ -27,12 +28,15 @@ interface IProps {
 
 export function SelectUser(props: IProps) {
   const { className } = props
+  const {
+    authStore: { generateGuestUser },
+  } = useStores()
   const { viewProvider } = useEditorContext()
   const [yjsState, yjsStore] = useYjsExtension()
 
-  function handleSelectUser() {
-    const user = yjsStore?.generateGuestUser()
-    yjsStore?.updateYjsUser()
+  function handleNewUser() {
+    const user = generateGuestUser()
+    yjsStore?.setUser(user)
     viewProvider?.execCommand(trackCommands.setUser(user))
   }
 
@@ -42,7 +46,7 @@ export function SelectUser(props: IProps) {
         Current user: {yjsState?.currentUser.id.slice(0, 5)}
       </div>
       <div>
-        <Button onClick={handleSelectUser}>New user</Button>
+        <Button onClick={handleNewUser}>New user</Button>
       </div>
     </Container>
   )
