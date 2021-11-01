@@ -16,14 +16,14 @@
 import { uuidv4 } from '@manuscripts/quarterback-shared'
 import { Transaction } from 'prosemirror-state'
 
-import { User } from '$typings/user'
+import { TrackedUser } from '$typings/user'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, ChangeSet } from './ChangeSet'
 import { updateChangeAttrs } from './updateChangeAttrs'
 
 export function fixInconsistentChanges(
   changeSet: ChangeSet,
-  currentUser: User,
+  currentUser: TrackedUser,
   newTr: Transaction
 ) {
   const iteratedIds = new Set()

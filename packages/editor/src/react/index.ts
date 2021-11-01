@@ -15,7 +15,4 @@
  */
 export { useEditorState } from './useEditorState'
 export { usePluginState } from './usePluginState'
-export { useSnapshotProvider } from './useSnapshotProvider'
 export { useSSRLayoutEffect } from './useSSRLayoutEffect'
-export { useUserProvider } from './useUserProvider'
-export { useYjsSnapshotProvider } from './useYjsSnapshotProvider'

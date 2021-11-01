@@ -16,27 +16,15 @@
 import { EditorViewProvider } from './EditorViewProvider'
 import { ExtensionProvider } from './ExtensionProvider'
 import { PluginStateProvider } from './PluginStateProvider'
-import { SnapshotProvider } from './SnapshotProvider'
-import { UserProvider } from './UserProvider'
-import { YjsProvider } from './YjsProvider'
-import { YjsSnapshotProvider } from './YjsSnapshotProvider'
 
 export { EditorViewProvider } from './EditorViewProvider'
 export { ExtensionProvider } from './ExtensionProvider'
 export { PluginStateProvider } from './PluginStateProvider'
-export { SnapshotProvider } from './SnapshotProvider'
-export { UserProvider } from './UserProvider'
-export { YjsProvider } from './YjsProvider'
-export { YjsSnapshotProvider } from './YjsSnapshotProvider'
 
 export interface EditorProviders {
   viewProvider: EditorViewProvider
   extensionProvider: ExtensionProvider
   pluginStateProvider: PluginStateProvider
-  snapshotProvider: SnapshotProvider
-  userProvider: UserProvider
-  yjsProvider: YjsProvider
-  yjsSnapshotProvider: YjsSnapshotProvider
 }
 
 // By providing default values without providers the Providers are not created twice
@@ -45,27 +33,15 @@ export const emptyProviders = {
   viewProvider: undefined,
   extensionProvider: undefined,
   pluginStateProvider: undefined,
-  snapshotProvider: undefined,
-  userProvider: undefined,
-  yjsProvider: undefined,
-  yjsSnapshotProvider: undefined,
 }
 
 export const createDefaultProviders = (): EditorProviders => {
   const viewProvider = new EditorViewProvider()
   const extensionProvider = new ExtensionProvider()
   const pluginStateProvider = new PluginStateProvider(viewProvider)
-  const snapshotProvider = new SnapshotProvider(viewProvider)
-  const yjsProvider = new YjsProvider(viewProvider)
-  const userProvider = new UserProvider(viewProvider, yjsProvider)
-  const yjsSnapshotProvider = new YjsSnapshotProvider(viewProvider, yjsProvider)
   return {
     viewProvider,
     extensionProvider,
     pluginStateProvider,
-    snapshotProvider,
-    userProvider,
-    yjsProvider,
-    yjsSnapshotProvider,
   }
 }

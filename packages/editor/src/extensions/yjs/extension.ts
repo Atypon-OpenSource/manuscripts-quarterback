@@ -44,7 +44,7 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
       store: undefined,
     }
   }
-  const store = createYjsStore(ctx.viewProvider, opts)
+  const store = createYjsStore(ctx.viewProvider, opts).init()
   const plugins = [
     yjsPlugin(ctx.viewProvider),
     ySyncPlugin(store.yXmlFragment, {

@@ -19,6 +19,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'import/no-named-as-default': 'off',
     'import/no-named-as-default-member': 'off',
+    'simple-import-sort/sort': 'warn',
     'promise/always-return': 'off',
     'promise/no-nesting': 'off',
     'promise/no-promise-in-callback': 'off',

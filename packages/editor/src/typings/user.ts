@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface User {
+export interface TrackedUser {
+  id: string
+  name: string
+}
+export interface YjsUser {
   id: string
   clientID: number
   name: string

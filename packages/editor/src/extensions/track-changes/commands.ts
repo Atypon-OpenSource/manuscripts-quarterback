@@ -16,7 +16,7 @@
 import { uuidv4 } from '@manuscripts/quarterback-shared'
 
 import type { Command } from '$typings/editor'
-import { User } from '$typings/user'
+import { TrackedUser } from '$typings/user'
 
 import { setAction, TrackChangesAction } from './actions'
 import { CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
@@ -147,7 +147,7 @@ export const setChangeStatuses =
   }
 
 export const setUser =
-  (user: User): Command =>
+  (user: TrackedUser): Command =>
   (state, dispatch) => {
     if (dispatch) {
       dispatch(setAction(state.tr, TrackChangesAction.setUser, user))

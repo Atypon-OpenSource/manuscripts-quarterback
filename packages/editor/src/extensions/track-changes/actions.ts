@@ -15,7 +15,7 @@
  */
 import { Transaction } from 'prosemirror-state'
 
-import { User } from '$typings/user'
+import { TrackedUser } from '$typings/user'
 
 import { CHANGE_STATUS } from './ChangeSet'
 import { TrackChangesStatus } from './types'
@@ -31,7 +31,7 @@ export enum TrackChangesAction {
 }
 
 export type TrackChangesActionParams = {
-  [TrackChangesAction.setUser]: User
+  [TrackChangesAction.setUser]: TrackedUser
   [TrackChangesAction.setTrackingStatus]: TrackChangesStatus
   [TrackChangesAction.setChangeStatuses]: {
     status: CHANGE_STATUS

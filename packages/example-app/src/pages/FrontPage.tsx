@@ -22,7 +22,7 @@ export function FrontPage() {
   return (
     <Container>
       <header>
-        <h1>Example React app to demonstrate Yjs and track changes.</h1>
+        <h1>Track changes with Yjs</h1>
       </header>
       <Editor />
     </Container>

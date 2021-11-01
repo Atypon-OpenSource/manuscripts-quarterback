@@ -15,6 +15,7 @@
  */
 import type { yjsExtension } from './extension'
 import type { createYjsStore } from './store'
+import { YjsUser } from '$typings/user'
 
 export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
 export type YjsOptions = YjsDisabled | YjsEnabled
@@ -37,6 +38,8 @@ export type YjsStore = ReturnType<typeof createYjsStore>
 export interface YjsExtensionState {
   snapshots: YjsSnapshot[]
   selectedSnapshot: YjsSnapshot | null
+  currentUser: YjsUser
+  users: YjsUser[]
 }
 export interface YjsState {
   status: YjsStatus
@@ -57,4 +60,10 @@ export interface YjsSnapshot {
   date: number
   snapshot: Uint8Array
   clientID: number
+}
+
+export type AwarenessChange = {
+  added: number[]
+  updated: number[]
+  removed: number[]
 }

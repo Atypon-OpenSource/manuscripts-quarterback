@@ -16,9 +16,9 @@
 import {
   trackCommands,
   useEditorContext,
-  useUserProvider,
+  useYjsExtension,
 } from '@manuscripts/quarterback-editor'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 interface IProps {
@@ -27,22 +27,19 @@ interface IProps {
 
 export function SelectUser(props: IProps) {
   const { className } = props
-  const { viewProvider, userProvider } = useEditorContext()
-  const userState = useUserProvider()
+  const { viewProvider } = useEditorContext()
+  const [yjsState, yjsStore] = useYjsExtension()
 
   function handleSelectUser() {
-    if (!userProvider || !viewProvider) {
-      return
-    }
-    const user = userProvider?.generateGuestUser()
-    userProvider?.updateYjsUser()
+    const user = yjsStore?.generateGuestUser()
+    yjsStore?.updateYjsUser()
     viewProvider?.execCommand(trackCommands.setUser(user))
   }
 
   return (
     <Container className={className}>
       <div className="current-user">
-        Current user: {userState?.currentUser.id.slice(0, 5)}
+        Current user: {yjsState?.currentUser.id.slice(0, 5)}
       </div>
       <div>
         <Button onClick={handleSelectUser}>New user</Button>

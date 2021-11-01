@@ -27,18 +27,18 @@ export const trackChangesExtension =
     if (opts?.disabled) {
       return {
         name: trackChangesExtensionName,
-        commands: { ...commands },
+        commands,
         keymaps: [],
         plugins: [],
-        store: {},
+        store: undefined,
       }
     }
-    const plugins = [trackChangesPlugin(ctx.viewProvider, ctx.userProvider)]
+    const plugins = [trackChangesPlugin(ctx.viewProvider, { user: opts?.user })]
     return {
       name: trackChangesExtensionName,
-      commands: { ...commands },
+      commands,
       keymaps: [],
       plugins,
-      store: {},
+      store: undefined,
     }
   }

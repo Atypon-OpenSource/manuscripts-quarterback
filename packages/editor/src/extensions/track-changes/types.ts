@@ -15,6 +15,7 @@
  */
 import { CHANGE_OPERATION, TrackedAttrs } from './ChangeSet'
 import type { trackChangesExtension } from './extension'
+import type { TrackedUser } from '$typings/user'
 
 export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
   operation: CHANGE_OPERATION.insert
@@ -39,4 +40,5 @@ export type TrackChangesExtension = ReturnType<
 >
 export interface TrackChangesOptions {
   disabled: boolean
+  user: TrackedUser
 }

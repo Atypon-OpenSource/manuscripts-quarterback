@@ -60,7 +60,6 @@ export function SnapshotsList(props: IProps) {
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {/** @ts-ignore */}
         {snapshots.map((snap: YjsSnapshot, i: number) => (
           <SnapListItem key={`${snap.id}`}>
             <TitleWrapper>

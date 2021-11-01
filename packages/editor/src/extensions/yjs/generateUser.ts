@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type YjsDisabled = {
-  disabled: true
-}
-export type YjsEnabled = {
-  disabled: false
-  document: {
-    id: string
+import { uuidv4 } from '@manuscripts/quarterback-shared'
+import randomColor from 'randomcolor'
+import { names, uniqueNamesGenerator } from 'unique-names-generator'
+
+import { YjsUser } from '$typings/user'
+
+export function generateUser(clientID?: number, name?: string): YjsUser {
+  return {
+    id: uuidv4(),
+    clientID: clientID || Math.floor(Math.random() * 1000000),
+    name:
+      name ||
+      uniqueNamesGenerator({
+        dictionaries: [names],
+      }),
+    color: randomColor({
+      luminosity: 'dark',
+    }),
   }
-  user: {
-    id: string
-    name: string
-  }
-  ws_url: string
 }
-export type YjsOptions = YjsDisabled | YjsEnabled

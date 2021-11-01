@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { User, useUserProvider } from '@manuscripts/quarterback-editor'
+import { YjsUser, useYjsExtension } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -23,19 +23,19 @@ interface IProps {
 
 export function UsersList(props: IProps) {
   const { className } = props
-  const userState = useUserProvider()
+  const [yjsState] = useYjsExtension()
   return (
     <div className={className}>
       <Header>
-        <h2>Your name: {userState?.currentUser.name}</h2>
+        <h2>Your name: {yjsState?.currentUser.name}</h2>
       </Header>
       <List>
-        {userState?.users.map((user: User, i: number) => (
+        {yjsState?.users.map((user: YjsUser, i: number) => (
           <ListItem key={`${user.id}`}>
             <UserCircle
               title={user.name}
               color={user.color}
-              currentUser={user.id === userState.currentUser.id}
+              currentUser={user.id === yjsState.currentUser.id}
             >
               {user.name.charAt(0)}
             </UserCircle>

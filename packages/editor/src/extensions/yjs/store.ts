@@ -22,20 +22,17 @@ import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
 import { EditorViewProvider } from '$context/EditorViewProvider'
 import { trackCommands } from '$extensions/track-changes'
+import { YjsUser } from '$typings/user'
 
 import { createYjsSnapshot } from './snapshots'
-import type { YjsEnabled, YjsExtensionState, YjsSnapshot } from './types'
-
-export interface User {
-  id: string
-  name: string
-}
+import { generateUser } from './generateUser'
+import type { YjsEnabled, YjsExtensionState, YjsSnapshot, AwarenessChange } from './types'
 
 export const createYjsStore = (
   viewProvider: EditorViewProvider,
   opts: YjsEnabled
 ) => {
-  const { disabled, document, user, ws_url } = opts
+  const { document, user, ws_url } = opts
   const _observable = new Observable<'update'>()
   const ydoc = new Y.Doc()
   const permanentUserData = new Y.PermanentUserData(ydoc)
@@ -43,13 +40,12 @@ export const createYjsStore = (
   ydoc.gc = false
   const provider = new WebsocketProvider(ws_url, document.id, ydoc)
   const yXmlFragment = ydoc.getXmlFragment('pm-doc')
+
   let snapshots: YjsSnapshot[] = []
   let selectedSnapshot: YjsSnapshot | null = null
 
-  ydoc.getArray<YjsSnapshot>('versions').observe(function callback() {
-    // yjsStore.ydoc.getArray<YjsSnapshot>('versions').unobserve(callback)
-    snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
-  })
+  let currentUser: YjsUser = generateUser()
+  let usersMap: Map<number, YjsUser> = new Map()
 
   return {
     ydoc,
@@ -57,16 +53,28 @@ export const createYjsStore = (
     awareness: provider.awareness,
     yXmlFragment,
 
+    init() {
+      ydoc.getArray<YjsSnapshot>('versions').observe(function callback() {
+        // yjsStore.ydoc.getArray<YjsSnapshot>('versions').unobserve(callback)
+        snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
+      })
+      this.updateYjsUser()
+      provider.awareness.on('update', this.updateUsers.bind(this))
+      return this
+    },
+
     getState(): YjsExtensionState {
       return {
         snapshots: snapshots,
         selectedSnapshot: selectedSnapshot,
+        currentUser: currentUser,
+        users: Array.from(usersMap.values()),
       }
     },
 
     setOptions(newProps: YjsEnabled) {},
 
-    setUser(user: User) {
+    setUser(user: YjsUser) {
       permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
       provider.awareness.setLocalStateField('user', user)
     },
@@ -132,7 +140,7 @@ export const createYjsStore = (
       versions.forEach((v, i) => {
         if (v.id === snap.id) {
           versions.delete(i)
-          this.update()
+          this.updateVersions()
         }
       })
     },
@@ -146,6 +154,38 @@ export const createYjsStore = (
       }
       selectedSnapshot = null
       viewProvider.execCommand(trackCommands.refreshChanges())
+      this.update()
+    },
+
+    generateGuestUser(name?: string) {
+      currentUser = generateUser(currentUser?.clientID, name)
+      this.updateYjsUser()
+    },
+
+    updateYjsUser() {
+      const clientID = ydoc.clientID
+      currentUser.clientID = clientID
+      usersMap.set(clientID, currentUser)
+      permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
+      provider.awareness.setLocalStateField('user', user)
+      this.update()
+    },
+
+    updateUsers({ added, updated, removed }: AwarenessChange) {
+      const states = provider.awareness.getStates() as Map<
+        number,
+        {
+          cursor: any
+          user: YjsUser
+        }
+      >
+      added.concat(updated).forEach((clientID) => {
+        const state = states.get(clientID)
+        if (state) {
+          usersMap.set(clientID, state.user)
+        }
+      })
+      removed.forEach((clientID) => usersMap.delete(clientID))
       this.update()
     },
 

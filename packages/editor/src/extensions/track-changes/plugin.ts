@@ -18,8 +18,7 @@ import { Plugin, PluginKey } from 'prosemirror-state'
 import { ySyncPluginKey } from 'y-prosemirror'
 
 import { EditorViewProvider } from '$context/EditorViewProvider'
-import { UserProvider } from '$context/UserProvider'
-import { User } from '$typings/user'
+import { TrackedUser } from '$typings/user'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
 import { CHANGE_STATUS, ChangeSet } from './ChangeSet'
@@ -32,9 +31,14 @@ import {
   updateDocAndRemoveChanges,
 } from './updateChangeAttrs'
 
+const DEFAULT_USER = {
+  id: '0',
+  name: 'Unknown'
+}
+
 export interface TrackChangesState {
   status: TrackChangesStatus
-  currentUser: User
+  currentUser: TrackedUser
   insertColor: string
   deleteColor: string
   changeSet: ChangeSet
@@ -48,7 +52,7 @@ export const trackChangesPluginKey = new PluginKey<
 
 export const trackChangesPlugin = (
   viewProvider: EditorViewProvider,
-  userProvider: UserProvider
+  opts: { user?: TrackedUser }
 ) => {
   return new Plugin<TrackChangesState, QuarterBackSchema>({
     key: trackChangesPluginKey,
@@ -57,7 +61,7 @@ export const trackChangesPlugin = (
         const changeSet = findChanges(state)
         return {
           status: TrackChangesStatus.enabled,
-          currentUser: userProvider.currentUser,
+          currentUser: opts.user || DEFAULT_USER,
           insertColor: 'greenyellow',
           deleteColor: '#ffa4a4',
           changeSet: changeSet,
