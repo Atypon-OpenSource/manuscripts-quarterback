@@ -2,7 +2,9 @@
 
 ## How to install
 
-You must have `pnpm` installed globally: `npm i -g pnpm`. Also you need Docker.
+First you should check you have Node.js v16 installed: `node -v`. If not, I recommend using [nvm](https://github.com/nvm-sh/nvm) to install 16 version. This is needed for the ES modules and other new features.
+
+Install `pnpm` globally if haven't already: `npm i -g pnpm`. Also you need Docker.
 
 1. Install all dependencies: `pnpm i -r`
 3. Start the database: `docker-compose up -d postgres`
