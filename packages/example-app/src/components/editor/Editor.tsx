@@ -21,7 +21,7 @@ import {
   PMEditor,
   ReactEditorContext,
   trackChangesExtension,
-  yjsExtension
+  yjsExtension,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
 import React, { useMemo, useState } from 'react'
@@ -36,17 +36,21 @@ export function Editor() {
   const editorProviders = useMemo(() => createDefaultProviders(), [])
   const [disableYjs, setDisableYjs] = useState(true)
   const extensions = useMemo(
-    () => [baseExtension(), trackChangesExtension(), yjsExtension({
-      disabled: false,
-      document: {
-        id: 'documentId'
-      },
-      user: {
-        id: 'user-id-1',
-        name: 'Morty'
-      },
-      ws_url: YJS_WS_URL
-    })],
+    () => [
+      baseExtension(),
+      trackChangesExtension(),
+      yjsExtension({
+        disabled: false,
+        document: {
+          id: 'documentId',
+        },
+        user: {
+          id: 'user-id-1',
+          name: 'Morty',
+        },
+        ws_url: YJS_WS_URL,
+      }),
+    ],
     []
   )
 

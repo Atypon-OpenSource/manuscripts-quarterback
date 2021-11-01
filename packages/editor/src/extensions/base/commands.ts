@@ -15,6 +15,8 @@
  */
 import type { EditorState } from 'prosemirror-state'
 
+export { toggleMark } from 'prosemirror-commands'
+
 // From https://github.com/PierBover/prosemirror-cookbook
 export function getActiveMarks(state: EditorState): string[] {
   if (state.selection.empty) {

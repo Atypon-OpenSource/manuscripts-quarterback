@@ -17,10 +17,6 @@ import {
   activeNodesMarksPluginKey,
   ActiveNodesMarksState,
   commands,
-  setBlockNodeAttribute,
-  setDeleted,
-  setInserted,
-  toggleTrackChanges,
   useEditorContext,
   usePluginState,
 } from '@manuscripts/quarterback-editor'
@@ -106,29 +102,35 @@ export function Toolbar(props: IProps) {
     switch (title) {
       case 'bold':
         viewProvider?.execCommand(
-          commands.toggleMark(viewProvider?.view.state.schema.marks.bold)
+          commands.baseCommands.toggleMark(
+            viewProvider?.view.state.schema.marks.bold
+          )
         )
         return
       case 'italic':
         viewProvider?.execCommand(
-          commands.toggleMark(viewProvider?.view.state.schema.marks.italic)
+          commands.baseCommands.toggleMark(
+            viewProvider?.view.state.schema.marks.italic
+          )
         )
         return
       case 'toggle-blockquote':
         return
       case 'update-attribute':
-        viewProvider?.execCommand(setBlockNodeAttribute())
+        viewProvider?.execCommand(
+          commands.trackCommands.addTrackedAttributesToBlockNode()
+        )
         return
       case 'toggle-split-view':
         return
       case 'toggle-track-changes':
-        viewProvider?.execCommand(toggleTrackChanges())
+        viewProvider?.execCommand(commands.trackCommands.toggleTrackChanges())
         return
       case 'set-inserted':
-        viewProvider?.execCommand(setInserted())
+        viewProvider?.execCommand(commands.trackCommands.setInserted())
         return
       case 'set-deleted':
-        viewProvider?.execCommand(setDeleted())
+        viewProvider?.execCommand(commands.trackCommands.setDeleted())
         return
     }
   }

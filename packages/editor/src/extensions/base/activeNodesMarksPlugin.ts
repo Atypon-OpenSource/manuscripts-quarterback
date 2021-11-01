@@ -16,7 +16,7 @@
 import type { QuarterBackSchema } from '@manuscripts/quarterback-schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 
-import { getActiveMarks } from './getActiveMarks'
+import { getActiveMarks } from './commands'
 import type { ActiveNodesMarksState } from './types'
 
 export const activeNodesMarksPluginKey = new PluginKey<

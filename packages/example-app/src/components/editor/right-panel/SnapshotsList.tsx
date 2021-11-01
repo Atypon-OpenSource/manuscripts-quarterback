@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Snapshot,
-  useEditorContext,
-  useSnapshotProvider,
-  useYjsSnapshotProvider,
-} from '@manuscripts/quarterback-editor'
+import { useYjsExtension, YjsSnapshot } from '@manuscripts/quarterback-editor'
 import React, { useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import styled from 'styled-components'
@@ -29,28 +24,20 @@ interface IProps {
 }
 
 export function SnapshotsList(props: IProps) {
-  const { className, disableYjs } = props
+  const { className } = props
   const [isVisible, setIsVisible] = useState(true)
-  const { snapshotProvider, yjsSnapshotProvider } = useEditorContext()
-  const snapshotsState = useSnapshotProvider()
-  const yjsSnapshotsState = useYjsSnapshotProvider()
-  const state = useMemo(
-    () => (disableYjs ? snapshotsState : yjsSnapshotsState),
-    [disableYjs, snapshotsState, yjsSnapshotsState]
-  )
-  const provider = useMemo(
-    () => (disableYjs ? snapshotProvider : yjsSnapshotProvider),
-    [disableYjs, snapshotProvider, yjsSnapshotProvider]
-  )
+  const [yjsState, yjsStore] = useYjsExtension()
+  const snapshots = useMemo(() => yjsState?.snapshots || [], [yjsState])
+  const selectedSnapshot = useMemo(() => yjsState?.selectedSnapshot, [yjsState])
 
-  function handleInspectSnapshot(snap: Snapshot) {
-    provider?.inspectSnapshot(snap as any)
+  function handleInspectSnapshot(snap: YjsSnapshot) {
+    yjsStore?.inspectSnapshot(snap)
   }
   function handleResumeEditing() {
-    provider?.resumeEditing()
+    yjsStore?.resumeEditing()
   }
-  function handleDeleteSnapshot(snap: Snapshot) {
-    provider?.deleteSnapshot(snap as any)
+  function handleDeleteSnapshot(snap: YjsSnapshot) {
+    yjsStore?.deleteSnapshot(snap)
   }
   return (
     <>
@@ -66,7 +53,7 @@ export function SnapshotsList(props: IProps) {
           <Title>Snapshots</Title>
         </button>
         <button
-          className={`inspect-btn ${state?.selectedSnapshot ? '' : 'hidden'}`}
+          className={`inspect-btn ${selectedSnapshot ? '' : 'hidden'}`}
           onClick={() => handleResumeEditing()}
         >
           Stop inspecting
@@ -74,7 +61,7 @@ export function SnapshotsList(props: IProps) {
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
         {/** @ts-ignore */}
-        {state?.snapshots.map((snap: Snapshot, i: number) => (
+        {snapshots.map((snap: YjsSnapshot, i: number) => (
           <SnapListItem key={`${snap.id}`}>
             <TitleWrapper>
               <h4>Snapshot {i + 1}</h4>

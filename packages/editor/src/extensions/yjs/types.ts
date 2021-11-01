@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 import type { yjsExtension } from './extension'
+import type { createYjsStore } from './store'
 
 export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
-
-export interface YjsState {
-  status: YjsStatus
-}
-export enum YjsStatus {
-  enabled = 'enabled',
-  disabled = 'disabled',
-}
-export interface UserData {
-  userID: string
-  userName: string
-  insertColor: string
-  deleteColor: string
-}
+export type YjsOptions = YjsDisabled | YjsEnabled
 export type YjsDisabled = {
   disabled: true
 }
@@ -44,4 +32,29 @@ export type YjsEnabled = {
   }
   ws_url: string
 }
-export type YjsOptions = YjsDisabled | YjsEnabled
+
+export type YjsStore = ReturnType<typeof createYjsStore>
+export interface YjsExtensionState {
+  snapshots: YjsSnapshot[]
+  selectedSnapshot: YjsSnapshot | null
+}
+export interface YjsState {
+  status: YjsStatus
+}
+export enum YjsStatus {
+  enabled = 'enabled',
+  disabled = 'disabled',
+}
+// export interface UserData {
+//   userID: string
+//   userName: string
+//   insertColor: string
+//   deleteColor: string
+// }
+
+export interface YjsSnapshot {
+  id: string
+  date: number
+  snapshot: Uint8Array
+  clientID: number
+}

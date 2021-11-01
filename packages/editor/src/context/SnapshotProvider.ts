@@ -16,10 +16,7 @@
 import { Observable } from '@manuscripts/quarterback-shared'
 import { EditorState } from 'prosemirror-state'
 
-import {
-  createSnapshot as createSnapshotCmd,
-  refreshChanges,
-} from '$extensions/track-changes'
+import { trackCommands } from '$extensions/track-changes'
 import { PMSnapshot } from '$typings/snapshots'
 
 import { EditorViewProvider } from './EditorViewProvider'
@@ -53,7 +50,7 @@ export class SnapshotProvider {
   createSnapshot() {
     const snapshot = createSnapshot(this.viewProvider.view.state, 1)
     this.snapshots.push(snapshot)
-    this.viewProvider.execCommand(createSnapshotCmd())
+    this.viewProvider.execCommand(trackCommands.createSnapshot())
     this.update()
   }
 
@@ -69,7 +66,7 @@ export class SnapshotProvider {
       doc: snap.snapshot,
       selection: { type: 'text', anchor: 0, head: 0 },
     })
-    this.viewProvider.execCommand(refreshChanges())
+    this.viewProvider.execCommand(trackCommands.refreshChanges())
     // TODO set view uneditable
     this.update()
   }
@@ -84,9 +81,9 @@ export class SnapshotProvider {
     if (!this.currentEditorState) {
       throw Error('No currentEditorState to resume editing on!')
     }
-    this.viewProvider.replaceState(this.currentEditorState)
+    this.viewProvider.updateState(this.currentEditorState, true)
     this.currentEditorState = undefined
-    this.viewProvider.execCommand(refreshChanges())
+    this.viewProvider.execCommand(trackCommands.refreshChanges())
     this.update()
   }
 

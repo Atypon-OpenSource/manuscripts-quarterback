@@ -15,11 +15,12 @@
  */
 import {
   CHANGE_STATUS,
-  setChangeStatuses,
   trackChangesPluginKey,
   TrackChangesState,
+  trackCommands,
   useEditorContext,
   usePluginState,
+  useYjsExtension,
 } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import styled from 'styled-components'
@@ -30,29 +31,33 @@ interface IProps {
 }
 
 export function ChangesControls(props: IProps) {
-  const { className, disableYjs } = props
-  const { viewProvider, snapshotProvider, yjsSnapshotProvider } =
-    useEditorContext()
+  const { className } = props
+  const { viewProvider } = useEditorContext()
+  const [_, yjsStore] = useYjsExtension()
   const trackChangesState = usePluginState<TrackChangesState>(
     trackChangesPluginKey
   )
 
   function handleAcceptPending() {
     const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.accepted, ids))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids)
+    )
   }
   function handleRejectPending() {
     const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.rejected, ids))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids)
+    )
   }
   function handleReset() {
     const ids = trackChangesState?.changeSet.changes.map((c) => c.id) || []
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.pending, ids))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids)
+    )
   }
   function handleSnapshot() {
-    disableYjs
-      ? snapshotProvider?.createSnapshot()
-      : yjsSnapshotProvider?.createSnapshot()
+    yjsStore?.createSnapshot()
   }
   return (
     <Container className={className}>

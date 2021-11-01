@@ -17,10 +17,7 @@ import { Observable } from '@manuscripts/quarterback-shared'
 import { ProsemirrorBinding, ySyncPluginKey } from 'y-prosemirror'
 import * as Y from 'yjs'
 
-import {
-  createSnapshot as createSnapshotCmd,
-  refreshChanges,
-} from '$extensions/track-changes'
+import { trackCommands } from '$extensions/track-changes'
 import { YjsSnapshot } from '$typings/snapshots'
 
 import { EditorViewProvider } from './EditorViewProvider'
@@ -93,7 +90,7 @@ export class YjsSnapshotProvider {
     }
     if (!Y.equalSnapshots(prevSnapshot, snapshot)) {
       versions.push([createYjsSnapshot(snapshot, ydoc.clientID)])
-      this.viewProvider.execCommand(createSnapshotCmd())
+      this.viewProvider.execCommand(trackCommands.createSnapshot())
       this.updateVersions()
     }
   }
@@ -123,7 +120,7 @@ export class YjsSnapshotProvider {
     this.selectedSnapshot = snap
     setTimeout(() => {
       // TODO it seems the event execution order is not synchronous so the changes wont refresh
-      this.viewProvider.execCommand(refreshChanges())
+      this.viewProvider.execCommand(trackCommands.refreshChanges())
     }, 0)
     this._observable.emit('update', this.state)
   }
@@ -146,7 +143,7 @@ export class YjsSnapshotProvider {
       binding.unrenderSnapshot()
     }
     this.selectedSnapshot = null
-    this.viewProvider.execCommand(refreshChanges())
+    this.viewProvider.execCommand(trackCommands.refreshChanges())
     this._observable.emit('update', this.state)
   }
 

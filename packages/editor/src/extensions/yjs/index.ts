@@ -15,9 +15,10 @@
  */
 export { yjsPluginKey, yjsPlugin } from './plugin'
 
-export * from './commands'
+export * as yjsCommands from './commands'
 
 export { yjsExtension, yjsExtensionName } from './extension'
+export { useYjsExtension } from './useYjsExtension'
 
 export { YjsStatus } from './types'
 export * from './types'

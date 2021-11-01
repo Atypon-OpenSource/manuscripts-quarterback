@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { uuidv4 } from '@manuscripts/quarterback-shared'
+import * as Y from 'yjs'
 
-export {
-  activeNodesMarksPluginKey,
-  activeNodesMarksPlugin,
-} from './activeNodesMarksPlugin'
+import type { YjsSnapshot } from './types'
 
-export * as baseCommands from './commands'
-export { baseExtension, baseExtensionName } from './extension'
-
-export * from './types'
+export function createYjsSnapshot(
+  ysnap: Y.Snapshot,
+  clientID: number
+): YjsSnapshot {
+  return {
+    id: uuidv4(),
+    date: new Date().getTime(),
+    snapshot: Y.encodeSnapshot(ysnap),
+    clientID,
+  }
+}

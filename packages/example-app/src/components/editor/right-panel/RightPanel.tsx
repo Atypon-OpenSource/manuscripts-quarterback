@@ -15,10 +15,9 @@
  */
 import {
   CHANGE_STATUS,
-  setChangeStatuses,
-  toggleShownStatuses,
   trackChangesPluginKey,
   TrackChangesState,
+  trackCommands,
   TrackedChange,
   useEditorContext,
   usePluginState,
@@ -43,16 +42,22 @@ export function RightPanel(props: Props) {
   const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
 
   function handleAcceptChange(id: string) {
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.accepted, [id]))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, [id])
+    )
   }
   function handleRejectChange(id: string) {
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.rejected, [id]))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, [id])
+    )
   }
   function handleResetChange(id: string) {
-    viewProvider?.execCommand(setChangeStatuses(CHANGE_STATUS.pending, [id]))
+    viewProvider?.execCommand(
+      trackCommands.setChangeStatuses(CHANGE_STATUS.pending, [id])
+    )
   }
   function toggleChangesVisibility(status: CHANGE_STATUS) {
-    viewProvider?.execCommand(toggleShownStatuses([status]))
+    viewProvider?.execCommand(trackCommands.toggleShownStatuses([status]))
   }
 
   return (

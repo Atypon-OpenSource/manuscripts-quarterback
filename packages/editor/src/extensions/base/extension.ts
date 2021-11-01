@@ -32,5 +32,6 @@ export const baseExtension = () => (ctx: EditorProviders) => {
     commands: {},
     keymaps: [],
     plugins,
+    store: {},
   }
 }

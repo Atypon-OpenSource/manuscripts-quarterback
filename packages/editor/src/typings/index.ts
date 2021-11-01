@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 export * from './editor'
-export * from './snapshots'
+// export * from './snapshots'
 export * from './user'

@@ -76,13 +76,10 @@ export class EditorViewProvider {
     this.view.dispatch(this.view.state.tr)
   }
 
-  replaceState(state: EditorState) {
-    this.view.updateState(state)
-    this.view.dispatch(this.view.state.tr)
-  }
-
-  updateState(newState: EditorState) {
+  updateState(newState: EditorState, replaced = false) {
     this.view.updateState(newState)
+    this._state = newState
+    replaced && this.view.dispatch(this.view.state.tr)
     this._observable.emit('updateState', newState)
     return newState
   }

@@ -37,13 +37,14 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
   if (opts.disabled) {
     return {
       name: yjsExtensionName,
+      opts,
       commands: { ...commands },
       keymaps: [],
       plugins: [],
-      store: {},
+      store: undefined,
     }
   }
-  const store = createYjsStore(opts)
+  const store = createYjsStore(ctx.viewProvider, opts)
   const plugins = [
     yjsPlugin(ctx.viewProvider),
     ySyncPlugin(store.yXmlFragment, {
@@ -64,6 +65,7 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
   ]
   return {
     name: yjsExtensionName,
+    opts,
     commands: { ...commands },
     keymaps: [],
     plugins,

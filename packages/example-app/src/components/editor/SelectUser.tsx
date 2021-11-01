@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {
-  setUser,
+  trackCommands,
   useEditorContext,
   useUserProvider,
 } from '@manuscripts/quarterback-editor'
@@ -36,7 +36,7 @@ export function SelectUser(props: IProps) {
     }
     const user = userProvider?.generateGuestUser()
     userProvider?.updateYjsUser()
-    viewProvider?.execCommand(setUser(user))
+    viewProvider?.execCommand(trackCommands.setUser(user))
   }
 
   return (
