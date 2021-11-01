@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { EditorView } from 'prosemirror-view'
 import { EditorState, Transaction } from 'prosemirror-state'
-import { schema } from '@manuscripts/quarterback-schema'
+import { schema } from '$schema'
 
 import { useSSRLayoutEffect } from './react'
 

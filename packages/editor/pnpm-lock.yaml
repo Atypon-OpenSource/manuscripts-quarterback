@@ -1,7 +1,6 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@manuscripts/quarterback-schema': workspace:*
   '@manuscripts/quarterback-shared': workspace:*
   '@rollup/plugin-alias': ^3.1.8
   '@rollup/plugin-commonjs': ^20.0.0
@@ -51,7 +50,6 @@ specifiers:
   yjs: ^13.5.16
 
 dependencies:
-  '@manuscripts/quarterback-schema': link:../schema
   '@manuscripts/quarterback-shared': link:../shared
   lib0: 0.2.42
   prosemirror-commands: 1.1.11

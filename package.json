@@ -13,8 +13,7 @@
   "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback#readme",
   "scripts": {
     "format": "pnpm run format -r",
-    "start": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/quarterback-schema' 'pnpm run dev --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-collab' 'pnpm run start --filter @manuscripts/quarterback-example-app'",
-    "editor": "pnpm run watch --filter @manuscripts/quarterback-editor"
+    "start": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/quarterback-editor' 'pnpm run dev --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-collab' 'pnpm run start --filter @manuscripts/quarterback-example-app'"
   },
   "engines": {
     "node": ">=12",

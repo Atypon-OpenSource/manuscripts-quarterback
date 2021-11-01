@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/quarterback-schema'
+import { schema } from '$schema'
 import { uuidv4 } from '@manuscripts/quarterback-shared'
 import { Node as PMNode, Slice } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'

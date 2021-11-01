@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // import { ySyncPluginKey } from 'y-prosemirror'
-import type { QuarterBackSchema } from '@manuscripts/quarterback-schema'
+import type { QuarterBackSchema } from '$schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 
 import type { EditorViewProvider } from '$context/Providers'

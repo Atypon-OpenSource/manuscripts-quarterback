@@ -25,7 +25,9 @@ declare global {
   }
 }
 
-import { baseCommands, trackCommands, yjsCommands } from '.'
+import { baseCommands } from './extensions/base'
+import { trackCommands } from './extensions/track-changes'
+import { yjsCommands } from './extensions/yjs'
 export const commands = { baseCommands, trackCommands, yjsCommands }
 
 export * from './context'
@@ -33,6 +35,7 @@ export * from './react'
 export * from './extensions/base'
 export * from './extensions/track-changes'
 export * from './extensions/yjs'
+export * from './schema'
 export * from './typings'
 export { PMEditor } from './PMEditor'
 export { pickExtension } from './extensions'

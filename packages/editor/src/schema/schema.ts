@@ -16,7 +16,7 @@
 import { Schema } from 'prosemirror-model'
 import { QuarterBackSchema, Nodes, Marks } from './types'
 
-import { TrackedAttrs } from '@manuscripts/quarterback-editor'
+import { TrackedAttrs } from '$extensions/track-changes'
 
 export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
   nodes: {

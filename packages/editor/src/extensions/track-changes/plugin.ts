@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarterBackSchema } from '@manuscripts/quarterback-schema'
+import { QuarterBackSchema } from '$schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { ySyncPluginKey } from 'y-prosemirror'
 

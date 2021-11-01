@@ -18,6 +18,7 @@ import { IncomingMessage, Server as HTTPServer } from 'http'
 import WebSocket, { WebSocketServer } from 'ws'
 import { Awareness, removeAwarenessStates } from 'y-protocols/awareness'
 
+import { schema } from '@manuscripts/quarterback-editor'
 import { log } from '$common/logger'
 
 import { Connections } from './Connections'
