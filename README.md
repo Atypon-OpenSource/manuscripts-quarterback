@@ -4,7 +4,9 @@
 
 First you should check you have Node.js v16 installed: `node -v`. If not, I recommend using [nvm](https://github.com/nvm-sh/nvm) to install 16 version. This is needed for the ES modules and other new features.
 
-Install `pnpm` globally if haven't already: `npm i -g pnpm`. Also you need Docker.
+This project uses Docker and Docker Compose. You should have at least version 17 / 1.13 installed: `docker -v`. Then you should ensure you have added this repository to the shared folders in your Docker settings eg `Preferences > Resources > File sharing` in macOS Docker Desktop.
+
+Install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
 1. Install all dependencies: `pnpm i -r`
 3. Start the database: `docker-compose up -d postgres`
