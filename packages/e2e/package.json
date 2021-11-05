@@ -1,0 +1,14 @@
+{
+  "name": "@manuscripts/quarterback-e2e",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "cypress open",
+    "test": "cypress run --browser chrome",
+    "cy": "cypress"
+  },
+  "devDependencies": {
+    "@testing-library/cypress": "^8.0.1",
+    "cypress": "^8.7.0",
+    "typescript": "^4.4.3"
+  }
+}
