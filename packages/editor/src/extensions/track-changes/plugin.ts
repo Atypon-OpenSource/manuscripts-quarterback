@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { Plugin, PluginKey } from 'prosemirror-state'
-import { ySyncPluginKey } from 'y-prosemirror'
-
+// import { ySyncPluginKey } from 'y-prosemirror' // TODO should be this, see extensions/yjs/plugin.ts
+import { yjsPluginKey } from '$extensions/yjs'
 import { EditorViewProvider } from '$context/EditorViewProvider'
 import { QuarterBackSchema } from '$schema'
 import { TrackedUser } from '$typings/user'
@@ -148,7 +148,7 @@ export const trackChangesPlugin = (
         if (
           tr.docChanged &&
           !tr.getMeta('history$') &&
-          !tr.getMeta(ySyncPluginKey)
+          !tr.getMeta(yjsPluginKey)
         ) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }

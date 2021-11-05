@@ -18,7 +18,7 @@ import {
   redo,
   undo,
   yCursorPlugin,
-  ySyncPlugin,
+  // ySyncPlugin,
   yUndoPlugin,
 } from 'y-prosemirror'
 import { Awareness } from 'y-protocols/awareness'
@@ -27,7 +27,7 @@ import type { EditorProviders } from '$context'
 import type { Extension } from '$typings/extension'
 
 import * as commands from './commands'
-import { yjsPlugin } from './plugin'
+import { ySyncPlugin } from './plugin'
 import { createYjsStore } from './store'
 import type { YjsOptions } from './types'
 
@@ -46,7 +46,7 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
   }
   const store = createYjsStore(ctx.viewProvider, opts).init()
   const plugins = [
-    yjsPlugin(ctx.viewProvider),
+    // yjsPlugin(ctx.viewProvider),
     ySyncPlugin(store.yXmlFragment, {
       permanentUserData: store.permanentUserData,
       colors: [
