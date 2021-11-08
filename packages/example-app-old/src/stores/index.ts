@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const IS_DEV = true
-export const API_URL = 'http://localhost:5600'
-export const YJS_WS_URL = 'ws://localhost:5601'
+import { createContext, useContext } from 'react'
 
-// export const IS_DEV = process.env.NODE_ENV !== 'production'
-// export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5600'
-// export const YJS_WS_URL =
-//   process.env.REACT_APP_YJS_WS_URL || 'ws://localhost:5601'
+import { confMobx } from './mobxConf'
+import { Stores } from './Stores'
+
+confMobx()
+
+export const stores = new Stores()
+const StoresContext = createContext(stores)
+
+export const useStores = () => useContext(StoresContext)
+export { Stores }

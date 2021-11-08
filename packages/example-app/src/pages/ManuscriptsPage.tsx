@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const IS_DEV = true
-export const API_URL = 'http://localhost:5600'
-export const YJS_WS_URL = 'ws://localhost:5601'
+import React from 'react'
+import styled from 'styled-components'
 
-// export const IS_DEV = process.env.NODE_ENV !== 'production'
-// export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5600'
-// export const YJS_WS_URL =
-//   process.env.REACT_APP_YJS_WS_URL || 'ws://localhost:5601'
+import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
+
+export function ManuscriptsPage() {
+  return (
+    <Container>
+      <header>
+        <h1>Track changes with Yjs</h1>
+      </header>
+      <ManuscriptsEditor />
+    </Container>
+  )
+}
+
+const Container = styled.div``

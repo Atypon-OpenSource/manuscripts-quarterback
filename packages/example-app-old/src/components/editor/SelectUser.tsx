@@ -13,53 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  trackCommands,
+  useEditorContext,
+  useYjsExtension,
+} from '@manuscripts/quarterback-editor'
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { NavLink } from 'react-router-dom'
+import { useStores } from 'stores'
 import styled from 'styled-components'
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   className?: string
 }
 
-export const NavBar = (props: IProps) => {
+export function SelectUser(props: IProps) {
   const { className } = props
+  const {
+    authStore: { generateGuestUser },
+  } = useStores()
+  const { viewProvider } = useEditorContext()
+  const [yjsState, yjsStore] = useYjsExtension()
+
+  function handleNewUser() {
+    const user = generateGuestUser()
+    yjsStore?.setUser(user)
+    viewProvider?.execCommand(trackCommands.setUser(user))
+  }
+
   return (
     <Container className={className}>
-      <Nav>
-        <Link to="/" exact activeClassName="current">
-          Front page
-        </Link>
-        <Link to="/manuscripts" exact activeClassName="current">
-          Manuscripts
-        </Link>
-      </Nav>
+      <div className="current-user">
+        Current user: {yjsState?.currentUser.id.slice(0, 5)}
+      </div>
+      <div>
+        <Button onClick={handleNewUser}>New user</Button>
+      </div>
     </Container>
   )
 }
 
 const Container = styled.div`
-  background: var(--color-primary);
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
-  padding: 1rem;
-`
-const Nav = styled.nav`
   align-items: center;
-  color: #fff;
   display: flex;
-`
-const Link = styled(NavLink)`
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  transition: 0.2s hover;
-  &:hover {
-    text-decoration: underline;
+  .current-user {
+    margin: 0.25rem 1rem 0.25rem 0;
   }
-  &.current {
-    font-weight: 600;
+`
+const Button = styled.button`
+  cursor: pointer;
+  & + & {
+    margin-left: 0.5rem;
   }
 `

@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const IS_DEV = true
-export const API_URL = 'http://localhost:5600'
-export const YJS_WS_URL = 'ws://localhost:5601'
+import { AuthStore } from './AuthStore'
+import { DocumentStore } from './DocumentStore'
 
-// export const IS_DEV = process.env.NODE_ENV !== 'production'
-// export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5600'
-// export const YJS_WS_URL =
-//   process.env.REACT_APP_YJS_WS_URL || 'ws://localhost:5601'
+export class Stores {
+  authStore: AuthStore
+  documentStore: DocumentStore
+
+  constructor() {
+    this.authStore = new AuthStore(this.reset)
+    this.documentStore = new DocumentStore({
+      authStore: this.authStore,
+    })
+  }
+
+  reset = () => {
+    this.authStore.reset()
+    this.documentStore.reset()
+  }
+}

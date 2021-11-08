@@ -2,22 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "jsx": "react-jsx",
-    "baseUrl": "src",
     "experimentalDecorators": true,
+    "baseUrl": "src",
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true
+    "jsx": "react-jsx"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "src"
-  ]
+  "include": ["src"]
 }

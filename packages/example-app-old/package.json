@@ -1,23 +1,49 @@
 {
-  "name": "@manuscripts/quarterback-example-app",
+  "name": "@manuscripts/quarterback-example-app-old",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "type": "module",
   "scripts": {
-    "start": "node builder.js",
-    "build": "esbuild src/index.tsx --minify --format=cjs --outdir=public --sourcemap --bundle",
+    "start": "craco start",
+    "build": "craco build",
+    "eject": "craco eject",
     "lint": "eslint --cache --ext .js,.ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/cypress": "^8.0.1",
+    "@types/history": "^4.7.8",
+    "@types/node": "16.7.12",
+    "@types/prosemirror-state": "^1.2.7",
+    "@types/prosemirror-view": "^1.19.1",
+    "@types/react": "17.0.20",
+    "@types/react-dom": "17.0.9",
+    "@types/react-router": "^5.1.17",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/styled-components": "^5.1.15",
+    "eslint-config-react-app": "^6.0.0",
+    "prettier": "^2.4.1"
+  },
   "dependencies": {
+    "@craco/craco": "^6.4.0",
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "^0.47.3",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
     "@manuscripts/quarterback-editor": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
     "@manuscripts/style-guide": "workspace:*",
-    "@popperjs/core": "^2.10.2",
     "history": "^4.10.1",
     "lodash.debounce": "^4.0.8",
     "mobx": "^6.3.5",
@@ -34,26 +60,6 @@
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.3",
     "typescript": "4.4.2",
-    "unique-names-generator": "^4.6.0",
-    "uuid": "^8.3.1"
-  },
-  "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@testing-library/cypress": "^8.0.1",
-    "@types/history": "^4.7.8",
-    "@types/live-server": "^1.2.1",
-    "@types/node": "16.7.12",
-    "@types/prosemirror-state": "^1.2.7",
-    "@types/prosemirror-view": "^1.19.1",
-    "@types/react": "^17.0.20",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-router": "^5.1.17",
-    "@types/react-router-dom": "^5.3.2",
-    "@types/styled-components": "^5.1.15",
-    "chokidar": "^3.5.2",
-    "esbuild": "^0.12.26",
-    "esbuild-plugin-alias": "^0.2.0",
-    "live-server": "^1.2.1",
-    "typescript": "^4.4.3"
+    "unique-names-generator": "^4.6.0"
   }
 }
