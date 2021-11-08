@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import pkg from 'live-server'
 const { start } = pkg
 
@@ -9,6 +11,8 @@ import { config } from 'dotenv'
 
 const require = createRequire(import.meta.url)
 config()
+
+const arg = process.argv[2]
 
 /**
  * Live Server Params
@@ -31,7 +35,7 @@ const serverParams = {
  * ESBuild Params
  * @link https://esbuild.github.io/api/#build-api
  */
-const buildParams = {
+const buildParams = (devBuild = true) => ({
   color: true,
   entryPoints: ['src/index.tsx'],
   loader: { '.ts': 'tsx' },
@@ -42,23 +46,28 @@ const buildParams = {
       'react': require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),
-      'prosemirror-model': require.resolve('prosemirror-model'),
+      'prosemirror-model': require.resolve('../editor/node_modules/prosemirror-model'),
       'uuid': require.resolve('uuid'),
     }),
   ],
   inject: ['process-shim.js'],
   define: {},
   mainFields: ['module', 'browser', 'main'],
-  // minify: true,
+  minify: devBuild ? false : true,
   format: 'esm',
   bundle: true,
   sourcemap: true,
-  logLevel: 'error',
-  incremental: true
+  logLevel: devBuild ? 'error' : 'warning',
+  incremental: devBuild
+})
+
+async function esBuild() {
+  const builder = await build(buildParams(false))
+  // builder.rebuild()
 }
 
-async function main() {
-  const builder = await build(buildParams)
+async function buildAndWatch() {
+  const builder = await build(buildParams())
 
   let timeout
   watch('src/**/*.{ts,tsx}').on('all', (list) => {
@@ -72,4 +81,10 @@ async function main() {
   start(serverParams)
 }
 
-main()
+if (arg === 'build') {
+  build(buildParams(false))
+} else if (arg === 'watch') {
+  buildAndWatch()
+} else {
+  throw Error(`Unknown command '${arg}' for build.js, available commands: build | watch`)
+}
