@@ -6,7 +6,9 @@ First you should check you have Node.js v16 installed: `node -v`. If not, I reco
 
 This project uses Docker and Docker Compose. You should have at least version 17 / 1.13 installed: `docker -v`. Then you should ensure you have added this repository to the shared folders in your Docker settings eg `Preferences > Resources > File sharing` in macOS Docker Desktop.
 
-Install `pnpm` globally if haven't already: `npm i -g pnpm`.
+Also this project imports https://gitlab.com/mpapp-public/manuscripts-manuscript-editor and https://gitlab.com/mpapp-public/manuscripts-style-guide as git submodules which you should checkout with: `git submodule update --init --recursive`
+
+Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
 1. Install all dependencies: `pnpm i -r`
 3. Start the database: `docker-compose up -d postgres`
@@ -18,3 +20,7 @@ Install `pnpm` globally if haven't already: `npm i -g pnpm`.
 ## Commands
 
 You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/quarterback-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
+
+## Tests
+
+There are some example Cypress tests in `e2e` package. If you have the example-app running, you can execute them with `pnpm e2e`. Or open the Cypress GUI with `pnpm e2e:open`. 
