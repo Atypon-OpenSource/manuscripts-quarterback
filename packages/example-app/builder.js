@@ -3,7 +3,6 @@
 import pkg from 'live-server'
 const { start } = pkg
 
-import { watch } from 'chokidar'
 import { build } from 'esbuild'
 import alias from 'esbuild-plugin-alias'
 import { createRequire } from 'module'
@@ -58,21 +57,12 @@ const buildParams = (devBuild = true) => ({
   bundle: true,
   sourcemap: true,
   logLevel: devBuild ? 'error' : 'warning',
-  incremental: devBuild
+  incremental: devBuild,
+  watch: devBuild
 })
 
 async function buildAndWatch() {
-  const builder = await build(buildParams())
-
-  let timeout
-  watch('src/**/*.{ts,tsx}').on('all', (list) => {
-    if (timeout) return
-    timeout = setTimeout(() => {
-      builder.rebuild()
-      timeout = null
-    }, 500)
-  })
-
+  await build(buildParams())
   start(serverParams)
 }
 

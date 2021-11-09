@@ -304,6 +304,7 @@ importers:
       '@manuscripts/manuscript-editor': workspace:*
       '@manuscripts/manuscript-transform': workspace:*
       '@manuscripts/manuscripts-json-schema': ^1.47.0
+      '@manuscripts/pm-track-changes': workspace:*
       '@manuscripts/quarterback-editor': workspace:*
       '@manuscripts/quarterback-shared': workspace:*
       '@manuscripts/style-guide': workspace:*
@@ -319,7 +320,6 @@ importers:
       '@types/react-router': ^5.1.17
       '@types/react-router-dom': ^5.3.2
       '@types/styled-components': ^5.1.15
-      chokidar: ^3.5.2
       dotenv: ^10.0.0
       esbuild: ^0.12.26
       esbuild-plugin-alias: ^0.2.0
@@ -346,6 +346,7 @@ importers:
       '@manuscripts/manuscript-editor': link:../manuscript-editor
       '@manuscripts/manuscript-transform': link:../manuscript-transform
       '@manuscripts/manuscripts-json-schema': 1.49.3
+      '@manuscripts/pm-track-changes': link:../pm-track-changes
       '@manuscripts/quarterback-editor': link:../editor
       '@manuscripts/quarterback-shared': link:../shared
       '@manuscripts/style-guide': link:../style-guide
@@ -381,7 +382,6 @@ importers:
       '@types/react-router': 5.1.17
       '@types/react-router-dom': 5.3.2
       '@types/styled-components': 5.1.15
-      chokidar: 3.5.2
       dotenv: 10.0.0
       esbuild: 0.12.29
       esbuild-plugin-alias: 0.2.0
@@ -406,7 +406,6 @@ importers:
       '@manuscripts/manuscript-transform': ^0.47.3
       '@manuscripts/manuscripts-json-schema': ^1.47.0
       '@manuscripts/plugin-persist': ^0.1.2
-      '@manuscripts/pm-track-changes': workspace:*
       '@manuscripts/rxdb': ^8.2.0-manuscripts1
       '@manuscripts/style-guide': workspace:*
       '@manuscripts/title-editor': ^0.5.2
@@ -519,7 +518,6 @@ importers:
       '@manuscripts/comment-editor': 0.2.3_react-dom@16.14.0+react@16.14.0
       '@manuscripts/manuscripts-json-schema': 1.49.3
       '@manuscripts/plugin-persist': 0.1.2_a28ebc73553788ea9884b709b90d4742
-      '@manuscripts/pm-track-changes': link:../pm-track-changes
       '@manuscripts/title-editor': 0.5.2_64a66111db75ba89096e7235dad9db91
       '@manuscripts/track-changes': 0.1.3
       astrocite-eutils: 0.16.4
@@ -19870,7 +19868,7 @@ packages:
     resolution: {integrity: sha512-jd9olUr9D7do+RN8Wspzhpxhgp1n6Vd0NtQ4SFkmIACZoEL1nkyAdW9Ygrinjec0vgDcWjscFQQ1gDW8rsfKTg==}
     engines: {node: '>=6'}
     dependencies:
-      ts-pnp: 1.2.0_typescript@4.4.2
+      ts-pnp: 1.2.0_typescript@4.4.4
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -19879,7 +19877,7 @@ packages:
     resolution: {integrity: sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==}
     engines: {node: '>=6'}
     dependencies:
-      ts-pnp: 1.2.0_typescript@4.4.2
+      ts-pnp: 1.2.0_typescript@4.4.4
     transitivePeerDependencies:
       - typescript
     dev: false
@@ -22625,7 +22623,7 @@ packages:
       semver: 7.3.2
       style-loader: 1.3.0_webpack@4.44.2
       terser-webpack-plugin: 4.2.3_webpack@4.44.2
-      ts-pnp: 1.2.0_typescript@4.4.2
+      ts-pnp: 1.2.0_typescript@4.4.4
       typescript: 4.4.2
       url-loader: 4.1.1_file-loader@6.1.1+webpack@4.44.2
       webpack: 4.44.2
@@ -25332,7 +25330,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-pnp/1.2.0_typescript@4.4.2:
+  /ts-pnp/1.2.0_typescript@4.4.4:
     resolution: {integrity: sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==}
     engines: {node: '>=6'}
     peerDependencies:
@@ -25341,7 +25339,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      typescript: 4.4.2
+      typescript: 4.4.4
 
   /tsconfig-paths/3.11.0:
     resolution: {integrity: sha512-7ecdYDnIdmv639mmDwslG6KQg1Z9STTz1j7Gcz0xa+nshh/gKDAHcPxRbWOsA3SPp0tXP2leTcY9Kw+NAkfZzA==}

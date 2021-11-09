@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { uuidv4 } from './utils/uuidv4'
-
 import { setAction, TrackChangesAction } from './actions'
 import { CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
 import { trackChangesPluginKey } from './plugin'
@@ -25,6 +23,7 @@ import {
 import type { Command } from './types/editor'
 import { DeleteAttrs, InsertAttrs, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
+import { uuidv4 } from './utils/uuidv4'
 
 export const toggleTrackChanges = (): Command => (state, dispatch) => {
   const currentStatus = trackChangesPluginKey.getState(state)?.status

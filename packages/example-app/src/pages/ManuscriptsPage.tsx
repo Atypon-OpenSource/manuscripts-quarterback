@@ -13,20 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
 
+const LOCALSTORAGE_KEY = 'disable-track'
+
 export function ManuscriptsPage() {
+  const [disableTrack, setDisableTrack] = useState(() => {
+    if (typeof window === 'undefined') return false
+    let persisted
+    try {
+      persisted = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) || '')
+    }  catch (err) {
+      console.error(err)
+    }
+    return persisted
+  })
+
+  function handleToggleDisableTrack() {
+    const disabled = !disableTrack
+    setDisableTrack(disabled)
+    localStorage.setItem(LOCALSTORAGE_KEY, disabled ? 'true' : 'false')
+  }
+
   return (
     <Container>
       <header>
         <h1>Track changes with Yjs</h1>
+      <button onClick={handleToggleDisableTrack}>{disableTrack ? 'Enable' : 'Disable'} track changes</button>
       </header>
-      <ManuscriptsEditor />
+      <ManuscriptsEditor disableTrack={disableTrack}/>
     </Container>
   )
 }
 
-const Container = styled.div``
+const Container = styled.div`
+  & > header {
+    margin-bottom: 1rem;
+  }
+`

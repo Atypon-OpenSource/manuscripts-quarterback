@@ -30,12 +30,20 @@ import {
   useEditor,
 } from '@manuscripts/manuscript-editor'
 import React from 'react'
+import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
 
 import { createState, createView } from './setup-editor'
 
-export function ManuscriptsEditor() {
+interface Props {
+  disableTrack: boolean
+}
+
+export function ManuscriptsEditor(props: Props) {
+  const { disableTrack } = props
+  const plugins: any[] = disableTrack ? [] : [trackChangesPlugin({ user: undefined })]
+  console.log(plugins)
   const editor = useEditor<any>(
-    createState(),
+    createState({ plugins }),
     // @ts-ignore
     createView()
   )

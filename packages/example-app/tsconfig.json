@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
+    "lib": ["es2019", "dom", "dom.iterable"],
     "experimentalDecorators": true,
     "baseUrl": "src",
     "noEmit": true,

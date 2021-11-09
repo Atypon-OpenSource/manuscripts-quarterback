@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { uuidv4 } from '../utils/uuidv4'
 import { Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, ChangeSet } from '../ChangeSet'
 import { TrackedUser } from '../types/user'
+import { uuidv4 } from '../utils/uuidv4'
 import { updateChangeAttrs } from './updateChangeAttrs'
 
 export function fixInconsistentChanges(
