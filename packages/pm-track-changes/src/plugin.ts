@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 import { Plugin, PluginKey } from 'prosemirror-state'
-// import { ySyncPluginKey } from 'y-prosemirror' // TODO should be this, see extensions/yjs/plugin.ts
-import { yjsPluginKey } from '$extensions/yjs'
-import { EditorViewProvider } from '$context/EditorViewProvider'
-import { QuarterBackSchema } from '$schema'
-import { TrackedUser } from '$typings/user'
+import { EditorView } from 'prosemirror-view'
+import { ySyncPluginKey } from 'y-prosemirror'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
 import { CHANGE_STATUS, ChangeSet } from './ChangeSet'
-import { findChanges } from './findChanges'
-import { fixInconsistentChanges } from './fixInconsistentChanges'
-import { trackTransaction } from './trackTransaction'
-import { TrackChangesStatus } from './types'
+import { findChanges } from './track/findChanges'
+import { fixInconsistentChanges } from './track/fixInconsistentChanges'
+import { trackTransaction } from './track/trackTransaction'
 import {
   updateChangeAttrs,
   updateDocAndRemoveChanges,
-} from './updateChangeAttrs'
+} from './track/updateChangeAttrs'
+import { TrackChangesStatus } from './types/track'
+import { TrackedUser } from './types/user'
 
 const DEFAULT_USER = {
   id: '0',
@@ -45,16 +43,12 @@ export interface TrackChangesState {
   shownChangeStatuses: CHANGE_STATUS[]
 }
 
-export const trackChangesPluginKey = new PluginKey<
-  TrackChangesState,
-  QuarterBackSchema
->('track-changes')
+export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>(
+  'track-changes'
+)
 
-export const trackChangesPlugin = (
-  viewProvider: EditorViewProvider,
-  opts: { user?: TrackedUser }
-) => {
-  return new Plugin<TrackChangesState, QuarterBackSchema>({
+export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
+  return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
     state: {
       init(config, state) {
@@ -131,8 +125,8 @@ export const trackChangesPlugin = (
       const pluginState = trackChangesPluginKey.getState(newState)
       if (
         !pluginState ||
-        pluginState.status === TrackChangesStatus.disabled ||
-        !viewProvider.view.editable
+        pluginState.status === TrackChangesStatus.disabled
+        // || !editorView.editable
       ) {
         return null
       }
@@ -148,7 +142,7 @@ export const trackChangesPlugin = (
         if (
           tr.docChanged &&
           !tr.getMeta('history$') &&
-          !tr.getMeta(yjsPluginKey)
+          !tr.getMeta(ySyncPluginKey)
         ) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
@@ -164,7 +158,12 @@ export const trackChangesPlugin = (
           ids.forEach((changeId: string) => {
             const change = changeSet?.get(changeId)
             if (change) {
-              createdTr = updateChangeAttrs(createdTr, change, { status }, oldState.schema)
+              createdTr = updateChangeAttrs(
+                createdTr,
+                change,
+                { status },
+                oldState.schema
+              )
               setAction(createdTr, TrackChangesAction.updateChanges, [
                 change.id,
               ])
@@ -173,16 +172,23 @@ export const trackChangesPlugin = (
         } else if (getAction(tr, TrackChangesAction.createSnapshot)) {
           const mapping = updateDocAndRemoveChanges(
             createdTr,
+            oldState.schema,
             changeSet!.textChanges
           )
-          updateDocAndRemoveChanges(createdTr, changeSet!.nodeChanges, mapping)
+          updateDocAndRemoveChanges(
+            createdTr,
+            oldState.schema,
+            changeSet!.nodeChanges,
+            mapping
+          )
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
         }
       })
       const changed = fixInconsistentChanges(
         pluginState.changeSet,
         currentUser,
-        createdTr
+        createdTr,
+        oldState.schema
       )
       if (changed) {
         setAction(createdTr, TrackChangesAction.refreshChanges, true)

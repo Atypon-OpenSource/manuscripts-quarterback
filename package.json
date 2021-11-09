@@ -13,9 +13,9 @@
   "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback#readme",
   "scripts": {
     "format": "pnpm run format -r",
-    "build": "pnpm run build --filter @manuscripts/manuscript-editor | pnpm run build --filter @manuscripts/style-guide",
+    "build": "pnpm run build --filter @manuscripts/manuscript-editor | pnpm run build --filter @manuscripts/style-guide | pnpm run build --filter @manuscripts/manuscript-transform",
     "api": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-api' 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run dev --filter @manuscripts/quarterback-collab'",
-    "utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared'",
+    "utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/pm-track-changes'",
     "client": "concurrently --kill-others 'pnpm run start --filter @manuscripts/quarterback-example-app'",
     "start": "concurrently --kill-others 'pnpm api' 'pnpm utils' 'pnpm client'",
     "e2e": "pnpm run test --filter @manuscripts/quarterback-e2e",

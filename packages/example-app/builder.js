@@ -61,11 +61,6 @@ const buildParams = (devBuild = true) => ({
   incremental: devBuild
 })
 
-async function esBuild() {
-  const builder = await build(buildParams(false))
-  // builder.rebuild()
-}
-
 async function buildAndWatch() {
   const builder = await build(buildParams())
 

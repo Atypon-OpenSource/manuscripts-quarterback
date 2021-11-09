@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@manuscripts/manuscript-editor": "workspace:*",
-    "@manuscripts/manuscript-transform": "^0.47.3",
+    "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
     "@manuscripts/quarterback-editor": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",

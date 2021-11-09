@@ -24,3 +24,16 @@ You should run commands to individual packages with eg: `pnpm run watch --filter
 ## Tests
 
 There are some example Cypress tests in `e2e` package. If you have the example-app running, you can execute them with `pnpm e2e`. Or open the Cypress GUI with `pnpm e2e:open`. 
+
+## Working with Git submodules
+
+When I'm adding submodules, I first go to the packages `cd packages` and then add the module eg `git submodule add git@gitlab.com:mpapp-public/manuscripts-manuscript-transform.git manuscript-transform`.
+
+Afterwards, I add the branch to the submodule in `.gitmodules`
+```
+	branch = quarterback-integration
+```
+
+And then pull the latest head of that branch: `git submodule update --init --recursive`
+
+You might have to cd first into module and update its branch though: `cd packages/manuscript-transform && git pull && git checkout quarterback-integration`
