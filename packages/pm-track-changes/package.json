@@ -17,6 +17,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -cw",
+    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
     "lint": "eslint --cache --ext .js,.ts, ./src",
     "lint:fix": "eslint --fix --ext .js,.ts, ./src"
   },

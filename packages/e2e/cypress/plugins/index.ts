@@ -16,7 +16,10 @@ let shouldSkip = false
 /**
  * @type {Cypress.PluginConfig}
  */
-export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
+export default (
+  on: Cypress.PluginEvents,
+  config: Cypress.PluginConfigOptions
+) => {
   on('task', {
     resetShouldSkipFlag() {
       shouldSkip = false
@@ -25,6 +28,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     shouldSkip(value) {
       if (value != null) shouldSkip = value
       return shouldSkip
-    }
+    },
   })
 }

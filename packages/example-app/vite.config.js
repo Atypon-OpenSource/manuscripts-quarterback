@@ -26,14 +26,14 @@ export default defineConfig({
       // 'prosemirror-utils',
       'prosemirror-view',
     ],
-    entries: ['index.html']
+    entries: ['index.html'],
   },
   server: {
     port: parseInt(process.env.PORT || 3000),
     strictPort: true,
     hmr: {
-      timeout: 500
-    }
+      timeout: 500,
+    },
   },
   resolve: {
     alias: {
@@ -44,10 +44,7 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env': process.env
+    'process.env': process.env,
   },
-  plugins: [
-    reactRefresh(),
-    tsconfigPaths(),
-  ],
+  plugins: [reactRefresh(), tsconfigPaths()],
 })

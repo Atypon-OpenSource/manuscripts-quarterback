@@ -2,8 +2,14 @@
 .ProseMirror > .ProseMirror-yjs-cursor:first-child {
   margin-top: 16px;
 }
-.ProseMirror p:first-child, .ProseMirror h1:first-child, .ProseMirror h2:first-child, .ProseMirror h3:first-child, .ProseMirror h4:first-child, .ProseMirror h5:first-child, .ProseMirror h6:first-child {
-  margin-top: 16px
+.ProseMirror p:first-child,
+.ProseMirror h1:first-child,
+.ProseMirror h2:first-child,
+.ProseMirror h3:first-child,
+.ProseMirror h4:first-child,
+.ProseMirror h5:first-child,
+.ProseMirror h6:first-child {
+  margin-top: 16px;
 }
 /* This gives the remote user caret. The colors are automatically overwritten*/
 .ProseMirror-yjs-cursor {
@@ -57,7 +63,8 @@
   word-break: normal;
 }
 
-ychange[ychange_type='removed'], p[ychange_type='removed'] {
+ychange[ychange_type="removed"],
+p[ychange_type="removed"] {
   text-decoration: line-through;
 }
 /*
@@ -65,10 +72,10 @@ p[ychange_type='removed'] > span > br {
   display: none;
 }
 */
-*:not(ychange)[ychange_type='removed'] {
+*:not(ychange)[ychange_type="removed"] {
   background-color: #ff5a56;
   color: inherit !important;
 }
-img[ychange_type='removed'] {
+img[ychange_type="removed"] {
   padding: 2px;
 }

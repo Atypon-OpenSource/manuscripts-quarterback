@@ -26,8 +26,6 @@
   },
   "devDependencies": {
     "@manuscripts/quarterback-db": "workspace:*",
-    "eslint": "^7.32.0",
-    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",

@@ -22,16 +22,25 @@ export default {
   ],
   external: [
     ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {})
+    ...Object.keys(pkg.peerDependencies || {}),
   ],
   plugins: [
     alias({
       entries: [
-        { find: '$context', replacement: path.resolve(__dirname, 'src/context') },
-        { find: '$extensions', replacement: path.resolve(__dirname, 'src/extensions'), },
-        { find: '$react', replacement: path.resolve(__dirname, 'src/react'), },
-        { find: '$schema', replacement: path.resolve(__dirname, 'src/schema'), },
-        { find: '$typings', replacement: path.resolve(__dirname, 'src/typings'), },
+        {
+          find: '$context',
+          replacement: path.resolve(__dirname, 'src/context'),
+        },
+        {
+          find: '$extensions',
+          replacement: path.resolve(__dirname, 'src/extensions'),
+        },
+        { find: '$react', replacement: path.resolve(__dirname, 'src/react') },
+        { find: '$schema', replacement: path.resolve(__dirname, 'src/schema') },
+        {
+          find: '$typings',
+          replacement: path.resolve(__dirname, 'src/typings'),
+        },
       ],
     }),
     nodeResolve({

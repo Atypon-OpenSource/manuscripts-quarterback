@@ -26,7 +26,7 @@ export function ManuscriptsPage() {
     let persisted
     try {
       persisted = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) || '')
-    }  catch (err) {
+    } catch (err) {
       console.error(err)
     }
     return persisted
@@ -42,9 +42,11 @@ export function ManuscriptsPage() {
     <Container>
       <header>
         <h1>Track changes with Yjs</h1>
-      <button onClick={handleToggleDisableTrack}>{disableTrack ? 'Enable' : 'Disable'} track changes</button>
+        <button onClick={handleToggleDisableTrack}>
+          {disableTrack ? 'Enable' : 'Disable'} track changes
+        </button>
       </header>
-      <ManuscriptsEditor disableTrack={disableTrack}/>
+      <ManuscriptsEditor disableTrack={disableTrack} />
     </Container>
   )
 }

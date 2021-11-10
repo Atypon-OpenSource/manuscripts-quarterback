@@ -21,7 +21,7 @@ function abortEarly() {
   if (this.currentTest.state === 'failed') {
     return cy.task('shouldSkip', true)
   }
-  cy.task('shouldSkip').then(value => {
+  cy.task('shouldSkip').then((value) => {
     if (value) this.skip()
   })
 }

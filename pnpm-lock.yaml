@@ -57,17 +57,14 @@ importers:
       '@types/jsonwebtoken': ^8.5.5
       '@types/morgan': ^1.9.3
       '@types/node': ^16.11.6
-      '@typescript-eslint/eslint-plugin': ^4.33.0
       bcrypt: ^5.0.1
       cors: ^2.8.5
       dotenv: ^10.0.0
-      eslint: ^7.32.0
       express: ~4.17.1
       joi: ^17.4.2
       jsonwebtoken: ^8.5.1
       morgan: ^1.10.0
       nodemon: ^2.0.14
-      prettier: ^2.4.1
       rimraf: ^3.0.2
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
@@ -93,11 +90,8 @@ importers:
       '@types/jsonwebtoken': 8.5.5
       '@types/morgan': 1.9.3
       '@types/node': 16.11.7
-      '@typescript-eslint/eslint-plugin': 4.33.0_eslint@7.32.0+typescript@4.4.4
       dotenv: 10.0.0
-      eslint: 7.32.0
       nodemon: 2.0.14
-      prettier: 2.4.1
       rimraf: 3.0.2
       rollup: 2.59.0
       rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
@@ -117,18 +111,15 @@ importers:
       '@types/morgan': ^1.9.3
       '@types/node': ^16.11.6
       '@types/ws': ^8.2.0
-      '@typescript-eslint/eslint-plugin': ^4.33.0
       bcrypt: ^5.0.1
       cors: ^2.8.5
       dotenv: ^10.0.0
-      eslint: ^7.32.0
       express: ~4.17.1
       joi: ^17.4.2
       jsonwebtoken: ^8.5.1
       lib0: ^0.2.42
       morgan: ^1.10.0
       nodemon: ^2.0.14
-      prettier: ^2.4.1
       rimraf: ^3.0.2
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
@@ -162,11 +153,8 @@ importers:
       '@types/morgan': 1.9.3
       '@types/node': 16.11.7
       '@types/ws': 8.2.0
-      '@typescript-eslint/eslint-plugin': 4.33.0_eslint@7.32.0+typescript@4.4.4
       dotenv: 10.0.0
-      eslint: 7.32.0
       nodemon: 2.0.14
-      prettier: 2.4.1
       rimraf: 3.0.2
       rollup: 2.59.0
       rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
@@ -223,7 +211,6 @@ importers:
       '@types/react-dom': ^17.0.10
       '@types/react-icons': ^3.0.0
       '@zerollup/ts-transform-paths': ^1.7.18
-      eslint: ^7.32.0
       lib0: ^0.2.42
       node-sass: ^6.0.1
       postcss: ^8.3.11
@@ -291,7 +278,6 @@ importers:
       '@types/react-dom': 17.0.11
       '@types/react-icons': 3.0.0
       '@zerollup/ts-transform-paths': 1.7.18_typescript@4.4.4
-      eslint: 7.32.0
       node-sass: 6.0.1
       postcss: 8.3.11
       rollup: 2.59.0
@@ -807,16 +793,12 @@ importers:
   packages/shared:
     specifiers:
       '@manuscripts/quarterback-db': workspace:*
-      eslint: ^7.32.0
-      prettier: ^2.4.1
       rimraf: ^3.0.2
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
     devDependencies:
       '@manuscripts/quarterback-db': link:../db
-      eslint: 7.32.0
-      prettier: 2.4.1
       rimraf: 3.0.2
       rollup: 2.59.0
       rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
@@ -6969,31 +6951,6 @@ packages:
     dependencies:
       '@typescript-eslint/experimental-utils': 4.33.0_eslint@7.32.0+typescript@4.4.4
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
-      '@typescript-eslint/scope-manager': 4.33.0
-      debug: 4.3.2
-      eslint: 7.32.0
-      functional-red-black-tree: 1.0.1
-      ignore: 5.1.9
-      regexpp: 3.2.0
-      semver: 7.3.5
-      tsutils: 3.21.0_typescript@4.4.4
-      typescript: 4.4.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@typescript-eslint/eslint-plugin/4.33.0_eslint@7.32.0+typescript@4.4.4:
-    resolution: {integrity: sha512-aINiAxGVdOl1eJyVjaWn/YcVAq4Gi/Yo35qHGCnqbWVz61g39D0h23veY/MA0rFFGfxK7TySg2uwDeNv+JgVpg==}
-    engines: {node: ^10.12.0 || >=12.0.0}
-    peerDependencies:
-      '@typescript-eslint/parser': ^4.0.0
-      eslint: ^5.0.0 || ^6.0.0 || ^7.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/experimental-utils': 4.33.0_eslint@7.32.0+typescript@4.4.4
       '@typescript-eslint/scope-manager': 4.33.0
       debug: 4.3.2
       eslint: 7.32.0
