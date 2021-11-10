@@ -41,7 +41,6 @@ interface Props {
 export function ManuscriptsEditor(props: Props) {
   const { disableTrack } = props
   const plugins: any[] = disableTrack ? [] : [trackChangesPlugin({ user: undefined })]
-  console.log(plugins)
   const editor = useEditor<any>(
     createState({ plugins }),
     // @ts-ignore
@@ -49,7 +48,8 @@ export function ManuscriptsEditor(props: Props) {
   )
   const { onRender } = editor
   const menus = useApplicationMenus(getMenus(editor, () => null))
-
+  // @ts-ignore
+  window.view = editor.view
   return (
     <div>
       <ApplicationMenus {...menus} />

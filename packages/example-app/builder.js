@@ -7,6 +7,8 @@ import { build } from 'esbuild'
 import alias from 'esbuild-plugin-alias'
 import { createRequire } from 'module'
 import { config } from 'dotenv'
+import { resolve } from 'path/posix'
+import { promises as fs } from 'fs'
 
 const require = createRequire(import.meta.url)
 config()
@@ -19,7 +21,7 @@ const arg = process.argv[2]
  */
 const serverParams = {
   port: parseInt(process.env.PORT || 8081), // Set the server port. Defaults to 8080.
-  root: 'public', // Set root directory that's being served. Defaults to cwd.
+  root: 'esbuild', // Set root directory that's being served. Defaults to cwd.
   open: true, // When false, it won't load your browser by default.
   // host: "0.0.0.0", // Set the address to bind to. Defaults to 0.0.0.0 or process.env.IP.
   // ignore: 'scss,my/templates', // comma-separated string for paths to ignore
@@ -31,21 +33,37 @@ const serverParams = {
 }
 
 /**
- * ESBuild Params
  * @link https://esbuild.github.io/api/#build-api
+ * @type {import('esbuild').BuildOptions}
  */
 const buildParams = (devBuild = true) => ({
   color: true,
   entryPoints: ['src/index.tsx'],
   loader: { '.ts': 'tsx' },
   external: ['crypto', 'domain'],
-  outdir: 'public',
+  outdir: 'esbuild',
   plugins: [
     alias({
       'react': require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
-      'react-router-dom': require.resolve('react-router-dom'),
-      'prosemirror-model': require.resolve('../editor/node_modules/prosemirror-model'),
+      // 'react-router-dom': require.resolve('react-router-dom'),
+      // "prosemirror-commands": require.resolve("../manuscript-editor/node_modules/prosemirror-commands"),
+      // "prosemirror-dev-tools": require.resolve("../manuscript-editor/node_modules/prosemirror-dev-tools"),
+      // "prosemirror-dropcursor": require.resolve("../manuscript-editor/node_modules/prosemirror-dropcursor"),
+      // "prosemirror-gapcursor": require.resolve("../manuscript-editor/node_modules/prosemirror-gapcursor"),
+      // "prosemirror-history": require.resolve("../manuscript-editor/node_modules/prosemirror-history"),
+      // "prosemirror-inputrules": require.resolve("../manuscript-editor/node_modules/prosemirror-inputrules"),
+      // "prosemirror-keymap": require.resolve("../manuscript-editor/node_modules/prosemirror-keymap"),
+      // "prosemirror-model": require.resolve("../manuscript-editor/node_modules/prosemirror-model"),
+      // "prosemirror-schema-list": require.resolve("../manuscript-editor/node_modules/prosemirror-schema-list"),
+      // "prosemirror-state": require.resolve("../manuscript-editor/node_modules/prosemirror-state"),
+      // "prosemirror-tables": require.resolve("../manuscript-editor/node_modules/prosemirror-tables"),
+      // "prosemirror-transform": require.resolve("../manuscript-editor/node_modules/prosemirror-transform"),
+      // "prosemirror-utils": require.resolve("../manuscript-editor/node_modules/prosemirror-utils"),
+      // "prosemirror-view": require.resolve("../manuscript-editor/node_modules/prosemirror-view"),
+      // 'prosemirror-model': require.resolve('../editor/node_modules/node_modules/prosemirror-model'),
+      // 'prosemirror-state': require.resolve('prosemirror-state'),
+      // 'prosemirror-view': require.resolve('prosemirror-view'),
       'uuid': require.resolve('uuid'),
     }),
   ],
@@ -56,13 +74,15 @@ const buildParams = (devBuild = true) => ({
   format: 'esm',
   bundle: true,
   sourcemap: true,
+  metafile: true,
   logLevel: devBuild ? 'error' : 'warning',
   incremental: devBuild,
   watch: devBuild
 })
 
 async function buildAndWatch() {
-  await build(buildParams())
+  const builder = await build(buildParams())
+  // await fs.writeFile('./meta.json', JSON.stringify(builder, null, 2))
   start(serverParams)
 }
 

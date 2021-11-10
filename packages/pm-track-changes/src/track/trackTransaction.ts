@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import debug from 'debug'
 import { Fragment, Node as PMNode, Schema, Slice } from 'prosemirror-model'
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state'
 import {
@@ -35,6 +36,7 @@ function markInlineNodeChange(
   userColors: UserData,
   schema: Schema
 ) {
+  console.warn('schema', schema)
   const filtered = node.marks.filter(
     (m) =>
       m.type !== schema.marks.tracked_insert &&
@@ -342,8 +344,8 @@ export function deleteAndMergeSplitBlockNodes(
     splitSliceIntoMergedParts(insertSlice)
   const insertStartDepth = startDoc.resolve(from).depth
   const insertEndDepth = startDoc.resolve(to).depth
-  console.log(firstMergedNode)
-  console.log(lastMergedNode)
+  debug.log('debug: firstMergedNode', firstMergedNode)
+  console.log('debug: lastMergedNode', lastMergedNode)
   startDoc.nodesBetween(from, to, (node, pos) => {
     const offsetPos = deleteMap.map(pos, 1)
     const offsetFrom = deleteMap.map(from, -1)
@@ -476,14 +478,14 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
-  console.log(tr)
+  debug.log('TRACKED Transaction', tr)
   tr.steps.forEach((step) => {
-    console.log('\nstep', step)
+    debug.log('\ntransaction step', step)
     if (step instanceof ReplaceStep) {
       step
         .getMap()
         .forEach((fromA: number, toA: number, fromB: number, toB: number) => {
-          console.log(`changed ${fromA} ${toA} ${fromB} ${toB}`)
+          debug.log(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
           // @ts-ignore
           const { slice }: { slice: Slice } = step
           newTr.step(step.invert(oldState.doc))

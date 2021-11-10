@@ -22,7 +22,7 @@ import LoginPage from './pages/LoginPage'
 import { ManuscriptsPage } from './pages/ManuscriptsPage'
 
 export const Routes = () => (
-  <BrowserRouter basename={process.env.PUBLIC_URL}>
+  <BrowserRouter>
     <Switch>
       <WrappedRoute exact path="/" component={FrontPage} />
       <WrappedRoute exact path="/login" component={LoginPage} />
