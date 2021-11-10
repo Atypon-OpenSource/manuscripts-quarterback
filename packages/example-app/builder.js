@@ -7,8 +7,6 @@ import { build } from 'esbuild'
 import alias from 'esbuild-plugin-alias'
 import { createRequire } from 'module'
 import { config } from 'dotenv'
-import { resolve } from 'path/posix'
-import { promises as fs } from 'fs'
 
 const require = createRequire(import.meta.url)
 config()
@@ -46,24 +44,7 @@ const buildParams = (devBuild = true) => ({
     alias({
       'react': require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
-      // 'react-router-dom': require.resolve('react-router-dom'),
-      // "prosemirror-commands": require.resolve("../manuscript-editor/node_modules/prosemirror-commands"),
-      // "prosemirror-dev-tools": require.resolve("../manuscript-editor/node_modules/prosemirror-dev-tools"),
-      // "prosemirror-dropcursor": require.resolve("../manuscript-editor/node_modules/prosemirror-dropcursor"),
-      // "prosemirror-gapcursor": require.resolve("../manuscript-editor/node_modules/prosemirror-gapcursor"),
-      // "prosemirror-history": require.resolve("../manuscript-editor/node_modules/prosemirror-history"),
-      // "prosemirror-inputrules": require.resolve("../manuscript-editor/node_modules/prosemirror-inputrules"),
-      // "prosemirror-keymap": require.resolve("../manuscript-editor/node_modules/prosemirror-keymap"),
-      // "prosemirror-model": require.resolve("../manuscript-editor/node_modules/prosemirror-model"),
-      // "prosemirror-schema-list": require.resolve("../manuscript-editor/node_modules/prosemirror-schema-list"),
-      // "prosemirror-state": require.resolve("../manuscript-editor/node_modules/prosemirror-state"),
-      // "prosemirror-tables": require.resolve("../manuscript-editor/node_modules/prosemirror-tables"),
-      // "prosemirror-transform": require.resolve("../manuscript-editor/node_modules/prosemirror-transform"),
-      // "prosemirror-utils": require.resolve("../manuscript-editor/node_modules/prosemirror-utils"),
-      // "prosemirror-view": require.resolve("../manuscript-editor/node_modules/prosemirror-view"),
-      // 'prosemirror-model': require.resolve('../editor/node_modules/node_modules/prosemirror-model'),
-      // 'prosemirror-state': require.resolve('prosemirror-state'),
-      // 'prosemirror-view': require.resolve('prosemirror-view'),
+      'react-router-dom': require.resolve('react-router-dom'),
       'uuid': require.resolve('uuid'),
     }),
   ],
