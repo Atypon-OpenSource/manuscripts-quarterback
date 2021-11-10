@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { yjsPluginKey, ySyncPlugin } from './plugin'
-
 export * as yjsCommands from './commands'
 export * from './generate'
 
 export { yjsExtension, yjsExtensionName } from './extension'
 export { useYjsExtension } from './useYjsExtension'
 
-export { YjsStatus } from './types'
 export * from './types'

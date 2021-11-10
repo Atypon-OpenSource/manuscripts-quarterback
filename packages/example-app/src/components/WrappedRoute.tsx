@@ -58,9 +58,9 @@ const MainWrapper = styled.div`
 `
 const MainContainer = styled.main`
   margin: 40px auto 0 auto;
-  max-width: 800px;
+  max-width: 750px;
   padding-bottom: 20px;
-  @media only screen and (max-width: 720px) {
+  @media only screen and (max-width: 800px) {
     margin: 40px 20px 0 20px;
     padding-bottom: 20px;
   }
