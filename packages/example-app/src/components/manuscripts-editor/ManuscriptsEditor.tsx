@@ -31,6 +31,7 @@ import {
 } from '@manuscripts/manuscript-editor'
 import React from 'react'
 import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
+import { Plugin } from 'prosemirror-state'
 
 import { createState, createView } from './setup-editor'
 
@@ -40,10 +41,9 @@ interface Props {
 
 export function ManuscriptsEditor(props: Props) {
   const { disableTrack } = props
-  const plugins: any[] = disableTrack ? [] : [trackChangesPlugin({ user: undefined })]
-  const editor = useEditor<any>(
+  const plugins: Plugin[] = disableTrack ? [] : [trackChangesPlugin({ user: undefined })]
+  const editor = useEditor(
     createState({ plugins }),
-    // @ts-ignore
     createView()
   )
   const { onRender } = editor

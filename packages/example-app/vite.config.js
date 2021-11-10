@@ -26,6 +26,7 @@ export default defineConfig({
       // 'prosemirror-utils',
       'prosemirror-view',
     ],
+    entries: ['index.html']
   },
   server: {
     port: parseInt(process.env.PORT || 3000),

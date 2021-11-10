@@ -32,9 +32,7 @@ export function parseDoc(json: { [key: string]: unknown }) {
 
 export const createState = (props?: Partial<EditorProps>) =>
   EditorState.create({
-    // @ts-ignore
     doc: { ...defaultEditorProps, ...props }.doc,
-    // @ts-ignore
     schema,
     plugins: createPlugins({ ...defaultEditorProps, ...props }),
   })
@@ -47,7 +45,6 @@ export const createView =
     dispatch?: (tr: Transaction) => void
   ) => {
     const view = new EditorView(el, {
-      // @ts-ignore
       state,
       editable: () => true,
       scrollThreshold: 100,
@@ -57,11 +54,8 @@ export const createView =
         left: 0,
         right: 0,
       },
-      // @ts-ignore
       dispatchTransaction: dispatch,
-      // @ts-ignore
       nodeViews: createNodeViews({ ...defaultEditorProps, ...props }),
-      // @ts-ignore
       transformPasted,
     })
     return view
