@@ -29,9 +29,9 @@ import {
   useApplicationMenus,
   useEditor,
 } from '@manuscripts/manuscript-editor'
-import React from 'react'
 import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
 import { Plugin } from 'prosemirror-state'
+import React from 'react'
 
 import { createState, createView } from './setup-editor'
 

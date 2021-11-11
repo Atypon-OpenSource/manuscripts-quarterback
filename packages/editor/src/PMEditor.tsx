@@ -1,17 +1,32 @@
-import React, { useRef } from 'react'
-import { EditorView } from 'prosemirror-view'
-import { EditorState, Transaction } from 'prosemirror-state'
-import { schema } from '$schema'
-
-import { useSSRLayoutEffect } from './react'
-
-import { EditorContext as EditorProviders, useEditorContext } from './context'
-import { EditorProps } from './typings/editor'
-
+/*!
+ * © 2021 Atypon Systems LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import './styles/editor.css'
 import './styles/prosemirror-example-setup.css'
 import './styles/menu.css'
 import './styles/yjs.css'
+
+import { EditorState, Transaction } from 'prosemirror-state'
+import { EditorView } from 'prosemirror-view'
+import React, { useRef } from 'react'
+
+import { schema } from '$schema'
+
+import { EditorContext as EditorProviders, useEditorContext } from './context'
+import { useSSRLayoutEffect } from './react'
+import { EditorProps } from './typings/editor'
 
 export function PMEditor(props: EditorProps) {
   const { className = '', ...editorProps } = props
@@ -22,14 +37,24 @@ export function PMEditor(props: EditorProps) {
   useSSRLayoutEffect(() => {
     const editorViewDOM = editorDOMRef.current
     if (editorViewDOM && ctx.viewProvider) {
-      editorViewRef.current = init(editorViewDOM, ctx, editorProps, editorViewRef.current)
+      editorViewRef.current = init(
+        editorViewDOM,
+        ctx,
+        editorProps,
+        editorViewRef.current
+      )
     }
     return () => {
       editorViewRef.current?.destroy()
     }
   }, [])
 
-  function init(element: HTMLElement, ctx: EditorProviders, props: EditorProps, oldView?: EditorView | null) {
+  function init(
+    element: HTMLElement,
+    ctx: EditorProviders,
+    props: EditorProps,
+    oldView?: EditorView | null
+  ) {
     ctx.extensionProvider.init(ctx, props.extensions || [])
     const state = createEditorState(ctx)
     const view = oldView || createEditorView(element, state, ctx, props)
@@ -41,12 +66,16 @@ export function PMEditor(props: EditorProps) {
           const newState = oldEditorState.apply(tr)
           this.updateState(newState)
           ctx.viewProvider.updateState(newState)
-          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
+          ctx.pluginStateProvider.updatePluginListeners(
+            oldEditorState,
+            newState
+          )
           props.onEdit && props.onEdit(newState)
-        }
+        },
       })
     }
     if (window) {
+      // @ts-ignore
       window.editorView = view
       window.commands = ctx.extensionProvider.commands
     }
@@ -59,7 +88,7 @@ export function PMEditor(props: EditorProps) {
   function createEditorState(ctx: EditorProviders) {
     return EditorState.create({
       schema,
-      plugins: ctx.extensionProvider.plugins
+      plugins: ctx.extensionProvider.plugins,
     })
   }
 
@@ -75,17 +104,19 @@ export function PMEditor(props: EditorProps) {
         state,
         dispatchTransaction(tr: Transaction) {
           const oldEditorState = this.state
-          const newState = oldEditorState.apply(tr)
+          const { state: newState, transactions } =
+            oldEditorState.applyTransaction(tr)
           this.updateState(newState)
           ctx.viewProvider.updateState(newState)
-          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
+          ctx.pluginStateProvider.updatePluginListeners(
+            oldEditorState,
+            newState
+          )
           props.onEdit && props.onEdit(newState)
-        }
+        },
       }
     )
   }
 
-  return (
-    <div id="example-editor" ref={editorDOMRef} className={className}/>
-  )
+  return <div id="example-editor" ref={editorDOMRef} className={className} />
 }

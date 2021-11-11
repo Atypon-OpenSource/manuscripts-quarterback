@@ -15,6 +15,7 @@
  */
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { ySyncPluginKey } from 'y-prosemirror'
+
 import { EditorViewProvider } from '$context/EditorViewProvider'
 import { QuarterBackSchema } from '$schema'
 import { TrackedUser } from '$typings/user'

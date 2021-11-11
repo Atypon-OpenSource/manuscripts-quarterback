@@ -20,7 +20,6 @@ import type { Commands } from './typings/editor'
 
 declare global {
   interface Window {
-    editorView: EditorView
     commands: Commands
   }
 }
