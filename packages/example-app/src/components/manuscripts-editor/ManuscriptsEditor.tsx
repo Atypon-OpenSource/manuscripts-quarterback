@@ -40,6 +40,8 @@ import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
 import { Plugin } from 'prosemirror-state'
 import React, { useMemo, useRef } from 'react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
+import { RightPanel } from './right-panel/RightPanel'
+import styled from 'styled-components'
 
 import { createState, createView } from './setup-editor'
 
@@ -80,30 +82,44 @@ export function ManuscriptsEditor(props: Props) {
   )
   return (
     <ReactEditorContext.Provider value={providers}>
-      <div>
-        <Menus />
-        <hr />
-        <div id="editor" ref={editorDOMRef} className={`${className}`} />
-      </div>
+      <ViewGrid>
+        <LeftSide>
+          <Menus />
+          <hr />
+          <div id="editor" ref={editorDOMRef} className={`${className}`} />
+        </LeftSide>
+        <RightPanel disableYjs={true} />
+      </ViewGrid>
     </ReactEditorContext.Provider>
   )
 }
 
-export function ManuscriptsEditorOld(props: Props) {
-  const { disableTrack } = props
-  const plugins: Plugin[] = disableTrack
-    ? []
-    : [trackChangesPlugin({ user: undefined })]
-  const editor = useEditor(createState({ plugins }), createView())
-  const { onRender } = editor
-  const menus = useApplicationMenus(getMenus(editor, () => null))
-  // @ts-ignore
-  window.view = editor.view
-  return (
-    <div>
-      <ApplicationMenus {...menus} />
-      <hr />
-      <div ref={onRender} id="editor"></div>
-    </div>
-  )
-}
+const ViewGrid = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+  margin-top: 1rem;
+`
+const LeftSide = styled.div`
+  margin-right: 1rem;
+`
+
+
+// export function ManuscriptsEditorOld(props: Props) {
+//   const { disableTrack } = props
+//   const plugins: Plugin[] = disableTrack
+//     ? []
+//     : [trackChangesPlugin({ user: undefined })]
+//   const editor = useEditor(createState({ plugins }), createView())
+//   const { onRender } = editor
+//   const menus = useApplicationMenus(getMenus(editor, () => null))
+//   // @ts-ignore
+//   window.view = editor.view
+//   return (
+//     <div>
+//       <ApplicationMenus {...menus} />
+//       <hr />
+//       <div ref={onRender} id="editor"></div>
+//     </div>
+//   )
+// }
