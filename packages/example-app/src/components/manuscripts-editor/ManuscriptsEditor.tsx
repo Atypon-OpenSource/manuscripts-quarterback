@@ -22,24 +22,74 @@ import '@manuscripts/manuscript-editor/styles/popper.css'
 // import 'prosemirror-tables/style/tables.css'
 // import 'prosemirror-view/style/prosemirror.css'
 // import 'codemirror/lib/codemirror.css'
+import { defaultEditorProps } from './default-editor-data'
 import {
   ApplicationMenus,
+  createDefaultProviders,
+  createMenus,
   getMenus,
   // styles,
+  ReactEditorContext,
   useApplicationMenus,
   useEditor,
+  useEditorContext,
+  useEditorState,
+  useEditorV2,
 } from '@manuscripts/manuscript-editor'
 import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
 import { Plugin } from 'prosemirror-state'
-import React from 'react'
+import React, { useMemo, useRef } from 'react'
+import { applyDevTools } from 'prosemirror-dev-toolkit'
 
 import { createState, createView } from './setup-editor'
 
+function Menus() {
+  const { viewProvider } = useEditorContext()
+  const editorState = useEditorState()
+  const menuSpec = useMemo(
+    () => editorState && viewProvider ? createMenus()(editorState, viewProvider?.execCommand) : [],
+    [editorState, viewProvider?.execCommand]
+  )
+  const menus = useApplicationMenus(menuSpec)
+  return <ApplicationMenus {...menus} />
+}
+
 interface Props {
+  className?: string
   disableTrack: boolean
 }
 
 export function ManuscriptsEditor(props: Props) {
+  const { className = '', disableTrack } = props
+  const plugins: Plugin[] = disableTrack
+    ? []
+    : [trackChangesPlugin({ user: undefined })]
+  const editorDOMRef = useRef(null)
+  const providers = useMemo(() => createDefaultProviders(), [])
+  useEditorV2(
+    {
+      ctx: providers,
+      initialState: createState({ plugins }),
+      extensions: [],
+      manuscriptsProps: defaultEditorProps,
+      onEditorReady: (ctx) => {
+        applyDevTools(ctx.viewProvider.view)
+      },
+    },
+    editorDOMRef
+  )
+  return (
+    <ReactEditorContext.Provider value={providers}>
+      <div>
+        <Menus />
+        <hr />
+        <div id="editor" ref={editorDOMRef} className={`${className}`} />
+      </div>
+    </ReactEditorContext.Provider>
+  )
+}
+
+export function ManuscriptsEditorOld(props: Props) {
   const { disableTrack } = props
   const plugins: Plugin[] = disableTrack
     ? []

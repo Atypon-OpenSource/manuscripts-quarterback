@@ -21,6 +21,7 @@ import {
   transformPasted,
 } from '@manuscripts/manuscript-editor'
 import { schema } from '@manuscripts/manuscript-transform'
+import { applyDevTools } from 'prosemirror-dev-toolkit'
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
@@ -58,5 +59,6 @@ export const createView =
       nodeViews: createNodeViews({ ...defaultEditorProps, ...props }),
       transformPasted,
     })
+    applyDevTools(view)
     return view
   }
