@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { uuidv4 } from '@manuscripts/quarterback-shared'
 import { Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
 import { DeleteAttrs, InsertAttrs } from '../types/track'
-import { uuidv4 } from '../utils/uuidv4'
 
 export function createTrackedAttrs(
   attrs: InsertAttrs | DeleteAttrs

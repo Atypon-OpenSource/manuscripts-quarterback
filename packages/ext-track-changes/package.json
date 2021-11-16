@@ -48,6 +48,7 @@
     "y-prosemirror": "^1.0.12"
   },
   "dependencies": {
+    "@manuscripts/quarterback-shared": "workspace:*",
     "debug": "^4.1.1"
   }
 }

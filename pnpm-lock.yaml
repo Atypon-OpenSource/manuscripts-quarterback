@@ -390,6 +390,7 @@ importers:
   packages/ext-track-changes:
     specifiers:
       '@manuscripts/manuscript-editor': workspace:*
+      '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-commonjs': ^20.0.0
       '@types/prosemirror-commands': ^1.0.4
       '@types/prosemirror-model': ^1.13.2
@@ -408,6 +409,7 @@ importers:
       typescript: ^4.4.4
       y-prosemirror: ^1.0.12
     dependencies:
+      '@manuscripts/quarterback-shared': link:../shared
       debug: 4.3.2
     devDependencies:
       '@manuscripts/manuscript-editor': link:../manuscript-editor
