@@ -29,7 +29,7 @@ import styled from 'styled-components'
 
 import { ChangeList } from './ChangeList'
 import { ChangesControls } from './ChangesControls'
-// import { SnapshotsList } from './SnapshotsList'
+import { SnapshotsList } from './SnapshotsList'
 
 interface Props {
   disableYjs?: boolean
@@ -65,7 +65,7 @@ export function RightPanel(props: Props) {
   return (
     <RightSide>
       <ChangesControls className="changes-controls" disableYjs={disableYjs} />
-      {/* <SnapshotsList disableYjs={disableYjs} /> */}
+      <SnapshotsList disableYjs={disableYjs} />
       <ChangeList
         changes={changeSet?.pending || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.pending)}

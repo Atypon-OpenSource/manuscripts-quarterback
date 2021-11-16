@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
+import { uuidv4 } from '@manuscripts/quarterback-shared'
+import * as Y from 'yjs'
 
-export * as trackCommands from './commands'
-export { trackChangesExtension, trackChangesExtensionName } from './extension'
+import type { YjsSnapshot } from './types'
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
-
-export * from './types/track'
+export function createYjsSnapshot(
+  ysnap: Y.Snapshot,
+  clientID: number
+): YjsSnapshot {
+  return {
+    id: uuidv4(),
+    date: new Date().getTime(),
+    snapshot: Y.encodeSnapshot(ysnap),
+    clientID,
+  }
+}

@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
+import type { Transaction } from 'prosemirror-state'
 
-export * as trackCommands from './commands'
-export { trackChangesExtension, trackChangesExtensionName } from './extension'
+export enum YjsAction {
+  createSnapshot = 'yjs-create-snapshot',
+}
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
+export type YjsActionParams = {
+  [YjsAction.createSnapshot]: boolean
+}
 
-export * from './types/track'
+export const getAction = <K extends keyof YjsActionParams & string>(
+  tr: Transaction,
+  action: K
+) => tr.getMeta(action) as YjsActionParams[K] | undefined
+
+export const setAction = <K extends keyof YjsActionParams & string>(
+  tr: Transaction,
+  action: K,
+  payload: YjsActionParams[K]
+) => tr.setMeta(action, payload)

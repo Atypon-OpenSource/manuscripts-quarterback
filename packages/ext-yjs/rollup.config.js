@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from 'rollup-plugin-typescript2'
 
-export * as trackCommands from './commands'
-export { trackChangesExtension, trackChangesExtensionName } from './extension'
+import pkg from './package.json'
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
-
-export * from './types/track'
+export default {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs',
+    },
+    {
+      file: pkg.module,
+      format: 'es',
+    },
+  ],
+  external: [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+  ],
+  plugins: [typescript(), commonjs()],
+}

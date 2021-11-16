@@ -59,6 +59,7 @@ const buildParams = (devBuild = true) => ({
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),
       uuid: require.resolve('uuid'),
+      'y-prosemirror': require.resolve('y-prosemirror'),
     }),
   ],
   inject: ['process-shim.js'],

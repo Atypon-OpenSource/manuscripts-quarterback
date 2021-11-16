@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
+import type { Command } from '@manuscripts/manuscript-editor'
 
-export * as trackCommands from './commands'
-export { trackChangesExtension, trackChangesExtensionName } from './extension'
+import { setAction, YjsAction } from './actions'
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
-
-export * from './types/track'
+export const createSnapshot = (): Command => (state, dispatch) => {
+  if (dispatch) {
+    dispatch(setAction(state.tr, YjsAction.createSnapshot, true))
+    return true
+  }
+  return false
+}

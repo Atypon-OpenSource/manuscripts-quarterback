@@ -13,6 +13,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
   "dependencies": {
+    "@manuscripts/ext-yjs": "workspace:*",
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",

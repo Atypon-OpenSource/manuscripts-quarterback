@@ -17,39 +17,41 @@ import '@manuscripts/manuscript-editor/styles/Editor.css'
 import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
+import { yjsExtension } from '@manuscripts/ext-yjs'
+import {
+  ApplicationMenus,
+  createDefaultProviders,
+  createMenus,
+  // styles,
+  ReactEditorContext,
+  useApplicationMenus,
+  useEditorContext,
+  useEditorState,
+  useEditorV2,
+} from '@manuscripts/manuscript-editor'
+import { trackChangesExtension } from '@manuscripts/pm-track-changes'
+import { YJS_WS_URL } from 'config'
+import { applyDevTools } from 'prosemirror-dev-toolkit'
+import React, { useMemo, useRef } from 'react'
+import { useStores } from 'stores'
+import styled from 'styled-components'
+
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'
 // import 'prosemirror-tables/style/tables.css'
 // import 'prosemirror-view/style/prosemirror.css'
 // import 'codemirror/lib/codemirror.css'
 import { defaultEditorProps } from './default-editor-data'
-import {
-  ApplicationMenus,
-  createDefaultProviders,
-  createMenus,
-  getMenus,
-  // styles,
-  ReactEditorContext,
-  useApplicationMenus,
-  useEditor,
-  useEditorContext,
-  useEditorState,
-  useEditorV2,
-} from '@manuscripts/manuscript-editor'
-import { trackChangesPlugin } from '@manuscripts/pm-track-changes'
-import { Plugin } from 'prosemirror-state'
-import React, { useMemo, useRef } from 'react'
-import { applyDevTools } from 'prosemirror-dev-toolkit'
 import { RightPanel } from './right-panel/RightPanel'
-import styled from 'styled-components'
-
-import { createState, createView } from './setup-editor'
 
 function Menus() {
   const { viewProvider } = useEditorContext()
   const editorState = useEditorState()
   const menuSpec = useMemo(
-    () => editorState && viewProvider ? createMenus()(editorState, viewProvider?.execCommand) : [],
+    () =>
+      editorState && viewProvider
+        ? createMenus()(editorState, viewProvider?.execCommand)
+        : [],
     [editorState, viewProvider?.execCommand]
   )
   const menus = useApplicationMenus(menuSpec)
@@ -63,16 +65,38 @@ interface Props {
 
 export function ManuscriptsEditor(props: Props) {
   const { className = '', disableTrack } = props
-  const plugins: Plugin[] = disableTrack
-    ? []
-    : [trackChangesPlugin({ user: undefined })]
+  const {
+    authStore: { editorUser },
+  } = useStores()
   const editorDOMRef = useRef(null)
   const providers = useMemo(() => createDefaultProviders(), [])
+  const extensions = [
+    ...(disableTrack
+      ? []
+      : [
+          trackChangesExtension({
+            user: {
+              id: editorUser.id,
+              name: editorUser.name,
+            },
+          }),
+        ]),
+    yjsExtension({
+      disabled: false,
+      document: {
+        id: 'documentId',
+      },
+      user: {
+        id: editorUser.id,
+        name: editorUser.name,
+      },
+      ws_url: YJS_WS_URL,
+    }),
+  ]
   useEditorV2(
     {
       ctx: providers,
-      initialState: createState({ plugins }),
-      extensions: [],
+      extensions,
       manuscriptsProps: defaultEditorProps,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
@@ -88,7 +112,7 @@ export function ManuscriptsEditor(props: Props) {
           <hr />
           <div id="editor" ref={editorDOMRef} className={`${className}`} />
         </LeftSide>
-        <RightPanel disableYjs={true} />
+        <RightPanel disableYjs={false} />
       </ViewGrid>
     </ReactEditorContext.Provider>
   )
@@ -103,7 +127,6 @@ const ViewGrid = styled.div`
 const LeftSide = styled.div`
   margin-right: 1rem;
 `
-
 
 // export function ManuscriptsEditorOld(props: Props) {
 //   const { disableTrack } = props

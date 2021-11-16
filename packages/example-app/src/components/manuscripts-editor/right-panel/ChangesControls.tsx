@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useYjsExtension } from '@manuscripts/ext-yjs'
 import {
   useEditorContext,
   usePluginState,
-  // useYjsExtension,
 } from '@manuscripts/manuscript-editor'
 import {
   CHANGE_STATUS,
@@ -35,7 +35,7 @@ interface IProps {
 export function ChangesControls(props: IProps) {
   const { className } = props
   const { viewProvider } = useEditorContext()
-  // const [_, yjsStore] = useYjsExtension()
+  const [_, yjsStore] = useYjsExtension()
   const trackChangesState = usePluginState<TrackChangesState>(
     trackChangesPluginKey
   )
@@ -59,7 +59,7 @@ export function ChangesControls(props: IProps) {
     )
   }
   function handleSnapshot() {
-    // yjsStore?.createSnapshot()
+    yjsStore?.createSnapshot()
   }
   return (
     <Container className={className}>

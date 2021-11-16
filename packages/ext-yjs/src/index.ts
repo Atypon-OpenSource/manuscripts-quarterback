@@ -13,18 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
+export * as yjsCommands from './commands'
+export * from './generate'
 
-export * as trackCommands from './commands'
-export { trackChangesExtension, trackChangesExtensionName } from './extension'
+export { yjsExtension, yjsExtensionName } from './extension'
+export { useYjsExtension } from './useYjsExtension'
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
-
-export * from './types/track'
+export * from './types'
