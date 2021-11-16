@@ -17,7 +17,7 @@
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
-    "@manuscripts/pm-track-changes": "workspace:*",
+    "@manuscripts/ext-track-changes": "workspace:*",
     "@manuscripts/quarterback-editor": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
     "@manuscripts/style-guide": "workspace:*",

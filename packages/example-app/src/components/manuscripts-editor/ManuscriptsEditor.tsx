@@ -17,6 +17,7 @@ import '@manuscripts/manuscript-editor/styles/Editor.css'
 import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
+import { trackChangesExtension } from '@manuscripts/ext-track-changes'
 import { yjsExtension } from '@manuscripts/ext-yjs'
 import {
   ApplicationMenus,
@@ -29,7 +30,6 @@ import {
   useEditorState,
   useEditorV2,
 } from '@manuscripts/manuscript-editor'
-import { trackChangesExtension } from '@manuscripts/pm-track-changes'
 import { YJS_WS_URL } from 'config'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'

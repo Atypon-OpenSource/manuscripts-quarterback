@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import {
-  useEditorContext,
-  usePluginState,
-} from '@manuscripts/manuscript-editor'
-import {
   CHANGE_STATUS,
   trackChangesPluginKey,
   TrackChangesState,
   trackCommands,
   TrackedChange,
-} from '@manuscripts/pm-track-changes'
+} from '@manuscripts/ext-track-changes'
+import {
+  useEditorContext,
+  usePluginState,
+} from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'
 

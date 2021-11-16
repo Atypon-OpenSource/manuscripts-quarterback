@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ChangeSet, TrackedChange } from '@manuscripts/pm-track-changes'
+import { ChangeSet, TrackedChange } from '@manuscripts/ext-track-changes'
 import React from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import styled from 'styled-components'

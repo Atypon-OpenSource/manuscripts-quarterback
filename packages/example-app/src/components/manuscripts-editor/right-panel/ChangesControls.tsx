@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useYjsExtension } from '@manuscripts/ext-yjs'
-import {
-  useEditorContext,
-  usePluginState,
-} from '@manuscripts/manuscript-editor'
 import {
   CHANGE_STATUS,
   trackChangesPluginKey,
   TrackChangesState,
   trackCommands,
-} from '@manuscripts/pm-track-changes'
+} from '@manuscripts/ext-track-changes'
+import { useYjsExtension } from '@manuscripts/ext-yjs'
+import {
+  useEditorContext,
+  usePluginState,
+} from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'
 

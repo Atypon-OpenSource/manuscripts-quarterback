@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { trackCommands } from '@manuscripts/ext-track-changes'
 import { EditorViewProvider } from '@manuscripts/manuscript-editor'
-import { trackCommands } from '@manuscripts/pm-track-changes'
 import { Observable } from '@manuscripts/quarterback-shared'
 import { ProsemirrorBinding, ySyncPluginKey } from 'y-prosemirror'
 import { Awareness } from 'y-protocols/awareness'
