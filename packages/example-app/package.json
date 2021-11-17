@@ -13,11 +13,11 @@
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
   "dependencies": {
+    "@manuscripts/ext-track-changes": "workspace:*",
     "@manuscripts/ext-yjs": "workspace:*",
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
-    "@manuscripts/ext-track-changes": "workspace:*",
     "@manuscripts/quarterback-editor": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
     "@manuscripts/style-guide": "workspace:*",
@@ -40,7 +40,7 @@
     "typescript": "4.4.2",
     "unique-names-generator": "^4.6.0",
     "uuid": "^8.3.1",
-    "yjs": "^13.5.16"
+    "yjs": "^13.5.21"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",

@@ -127,7 +127,7 @@ importers:
       winston: ^3.3.3
       ws: ^8.2.3
       y-protocols: ^1.0.5
-      yjs: ^13.5.16
+      yjs: ^13.5.21
     dependencies:
       '@manuscripts/quarterback-db': link:../db
       '@manuscripts/quarterback-shared': link:../shared
@@ -141,7 +141,7 @@ importers:
       winston: 3.3.3
       ws: 8.2.3
       y-protocols: 1.0.5
-      yjs: 13.5.18
+      yjs: 13.5.21
     devDependencies:
       '@rollup/plugin-alias': 3.1.8_rollup@2.59.0
       '@rollup/plugin-commonjs': 21.0.1_rollup@2.59.0
@@ -233,10 +233,10 @@ importers:
       ttypescript: ^1.5.12
       typescript: ^4.4.4
       unique-names-generator: ^4.6.0
-      y-prosemirror: ^1.0.11
+      y-prosemirror: ^1.0.12
       y-protocols: ^1.0.5
       y-websocket: ^1.3.17
-      yjs: ^13.5.16
+      yjs: ^13.5.21
     dependencies:
       '@manuscripts/quarterback-shared': link:../shared
       lib0: 0.2.42
@@ -254,10 +254,10 @@ importers:
       prosemirror-view: 1.22.0
       randomcolor: 0.6.2
       unique-names-generator: 4.6.0
-      y-prosemirror: 1.0.11_dd4dd2c03cdc19c4f6a6b7c0a4ab9d9d
+      y-prosemirror: 1.0.12_aebabedc1347a92d7d3d792f78940d02
       y-protocols: 1.0.5
-      y-websocket: 1.3.17_yjs@13.5.18
-      yjs: 13.5.18
+      y-websocket: 1.3.17_yjs@13.5.21
+      yjs: 13.5.21
     devDependencies:
       '@rollup/plugin-alias': 3.1.8_rollup@2.59.0
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.59.0
@@ -335,7 +335,7 @@ importers:
       uuid: ^8.3.1
       vite: ^2.6.13
       vite-tsconfig-paths: ^3.3.17
-      yjs: ^13.5.16
+      yjs: ^13.5.21
     dependencies:
       '@manuscripts/ext-track-changes': link:../ext-track-changes
       '@manuscripts/ext-yjs': link:../ext-yjs
@@ -364,7 +364,7 @@ importers:
       typescript: 4.4.2
       unique-names-generator: 4.6.0
       uuid: 8.3.2
-      yjs: 13.5.18
+      yjs: 13.5.21
     devDependencies:
       '@esbuild-plugins/node-globals-polyfill': 0.1.1_esbuild@0.12.29
       '@testing-library/cypress': 8.0.1
@@ -17885,13 +17885,13 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       isomorphic.js: 0.2.4
+    dev: false
 
   /lib0/0.2.43:
     resolution: {integrity: sha512-MJ1KLoz5p3gljIUBfdjjNuL/wlWHHK6+DrcIRhzSRLvtAu1XNdRtRGATYM51KSTI0P2nxJZFQM8rwCH6ga9KUw==}
     engines: {node: '>=12'}
     dependencies:
       isomorphic.js: 0.2.4
-    dev: false
 
   /libxmljs2/0.29.0:
     resolution: {integrity: sha512-g9PvujoUGRHBp2R7Z49pKklMdAucayepGSJajfpzl+JlGRO1lHfWWH1KQcwqoylO524G9Mu9pO74ZaQ11fi0/w==}
@@ -27055,18 +27055,6 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
 
-  /y-leveldb/0.1.0_yjs@13.5.18:
-    resolution: {integrity: sha512-sMuitVrsAUNh+0b66I42nAuW3lCmez171uP4k0ePcTAJ+c+Iw9w4Yq3wwiyrDMFXBEyQSjSF86Inc23wEvWnxw==}
-    requiresBuild: true
-    peerDependencies:
-      yjs: ^13.0.0
-    dependencies:
-      level: 6.0.1
-      lib0: 0.2.42
-      yjs: 13.5.18
-    dev: false
-    optional: true
-
   /y-leveldb/0.1.0_yjs@13.5.21:
     resolution: {integrity: sha512-sMuitVrsAUNh+0b66I42nAuW3lCmez171uP4k0ePcTAJ+c+Iw9w4Yq3wwiyrDMFXBEyQSjSF86Inc23wEvWnxw==}
     requiresBuild: true
@@ -27074,27 +27062,10 @@ packages:
       yjs: ^13.0.0
     dependencies:
       level: 6.0.1
-      lib0: 0.2.42
+      lib0: 0.2.43
       yjs: 13.5.21
     dev: false
     optional: true
-
-  /y-prosemirror/1.0.11_dd4dd2c03cdc19c4f6a6b7c0a4ab9d9d:
-    resolution: {integrity: sha512-Qf1nSk6vrTcVCZkW64zCuzjRO9Ak5RjAUBfX/8VxRd/MdoGC7qLulM38Hh/UWMqRJnCuP6/JXA0Ji3hJ/lnwlg==}
-    peerDependencies:
-      prosemirror-model: ^1.7.1
-      prosemirror-state: ^1.2.3
-      prosemirror-view: ^1.9.10
-      y-protocols: ^1.0.1
-      yjs: ^13.3.2
-    dependencies:
-      lib0: 0.2.42
-      prosemirror-model: 1.15.0
-      prosemirror-state: 1.3.4
-      prosemirror-view: 1.22.0
-      y-protocols: 1.0.5
-      yjs: 13.5.18
-    dev: false
 
   /y-prosemirror/1.0.12_aebabedc1347a92d7d3d792f78940d02:
     resolution: {integrity: sha512-DvALyb2Q5QRMYAtP0IOSNj1q3NbqjPvJLQggNqzA8LehUrLSrLn/WIpDiphLHrAokrQtyGFrUrsJJuNYpV7+fQ==}
@@ -27105,7 +27076,7 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.3.2
     dependencies:
-      lib0: 0.2.42
+      lib0: 0.2.43
       prosemirror-model: 1.15.0
       prosemirror-state: 1.3.4
       prosemirror-view: 1.22.0
@@ -27122,7 +27093,7 @@ packages:
       y-protocols: ^1.0.1
       yjs: ^13.3.2
     dependencies:
-      lib0: 0.2.42
+      lib0: 0.2.43
       prosemirror-model: 1.15.0
       prosemirror-state: 1.3.4
       prosemirror-view: 1.22.0
@@ -27132,21 +27103,6 @@ packages:
     resolution: {integrity: sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==}
     dependencies:
       lib0: 0.2.42
-    dev: false
-
-  /y-websocket/1.3.17_yjs@13.5.18:
-    resolution: {integrity: sha512-SswN7EosLDpnrWue45/yQjkTGSRkzxioFc/0WcyHNkudnknWToOBaIo2coWgnYZd9BP0XlNAc8pPhTGkDveQJQ==}
-    hasBin: true
-    peerDependencies:
-      yjs: ^13.5.6
-    dependencies:
-      lib0: 0.2.42
-      lodash.debounce: 4.0.8
-      y-protocols: 1.0.5
-      yjs: 13.5.18
-    optionalDependencies:
-      ws: 6.2.2
-      y-leveldb: 0.1.0_yjs@13.5.18
     dev: false
 
   /y-websocket/1.3.17_yjs@13.5.21:
@@ -27279,13 +27235,6 @@ packages:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
     dev: true
-
-  /yjs/13.5.18:
-    resolution: {integrity: sha512-6LcTL8gRe12fy89OvXG6Xs/uhsl7iwE4Wh106H1NItkcqcUaY2waTje1NVWmOZNXHXWVAzdf/fBQqB4Phq9sGA==}
-    requiresBuild: true
-    dependencies:
-      lib0: 0.2.42
-    dev: false
 
   /yjs/13.5.21:
     resolution: {integrity: sha512-DehXnsAp2ALOgdTUCogQlMNB1lcaP8QE3ovpkE9lcsZpKBn5a/yJI/AXbL3lIN0o0v1ezKk7JmqnfUBiZJSARw==}
