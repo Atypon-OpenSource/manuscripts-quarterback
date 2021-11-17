@@ -139,11 +139,10 @@ export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
           insertColor,
           deleteColor,
         }
-        if (
-          tr.docChanged &&
-          !tr.getMeta('history$') &&
-          !tr.getMeta(ySyncPluginKey)
-        ) {
+        const wasAppended = tr.getMeta('appendedTransaction')
+        const wasYjs =
+          tr.getMeta(ySyncPluginKey) || wasAppended?.getMeta(ySyncPluginKey)
+        if (tr.docChanged && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
         if (tr.docChanged) {
