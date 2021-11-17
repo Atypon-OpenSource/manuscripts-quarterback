@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import { trackCommands } from '@manuscripts/ext-track-changes'
-import { useYjsExtension } from '@manuscripts/ext-yjs'
 import { useEditorContext } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import { useStores } from 'stores'
 import styled from 'styled-components'
+
+import { useYjsExtension } from './useYjsExtension'
 
 interface IProps {
   className?: string

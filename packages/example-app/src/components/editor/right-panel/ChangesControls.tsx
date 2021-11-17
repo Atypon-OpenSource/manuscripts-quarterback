@@ -19,13 +19,14 @@ import {
   TrackChangesState,
   trackCommands,
 } from '@manuscripts/ext-track-changes'
-import { useYjsExtension } from '@manuscripts/ext-yjs'
 import {
   useEditorContext,
   usePluginState,
 } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import styled from 'styled-components'
+
+import { useYjsExtension } from '../useYjsExtension'
 
 interface IProps {
   className?: string
@@ -59,14 +60,15 @@ export function ChangesControls(props: IProps) {
     )
   }
   function handleSnapshot() {
+    console.log(yjsStore)
     yjsStore?.createSnapshot()
   }
   return (
     <Container className={className}>
-      <button onClick={() => handleAcceptPending()}>Accept pending</button>
-      <button onClick={() => handleRejectPending()}>Reject pending</button>
-      <button onClick={() => handleReset()}>Reset</button>
-      <button onClick={() => handleSnapshot()}>Snapshot</button>
+      <button onClick={handleAcceptPending}>Accept pending</button>
+      <button onClick={handleRejectPending}>Reject pending</button>
+      <button onClick={handleReset}>Reset</button>
+      <button onClick={handleSnapshot}>Snapshot</button>
     </Container>
   )
 }
