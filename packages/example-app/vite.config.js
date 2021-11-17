@@ -29,6 +29,7 @@ export default defineConfig({
     exclude: [
       'prosemirror-commands',
       'prosemirror-dropcursor',
+      'prosemirror-example-setup',
       'prosemirror-gapcursor',
       'prosemirror-history',
       'prosemirror-inputrules',
@@ -56,6 +57,7 @@ export default defineConfig({
       react: require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),
+      yjs: resolve('node_modules/yjs'),
     },
   },
   define: {

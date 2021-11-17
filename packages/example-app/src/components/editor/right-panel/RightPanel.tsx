@@ -19,6 +19,8 @@ import {
   TrackChangesState,
   trackCommands,
   TrackedChange,
+} from '@manuscripts/ext-track-changes'
+import {
   useEditorContext,
   usePluginState,
 } from '@manuscripts/quarterback-editor'

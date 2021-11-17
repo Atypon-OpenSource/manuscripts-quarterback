@@ -18,9 +18,11 @@ import {
   trackChangesPluginKey,
   TrackChangesState,
   trackCommands,
+} from '@manuscripts/ext-track-changes'
+import { useYjsExtension } from '@manuscripts/ext-yjs'
+import {
   useEditorContext,
   usePluginState,
-  useYjsExtension,
 } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import styled from 'styled-components'

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { trackChangesExtension } from '@manuscripts/ext-track-changes'
+import { yjsExtension } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
   createDefaultProviders,
@@ -20,8 +22,6 @@ import {
   pickExtension,
   PMEditor,
   ReactEditorContext,
-  trackChangesExtension,
-  yjsExtension,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
 import React, { useMemo, useState } from 'react'

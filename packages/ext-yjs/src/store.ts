@@ -101,7 +101,7 @@ export const createYjsStore = (
           : Y.decodeSnapshot(prevVersion.snapshot)
       const snapshot = Y.snapshot(ydoc)
       console.info('created snapshot', snapshot)
-      if (prevVersion != null) {
+      if (prevVersion) {
         // account for the action of adding a version to ydoc
         const prevVersionID = prevSnapshot.sv.get(prevVersion.clientID)
         if (!prevVersionID) {

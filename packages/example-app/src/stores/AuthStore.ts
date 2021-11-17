@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateUser, YjsUser } from '@manuscripts/quarterback-editor'
+import { generateUser, YjsUser } from '@manuscripts/ext-yjs'
 import { IJwt, ILoginParams, IUser } from '@manuscripts/quarterback-shared'
 import { action, computed, observable } from 'mobx'
 

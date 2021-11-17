@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useYjsExtension, YjsUser } from '@manuscripts/quarterback-editor'
+import { useYjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import React from 'react'
 import styled from 'styled-components'
 

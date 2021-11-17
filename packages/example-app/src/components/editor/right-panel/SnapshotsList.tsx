@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useYjsExtension, YjsSnapshot } from '@manuscripts/quarterback-editor'
+import { useYjsExtension, YjsSnapshot } from '@manuscripts/ext-yjs'
 import React, { useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import styled from 'styled-components'
