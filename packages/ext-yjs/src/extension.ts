@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { EditorProviders } from '@manuscripts/manuscript-editor'
+import type {
+  CreateExtensionFn,
+  EditorProviders,
+} from '@manuscripts/manuscript-editor'
 import { keymap } from 'prosemirror-keymap'
 import {
   redo,
@@ -67,4 +70,8 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
     plugins,
     store,
   }
+}
+
+function typeCheck(): CreateExtensionFn {
+  return yjsExtension
 }

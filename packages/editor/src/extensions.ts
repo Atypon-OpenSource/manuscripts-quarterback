@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ExtensionProvider } from './context/ExtensionProvider'
-import type { BaseExtension, baseExtensionName } from './extensions/base'
-import type {
-  TrackChangesExtension,
-  trackChangesExtensionName,
-} from './extensions/track-changes'
-import type { YjsExtension, yjsExtensionName } from './extensions/yjs'
+// import type { ExtensionProvider } from './context/ExtensionProvider'
+// import type { BaseExtension, baseExtensionName } from './extensions/base'
+// import type {
+//   TrackChangesExtension,
+//   trackChangesExtensionName,
+// } from './extensions/track-changes'
+// import type { YjsExtension, yjsExtensionName } from './extensions/yjs'
 
-export type Extensions = {
-  [baseExtensionName]: BaseExtension
-  [trackChangesExtensionName]: TrackChangesExtension
-  [yjsExtensionName]: YjsExtension
-}
+// export type Extensions = {
+//   [baseExtensionName]: BaseExtension
+//   [trackChangesExtensionName]: TrackChangesExtension
+//   [yjsExtensionName]: YjsExtension
+// }
 
-export const pickExtension = <E extends keyof Extensions & string>(
-  extStore: ExtensionProvider,
-  name: E
-) => extStore.getExtension(name) as Extensions[E]
+// export const pickExtension = <E extends keyof Extensions & string>(
+//   extStore: ExtensionProvider,
+//   name: E
+// ) => extStore.getExtension(name) as Extensions[E]
+export {}

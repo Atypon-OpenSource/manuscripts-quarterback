@@ -19,11 +19,11 @@ import {
   baseExtension,
   createDefaultProviders,
   EditorContext,
-  pickExtension,
   PMEditor,
   ReactEditorContext,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
+import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useState } from 'react'
 import { useStores } from 'stores'
 import styled from 'styled-components'
@@ -51,7 +51,7 @@ export function Editor() {
       yjsExtension({
         disabled: false,
         document: {
-          id: 'documentId',
+          id: 'doc1',
         },
         user: {
           id: editorUser.id,
@@ -66,7 +66,9 @@ export function Editor() {
   // eslint-disable-next-line
   function handleEdit() {}
   // eslint-disable-next-line
-  function handleEditorReady(ctx: EditorContext) {}
+  function handleEditorReady(ctx: EditorContext) {
+    applyDevTools(ctx.viewProvider.view)
+  }
   return (
     <ReactEditorContext.Provider value={editorProviders}>
       <UsersList />
