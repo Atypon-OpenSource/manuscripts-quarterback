@@ -43,13 +43,7 @@ export function SnapshotsList(props: IProps) {
     <>
       <Header>
         <button onClick={() => setIsVisible(!isVisible)} className="header-btn">
-          <span>
-            {isVisible ? (
-              <FiChevronDown size={16} />
-            ) : (
-              <FiChevronRight size={16} />
-            )}
-          </span>
+          <span>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</span>
           <Title>Snapshots</Title>
         </button>
         <button
@@ -65,12 +59,8 @@ export function SnapshotsList(props: IProps) {
             <TitleWrapper>
               <h4>Snapshot {i + 1}</h4>
               <Buttons>
-                <button onClick={() => handleInspectSnapshot(snap)}>
-                  Inspect
-                </button>
-                <button onClick={() => handleDeleteSnapshot(snap)}>
-                  Delete
-                </button>
+                <button onClick={() => handleInspectSnapshot(snap)}>Inspect</button>
+                <button onClick={() => handleDeleteSnapshot(snap)}>Delete</button>
               </Buttons>
             </TitleWrapper>
             <small>{new Date(snap.date).toLocaleString()}</small>

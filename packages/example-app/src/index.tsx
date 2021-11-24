@@ -15,19 +15,12 @@
  */
 import './index.css'
 
-import { Provider } from 'mobx-react'
 import * as React from 'react'
 import { render } from 'react-dom'
 
 import { Routes } from './routes'
-import { stores } from './stores'
 import { confMobx } from './stores/mobxConf'
 
 confMobx()
 
-render(
-  <Provider {...stores}>
-    <Routes />
-  </Provider>,
-  document.getElementById('root')
-)
+render(<Routes />, document.getElementById('root'))

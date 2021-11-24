@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type {
-  ILoginParams,
-  ILoginResponse,
-} from '@manuscripts/quarterback-shared'
+import type { ILoginParams, ILoginResponse } from '@manuscripts/quarterback-shared'
 
 import { post } from './methods'
 

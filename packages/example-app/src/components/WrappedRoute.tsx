@@ -34,16 +34,15 @@ const renderNoMainContainerWrapper =
       </MainWrapper>
     )
 
-const renderWrapper =
-  (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
-    (
-      <MainWrapper>
-        <NavBar {...props} />
-        <MainContainer>
-          <Component {...props} />
-        </MainContainer>
-      </MainWrapper>
-    )
+const renderWrapper = (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
+  (
+    <MainWrapper>
+      <NavBar {...props} />
+      <MainContainer>
+        <Component {...props} />
+      </MainContainer>
+    </MainWrapper>
+  )
 
 export const NoMainContainerRoute = ({ component, ...rest }: IWrappedRoute) => (
   <Route {...rest} render={renderNoMainContainerWrapper(component)} />

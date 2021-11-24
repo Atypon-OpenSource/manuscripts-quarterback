@@ -26,7 +26,7 @@ export const Routes = () => (
     <Switch>
       <WrappedRoute exact path="/" component={FrontPage} />
       <WrappedRoute exact path="/login" component={LoginPage} />
-      <WrappedRoute exact path="/manuscripts" component={ManuscriptsPage} />
+      <WrappedRoute exact path="/manuscripts/:documentId" component={ManuscriptsPage} />
       <Redirect to="/" />
     </Switch>
   </BrowserRouter>

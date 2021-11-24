@@ -23,9 +23,10 @@ import {
   ReactEditorContext,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
+import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useState } from 'react'
-import { useStores } from 'stores'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { RightPanel } from './right-panel/RightPanel'
@@ -33,11 +34,11 @@ import { SelectUser } from './SelectUser'
 import { Toolbar } from './Toolbar'
 import { UsersList } from './UsersList'
 
-export function Editor() {
+export const Editor = observer(() => {
   const editorProviders = useMemo(() => createDefaultProviders(), [])
   const {
     authStore: { editorUser },
-  } = useStores()
+  } = stores
   const [disableYjs, setDisableYjs] = useState(true)
   const extensions = useMemo(
     () => [
@@ -90,7 +91,7 @@ export function Editor() {
       </div>
     </ReactEditorContext.Provider>
   )
-}
+})
 
 const ViewGrid = styled.div`
   display: grid;

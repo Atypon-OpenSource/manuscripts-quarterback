@@ -22,7 +22,7 @@ module.exports = {
       },
     },
   ],
-  printWidth: 80,
+  printWidth: 100,
   semi: false,
   singleQuote: true,
   trailingComma: 'es5',

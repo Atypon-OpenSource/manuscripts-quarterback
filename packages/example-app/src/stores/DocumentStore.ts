@@ -68,9 +68,7 @@ export class DocumentStore {
       return
     }
     runInAction(() => {
-      const currentDocsIds = Array.from(this.documentsMap.entries()).map(
-        ([id, _doc]) => id
-      )
+      const currentDocsIds = Array.from(this.documentsMap.entries()).map(([id, _doc]) => id)
       resp.data.docs.forEach((d) => {
         const idx = currentDocsIds.indexOf(d.id)
         if (idx === -1) {

@@ -16,7 +16,7 @@
 import { trackCommands } from '@manuscripts/ext-track-changes'
 import { useEditorContext } from '@manuscripts/quarterback-editor'
 import React from 'react'
-import { useStores } from 'stores'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { useYjsExtension } from './useYjsExtension'
@@ -29,7 +29,7 @@ export function SelectUser(props: IProps) {
   const { className } = props
   const {
     authStore: { generateGuestUser },
-  } = useStores()
+  } = stores
   const { viewProvider } = useEditorContext()
   const [yjsState, yjsStore] = useYjsExtension()
 
@@ -41,9 +41,7 @@ export function SelectUser(props: IProps) {
 
   return (
     <Container className={className}>
-      <div className="current-user">
-        Current user: {yjsState?.currentUser.id.slice(0, 5)}
-      </div>
+      <div className="current-user">Current user: {yjsState?.currentUser.id.slice(0, 5)}</div>
       <div>
         <Button onClick={handleNewUser}>New user</Button>
       </div>

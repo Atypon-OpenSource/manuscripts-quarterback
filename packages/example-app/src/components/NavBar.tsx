@@ -13,30 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { observer } from 'mobx-react'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
+import { stores } from 'stores'
+import styled, { css } from 'styled-components'
 
 interface IProps extends RouteComponentProps {
   className?: string
 }
 
-export const NavBar = (props: IProps) => {
+export const NavBar = observer((props: IProps) => {
   const { className } = props
+  const {
+    authStore: { user, logout },
+  } = stores
   return (
     <Container className={className}>
       <Nav>
-        <Link to="/" exact activeClassName="current">
-          Front page
-        </Link>
-        <Link to="/manuscripts" exact activeClassName="current">
-          Manuscripts
-        </Link>
+        <div>
+          <Link to="/" exact activeClassName="current">
+            Front page
+          </Link>
+          <Link to="/manuscripts/doc1" exact activeClassName="current">
+            Manuscripts
+          </Link>
+          {user && (
+            <Link to="/account" exact activeClassName="current">
+              {user.firstname}
+            </Link>
+          )}
+        </div>
+        {user ? (
+          <Button onClick={() => logout()}>Logout</Button>
+        ) : (
+          <Link to="/login" exact activeClassName="current">
+            Login
+          </Link>
+        )}
       </Nav>
     </Container>
   )
-}
+})
 
 const Container = styled.div`
   background: var(--color-primary);
@@ -47,12 +66,15 @@ const Nav = styled.nav`
   align-items: center;
   color: #fff;
   display: flex;
+  justify-content: space-between;
 `
-const Link = styled(NavLink)`
+const linkStyles = css`
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
+  font-family: serif;
   font-size: 1rem;
+  font-weight: 100;
   padding: 0.5rem 1rem;
   text-decoration: none;
   transition: 0.2s hover;
@@ -62,4 +84,12 @@ const Link = styled(NavLink)`
   &.current {
     font-weight: 600;
   }
+`
+const Link = styled(NavLink)`
+  ${linkStyles}
+`
+const Button = styled.button`
+  ${linkStyles}
+  background: transparent;
+  border: 0;
 `

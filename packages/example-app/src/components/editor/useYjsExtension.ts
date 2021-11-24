@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  YjsExtension,
-  yjsExtensionName,
-  YjsExtensionState,
-  YjsStore,
-} from '@manuscripts/ext-yjs'
+import { YjsExtension, yjsExtensionName, YjsExtensionState, YjsStore } from '@manuscripts/ext-yjs'
 import { useEditorContext } from '@manuscripts/quarterback-editor'
 import { useEffect, useState } from 'react'
 import * as Y from 'yjs'
@@ -33,9 +28,7 @@ export function useYjsExtension() {
     const cb = (newState: YjsExtensionState) => {
       setState(newState)
     }
-    const yjs = extensionProvider?.getExtension(yjsExtensionName) as
-      | YjsExtension
-      | undefined
+    const yjs = extensionProvider?.getExtension(yjsExtensionName) as YjsExtension | undefined
     if (!yjs || yjs.opts.disabled || !yjs.store) {
       return
     }

@@ -28,35 +28,20 @@ interface IProps {
 }
 
 export function ChangeList(props: IProps) {
-  const {
-    className,
-    changes,
-    isVisible,
-    title,
-    renderChangeContent,
-    toggleVisibility,
-  } = props
+  const { className, changes, isVisible, title, renderChangeContent, toggleVisibility } = props
 
   function changeTitle(c: TrackedChange) {
     if (ChangeSet.isTextChange(c)) {
       return `Text ${c.attrs.operation}`
     } else if (ChangeSet.isNodeChange(c)) {
-      return `${c.nodeType.charAt(0).toUpperCase()}${c.nodeType.slice(1)} ${
-        c.attrs.operation
-      }`
+      return `${c.nodeType.charAt(0).toUpperCase()}${c.nodeType.slice(1)} ${c.attrs.operation}`
     }
     return 'Unknown change!'
   }
   return (
     <>
       <Header onClick={() => toggleVisibility()}>
-        <span>
-          {isVisible ? (
-            <FiChevronDown size={16} />
-          ) : (
-            <FiChevronRight size={16} />
-          )}
-        </span>
+        <span>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</span>
         <h2>{title}</h2>
       </Header>
       <List className={`${className || ''} ${isVisible ? '' : 'hidden'}`}>
@@ -68,9 +53,7 @@ export function ChangeList(props: IProps) {
             </TitleWrapper>
             <Ranges>
               <span className="msg">from: {c.from}</span>
-              {c.type === 'text-change' && (
-                <span className="msg">to: {c.to}</span>
-              )}
+              {c.type === 'text-change' && <span className="msg">to: {c.to}</span>}
               {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
             </Ranges>
           </ListItem>

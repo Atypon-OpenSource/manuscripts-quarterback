@@ -20,10 +20,7 @@ import {
   trackCommands,
   TrackedChange,
 } from '@manuscripts/ext-track-changes'
-import {
-  useEditorContext,
-  usePluginState,
-} from '@manuscripts/manuscript-editor'
+import { useEditorContext, usePluginState } from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -38,25 +35,17 @@ interface Props {
 export function RightPanel(props: Props) {
   const { disableYjs } = props
   const { viewProvider } = useEditorContext()
-  const trackChangesState = usePluginState<TrackChangesState>(
-    trackChangesPluginKey
-  )
+  const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey)
   const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
 
   function handleAcceptChange(id: string) {
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, [id])
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, [id]))
   }
   function handleRejectChange(id: string) {
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, [id])
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, [id]))
   }
   function handleResetChange(id: string) {
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.pending, [id])
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, [id]))
   }
   function toggleChangesVisibility(status: CHANGE_STATUS) {
     viewProvider?.execCommand(trackCommands.toggleShownStatuses([status]))
@@ -72,16 +61,10 @@ export function RightPanel(props: Props) {
         title="Pending"
         renderChangeContent={(c: TrackedChange) => (
           <Buttons>
-            <button
-              onClick={() => handleAcceptChange(c.id)}
-              aria-label="accept-btn"
-            >
+            <button onClick={() => handleAcceptChange(c.id)} aria-label="accept-btn">
               Accept
             </button>
-            <button
-              onClick={() => handleRejectChange(c.id)}
-              aria-label="reject-btn"
-            >
+            <button onClick={() => handleRejectChange(c.id)} aria-label="reject-btn">
               Reject
             </button>
           </Buttons>
@@ -94,16 +77,10 @@ export function RightPanel(props: Props) {
         title="Accepted"
         renderChangeContent={(c: TrackedChange) => (
           <Buttons>
-            <button
-              onClick={() => handleResetChange(c.id)}
-              aria-label="accept-btn"
-            >
+            <button onClick={() => handleResetChange(c.id)} aria-label="accept-btn">
               Reset
             </button>
-            <button
-              onClick={() => handleRejectChange(c.id)}
-              aria-label="reject-btn"
-            >
+            <button onClick={() => handleRejectChange(c.id)} aria-label="reject-btn">
               Reject
             </button>
           </Buttons>
@@ -116,16 +93,10 @@ export function RightPanel(props: Props) {
         title="Rejected"
         renderChangeContent={(c: TrackedChange) => (
           <Buttons>
-            <button
-              onClick={() => handleAcceptChange(c.id)}
-              aria-label="accept-btn"
-            >
+            <button onClick={() => handleAcceptChange(c.id)} aria-label="accept-btn">
               Accept
             </button>
-            <button
-              onClick={() => handleResetChange(c.id)}
-              aria-label="reject-btn"
-            >
+            <button onClick={() => handleResetChange(c.id)} aria-label="reject-btn">
               Reset
             </button>
           </Buttons>

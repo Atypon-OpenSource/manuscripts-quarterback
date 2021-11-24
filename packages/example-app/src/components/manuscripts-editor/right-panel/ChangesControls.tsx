@@ -20,10 +20,7 @@ import {
   trackCommands,
 } from '@manuscripts/ext-track-changes'
 import { useYjsExtension } from '@manuscripts/ext-yjs'
-import {
-  useEditorContext,
-  usePluginState,
-} from '@manuscripts/manuscript-editor'
+import { useEditorContext, usePluginState } from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -36,27 +33,19 @@ export function ChangesControls(props: IProps) {
   const { className } = props
   const { viewProvider } = useEditorContext()
   const [_, yjsStore] = useYjsExtension()
-  const trackChangesState = usePluginState<TrackChangesState>(
-    trackChangesPluginKey
-  )
+  const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey)
 
   function handleAcceptPending() {
     const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids)
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
   function handleRejectPending() {
     const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids)
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
   function handleReset() {
     const ids = trackChangesState?.changeSet.changes.map((c) => c.id) || []
-    viewProvider?.execCommand(
-      trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids)
-    )
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function handleSnapshot() {
     yjsStore?.createSnapshot()

@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  EditorProps,
-  PopperManager,
-  ViewerProps,
-} from '@manuscripts/manuscript-editor'
+import { EditorProps, PopperManager, ViewerProps } from '@manuscripts/manuscript-editor'
 import {
   ActualManuscriptNode,
   Build,
@@ -144,8 +140,7 @@ export const defaultEditorProps: EditorProps = {
     subscribe: () => undefined,
     setView: () => undefined,
     retrySync: (_componentIDs: string[]) => Promise.resolve(),
-    handleStateChange: (_view: ManuscriptEditorView, _docChanged: boolean) =>
-      undefined,
+    handleStateChange: (_view: ManuscriptEditorView, _docChanged: boolean) => undefined,
     setCommentTarget: (_commentTarget?: string) => undefined,
     jupyterConfig: {
       url: 'http://test-jupyter-url',

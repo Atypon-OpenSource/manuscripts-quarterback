@@ -16,6 +16,7 @@
 import { Input } from 'elements/Input'
 import React, { useState } from 'react'
 import { MdEmail, MdLock } from 'react-icons/md'
+import styled from 'styled-components'
 
 interface Props {
   className?: string
@@ -37,11 +38,11 @@ export function LoginForm(props: Props) {
   const [password, setPassword] = useState('')
 
   return (
-    <form
+    <Form
       onSubmit={handleSubmit}
       className={`${className} flex items-center flex-col justify-center`}
     >
-      <div className="mt-2">
+      <Field>
         <label htmlFor="login-email">Email</label>
         <Input
           required
@@ -49,13 +50,12 @@ export function LoginForm(props: Props) {
           type="email"
           name="email"
           autoComplete="on"
-          placeholder={'Email'}
           value={email}
           icon={<MdEmail size={24} />}
           onChange={(val) => setEmail(val)}
         />
-      </div>
-      <div className="mt-2">
+      </Field>
+      <Field>
         <label htmlFor="login-password">Password</label>
         <Input
           required
@@ -63,21 +63,27 @@ export function LoginForm(props: Props) {
           type="password"
           name="password"
           autoComplete="on"
-          placeholder="********"
           value={password}
           icon={<MdLock size={24} />}
           onChange={(val) => setPassword(val)}
         />
-      </div>
-      <button
-        className="w-full px-4 py-2 mt-5 leading-tight text-white bg-red-500 rounded"
-        type="submit"
-      >
-        Submit
-      </button>
-      <button className="px-4 py-2 mt-5 leading-tight text-center rounded hover:underline">
-        Sign up
-      </button>
-    </form>
+      </Field>
+      <Field>
+        <button
+          className="w-full px-4 py-2 mt-5 leading-tight text-white bg-red-500 rounded"
+          type="submit"
+        >
+          Submit
+        </button>
+      </Field>
+    </Form>
   )
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+const Field = styled.div`
+  margin-top: 1rem;
+`

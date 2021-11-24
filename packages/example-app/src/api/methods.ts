@@ -63,11 +63,7 @@ export function get<T>(path: string, defaultError?: string): Promise<Event<T>> {
   )
 }
 
-export function post<T>(
-  path: string,
-  payload: any,
-  defaultError?: string
-): Promise<Event<T>> {
+export function post<T>(path: string, payload: any, defaultError?: string): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
@@ -83,11 +79,7 @@ export function post<T>(
   )
 }
 
-export function put<T>(
-  path: string,
-  payload: any,
-  defaultError?: string
-): Promise<Event<T>> {
+export function put<T>(path: string, payload: any, defaultError?: string): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {

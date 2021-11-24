@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createContext, useContext } from 'react'
-
 import { confMobx } from './mobxConf'
 import { Stores } from './Stores'
 
 confMobx()
 
 export const stores = new Stores()
-const StoresContext = createContext(stores)
-
-export const useStores = () => useContext(StoresContext)
 export { Stores }

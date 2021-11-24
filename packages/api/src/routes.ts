@@ -17,9 +17,12 @@ import { Router } from 'express'
 
 import { authenticate, validateBody } from '$middlewares'
 
+import * as authCtrl from './routes/auth/auth.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
 
 const router = Router()
+
+router.post('/login', authCtrl.login)
 
 router.get('/docs', authenticate, docCtrl.getDocuments)
 

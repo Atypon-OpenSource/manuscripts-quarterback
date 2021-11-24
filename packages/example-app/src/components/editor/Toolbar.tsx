@@ -21,14 +21,7 @@ import {
   usePluginState,
 } from '@manuscripts/quarterback-editor'
 import React from 'react'
-import {
-  FiAtSign,
-  FiBold,
-  FiEye,
-  FiFileMinus,
-  FiFilePlus,
-  FiItalic,
-} from 'react-icons/fi'
+import { FiAtSign, FiBold, FiEye, FiFileMinus, FiFilePlus, FiItalic } from 'react-icons/fi'
 import { GrBlockQuote } from 'react-icons/gr'
 import { MdViewWeek } from 'react-icons/md'
 import styled from 'styled-components'
@@ -94,32 +87,24 @@ const commandIcons: {
 export function Toolbar(props: IProps) {
   const { className } = props
   const { viewProvider } = useEditorContext()
-  const activeNodesMarksPlugin = usePluginState<ActiveNodesMarksState>(
-    activeNodesMarksPluginKey
-  )
+  const activeNodesMarksPlugin = usePluginState<ActiveNodesMarksState>(activeNodesMarksPluginKey)
 
   function handleIconClick(title: IconType) {
     switch (title) {
       case 'bold':
         viewProvider?.execCommand(
-          commands.baseCommands.toggleMark(
-            viewProvider?.view.state.schema.marks.bold
-          )
+          commands.baseCommands.toggleMark(viewProvider?.view.state.schema.marks.bold)
         )
         return
       case 'italic':
         viewProvider?.execCommand(
-          commands.baseCommands.toggleMark(
-            viewProvider?.view.state.schema.marks.italic
-          )
+          commands.baseCommands.toggleMark(viewProvider?.view.state.schema.marks.italic)
         )
         return
       case 'toggle-blockquote':
         return
       case 'update-attribute':
-        viewProvider?.execCommand(
-          commands.trackCommands.addTrackedAttributesToBlockNode()
-        )
+        viewProvider?.execCommand(commands.trackCommands.addTrackedAttributesToBlockNode())
         return
       case 'toggle-split-view':
         return
@@ -141,9 +126,7 @@ export function Toolbar(props: IProps) {
           <IconItem key={item.title}>
             <IconButton
               className={`${
-                activeNodesMarksPlugin?.activeMarks.includes(item.title)
-                  ? 'active'
-                  : ''
+                activeNodesMarksPlugin?.activeMarks.includes(item.title) ? 'active' : ''
               }`}
               onClick={() => handleIconClick(item.title)}
             >
@@ -153,10 +136,7 @@ export function Toolbar(props: IProps) {
         ))}
         {commandIcons.map((item) => (
           <IconItem key={item.title}>
-            <IconButton
-              onClick={() => handleIconClick(item.title)}
-              aria-label={item.title}
-            >
+            <IconButton onClick={() => handleIconClick(item.title)} aria-label={item.title}>
               {item.icon}
             </IconButton>
           </IconItem>

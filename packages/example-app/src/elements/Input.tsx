@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import React, { forwardRef } from 'react'
+import styled from 'styled-components'
 
 interface IProps {
   className?: string
@@ -56,21 +57,15 @@ export const Input = forwardRef((props: IProps, ref?: React.Ref<any>) => {
     onKeyPress,
   } = props
 
-  function handleChange(
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     if (!disabled && onChange) {
       onChange(event.target.value)
     }
   }
   return (
-    <div
-      className={`${className} flex items-center relative border border-gray-400 rounded bg-gray-100
-        w-72 focus-within:ring focus-within:ring-blue-200`}
-    >
-      <span className="pl-2 pr-1 w-max">{icon}</span>
-      <input
-        className="w-full p-1 bg-transparent rounded outline-none"
+    <Container className={`${className}`}>
+      <IconWrapper>{icon}</IconWrapper>
+      <StyledInput
         ref={ref}
         value={value}
         type={type}
@@ -87,7 +82,7 @@ export const Input = forwardRef((props: IProps, ref?: React.Ref<any>) => {
         onBlur={onBlur}
         onKeyPress={onKeyPress}
       />
-    </div>
+    </Container>
   )
 })
 
@@ -97,3 +92,27 @@ Input.defaultProps = {
   type: 'text',
   disabled: false,
 }
+
+const Container = styled.div`
+  align-items: center;
+  border: 1px solid #747474;
+  border-radius: 4px;
+  display: flex;
+  &:focus-within {
+    box-shadow: 0 0 0 2px rgba(80, 0, 255, 0.2);
+  }
+`
+const IconWrapper = styled.span`
+  padding: 0 0.25rem 0 0.5rem;
+  width: max-content;
+`
+const StyledInput = styled.input`
+  background: transparent;
+  border: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  padding: 0.5rem;
+  width: 100%;
+`

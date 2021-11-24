@@ -13,45 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ILoginParams } from '@manuscripts/quarterback-shared'
-import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { useHistory } from 'react-router'
+import { stores } from 'stores'
+import styled from 'styled-components'
 
 import { LoginForm } from '../components/login-page/LoginForm'
-import { Stores } from '../stores/Stores'
 
-interface Props {
-  login?: (data: ILoginParams) => Promise<boolean>
+function LoginPage() {
+  const history = useHistory()
+  const {
+    authStore: { login },
+  } = stores
+
+  async function handleSubmit(data: any) {
+    const success = await login!(data)
+    if (success) {
+      history.push('/')
+    }
+  }
+  return (
+    <Container>
+      <Body>
+        <h1>Login</h1>
+        <div>
+          <LoginForm onSubmit={handleSubmit} />
+        </div>
+      </Body>
+    </Container>
+  )
 }
 
-const LoginPage = inject((stores: Stores) => ({
-  login: stores.authStore?.login,
-}))(
-  observer((props: Props) => {
-    const { login } = props
-    const history = useHistory()
-
-    async function handleSubmit(data: any) {
-      const success = await login!(data)
-      if (success) {
-        history.push('/')
-      }
-    }
-    return (
-      <div className="absolute inset-0 flex items-center main-bg">
-        <section
-          className={`p-16 mx-auto inline-block bg-white text-container border
-        rounded-2xl`}
-        >
-          <h1 className="mb-8 text-5xl font-bold cursive">login</h1>
-          <div>
-            <LoginForm onSubmit={handleSubmit} />
-          </div>
-        </section>
-      </div>
-    )
-  })
-)
+const Container = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+`
+const Body = styled.div`
+  margin-top: 6rem;
+  & > h1 {
+    margin: 0;
+  }
+`
 
 export default LoginPage

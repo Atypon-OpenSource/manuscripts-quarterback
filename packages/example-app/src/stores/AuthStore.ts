@@ -15,7 +15,7 @@
  */
 import { generateUser, YjsUser } from '@manuscripts/ext-yjs'
 import { IJwt, ILoginParams, IUser } from '@manuscripts/quarterback-shared'
-import { action, computed, observable } from 'mobx'
+import { action, computed, makeObservable, observable } from 'mobx'
 
 import * as authApi from '../api/auth'
 import { hydrate, persist } from './persist'
@@ -33,6 +33,7 @@ export class AuthStore {
   STORAGE_KEY = 'auth-store'
 
   constructor(resetFn: () => void) {
+    makeObservable(this)
     this.resetAllStores = resetFn
     const data = hydrate<Persisted>('session', this.STORAGE_KEY)
     if (data) {
@@ -60,21 +61,20 @@ export class AuthStore {
   }
 
   @action login = async (params: ILoginParams) => {
-    const resp = Promise.resolve(true)
-    try {
-      // resp = await authApi.login(params)
-      // this.user = resp.user
-      // this.jwt = resp.jwt
+    const res = await authApi.login(params)
+    if (res.ok) {
+      this.user = res.data.user
+      this.jwt = res.data.jwt
       this.persist()
-    } catch (err) {
-      console.error(err)
+      return true
+    } else {
+      console.error(res.error)
+      return false
     }
-    return resp
   }
 
-  @action logout = () => {
-    // this.resetAllStores()
-    this.reset()
+  logout = () => {
+    this.resetAllStores()
   }
 
   @action reset = () => {

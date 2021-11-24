@@ -31,9 +31,10 @@ import {
   useEditorV2,
 } from '@manuscripts/manuscript-editor'
 import { YJS_WS_URL } from 'config'
+import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'
-import { useStores } from 'stores'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 // import '@manuscripts/style-guide/styles/tip.css'
@@ -49,9 +50,7 @@ function Menus() {
   const editorState = useEditorState()
   const menuSpec = useMemo(
     () =>
-      editorState && viewProvider
-        ? createMenus()(editorState, viewProvider?.execCommand)
-        : [],
+      editorState && viewProvider ? createMenus()(editorState, viewProvider?.execCommand) : [],
     [editorState, viewProvider?.execCommand]
   )
   const menus = useApplicationMenus(menuSpec)
@@ -63,11 +62,11 @@ interface Props {
   disableTrack: boolean
 }
 
-export function ManuscriptsEditor(props: Props) {
+export const ManuscriptsEditor = observer((props: Props) => {
   const { className = '', disableTrack } = props
   const {
     authStore: { editorUser },
-  } = useStores()
+  } = stores
   const editorDOMRef = useRef(null)
   const providers = useMemo(() => createDefaultProviders(), [])
   const extensions = [
@@ -116,7 +115,7 @@ export function ManuscriptsEditor(props: Props) {
       </ViewGrid>
     </ReactEditorContext.Provider>
   )
-}
+})
 
 const ViewGrid = styled.div`
   display: grid;

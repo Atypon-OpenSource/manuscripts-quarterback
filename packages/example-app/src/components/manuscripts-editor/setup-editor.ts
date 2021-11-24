@@ -40,11 +40,7 @@ export const createState = (props?: Partial<EditorProps>) =>
 
 export const createView =
   (props?: Partial<EditorProps>) =>
-  (
-    el: HTMLElement,
-    state: EditorState,
-    dispatch?: (tr: Transaction) => void
-  ) => {
+  (el: HTMLElement, state: EditorState, dispatch?: (tr: Transaction) => void) => {
     const view = new EditorView(el, {
       state,
       editable: () => true,
