@@ -1,14 +1,14 @@
 [submodule "packages/style-guide"]
 	path = packages/style-guide
-	url = https://gitlab.com/mpapp-public/manuscripts-style-guide
+	url = hgit@gitlab.com:mpapp-public/manuscripts-style-guide.git
 	branch = quarterback-integration
 
 [submodule "packages/manuscript-editor"]
 	path = packages/manuscript-editor
-	url = https://gitlab.com/mpapp-public/manuscripts-manuscript-editor
+	url = git@gitlab.com:mpapp-public/manuscripts-manuscript-editor.git
 	branch = quarterback-integration
 
 [submodule "packages/manuscript-transform"]
 	path = packages/manuscript-transform
-	url = https://gitlab.com/mpapp-public/manuscripts-manuscript-transform
+	url = git@gitlab.com:mpapp-public/manuscripts-manuscript-transform.git
 	branch = quarterback-integration
