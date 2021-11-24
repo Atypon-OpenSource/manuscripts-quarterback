@@ -1,6 +1,6 @@
 [submodule "packages/style-guide"]
 	path = packages/style-guide
-	url = hgit@gitlab.com:mpapp-public/manuscripts-style-guide.git
+	url = git@gitlab.com:mpapp-public/manuscripts-style-guide.git
 	branch = quarterback-integration
 
 [submodule "packages/manuscript-editor"]
