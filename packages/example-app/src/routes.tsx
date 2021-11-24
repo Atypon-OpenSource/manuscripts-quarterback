@@ -17,6 +17,7 @@ import * as React from 'react'
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom'
 
 import { WrappedRoute } from './components/WrappedRoute'
+import { AccountPage } from './pages/AccountPage'
 import { FrontPage } from './pages/FrontPage'
 import LoginPage from './pages/LoginPage'
 import { ManuscriptsPage } from './pages/ManuscriptsPage'
@@ -26,6 +27,7 @@ export const Routes = () => (
     <Switch>
       <WrappedRoute exact path="/" component={FrontPage} />
       <WrappedRoute exact path="/login" component={LoginPage} />
+      <WrappedRoute exact path="/account" component={AccountPage} />
       <WrappedRoute exact path="/manuscripts/:documentId" component={ManuscriptsPage} />
       <Redirect to="/" />
     </Switch>
