@@ -8,6 +8,8 @@ This project uses Docker and Docker Compose. You should have at least version 17
 
 Also this project imports https://gitlab.com/mpapp-public/manuscripts-manuscript-editor and https://gitlab.com/mpapp-public/manuscripts-style-guide as git submodules which you should checkout with: `git submodule update --init --recursive`
 
+NOTE: it is a good idea to run `git submodule update --remote` once in a while incase the `quarterback-integration` branches in the git submodules have been updated.
+
 Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
 1. Install all dependencies: `pnpm i -r`
