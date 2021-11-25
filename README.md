@@ -15,7 +15,8 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 4. Copy the environment variables: `cp ./packages/api/.example-env ./packages/api/.env && cp ./packages/collab/.example-env ./packages/collab/.env && cp ./packages/db/.example-env ./packages/db/.env && cp ./packages/example-app/.example-env ./packages/example-app/.env`
 5. Migrate the database: `pnpm run migrate --filter @manuscripts/quarterback-db`
 6. And seed it with test data: `pnpm run seed --filter @manuscripts/quarterback-db`
-7. Start the app in http://localhost:4600: `pnpm start`
+7. Build the external manuscripts packages: `pnpm build`
+8. Start the app in http://localhost:4600: `pnpm start`. Or you can also start them as groups: `pnpm utils` `pnpm api` `pnpm client`
 
 ## Commands
 
