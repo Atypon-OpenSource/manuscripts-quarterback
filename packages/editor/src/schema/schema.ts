@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TrackedAttrs } from '@manuscripts/ext-track-changes'
 import { Schema } from 'prosemirror-model'
-
-import { TrackedAttrs } from '$extensions/track-changes'
 
 import { Marks, Nodes, QuarterBackSchema } from './types'
 
