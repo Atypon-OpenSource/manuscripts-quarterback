@@ -12,3 +12,8 @@
 	path = packages/manuscript-transform
 	url = git@gitlab.com:mpapp-public/manuscripts-manuscript-transform.git
 	branch = quarterback-integration
+
+[submodule "packages/library"]
+	path = packages/library
+	url = git@gitlab.com:mpapp-public/manuscripts-library.git
+	branch = quarterback-integration
