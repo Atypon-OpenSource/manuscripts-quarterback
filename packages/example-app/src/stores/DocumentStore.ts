@@ -16,7 +16,7 @@
 import { PmDoc } from '@manuscripts/quarterback-shared'
 // import { EditorStore } from './EditorStore'
 // import { ToastStore } from './ToastStore'
-import { getDocuments } from 'api/document'
+import { getDocuments, openDocument } from 'api/document'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { AuthStore } from './AuthStore'
@@ -76,6 +76,17 @@ export class DocumentStore {
         }
         currentDocsIds.splice(idx, 1)
       })
+    })
+  }
+
+  @action openDocument = async (documentId: string) => {
+    const resp = await openDocument(documentId)
+    if (!resp.ok) {
+      console.error(resp.error)
+      return
+    }
+    runInAction(() => {
+      this.currentDocument = resp.data.doc
     })
   }
 

@@ -39,3 +39,23 @@ export const getDocuments = async (
     next(err)
   }
 }
+
+export const openDocument = async (
+  req: IAuthRequest<Record<string, never>, { documentId: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const result = await docService.openDocument(documentId, res.locals.user.id)
+    if (result.ok) {
+      res.json({
+        doc: result.data,
+      })
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}

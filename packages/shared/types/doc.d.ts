@@ -21,3 +21,8 @@ export { PmDoc } from '@manuscripts/quarterback-db'
 export interface IGetDocumentsResponse {
   docs: PmDoc[]
 }
+
+// GET /doc/:documentId/open
+export interface IOpenDocumentResponse {
+  doc: PmDoc
+}

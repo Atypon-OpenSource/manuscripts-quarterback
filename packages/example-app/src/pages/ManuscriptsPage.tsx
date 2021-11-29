@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
@@ -31,6 +33,14 @@ export function ManuscriptsPage() {
     }
     return persisted
   })
+  const routeParams = useParams<{ documentId: string }>()
+  const {
+    documentStore: { openDocument },
+  } = stores
+
+  useEffect(() => {
+    openDocument(routeParams.documentId)
+  }, [])
 
   function handleToggleDisableTrack() {
     const disabled = !disableTrack

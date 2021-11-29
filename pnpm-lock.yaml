@@ -46,6 +46,7 @@ importers:
 
   packages/api:
     specifiers:
+      '@manuscripts/manuscript-transform': workspace:*
       '@manuscripts/quarterback-db': workspace:*
       '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-alias': ^3.1.8
@@ -54,6 +55,7 @@ importers:
       '@types/cors': ^2.8.12
       '@types/express': ^4.17.13
       '@types/express-serve-static-core': ^4.17.24
+      '@types/jsdom': ^16.2.4
       '@types/jsonwebtoken': ^8.5.5
       '@types/morgan': ^1.9.3
       '@types/node': ^16.11.6
@@ -62,6 +64,7 @@ importers:
       dotenv: ^10.0.0
       express: ~4.17.1
       joi: ^17.4.2
+      jsdom: ^16.4.0
       jsonwebtoken: ^8.5.1
       morgan: ^1.10.0
       nodemon: ^2.0.14
@@ -71,12 +74,14 @@ importers:
       typescript: ^4.4.4
       winston: ^3.3.3
     dependencies:
+      '@manuscripts/manuscript-transform': link:../manuscript-transform
       '@manuscripts/quarterback-db': link:../db
       '@manuscripts/quarterback-shared': link:../shared
       bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.17.1
       joi: 17.4.2
+      jsdom: 16.7.0
       jsonwebtoken: 8.5.1
       morgan: 1.10.0
       winston: 3.3.3
@@ -87,6 +92,7 @@ importers:
       '@types/cors': 2.8.12
       '@types/express': 4.17.13
       '@types/express-serve-static-core': 4.17.24
+      '@types/jsdom': 16.2.13
       '@types/jsonwebtoken': 8.5.5
       '@types/morgan': 1.9.3
       '@types/node': 16.11.7

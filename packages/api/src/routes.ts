@@ -25,5 +25,6 @@ const router = Router()
 router.post('/login', authCtrl.login)
 
 router.get('/docs', authenticate, docCtrl.getDocuments)
+router.get('/doc/:documentId/open', authenticate, docCtrl.openDocument)
 
 export default router

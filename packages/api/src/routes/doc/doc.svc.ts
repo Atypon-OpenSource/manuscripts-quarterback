@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/manuscript-transform'
 import { Event, PmDoc } from '@manuscripts/quarterback-shared'
 
 import { CustomError, prisma } from '$common'
@@ -24,6 +25,30 @@ export const docService = {
         user_id: userId,
       },
     })
+    return { ok: true, data: found }
+  },
+  async openDocument(docId: string, userId: string): Promise<Event<PmDoc | null>> {
+    let found = await prisma.pmDoc.findFirst({
+      where: {
+        id: docId,
+      },
+    })
+    if (!found) {
+      const doc = schema.nodes.doc.createAndFill()?.toJSON() || {}
+      await prisma.pmDoc.create({
+        data: {
+          id: docId,
+          name: 'Untitled',
+          user_id: userId,
+          doc,
+        },
+      })
+      found = (await prisma.pmDoc.findFirst({
+        where: {
+          id: docId,
+        },
+      })) as PmDoc
+    }
     return { ok: true, data: found }
   },
 }

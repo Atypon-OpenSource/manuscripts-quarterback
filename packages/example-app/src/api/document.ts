@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IGetDocumentsResponse } from '@manuscripts/quarterback-shared'
+import { IGetDocumentsResponse, IOpenDocumentResponse } from '@manuscripts/quarterback-shared'
 
 import { get } from './methods'
 
-export const getDocuments = () =>
-  get<IGetDocumentsResponse>('docs', 'Fetching documents failed')
+export const getDocuments = () => get<IGetDocumentsResponse>('docs', 'Fetching documents failed')
+
+export const openDocument = (documentId: string) =>
+  get<IOpenDocumentResponse>(`doc/${documentId}/open`, 'Opening document failed')
