@@ -1,24 +1,22 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "moduleResolution": "node",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "lib": ["es2017", "dom", "dom.iterable"],
     "module": "esnext",
-    "lib": ["esnext"],
-    "target": "esnext",
-    "declaration": true,
-    "declarationDir": "./dist",
+    "moduleResolution": "node",
+    "target": "es2017",
     "isolatedModules": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
     "strict": true,
     "noImplicitAny": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "removeComments": false
-  }
+    "removeComments": true,
+    "typeRoots": ["node_modules/@types", "packages/style-guide/stories/types"]
+  },
+  "include": ["packages"]
 }
