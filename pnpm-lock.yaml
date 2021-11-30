@@ -234,7 +234,7 @@ importers:
       ttypescript: ^1.5.12
       typescript: ^4.4.4
       unique-names-generator: ^4.6.0
-      y-prosemirror: ^1.0.12
+      y-prosemirror: ^1.0.13
       y-protocols: ^1.0.5
       y-websocket: ^1.3.17
       yjs: ^13.5.21
@@ -256,7 +256,7 @@ importers:
       prosemirror-view: 1.22.0
       randomcolor: 0.6.2
       unique-names-generator: 4.6.0
-      y-prosemirror: 1.0.12_aebabedc1347a92d7d3d792f78940d02
+      y-prosemirror: 1.0.13_aebabedc1347a92d7d3d792f78940d02
       y-protocols: 1.0.5
       y-websocket: 1.3.17_yjs@13.5.21
       yjs: 13.5.21
@@ -409,7 +409,7 @@ importers:
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
-      y-prosemirror: ^1.0.12
+      y-prosemirror: ^1.0.13
     dependencies:
       '@manuscripts/quarterback-shared': link:../shared
       debug: 4.3.2
@@ -430,7 +430,7 @@ importers:
       rollup: 2.59.0
       rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
       typescript: 4.4.4
-      y-prosemirror: 1.0.12_b69bb5f26aef30e1d77540695bff70ef
+      y-prosemirror: 1.0.13_b69bb5f26aef30e1d77540695bff70ef
 
   packages/ext-yjs:
     specifiers:
@@ -457,7 +457,7 @@ importers:
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
       unique-names-generator: ^4.6.0
-      y-prosemirror: ^1.0.12
+      y-prosemirror: ^1.0.13
       y-protocols: ^1.0.5
       y-websocket: ^1.3.17
       yjs: ^13.5.21
@@ -468,7 +468,7 @@ importers:
       lib0: 0.2.42
       randomcolor: 0.6.2
       unique-names-generator: 4.6.0
-      y-prosemirror: 1.0.12_aebabedc1347a92d7d3d792f78940d02
+      y-prosemirror: 1.0.13_aebabedc1347a92d7d3d792f78940d02
       y-protocols: 1.0.5
       y-websocket: 1.3.17_yjs@13.5.21
       yjs: 13.5.21
@@ -24573,8 +24573,8 @@ packages:
     dev: false
     optional: true
 
-  /y-prosemirror/1.0.12_aebabedc1347a92d7d3d792f78940d02:
-    resolution: {integrity: sha512-DvALyb2Q5QRMYAtP0IOSNj1q3NbqjPvJLQggNqzA8LehUrLSrLn/WIpDiphLHrAokrQtyGFrUrsJJuNYpV7+fQ==}
+  /y-prosemirror/1.0.13_aebabedc1347a92d7d3d792f78940d02:
+    resolution: {integrity: sha512-cOlOVbose0ODmHr9NAk1c5ULauD9e059a4WhK2yy2dzsrNuwNDoDTKc2fuTkHpjoqqBLo+n0vgUB5yMo3FK2YA==}
     peerDependencies:
       prosemirror-model: ^1.7.1
       prosemirror-state: ^1.2.3
@@ -24590,8 +24590,8 @@ packages:
       yjs: 13.5.21
     dev: false
 
-  /y-prosemirror/1.0.12_b69bb5f26aef30e1d77540695bff70ef:
-    resolution: {integrity: sha512-DvALyb2Q5QRMYAtP0IOSNj1q3NbqjPvJLQggNqzA8LehUrLSrLn/WIpDiphLHrAokrQtyGFrUrsJJuNYpV7+fQ==}
+  /y-prosemirror/1.0.13_b69bb5f26aef30e1d77540695bff70ef:
+    resolution: {integrity: sha512-cOlOVbose0ODmHr9NAk1c5ULauD9e059a4WhK2yy2dzsrNuwNDoDTKc2fuTkHpjoqqBLo+n0vgUB5yMo3FK2YA==}
     peerDependencies:
       prosemirror-model: ^1.7.1
       prosemirror-state: ^1.2.3
