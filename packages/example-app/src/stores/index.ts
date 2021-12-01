@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { confMobx } from './mobxConf'
 import { Stores } from './Stores'
-
-confMobx()
 
 export const stores = new Stores()
 export { Stores }

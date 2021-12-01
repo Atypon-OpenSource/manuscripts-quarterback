@@ -15,8 +15,13 @@
  */
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { stores } from 'stores'
 import styled from 'styled-components'
+import { yDocToProsemirrorJSON } from 'y-prosemirror' 
+import { WebsocketProvider } from 'y-websocket'
+import { Doc } from 'yjs'
+
+import { YJS_WS_URL } from 'config'
+import { stores } from 'stores'
 
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
 
@@ -37,9 +42,33 @@ export function ManuscriptsPage() {
   const {
     documentStore: { openDocument },
   } = stores
+  const [initialData, setInitialData] = useState<{
+    yDoc: Doc
+    pmDoc: Record<string, any>
+    provider: WebsocketProvider
+  }>()
 
   useEffect(() => {
-    openDocument(routeParams.documentId)
+    openDocument(routeParams.documentId).then(yDoc => {
+      const provider = new WebsocketProvider(YJS_WS_URL, routeParams.documentId, yDoc)
+      provider.on('sync', () => {
+        const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
+        pmDoc.type = 'manuscript'
+        setInitialData({
+          yDoc,
+          pmDoc,
+          provider,
+        })
+      })
+    }).catch((err) => {
+      console.error(err)
+    })
+    return () => {
+      if (initialData) {
+        initialData.yDoc.destroy()
+        initialData.provider.destroy()
+      }
+    }
   }, [])
 
   function handleToggleDisableTrack() {
@@ -56,7 +85,13 @@ export function ManuscriptsPage() {
           {disableTrack ? 'Enable' : 'Disable'} track changes
         </button>
       </header>
-      <ManuscriptsEditor disableTrack={disableTrack} />
+      { initialData &&
+      <ManuscriptsEditor
+        disableTrack={disableTrack}
+        documentId={routeParams.documentId}
+        initialData={initialData}
+      />
+      }
     </Container>
   )
 }

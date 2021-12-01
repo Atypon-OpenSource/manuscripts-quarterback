@@ -36,13 +36,13 @@ export const createYjsStore = (
   viewProvider: EditorViewProvider,
   opts: YjsEnabled
 ) => {
-  const { document, user, ws_url } = opts
+  const { document, user, initial, ws_url } = opts
   const _observable = new Observable<'update'>()
-  const ydoc = new Y.Doc()
+  const ydoc = initial?.doc || new Doc()
+  ydoc.gc = false
   const permanentUserData = new Y.PermanentUserData(ydoc)
   permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
-  ydoc.gc = false
-  const provider = new WebsocketProvider(ws_url, document.id, ydoc)
+  const provider = initial?.provider || new WebsocketProvider(ws_url, document.id, ydoc)
   const yXmlFragment = ydoc.getXmlFragment('pm-doc')
 
   let snapshots: YjsSnapshot[] = []

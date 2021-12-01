@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 import { PmDoc } from '@manuscripts/quarterback-shared'
-// import { EditorStore } from './EditorStore'
-// import { ToastStore } from './ToastStore'
 import { getDocuments, openDocument } from 'api/document'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
+import { applyUpdate, Doc } from 'yjs'
 
 import { AuthStore } from './AuthStore'
 
@@ -79,15 +78,15 @@ export class DocumentStore {
     })
   }
 
-  @action openDocument = async (documentId: string) => {
+  openDocument = async (documentId: string) => {
     const resp = await openDocument(documentId)
+    const yDoc = new Doc({ gc: true })
     if (!resp.ok) {
       console.error(resp.error)
-      return
+      return yDoc
     }
-    runInAction(() => {
-      this.currentDocument = resp.data.doc
-    })
+    applyUpdate(yDoc, new Uint8Array(resp.data))
+    return yDoc
   }
 
   @action setCurrentDocument = (id: string) => {

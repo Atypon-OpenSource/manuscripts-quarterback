@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { WebsocketProvider } from 'y-websocket'
+import { Doc } from 'yjs'
+
 import type { yjsExtension } from './extension'
 import type { createYjsStore } from './store'
 
@@ -30,6 +33,10 @@ export type YjsEnabled = {
     id: string
     name: string
     color?: string
+  }
+  initial?: {
+    doc: Doc
+    provider: WebsocketProvider
   }
   ws_url: string
 }

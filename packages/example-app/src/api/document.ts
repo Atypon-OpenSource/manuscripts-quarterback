@@ -20,4 +20,4 @@ import { get } from './methods'
 export const getDocuments = () => get<IGetDocumentsResponse>('docs', 'Fetching documents failed')
 
 export const openDocument = (documentId: string) =>
-  get<IOpenDocumentResponse>(`doc/${documentId}/open`, 'Opening document failed')
+  get<IOpenDocumentResponse>(`doc/${documentId}/open`, 'Opening document failed', { Accept: 'application/octet-stream' })
