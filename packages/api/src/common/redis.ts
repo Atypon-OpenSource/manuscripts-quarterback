@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDoc } from '@manuscripts/quarterback-db'
+import Redis from 'ioredis'
 
-export { PmDoc } from '@manuscripts/quarterback-db'
+import { config } from './config'
 
-// GET /docs
-export interface IGetDocumentsResponse {
-  docs: PmDoc[]
-}
-
-// GET /doc/:documentId/open
-export type IOpenDocumentResponse = Uint8Array
+export const createRedisClient = () =>
+  new Redis(config.REDIS.URL, {
+    // Heroku specific hack. Since it uses self-signed certificates or something alike
+    // this must be specified when ran inside Heroku (aka. production)
+    // Locally it be must unset (not even set true) because it then sets other options
+    // that break something else.
+    ...(config.ENV === 'production' && {
+      tls: {
+        rejectUnauthorized: false,
+      },
+    }),
+  })

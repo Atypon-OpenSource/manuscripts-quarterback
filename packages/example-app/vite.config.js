@@ -54,10 +54,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@manuscripts/manuscript-transform': resolve('../manuscript-transform'),
+      lib0: resolve('node_modules/lib0'),
       react: require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),
       yjs: resolve('node_modules/yjs'),
+      'y-prosemirror': resolve('node_modules/y-prosemirror'),
     },
   },
   define: {

@@ -46,6 +46,7 @@ importers:
 
   packages/api:
     specifiers:
+      '@manuscripts/manuscript-transform': workspace:*
       '@manuscripts/quarterback-db': workspace:*
       '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-alias': ^3.1.8
@@ -54,6 +55,8 @@ importers:
       '@types/cors': ^2.8.12
       '@types/express': ^4.17.13
       '@types/express-serve-static-core': ^4.17.24
+      '@types/ioredis': ^4.28.1
+      '@types/jsdom': ^16.2.4
       '@types/jsonwebtoken': ^8.5.5
       '@types/morgan': ^1.9.3
       '@types/node': ^16.11.6
@@ -61,7 +64,9 @@ importers:
       cors: ^2.8.5
       dotenv: ^10.0.0
       express: ~4.17.1
+      ioredis: ^4.28.1
       joi: ^17.4.2
+      jsdom: ^16.4.0
       jsonwebtoken: ^8.5.1
       morgan: ^1.10.0
       nodemon: ^2.0.14
@@ -70,16 +75,23 @@ importers:
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
       winston: ^3.3.3
+      y-prosemirror: ^1.0.12
+      yjs: ^13.5.21
     dependencies:
+      '@manuscripts/manuscript-transform': link:../manuscript-transform
       '@manuscripts/quarterback-db': link:../db
       '@manuscripts/quarterback-shared': link:../shared
       bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.17.1
+      ioredis: 4.28.1
       joi: 17.4.2
+      jsdom: 16.7.0
       jsonwebtoken: 8.5.1
       morgan: 1.10.0
       winston: 3.3.3
+      y-prosemirror: 1.0.12_yjs@13.5.21
+      yjs: 13.5.21
     devDependencies:
       '@rollup/plugin-alias': 3.1.8_rollup@2.59.0
       '@rollup/plugin-commonjs': 21.0.1_rollup@2.59.0
@@ -87,6 +99,8 @@ importers:
       '@types/cors': 2.8.12
       '@types/express': 4.17.13
       '@types/express-serve-static-core': 4.17.24
+      '@types/ioredis': 4.28.1
+      '@types/jsdom': 16.2.13
       '@types/jsonwebtoken': 8.5.5
       '@types/morgan': 1.9.3
       '@types/node': 16.11.7
@@ -107,6 +121,7 @@ importers:
       '@types/cors': ^2.8.12
       '@types/express': ^4.17.13
       '@types/express-serve-static-core': ^4.17.24
+      '@types/ioredis': ^4.28.1
       '@types/jsonwebtoken': ^8.5.5
       '@types/morgan': ^1.9.3
       '@types/node': ^16.11.6
@@ -115,6 +130,7 @@ importers:
       cors: ^2.8.5
       dotenv: ^10.0.0
       express: ~4.17.1
+      ioredis: ^4.28.1
       joi: ^17.4.2
       jsonwebtoken: ^8.5.1
       lib0: ^0.2.42
@@ -134,6 +150,7 @@ importers:
       bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.17.1
+      ioredis: 4.28.1
       joi: 17.4.2
       jsonwebtoken: 8.5.1
       lib0: 0.2.42
@@ -149,6 +166,7 @@ importers:
       '@types/cors': 2.8.12
       '@types/express': 4.17.13
       '@types/express-serve-static-core': 4.17.24
+      '@types/ioredis': 4.28.1
       '@types/jsonwebtoken': 8.5.5
       '@types/morgan': 1.9.3
       '@types/node': 16.11.7
@@ -316,6 +334,7 @@ importers:
       esbuild: ^0.12.26
       esbuild-plugin-alias: ^0.2.0
       history: ^4.10.1
+      lib0: ^0.2.42
       live-server: ^1.2.1
       lodash.debounce: ^4.0.8
       mobx: ^6.3.5
@@ -337,6 +356,8 @@ importers:
       uuid: ^8.3.1
       vite: ^2.6.13
       vite-tsconfig-paths: ^3.3.17
+      y-prosemirror: ^1.0.13
+      y-websocket: ^1.3.17
       yjs: ^13.5.21
     dependencies:
       '@manuscripts/ext-track-changes': link:../ext-track-changes
@@ -349,6 +370,7 @@ importers:
       '@manuscripts/style-guide': link:../style-guide
       '@popperjs/core': 2.10.2
       history: 4.10.1
+      lib0: 0.2.43
       lodash.debounce: 4.0.8
       mobx: 6.3.6
       mobx-react: 7.2.1_5cbc179485cce5c6733ddc74a83c553b
@@ -366,6 +388,8 @@ importers:
       typescript: 4.4.2
       unique-names-generator: 4.6.0
       uuid: 8.3.2
+      y-prosemirror: 1.0.13_56657aced861ebc3ef8926c99f4d6422
+      y-websocket: 1.3.17_yjs@13.5.21
       yjs: 13.5.21
     devDependencies:
       '@esbuild-plugins/node-globals-polyfill': 0.1.1_esbuild@0.12.29
@@ -856,6 +880,9 @@ importers:
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
+      yjs: ^13.5.21
+    dependencies:
+      yjs: 13.5.21
     devDependencies:
       '@manuscripts/quarterback-db': link:../db
       rimraf: 3.0.2
@@ -6318,6 +6345,12 @@ packages:
     resolution: {integrity: sha512-DxX1V9P8zdJPYQat1gHyY0xj3efl8gnMVjiM9iCY6y27lj+PoQWkgjt8jDqmovPqULkKVpKRg8J36iQiA+EtEg==}
     dev: false
 
+  /@types/ioredis/4.28.1:
+    resolution: {integrity: sha512-raYHPqRWrfnEoym94BY28mG1+tcZqh3dsp2q7x5IyMAAEvIdu+H0X8diASMpncIm+oHyH9dalOeOnGOL/YnuOA==}
+    dependencies:
+      '@types/node': 16.11.7
+    dev: true
+
   /@types/is-function/1.0.1:
     resolution: {integrity: sha512-A79HEEiwXTFtfY+Bcbo58M2GRYzCr9itHWzbzHVFNEYCcoU/MMGwYYf721gBrnhpj1s6RGVVha/IgNFnR0Iw/Q==}
     dev: true
@@ -6669,8 +6702,8 @@ packages:
   /@types/react-select/3.1.2:
     resolution: {integrity: sha512-ygvR/2FL87R2OLObEWFootYzkvm67LRA+URYEAcBuvKk7IXmdsnIwSGm60cVXGaqkJQHozb2Cy1t94tCYb6rJA==}
     dependencies:
-      '@types/react': 16.14.20
-      '@types/react-dom': 16.9.14
+      '@types/react': 17.0.34
+      '@types/react-dom': 17.0.11
       '@types/react-transition-group': 4.4.4
     dev: true
 
@@ -8541,7 +8574,7 @@ packages:
       '@babel/helper-module-imports': 7.16.0
       babel-plugin-syntax-jsx: 6.18.0
       lodash: 4.17.21
-      styled-components: 5.3.3_60f3b602325395587bfce1ce81a371e8
+      styled-components: 5.3.3_react-dom@17.0.2+react@17.0.2
 
   /babel-plugin-syntax-jsx/6.18.0:
     resolution: {integrity: sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=}
@@ -9686,6 +9719,11 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /cluster-key-slot/1.1.0:
+    resolution: {integrity: sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /co/4.6.0:
     resolution: {integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
@@ -10828,6 +10866,11 @@ packages:
 
   /delegates/1.0.0:
     resolution: {integrity: sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=}
+
+  /denque/1.5.1:
+    resolution: {integrity: sha512-XwE+iZ4D6ZUB7mfYRMb5wByE8L74HCn30FBN7sWnXksWc1LO1bPDl67pBR9o/kC4z/xSNAwkMYcGgqDV3BE3Hw==}
+    engines: {node: '>=0.10'}
+    dev: false
 
   /depd/1.1.2:
     resolution: {integrity: sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=}
@@ -14010,6 +14053,25 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
+  /ioredis/4.28.1:
+    resolution: {integrity: sha512-7gcrUJEcPHWy+eEyq6wIZpXtfHt8crhbc5+z0sqrnHUkwBblXinygfamj+/jx83Qo+2LW3q87Nj2VsuH6BF2BA==}
+    engines: {node: '>=6'}
+    dependencies:
+      cluster-key-slot: 1.1.0
+      debug: 4.3.2
+      denque: 1.5.1
+      lodash.defaults: 4.2.0
+      lodash.flatten: 4.4.0
+      lodash.isarguments: 3.1.0
+      p-map: 2.1.0
+      redis-commands: 1.7.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /ip-regex/2.1.0:
     resolution: {integrity: sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk=}
     engines: {node: '>=4'}
@@ -16720,9 +16782,17 @@ packages:
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
 
+  /lodash.defaults/4.2.0:
+    resolution: {integrity: sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw=}
+    dev: false
+
   /lodash.escape/4.0.1:
     resolution: {integrity: sha1-yQRGkMIeBClL6qUXcS/e0fqI3pg=}
     dev: true
+
+  /lodash.flatten/4.4.0:
+    resolution: {integrity: sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=}
+    dev: false
 
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
@@ -16734,6 +16804,10 @@ packages:
 
   /lodash.includes/4.3.0:
     resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=}
+    dev: false
+
+  /lodash.isarguments/3.1.0:
+    resolution: {integrity: sha1-L1c9hcaiQon/AGY7SRwdM4/zRYo=}
     dev: false
 
   /lodash.isboolean/3.0.3:
@@ -21097,6 +21171,22 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
+  /redis-commands/1.7.0:
+    resolution: {integrity: sha512-nJWqw3bTFy21hX/CPKHth6sfhZbdiHP6bTawSgQBlKOVRG7EZkfHbbHwQJnrE4vsQf0CMNE+3gJ4Fmm16vdVlQ==}
+    dev: false
+
+  /redis-errors/1.2.0:
+    resolution: {integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=}
+    engines: {node: '>=4'}
+    dev: false
+
+  /redis-parser/3.0.0:
+    resolution: {integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=}
+    engines: {node: '>=4'}
+    dependencies:
+      redis-errors: 1.2.0
+    dev: false
+
   /redux/4.1.2:
     resolution: {integrity: sha512-SH8PglcebESbd/shgf6mii6EIoRM0zrQyjcuQ+ojmfxjTtE0z9Y8pa62iA/OJ58qjP6j27uyW4kUF4jl/jd6sw==}
     dependencies:
@@ -22298,6 +22388,10 @@ packages:
 
   /stackframe/1.2.0:
     resolution: {integrity: sha512-GrdeshiRmS1YLMYgzF16olf2jJ/IzxXY9lhKOskuVziubpTYcYqyOwYeJKzQkwy7uN0fYSsbsC4RQaXf9LCrYA==}
+    dev: false
+
+  /standard-as-callback/2.1.0:
+    resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
     dev: false
 
   /state-toggle/1.0.3:
@@ -24573,6 +24667,34 @@ packages:
     dev: false
     optional: true
 
+  /y-prosemirror/1.0.12_yjs@13.5.21:
+    resolution: {integrity: sha512-DvALyb2Q5QRMYAtP0IOSNj1q3NbqjPvJLQggNqzA8LehUrLSrLn/WIpDiphLHrAokrQtyGFrUrsJJuNYpV7+fQ==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.3.2
+    dependencies:
+      lib0: 0.2.43
+      yjs: 13.5.21
+    dev: false
+
+  /y-prosemirror/1.0.13_56657aced861ebc3ef8926c99f4d6422:
+    resolution: {integrity: sha512-cOlOVbose0ODmHr9NAk1c5ULauD9e059a4WhK2yy2dzsrNuwNDoDTKc2fuTkHpjoqqBLo+n0vgUB5yMo3FK2YA==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.3.2
+    dependencies:
+      lib0: 0.2.43
+      prosemirror-state: 1.3.4
+      prosemirror-view: 1.22.0
+      yjs: 13.5.21
+    dev: false
+
   /y-prosemirror/1.0.13_aebabedc1347a92d7d3d792f78940d02:
     resolution: {integrity: sha512-cOlOVbose0ODmHr9NAk1c5ULauD9e059a4WhK2yy2dzsrNuwNDoDTKc2fuTkHpjoqqBLo+n0vgUB5yMo3FK2YA==}
     peerDependencies:
@@ -24608,7 +24730,7 @@ packages:
   /y-protocols/1.0.5:
     resolution: {integrity: sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==}
     dependencies:
-      lib0: 0.2.42
+      lib0: 0.2.43
     dev: false
 
   /y-websocket/1.3.17_yjs@13.5.21:
@@ -24617,7 +24739,7 @@ packages:
     peerDependencies:
       yjs: ^13.5.6
     dependencies:
-      lib0: 0.2.42
+      lib0: 0.2.43
       lodash.debounce: 4.0.8
       y-protocols: 1.0.5
       yjs: 13.5.21

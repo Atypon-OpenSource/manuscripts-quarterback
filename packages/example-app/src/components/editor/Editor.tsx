@@ -52,7 +52,7 @@ export const Editor = observer(() => {
       yjsExtension({
         disabled: false,
         document: {
-          id: 'doc1',
+          id: 'frontpage-doc',
         },
         user: {
           id: editorUser.id,

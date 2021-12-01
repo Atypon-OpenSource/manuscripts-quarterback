@@ -36,6 +36,8 @@ import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
+import { WebsocketProvider } from 'y-websocket'
+import { Doc } from 'yjs'
 
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'
@@ -60,10 +62,16 @@ function Menus() {
 interface Props {
   className?: string
   disableTrack: boolean
+  documentId: string
+  initialData: {
+    yDoc: Doc
+    pmDoc: Record<string, any>
+    provider: WebsocketProvider
+  }
 }
 
 export const ManuscriptsEditor = observer((props: Props) => {
-  const { className = '', disableTrack } = props
+  const { className = '', disableTrack, documentId, initialData } = props
   const {
     authStore: { editorUser },
   } = stores
@@ -83,11 +91,15 @@ export const ManuscriptsEditor = observer((props: Props) => {
     yjsExtension({
       disabled: false,
       document: {
-        id: 'documentId',
+        id: documentId,
       },
       user: {
         id: editorUser.id,
         name: editorUser.name,
+      },
+      initial: {
+        doc: initialData.yDoc,
+        provider: initialData.provider,
       },
       ws_url: YJS_WS_URL,
     }),
@@ -95,6 +107,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
   useEditorV2(
     {
       ctx: providers,
+      initialDoc: initialData.pmDoc,
       extensions,
       manuscriptsProps: defaultEditorProps,
       onEditorReady: (ctx) => {

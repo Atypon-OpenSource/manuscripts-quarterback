@@ -40,4 +40,7 @@ export const config = {
   JWT: {
     SECRET: process.env.JWT_SECRET || 'verylongrandomstring',
   },
+  REDIS: {
+    URL: process.env.REDIS_URL || '',
+  },
 }

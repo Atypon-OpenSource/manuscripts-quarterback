@@ -19,7 +19,9 @@ import WebSocket, { WebSocketServer } from 'ws'
 import { Awareness, removeAwarenessStates } from 'y-protocols/awareness'
 
 import { log } from '$common/logger'
+import { createRedisClient } from '$common/redis'
 
+import { RedisPersistance } from '../y-redis/RedisPersistance'
 import { Connections } from './Connections'
 import { Document } from './Document'
 import {
@@ -39,6 +41,9 @@ export class YjsServer {
   httpServer?: HTTPServer
   wsServer?: WebSocketServer
   connections = new Connections()
+  redisPersistence = new RedisPersistance({
+    createRedisClient,
+  })
   opts: Required<Options>
 
   constructor(opts?: Options) {
@@ -74,7 +79,8 @@ export class YjsServer {
     // const query = request?.url?.split('?') || []
     // const queryParams = new URLSearchParams(query[1] ? query[1] : '')
     log.debug(`Parsed documentId: ${documentId}`)
-    const doc = this.documents.get(documentId) || new Document(documentId)
+    const doc = await this.redisPersistence.fetchYDoc(documentId)
+    // const doc = this.documents.get(documentId) || new Document(documentId)
     if (!this.documents.has(doc.id)) {
       this.documents.set(doc.id, doc)
     }

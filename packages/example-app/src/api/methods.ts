@@ -18,6 +18,17 @@ import type { Event } from '@manuscripts/quarterback-shared'
 import { API_URL } from '../config'
 import { stores } from '../stores'
 
+type FetchOptions = {
+  method: string
+  headers: Record<string, string>
+  body?: string
+}
+
+const DEFAULT_HEADERS = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+}
+
 function getAuthHeader() {
   const jwt = stores?.authStore.jwt
   return jwt && { Authorization: `Bearer ${jwt.token}` }
@@ -25,7 +36,7 @@ function getAuthHeader() {
 
 export async function wrappedFetch<T>(
   path: string,
-  options: RequestInit,
+  options: FetchOptions,
   defaultError = 'Request failed'
 ): Promise<Event<T>> {
   let resp
@@ -36,7 +47,13 @@ export async function wrappedFetch<T>(
     console.error(err)
     return { ok: false, error: 'Connection error', status: 550 }
   }
-  const data = await resp.json()
+  let data
+  const contentType = resp.headers.get('Content-Type')
+  if (!contentType || contentType.includes('application/json')) {
+    data = await resp.json()
+  } else if (contentType.includes('application/octet-stream')) {
+    data = await resp.arrayBuffer()
+  }
   if (!resp.ok) {
     console.error(data?.message || defaultError)
     return {
@@ -48,14 +65,13 @@ export async function wrappedFetch<T>(
   return { ok: true, data }
 }
 
-export function get<T>(path: string, defaultError?: string): Promise<Event<T>> {
+export function get<T>(path: string, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
       method: 'GET',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...headers,
         ...getAuthHeader(),
       },
     },
@@ -63,14 +79,13 @@ export function get<T>(path: string, defaultError?: string): Promise<Event<T>> {
   )
 }
 
-export function post<T>(path: string, payload: any, defaultError?: string): Promise<Event<T>> {
+export function post<T>(path: string, payload: any, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...headers,
         ...getAuthHeader(),
       },
       body: JSON.stringify(payload),
@@ -79,14 +94,13 @@ export function post<T>(path: string, payload: any, defaultError?: string): Prom
   )
 }
 
-export function put<T>(path: string, payload: any, defaultError?: string): Promise<Event<T>> {
+export function put<T>(path: string, payload: any, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
       method: 'PUT',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...headers,
         ...getAuthHeader(),
       },
       body: JSON.stringify(payload),
@@ -95,14 +109,13 @@ export function put<T>(path: string, payload: any, defaultError?: string): Promi
   )
 }
 
-export function del<T>(path: string, defaultError?: string): Promise<Event<T>> {
+export function del<T>(path: string, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
       method: 'DELETE',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...headers,
         ...getAuthHeader(),
       },
     },

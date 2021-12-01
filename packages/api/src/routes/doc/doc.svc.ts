@@ -13,9 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/manuscript-transform'
 import { Event, PmDoc } from '@manuscripts/quarterback-shared'
+import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
+import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
 import { CustomError, prisma } from '$common'
+import { createRedisClient } from '$common/redis'
+
+const pub = createRedisClient()
+
+const yjsService = {
+  documentIsInRedis(docId: string) {
+    return pub.exists(`${docId}:updates`).then((res) => res === 1)
+  },
+  async getYjsDoc(docId: string) {
+    const yDoc = new Doc()
+    const exists = await pub.exists(`${docId}:updates`)
+    if (exists === 1) {
+      const updates = await pub.lrangeBuffer(`${docId}:updates`, 0, -1)
+      yDoc.transact(() => {
+        updates.forEach((update) => {
+          applyUpdate(yDoc, update)
+        })
+      })
+    } else {
+      const doc = schema.nodes.manuscript.createAndFill() as any
+      const update = encodeStateAsUpdate(prosemirrorToYDoc(doc, 'pm-doc'))
+      applyUpdate(yDoc, update)
+    }
+    return yDoc
+  },
+}
 
 export const docService = {
   async getDocuments(userId: string): Promise<Event<PmDoc[]>> {
@@ -25,5 +54,52 @@ export const docService = {
       },
     })
     return { ok: true, data: found }
+  },
+  async openDocument(docId: string, userId: string): Promise<Event<Uint8Array>> {
+    const inRedis = await yjsService.documentIsInRedis(docId)
+    let yDoc
+    if (inRedis) {
+      yDoc = await yjsService.getYjsDoc(docId)
+      const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
+      pmDoc.type = 'manuscript'
+      await prisma.pmDoc.upsert({
+        where: {
+          id: docId,
+        },
+        update: {
+          doc: pmDoc,
+        },
+        create: {
+          id: docId,
+          name: 'Untitled',
+          user_id: userId,
+          doc: pmDoc,
+        },
+      })
+    } else {
+      const found = await prisma.pmDoc.findFirst({
+        where: {
+          id: docId,
+        },
+      })
+      let doc
+      if (!found) {
+        doc = schema.nodes.manuscript.createAndFill()?.toJSON() || {}
+        await prisma.pmDoc.create({
+          data: {
+            id: docId,
+            name: 'Untitled',
+            user_id: userId,
+            doc,
+          },
+        })
+      } else {
+        doc = found.doc
+      }
+      const node = schema.nodeFromJSON(doc as any)
+      yDoc = prosemirrorToYDoc(node, 'pm-doc')
+    }
+    const buffer = encodeStateAsUpdate(yDoc)
+    return { ok: true, data: buffer }
   },
 }

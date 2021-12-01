@@ -44,6 +44,14 @@ import { log } from '$common/logger'
 import { Document } from './Document'
 import { Connection, SyncMessageType, YjsMessageType } from './types'
 
+/**
+ * Explained to some extent https://discuss.yjs.dev/t/read-only-or-one-way-only-sync/135/4
+ * [0, 0] is a SyncStep1. It is request to receive the missing state (it contains a state-vector that the server uses to compute the missing updates)
+ * [0, 1] is SyncStep2, which is the reply to a SyncStep1. It contains the missing updates.
+ * [0, 2] is a regular document update message.
+ * [1, x] Awareness message. This information is only used to represent shared cursors and the name of each user.
+ */
+
 export function readMessageYjs(
   data: ArrayBuffer,
   doc: Document,
