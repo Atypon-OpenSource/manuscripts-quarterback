@@ -44,10 +44,7 @@ export function PMEditor(props: EditorProps) {
         editorViewRef.current
       )
     }
-    return () => {
-      editorViewRef.current?.destroy()
-    }
-  }, [])
+  }, [editorProps])
 
   function init(
     element: HTMLElement,
