@@ -4,7 +4,7 @@
 
 First you should check you have Node.js v16 installed: `node -v`. If not, I recommend using [nvm](https://github.com/nvm-sh/nvm) to install 16 version. This is needed for the ES modules and other new features.
 
-This project uses Docker and Docker Compose. You should have at least version 17 / 1.13 installed: `docker -v`. Then you should ensure you have added this repository to the shared folders in your Docker settings eg `Preferences > Resources > File sharing` in macOS Docker Desktop.
+This project uses Docker and Docker Compose. You should have at least version 17 / 1.13 installed: `docker -v`. Then if you are using macOS (probably in Windows too, not Ubuntu though) you should ensure you have added this repository to the shared folders in your Docker settings eg `Preferences > Resources > File sharing` in macOS Docker Desktop.
 
 Also this project imports https://gitlab.com/mpapp-public/manuscripts-manuscript-editor and https://gitlab.com/mpapp-public/manuscripts-style-guide as git submodules which you should checkout with: `git submodule update --init --recursive`
 
@@ -27,6 +27,16 @@ Also, if you were to remove a package inside `packages` the node_modules in the 
 ## Commands
 
 You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/quarterback-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
+
+## Test users
+
+admin
+email: quarterback+ADMIN@atypon.com
+pass: asdfasdf
+
+user
+email: quarterback+USER@atypon.com
+pass: asdfasdf
 
 ## Tests
 

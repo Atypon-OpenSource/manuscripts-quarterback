@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 export class Observable<K = string> {
-  _observers = new Map<K, Set<(args: any[]) => void>>()
+  _observers = new Map<K, Set<(...args: any[]) => void>>()
 
   on(key: K, cb: (...args: any[]) => void) {
     const current = this._observers.get(key)
@@ -36,11 +36,7 @@ export class Observable<K = string> {
   }
 
   emit(key: K, ...args: any[]) {
-    return Array.from((this._observers.get(key) || new Set()).values()).forEach(
-      // TODO the typing of this annoying thing
-      // @ts-ignore
-      (cb) => cb(...args)
-    )
+    return Array.from((this._observers.get(key) || new Set()).values()).forEach((cb) => cb(...args))
   }
 
   destroy() {
