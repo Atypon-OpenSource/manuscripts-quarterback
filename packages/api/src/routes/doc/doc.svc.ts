@@ -24,24 +24,18 @@ import { createRedisClient } from '$common/redis'
 const pub = createRedisClient()
 
 const yjsService = {
-  documentIsInRedis(docId: string) {
-    return pub.exists(`${docId}:updates`).then((res) => res === 1)
-  },
-  async getYjsDoc(docId: string) {
-    const yDoc = new Doc()
-    const exists = await pub.exists(`${docId}:updates`)
-    if (exists === 1) {
-      const updates = await pub.lrangeBuffer(`${docId}:updates`, 0, -1)
-      yDoc.transact(() => {
-        updates.forEach((update) => {
-          applyUpdate(yDoc, update)
-        })
-      })
-    } else {
-      const doc = schema.nodes.manuscript.createAndFill() as any
-      const update = encodeStateAsUpdate(prosemirrorToYDoc(doc, 'pm-doc'))
-      applyUpdate(yDoc, update)
+  async getYDocFromRedis(docId: string) {
+    const exists = await pub.exists(`${docId}:updates`).then((res) => res === 1)
+    if (!exists) {
+      return undefined
     }
+    const yDoc = new Doc()
+    const updates = await pub.lrangeBuffer(`${docId}:updates`, 0, -1)
+    yDoc.transact(() => {
+      updates.forEach((update) => {
+        applyUpdate(yDoc, update)
+      })
+    })
     return yDoc
   },
 }
@@ -56,10 +50,8 @@ export const docService = {
     return { ok: true, data: found }
   },
   async openDocument(docId: string, userId: string): Promise<Event<Uint8Array>> {
-    const inRedis = await yjsService.documentIsInRedis(docId)
-    let yDoc
-    if (inRedis) {
-      yDoc = await yjsService.getYjsDoc(docId)
+    let yDoc = await yjsService.getYDocFromRedis(docId)
+    if (yDoc) {
       const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
       pmDoc.type = 'manuscript'
       await prisma.pmDoc.upsert({
