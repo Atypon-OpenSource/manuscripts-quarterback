@@ -20,13 +20,19 @@
     "client": "concurrently --kill-others 'pnpm run dev --filter @manuscripts/quarterback-example-app'",
     "start": "concurrently --kill-others 'pnpm api' 'pnpm utils' 'pnpm client'",
     "e2e": "pnpm run test --filter @manuscripts/quarterback-e2e",
-    "e2e:open": "pnpm run start --filter @manuscripts/quarterback-e2e"
+    "e2e:open": "pnpm run start --filter @manuscripts/quarterback-e2e",
+    "cs": "changeset",
+    "cs:version": "changeset version",
+    "cs:publish": "changeset publish",
+    "ci:version": "changeset version && pnpm i --lockfile-only",
+    "ci:publish": "pnpm publish -r --no-git-checks --tag=next"
   },
   "engines": {
     "node": ">=16",
     "pnpm": "^6.0.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.18.1",
     "@manuscripts/eslint-config": "^0.4.2",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "concurrently": "^6.3.0",

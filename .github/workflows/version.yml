@@ -1,0 +1,48 @@
+name: Changesets version
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
+jobs:
+  version:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: setup caching
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.PNPM_CACHE_FOLDER }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: setup node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: install pnpm
+        uses: ./actions/pnpm_install
+        with:
+          cache: ${{ env.PNPM_CACHE_FOLDER }}
+
+      # TODO change logic here to combine multiple PRs
+      - name: create versions
+        uses: changesets/action@master
+        with:
+          version: pnpm ci:version
+          commit: 'chore(changeset): version update'
+          title: 'chore(changeset): version update'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

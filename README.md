@@ -39,3 +39,7 @@ You can add a submodule with eg: `git submodule add -b quarterback-integration g
 After which you should also add the package to the source control: `git add packages/library`
 
 Any time you update a submodule and push to its `quarterback-integration` branch, you must then also execute `git add packages/<module>` here to update the tracked commit.
+
+## Publishing new versions
+
+Use this [guide](.changeset/README.md) to publish new versions using Changesets and Github Actions
