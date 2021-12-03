@@ -21,8 +21,7 @@ import { log } from '$common/logger'
 import { AnyRequest } from '$typings/request'
 
 export const validateBody =
-  (schema: ObjectSchema) =>
-  async (req: AnyRequest, res: Response, next: NextFunction) => {
+  (schema: ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
     const { body } = req
 
     const result = schema.strict().validate(body)

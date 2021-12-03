@@ -19,16 +19,10 @@ import { config } from '$common/config'
 import { IError } from '$common/error'
 import { log } from '$common/logger'
 
-export function errorHandler(
-  err: IError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
+export function errorHandler(err: IError, req: Request, res: Response, next: NextFunction): void {
   if (err) {
     const statusCode = err.statusCode ? err.statusCode : 500
-    const message =
-      statusCode === 500 ? 'Internal server error.' : 'Something went wrong.'
+    const message = statusCode === 500 ? 'Internal server error.' : 'Something went wrong.'
     const body: { message: string; stack?: string } = { message }
     if (statusCode === 500) {
       log.error('Handled internal server error:')

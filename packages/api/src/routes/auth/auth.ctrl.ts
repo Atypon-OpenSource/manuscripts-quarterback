@@ -27,11 +27,7 @@ export const LOGIN_SCHEMA = Joi.object({
   password: Joi.string().min(8).max(255).required(),
 })
 
-export const login = async (
-  req: IRequest<ILoginParams>,
-  res: Response,
-  next: NextFunction
-) => {
+export const login = async (req: IRequest<ILoginParams>, res: Response, next: NextFunction) => {
   try {
     const user = await authService.loginUser(req.body)
     if (!user) {

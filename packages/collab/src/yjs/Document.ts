@@ -57,11 +57,7 @@ export class Document {
     this.yDoc.off('update', cb)
   }
 
-  onAwarenessUpdate(
-    cb: (update: AwarenessUpdate, docId: string, awareness: Awareness) => void
-  ) {
-    this.awareness.on('update', (update: AwarenessUpdate) =>
-      cb(update, this.id, this.awareness)
-    )
+  onAwarenessUpdate(cb: (update: AwarenessUpdate, docId: string, awareness: Awareness) => void) {
+    this.awareness.on('update', (update: AwarenessUpdate) => cb(update, this.id, this.awareness))
   }
 }

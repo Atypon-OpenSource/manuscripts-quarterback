@@ -22,11 +22,7 @@ import { IAuthRequest, IRequest } from '$typings/request'
 
 import { docService } from './doc.svc'
 
-export const getDocuments = async (
-  req: IAuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const getDocuments = async (req: IAuthRequest, res: Response, next: NextFunction) => {
   try {
     const result = await docService.getDocuments(res.locals.user.id)
     if (result.ok) {

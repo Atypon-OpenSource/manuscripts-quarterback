@@ -18,28 +18,19 @@ import { NextFunction, Request, Response } from 'express'
 import { CustomError, jwtService } from '$common'
 
 function parseJwtFromHeaders(req: Request) {
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.toLowerCase().includes('bearer')
-  ) {
+  if (req.headers.authorization && req.headers.authorization.toLowerCase().includes('bearer')) {
     return req.headers.authorization.split(' ')[1]
   }
   return null
 }
 
-export const authenticate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = parseJwtFromHeaders(req)
   if (!jwtToken) {
     // Without return this method would continue processing and generate TWO errors
     // of which the next one wouldn't get caught by the errorHandler
     // -> always remember to return next() inside if
-    return next(
-      new CustomError('Missing authorization header with Bearer token', 401)
-    )
+    return next(new CustomError('Missing authorization header with Bearer token', 401))
   }
   const decrypted = jwtService.decryptSessionToken(jwtToken)
   if (!decrypted.ok) {

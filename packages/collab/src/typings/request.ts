@@ -35,7 +35,6 @@ export type IAuthRequest<
   }
 >
 
-export type AnyRequest<
-  B = Record<string, any>,
-  Q extends ParamsDictionary = Record<string, any>
-> = IRequest<B, Q> | IAuthRequest<B, Q>
+export type AnyRequest<B = Record<string, any>, Q extends ParamsDictionary = Record<string, any>> =
+  | IRequest<B, Q>
+  | IAuthRequest<B, Q>

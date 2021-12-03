@@ -25,10 +25,7 @@ import {
   writeVarUint8Array,
 } from 'lib0/encoding'
 import type { Awareness } from 'y-protocols/awareness'
-import {
-  applyAwarenessUpdate,
-  encodeAwarenessUpdate,
-} from 'y-protocols/awareness'
+import { applyAwarenessUpdate, encodeAwarenessUpdate } from 'y-protocols/awareness'
 import {
   readSyncMessage as yjsReadSyncMessage,
   readSyncStep1,
@@ -58,9 +55,7 @@ export function readMessageYjs(
   conn: Connection
 ): Event<ArrayBuffer | undefined> {
   const encoder = createEncoder()
-  const decoder = createDecoder(
-    data instanceof Uint8Array ? data : new Uint8Array(data)
-  )
+  const decoder = createDecoder(data instanceof Uint8Array ? data : new Uint8Array(data))
   const messageType = readVarUint(decoder)
   switch (messageType) {
     case YjsMessageType.sync:
@@ -137,10 +132,7 @@ export function writeSyncUpdate(update: Uint8Array) {
 
 // Connection.sendCurrentAwareness ->
 // OutgoingMessage.createAwarenessUpdateMessage(this.document.awareness)
-export function writeAwarenessUpdate(
-  awareness: Awareness,
-  changedClientIDs: number[]
-) {
+export function writeAwarenessUpdate(awareness: Awareness, changedClientIDs: number[]) {
   const encoder = createEncoder()
   const message = encodeAwarenessUpdate(awareness, changedClientIDs)
   writeVarUint(encoder, YjsMessageType.awareness)

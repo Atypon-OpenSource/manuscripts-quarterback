@@ -15,11 +15,7 @@
  */
 import { IncomingMessage } from 'http'
 import WebSocket from 'ws'
-import {
-  messageYjsSyncStep1,
-  messageYjsSyncStep2,
-  messageYjsUpdate,
-} from 'y-protocols/sync'
+import { messageYjsSyncStep1, messageYjsSyncStep2, messageYjsUpdate } from 'y-protocols/sync'
 
 export type Connection = {
   id: string

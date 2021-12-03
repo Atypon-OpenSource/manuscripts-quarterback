@@ -24,12 +24,7 @@ import { createRedisClient } from '$common/redis'
 import { RedisPersistance } from '../y-redis/RedisPersistance'
 import { Connections } from './Connections'
 import { Document } from './Document'
-import {
-  readMessageYjs,
-  writeAwarenessUpdate,
-  writeSyncStep1,
-  writeSyncUpdate,
-} from './messages'
+import { readMessageYjs, writeAwarenessUpdate, writeSyncStep1, writeSyncUpdate } from './messages'
 import { AwarenessUpdate, Connection } from './types'
 
 interface Options {
@@ -140,20 +135,12 @@ export class YjsServer {
   }
 
   // OutgoingMessage.createAwarenessUpdateMessage
-  onAwarenessUpdate(
-    update: AwarenessUpdate,
-    docId: string,
-    awareness: Awareness
-  ) {
-    log.debug(
-      `onAwarenessUpdate: (doc.id ${docId.slice(0, 5)}) (update ${update})`
-    )
+  onAwarenessUpdate(update: AwarenessUpdate, docId: string, awareness: Awareness) {
+    log.debug(`onAwarenessUpdate: (doc.id ${docId.slice(0, 5)}) (update ${update})`)
     const changedClientIDs = this.connections.updateConnections(docId, update)
     // TODO not pretty
     const clientIDs =
-      changedClientIDs.length > 0
-        ? changedClientIDs
-        : Array.from(awareness.getStates().keys())
+      changedClientIDs.length > 0 ? changedClientIDs : Array.from(awareness.getStates().keys())
     const connections = this.connections.getChannelConnections(docId)
     const message = writeAwarenessUpdate(awareness, clientIDs)
     connections.forEach((conn) => {

@@ -102,10 +102,7 @@ export class Connections {
     }
   }
 
-  updateConnections(
-    docId: string,
-    { added, updated, removed }: AwarenessUpdate
-  ) {
+  updateConnections(docId: string, { added, updated, removed }: AwarenessUpdate) {
     const connections = this.getChannelConnections(docId)
     connections.forEach((conn) => {
       // These assignments will mutate the original connection object, hence no
