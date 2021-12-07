@@ -13,7 +13,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && rollup -c",
-    "dev": "nodemon --watch dist dist/index.js",
+    "dev": "nodemon --watch dist start.js",
     "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
     "lint": "eslint --cache --ext .js,.ts, ./src",
     "lint:fix": "eslint --fix --ext .js,.ts, ./src",
@@ -42,16 +42,19 @@
   "dependencies": {
     "@manuscripts/quarterback-db": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/manuscript-transform": "workspace:*",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "~4.17.1",
     "ioredis": "^4.28.1",
     "joi": "^17.4.2",
+    "jsdom": "^16.4.0",
     "jsonwebtoken": "^8.5.1",
     "lib0": "^0.2.42",
     "morgan": "^1.10.0",
     "winston": "^3.3.3",
     "ws": "^8.2.3",
+    "y-prosemirror": "^1.0.13",
     "y-protocols": "^1.0.5",
     "yjs": "^13.5.21"
   }

@@ -18,19 +18,20 @@ import { Event, PmDoc } from '@manuscripts/quarterback-shared'
 import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
 import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
-import { CustomError, prisma } from '$common'
+import { CustomError, log, prisma } from '$common'
 import { createRedisClient } from '$common/redis'
 
 const pub = createRedisClient()
 
 const yjsService = {
   async getYDocFromRedis(docId: string) {
-    const exists = await pub.exists(`${docId}:updates`).then((res) => res === 1)
-    if (!exists) {
+    const updates = await pub.lrangeBuffer(`${docId}:updates`, 0, -1)
+    if (updates.length === 0) {
+      log.debug('Didnt find yDoc from Redis')
       return undefined
     }
     const yDoc = new Doc()
-    const updates = await pub.lrangeBuffer(`${docId}:updates`, 0, -1)
+    log.debug(`Found yDoc in redis, applying ${updates.length} updates`)
     yDoc.transact(() => {
       updates.forEach((update) => {
         applyUpdate(yDoc, update)

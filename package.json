@@ -16,6 +16,7 @@
     "lint:fix":  "eslint --ignore-path .gitignore --fix --ext .js,.cjs,.ts,.tsx .",
     "build": "pnpm run build --filter @manuscripts/manuscript-transform 2>/dev/null || true && pnpm run build --filter @manuscripts/style-guide 2>/dev/null || true && pnpm run build --filter @manuscripts/manuscript-editor 2>/dev/null",
     "api": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-api' 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run dev --filter @manuscripts/quarterback-collab'",
+    "collab": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run dev --filter @manuscripts/quarterback-collab'",
     "utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/quarterback-editor' 'pnpm run watch --filter @manuscripts/ext-track-changes' 'pnpm run watch --filter @manuscripts/ext-yjs'",
     "client": "concurrently --kill-others 'pnpm run dev --filter @manuscripts/quarterback-example-app'",
     "start": "concurrently --kill-others 'pnpm api' 'pnpm utils' 'pnpm client'",

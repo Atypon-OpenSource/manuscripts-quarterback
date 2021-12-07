@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/manuscript-transform'
+import { prosemirrorToYDoc } from 'y-prosemirror'
 import { Awareness } from 'y-protocols/awareness'
 import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
@@ -31,6 +33,11 @@ export class Document {
     this.yDoc = new Doc({ gc: true })
     this.awareness = new Awareness(this.yDoc)
     this.awareness.setLocalState(null)
+  }
+
+  createDefaultDoc() {
+    const node = schema.nodes.manuscript.createAndFill() as any
+    applyUpdate(this.yDoc, encodeStateAsUpdate(prosemirrorToYDoc(node, 'pm-doc')))
   }
 
   getClients() {

@@ -49,19 +49,16 @@ export function ManuscriptsPage() {
   }>()
 
   useEffect(() => {
-    openDocument(routeParams.documentId).then(yDoc => {
-      const provider = new WebsocketProvider(YJS_WS_URL, routeParams.documentId, yDoc)
-      provider.on('sync', () => {
-        const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
-        pmDoc.type = 'manuscript'
-        setInitialData({
-          yDoc,
-          pmDoc,
-          provider,
-        })
+    const yDoc = new Doc({ gc: false })
+    const provider = new WebsocketProvider(YJS_WS_URL, routeParams.documentId, yDoc)
+    provider.on('synced', () => {
+      const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
+      pmDoc.type = 'manuscript'
+      setInitialData({
+        yDoc,
+        pmDoc,
+        provider,
       })
-    }).catch((err) => {
-      console.error(err)
     })
     return () => {
       if (initialData) {

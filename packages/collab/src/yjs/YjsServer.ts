@@ -74,8 +74,15 @@ export class YjsServer {
     // const query = request?.url?.split('?') || []
     // const queryParams = new URLSearchParams(query[1] ? query[1] : '')
     log.debug(`Parsed documentId: ${documentId}`)
+    // let doc: Document
+    // if (this.documents.has(documentId)) {
+    //   doc = this.documents.get(documentId) as Document
+    // } else {
+    //   doc = new Document(documentId)
+    //   doc.createDefaultDoc()
+    //   this.documents.set(doc.id, doc)
+    // }
     const doc = await this.redisPersistence.fetchYDoc(documentId)
-    // const doc = this.documents.get(documentId) || new Document(documentId)
     if (!this.documents.has(doc.id)) {
       this.documents.set(doc.id, doc)
     }
@@ -103,6 +110,7 @@ export class YjsServer {
       log.error(`Failed to read socket message: ${result.error}`)
       return
     } else if (result.data) {
+      // TODO unneeded? onDocUpdate triggers if update?
       const connections = this.connections.getChannelConnections(doc.id)
       log.debug(`Sending data to clients: ${connections.size}`)
       connections.forEach((conn) => {

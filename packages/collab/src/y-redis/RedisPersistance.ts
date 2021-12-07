@@ -64,11 +64,17 @@ export class RedisPersistance {
     } else {
       doc = new Document(docId)
       persistedDoc = new PersistedDoc(doc, this.pub, this.sub)
+      const exists = await this.pub.exists(`${docId}:updates`).then((key) => key === 1)
+      this.docs.set(docId, persistedDoc)
+      if (!exists) {
+        doc.createDefaultDoc()
+        await persistedDoc.pushUpdateToRedis(doc.encodeStateAsUpdate())
+      } else {
+        await persistedDoc.getUpdates()
+      }
     }
-    const update = doc.encodeStateAsUpdate()
     // doc.onYDocUpdate(persistedDocument.pushUpdateToRedis)
     // redis.subscribe(doc.id).then(() => persistedDocument.getUpdates())
-    persistedDoc.pushUpdateToRedis(update)
     return doc
   }
 
