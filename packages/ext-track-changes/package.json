@@ -24,6 +24,7 @@
   "devDependencies": {
     "@manuscripts/manuscript-editor": "workspace:*",
     "@rollup/plugin-commonjs": "^20.0.0",
+    "@types/debug": "^4.1.7",
     "@types/prosemirror-commands": "^1.0.4",
     "@types/prosemirror-model": "^1.13.2",
     "@types/prosemirror-state": "^1.2.7",
@@ -49,6 +50,6 @@
   },
   "dependencies": {
     "@manuscripts/quarterback-shared": "workspace:*",
-    "debug": "^4.1.1"
+    "debug": "^4.3.3"
   }
 }

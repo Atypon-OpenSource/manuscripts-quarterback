@@ -62,6 +62,7 @@ function Menus() {
 interface Props {
   className?: string
   disableTrack: boolean
+  disableDebug: boolean
   documentId: string
   initialData: {
     yDoc: Doc
@@ -71,7 +72,7 @@ interface Props {
 }
 
 export const ManuscriptsEditor = observer((props: Props) => {
-  const { className = '', disableTrack, documentId, initialData } = props
+  const { className = '', disableTrack, disableDebug, documentId, initialData } = props
   const {
     authStore: { editorUser },
   } = stores
@@ -86,6 +87,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
               id: editorUser.id,
               name: editorUser.name,
             },
+            debug: !disableDebug,
           }),
         ]),
     yjsExtension({

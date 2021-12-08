@@ -15,9 +15,22 @@
  */
 import { TrackedAttrs } from '@manuscripts/ext-track-changes'
 import { Schema } from 'prosemirror-model'
+import { bulletList, listItem, orderedList } from 'prosemirror-schema-list'
 
 import { Marks, Nodes, QuarterBackSchema } from './types'
 
+function add(obj: Record<string, any>, props: Record<string, any>) {
+  const copy: Record<string, any> = {}
+  for (const prop in obj) {
+    copy[prop] = obj[prop]
+  }
+  for (const prop in props) {
+    copy[prop] = props[prop]
+  }
+  return copy
+}
+
+// From https://github.com/ProseMirror/prosemirror-schema-basic/blob/master/src/schema-basic.js
 export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
   nodes: {
     // :: NodeSpec The top level document node.
@@ -140,6 +153,9 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         return ['br']
       },
     },
+    ordered_list: add(orderedList, { content: 'list_item+', group: 'block' }),
+    bullet_list: add(bulletList, { content: 'list_item+', group: 'block' }),
+    list_item: add(listItem, { content: 'paragraph block*' }),
   },
   marks: {
     // :: MarkSpec A link. Has `href` and `title` attributes. `title`

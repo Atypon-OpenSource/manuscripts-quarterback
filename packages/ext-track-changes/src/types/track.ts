@@ -36,5 +36,10 @@ export interface UserData {
 
 export interface TrackChangesOptions {
   disabled?: boolean
+  debug?: boolean
   user: TrackedUser
+}
+
+export interface TrackChangesPluginOptions {
+  user?: TrackedUser
 }

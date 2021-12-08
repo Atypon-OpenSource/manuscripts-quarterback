@@ -23,7 +23,7 @@ import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
 import { updateChangeAttrs, updateDocAndRemoveChanges } from './track/updateChangeAttrs'
-import { TrackChangesStatus } from './types/track'
+import { TrackChangesPluginOptions, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
 const DEFAULT_USER = {
@@ -42,7 +42,7 @@ export interface TrackChangesState {
 
 export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>('track-changes')
 
-export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
+export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
     state: {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import debug from 'debug'
 import { Fragment, Node as PMNode, Schema, Slice } from 'prosemirror-model'
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state'
 import {
@@ -27,6 +26,7 @@ import {
 } from 'prosemirror-transform'
 
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
+import { logger } from '../logger'
 import { DeleteAttrs, InsertAttrs, UserData } from '../types/track'
 import { createTrackedAttrs, shouldMergeMarks } from './node-utils'
 
@@ -36,7 +36,6 @@ function markInlineNodeChange(
   userColors: UserData,
   schema: Schema
 ) {
-  console.warn('schema', schema)
   const filtered = node.marks.filter(
     (m) => m.type !== schema.marks.tracked_insert && m.type !== schema.marks.tracked_delete
   )
@@ -70,7 +69,9 @@ function recurseContent(
     })
     return node.type.create(
       {
-        dataTracked: createTrackedAttrs(insertAttrs),
+        ...node.attrs,
+        // 8.12.2021 DISABLED node changes
+        // dataTracked: createTrackedAttrs(insertAttrs),
       },
       Fragment.fromArray(updatedChildren),
       node.marks
@@ -168,11 +169,14 @@ function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: 
       newTr.replaceWith(pos - 1, pos + 1, Fragment.empty)
     }
   } else {
-    const attrs = {
-      ...node.attrs,
-      dataTracked: createTrackedAttrs(deleteAttrs),
-    }
-    newTr.setNodeMarkup(pos, undefined, attrs, node.marks)
+    // 8.12.2021 DISABLED node changes
+    // const attrs = {
+    //   ...node.attrs,
+    //   dataTracked: createTrackedAttrs(deleteAttrs),
+    // }
+    // newTr.setNodeMarkup(pos, undefined, attrs, node.marks)
+    // REPLACEMENT:
+    newTr.replaceWith(pos - 1, pos + 1, Fragment.empty)
   }
 }
 
@@ -324,8 +328,7 @@ export function deleteAndMergeSplitBlockNodes(
     splitSliceIntoMergedParts(insertSlice)
   const insertStartDepth = startDoc.resolve(from).depth
   const insertEndDepth = startDoc.resolve(to).depth
-  debug.log('debug: firstMergedNode', firstMergedNode)
-  console.log('debug: lastMergedNode', lastMergedNode)
+  logger('deleteAndMergeSplitBlockNodes: firstMergedNode', firstMergedNode)
   startDoc.nodesBetween(from, to, (node, pos) => {
     const offsetPos = deleteMap.map(pos, 1)
     const offsetFrom = deleteMap.map(from, -1)
@@ -350,7 +353,6 @@ export function deleteAndMergeSplitBlockNodes(
           // Block node deleted completely
           deleteNode(node, offsetPos, newTr, deleteAttrs)
         } else if (nodeEnd > offsetFrom && nodeEnd <= offsetTo) {
-          console.log('MERGING END TOKEN')
           // The end token deleted: <p>asdf|</p><p>bye</p>| + [<p>] hello</p> -> <p>asdf hello</p>
           // How about <p>asdf|</p><p>|bye</p> + [<p>] hello</p><p>good[</p>] -> <p>asdf hello</p><p>goodbye</p>
           // This doesnt work at least: <p>asdf|</p><p>|bye</p> + empty -> <p>asdfbye</p>
@@ -367,7 +369,6 @@ export function deleteAndMergeSplitBlockNodes(
           ) {
             // const insertedNode = getBlockNodeAtDepth(insertSlice.content, 1, depth, true)
             // updatedSliceNodes = content.filter((_, i) => i !== 0)
-            console.log('insert')
             newTr.insert(
               nodeEnd - 1,
               setFragmentAsInserted(
@@ -382,7 +383,6 @@ export function deleteAndMergeSplitBlockNodes(
             )
           }
         } else if (offsetPos >= offsetFrom && nodeEnd - 1 > offsetTo) {
-          console.log('MERGING START TOKEN')
           // The start token deleted: |<p>hey</p><p>|asdf</p> + <p>hello [</p>] -> <p>hello asdf</p>
           // Gosh the depth... Ainakin sliceen ekan? sitten tsekkaan mikä syvyys
           // Ainakin syvin tulee ekana joten pitäis olla samassa tasossa
@@ -396,7 +396,6 @@ export function deleteAndMergeSplitBlockNodes(
             depth === insertEndDepth &&
             lastMergedNode?.mergedContent
           ) {
-            console.log('insert')
             // Just as a future reminder, inserting text at paragraph position wraps into into a new paragraph...
             // So you need to offset it by 1 to insert it _inside_ the paragraph
             newTr.insert(
@@ -412,8 +411,6 @@ export function deleteAndMergeSplitBlockNodes(
               )
             )
             mergedInsertPos = offsetPos
-            // const insertedNode = getBlockNodeAtDepth(insertSlice.content, 1, depth, false)
-            // updatedSliceNodes = (updatedSliceNodes || content).filter((_, i) => i + 1 !== (updatedSliceNodes || content).length)
           } else if (insertSlice.openStart === insertSlice.openEnd) {
             deleteNode(node, offsetPos, newTr, deleteAttrs)
           }
@@ -428,7 +425,6 @@ export function deleteAndMergeSplitBlockNodes(
       deleteMap.appendMap(newestStep.getMap())
     }
   })
-  console.log(updatedSliceNodes)
   return {
     deleteMap,
     mergedInsertPos,
@@ -458,12 +454,12 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
-  debug.log('TRACKED Transaction', tr)
+  logger('TRACKED Transaction', tr)
   tr.steps.forEach((step) => {
-    debug.log('\ntransaction step', step)
+    logger('\ntransaction step', step)
     if (step instanceof ReplaceStep) {
       step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
-        debug.log(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
+        logger(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
         // @ts-ignore
         const { slice }: { slice: Slice } = step
         newTr.step(step.invert(oldState.doc))
@@ -477,9 +473,8 @@ export function trackTransaction(
           userData,
           slice
         )
-        console.log('tr after delete', newTr)
+        logger('tr after delete', newTr)
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
-        // applyAndMergeMarks(deleteMap.map(fromA), toAWithOffset, oldState.doc, newTr, deleteAttrs, userColors)
         if (newSliceContent.size > 0) {
           const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
           const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
@@ -494,7 +489,7 @@ export function trackTransaction(
             console.log('Insert step', newStep)
             throw Error(`Insert ReplaceStep failed: "${stepResult.failed}"`)
           }
-          console.log('tr after insert', newTr)
+          logger('tr after insert', newTr)
           applyAndMergeMarks(
             toAWithOffset,
             toAWithOffset + insertedSlice.size,
@@ -521,6 +516,5 @@ export function trackTransaction(
       // } else if (step instanceof ReplaceAroundStep) {
     }
   })
-  console.log('newTr', newTr)
   return newTr.setMeta('track-changes-enabled', true)
 }

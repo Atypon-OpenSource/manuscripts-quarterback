@@ -16,6 +16,7 @@
 import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 
 import * as commands from './commands'
+import { enableDebug } from './logger'
 import { trackChangesPlugin } from './plugin'
 import type { TrackChangesOptions } from './types/track'
 
@@ -32,6 +33,7 @@ export const trackChangesExtension = (opts?: TrackChangesOptions) => (ctx: Edito
       store: undefined,
     }
   }
+  enableDebug(!!opts?.debug)
   return {
     name: trackChangesExtensionName,
     commands,
