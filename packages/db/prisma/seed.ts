@@ -42,10 +42,7 @@ const DEFAULT_DOCS = [
   },
 ]
 
-async function insertUser(
-  userParams: typeof DEFAULT_USERS[0],
-  password: string
-) {
+async function insertUser(userParams: typeof DEFAULT_USERS[0], password: string) {
   return prisma.user.upsert({
     where: { email: userParams.email },
     update: {},
@@ -64,9 +61,7 @@ async function insertPmDocs(userId: string) {
 
 async function main() {
   const password = await hash('asdfasdf', 10)
-  const users = await Promise.all(
-    DEFAULT_USERS.map((user) => insertUser(user, password))
-  )
+  const users = await Promise.all(DEFAULT_USERS.map((user) => insertUser(user, password)))
   const docs = await Promise.all(users.map((user) => insertPmDocs(user.id)))
 }
 

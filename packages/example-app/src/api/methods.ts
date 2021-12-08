@@ -65,7 +65,11 @@ export async function wrappedFetch<T>(
   return { ok: true, data }
 }
 
-export function get<T>(path: string, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
+export function get<T>(
+  path: string,
+  defaultError?: string,
+  headers: Record<string, string> = DEFAULT_HEADERS
+): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
@@ -79,7 +83,12 @@ export function get<T>(path: string, defaultError?: string, headers: Record<stri
   )
 }
 
-export function post<T>(path: string, payload: any, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
+export function post<T>(
+  path: string,
+  payload: any,
+  defaultError?: string,
+  headers: Record<string, string> = DEFAULT_HEADERS
+): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
@@ -94,7 +103,12 @@ export function post<T>(path: string, payload: any, defaultError?: string, heade
   )
 }
 
-export function put<T>(path: string, payload: any, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
+export function put<T>(
+  path: string,
+  payload: any,
+  defaultError?: string,
+  headers: Record<string, string> = DEFAULT_HEADERS
+): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {
@@ -109,7 +123,11 @@ export function put<T>(path: string, payload: any, defaultError?: string, header
   )
 }
 
-export function del<T>(path: string, defaultError?: string, headers: Record<string, string> = DEFAULT_HEADERS): Promise<Event<T>> {
+export function del<T>(
+  path: string,
+  defaultError?: string,
+  headers: Record<string, string> = DEFAULT_HEADERS
+): Promise<Event<T>> {
   return wrappedFetch(
     path,
     {

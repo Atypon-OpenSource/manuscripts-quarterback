@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { YJS_WS_URL } from 'config'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { stores } from 'stores'
 import styled from 'styled-components'
-import { yDocToProsemirrorJSON } from 'y-prosemirror' 
+import { yDocToProsemirrorJSON } from 'y-prosemirror'
 import { WebsocketProvider } from 'y-websocket'
 import { Doc } from 'yjs'
-
-import { YJS_WS_URL } from 'config'
-import { stores } from 'stores'
 
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
 
@@ -82,13 +81,13 @@ export function ManuscriptsPage() {
           {disableTrack ? 'Enable' : 'Disable'} track changes
         </button>
       </header>
-      { initialData &&
-      <ManuscriptsEditor
-        disableTrack={disableTrack}
-        documentId={routeParams.documentId}
-        initialData={initialData}
-      />
-      }
+      {initialData && (
+        <ManuscriptsEditor
+          disableTrack={disableTrack}
+          documentId={routeParams.documentId}
+          initialData={initialData}
+        />
+      )}
     </Container>
   )
 }

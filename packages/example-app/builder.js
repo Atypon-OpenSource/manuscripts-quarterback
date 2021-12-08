@@ -86,7 +86,5 @@ if (arg === 'build') {
 } else if (arg === 'watch') {
   buildAndWatch()
 } else {
-  throw Error(
-    `Unknown command '${arg}' for build.js, available commands: build | watch`
-  )
+  throw Error(`Unknown command '${arg}' for build.js, available commands: build | watch`)
 }

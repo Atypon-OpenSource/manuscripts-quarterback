@@ -37,12 +37,7 @@ export function PMEditor(props: EditorProps) {
   useSSRLayoutEffect(() => {
     const editorViewDOM = editorDOMRef.current
     if (editorViewDOM && ctx.viewProvider) {
-      editorViewRef.current = init(
-        editorViewDOM,
-        ctx,
-        editorProps,
-        editorViewRef.current
-      )
+      editorViewRef.current = init(editorViewDOM, ctx, editorProps, editorViewRef.current)
     }
   }, [editorProps])
 
@@ -63,10 +58,7 @@ export function PMEditor(props: EditorProps) {
           const newState = oldEditorState.apply(tr)
           this.updateState(newState)
           ctx.viewProvider.updateState(newState)
-          ctx.pluginStateProvider.updatePluginListeners(
-            oldEditorState,
-            newState
-          )
+          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
           props.onEdit && props.onEdit(newState)
         },
       })
@@ -101,14 +93,10 @@ export function PMEditor(props: EditorProps) {
         state,
         dispatchTransaction(tr: Transaction) {
           const oldEditorState = this.state
-          const { state: newState, transactions } =
-            oldEditorState.applyTransaction(tr)
+          const { state: newState, transactions } = oldEditorState.applyTransaction(tr)
           this.updateState(newState)
           ctx.viewProvider.updateState(newState)
-          ctx.pluginStateProvider.updatePluginListeners(
-            oldEditorState,
-            newState
-          )
+          ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
           props.onEdit && props.onEdit(newState)
         },
       }

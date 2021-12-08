@@ -56,7 +56,6 @@ export class RedisPersistance {
   }
 
   async fetchYDoc(docId: string): Promise<Document> {
-    // TODO fetch from Redis
     let persistedDoc = this.docs.get(docId),
       doc
     if (persistedDoc) {
@@ -73,12 +72,8 @@ export class RedisPersistance {
         await persistedDoc.getUpdates()
       }
     }
-    // doc.onYDocUpdate(persistedDocument.pushUpdateToRedis)
-    // redis.subscribe(doc.id).then(() => persistedDocument.getUpdates())
     return doc
   }
-
-  get(documentId: string) {}
 
   update(documentId: string, update: Uint8Array): Promise<any> {
     const persistedDocument = this.docs.get(documentId)

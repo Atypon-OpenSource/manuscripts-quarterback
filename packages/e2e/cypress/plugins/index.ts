@@ -22,10 +22,7 @@ let shouldSkip = false
 /**
  * @type {Cypress.PluginConfig}
  */
-export default (
-  on: Cypress.PluginEvents,
-  config: Cypress.PluginConfigOptions
-) => {
+export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   on('task', {
     resetShouldSkipFlag() {
       shouldSkip = false

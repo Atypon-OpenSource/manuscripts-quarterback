@@ -15,5 +15,4 @@
  */
 import { useEffect, useLayoutEffect } from 'react'
 
-export const useSSRLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+export const useSSRLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
