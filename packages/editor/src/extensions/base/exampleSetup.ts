@@ -16,11 +16,7 @@
 import { baseKeymap } from 'prosemirror-commands'
 import { dropCursor } from 'prosemirror-dropcursor'
 import type { Options } from 'prosemirror-example-setup'
-import {
-  buildInputRules,
-  buildKeymap,
-  buildMenuItems,
-} from 'prosemirror-example-setup'
+import { buildInputRules, buildKeymap, buildMenuItems } from 'prosemirror-example-setup'
 import { gapCursor } from 'prosemirror-gapcursor'
 import { history } from 'prosemirror-history'
 import { keymap } from 'prosemirror-keymap'

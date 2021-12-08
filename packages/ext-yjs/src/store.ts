@@ -24,18 +24,9 @@ import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
 import { generateColor, generateUser } from './generate'
 import { createYjsSnapshot } from './snapshots'
-import type {
-  AwarenessChange,
-  YjsEnabled,
-  YjsExtensionState,
-  YjsSnapshot,
-  YjsUser,
-} from './types'
+import type { AwarenessChange, YjsEnabled, YjsExtensionState, YjsSnapshot, YjsUser } from './types'
 
-export const createYjsStore = (
-  viewProvider: EditorViewProvider,
-  opts: YjsEnabled
-) => {
+export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnabled) => {
   const { document, user, initial, ws_url } = opts
   const _observable = new Observable<'update'>()
   const ydoc = initial?.doc || new Doc()
@@ -92,13 +83,10 @@ export const createYjsStore = (
 
     createSnapshot() {
       const versions = ydoc.getArray<YjsSnapshot>('versions')
-      const prevVersion =
-        versions.length === 0 ? null : versions.get(versions.length - 1)
+      const prevVersion = versions.length === 0 ? null : versions.get(versions.length - 1)
       console.info(prevVersion)
       const prevSnapshot =
-        prevVersion === null
-          ? Y.emptySnapshot
-          : Y.decodeSnapshot(prevVersion.snapshot)
+        prevVersion === null ? Y.emptySnapshot : Y.decodeSnapshot(prevVersion.snapshot)
       const snapshot = Y.snapshot(ydoc)
       console.info('created snapshot', snapshot)
       if (prevVersion) {
@@ -132,9 +120,7 @@ export const createYjsStore = (
           prevYSnapshot = Y.decodeSnapshot(s.snapshot)
         }
       })
-      const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(
-        viewProvider.state
-      ).binding
+      const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(viewProvider.state).binding
       if (binding) {
         binding.renderSnapshot(ySnapshot, prevYSnapshot)
       }
@@ -157,9 +143,7 @@ export const createYjsStore = (
     },
 
     resumeEditing() {
-      const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(
-        viewProvider.state
-      ).binding
+      const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(viewProvider.state).binding
       if (binding) {
         binding.unrenderSnapshot()
       }

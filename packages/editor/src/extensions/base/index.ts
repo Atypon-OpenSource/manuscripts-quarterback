@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-export {
-  activeNodesMarksPluginKey,
-  activeNodesMarksPlugin,
-} from './activeNodesMarksPlugin'
+export { activeNodesMarksPluginKey, activeNodesMarksPlugin } from './activeNodesMarksPlugin'
 
 export * as baseCommands from './commands'
 export { baseExtension, baseExtensionName } from './extension'

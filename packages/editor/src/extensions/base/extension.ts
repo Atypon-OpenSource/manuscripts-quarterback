@@ -23,9 +23,7 @@ import { exampleSetup } from './exampleSetup'
 export const baseExtensionName = 'base' as const
 
 export const baseExtension = () => (ctx: EditorProviders) => {
-  const plugins = exampleSetup({ schema, history: false }).concat([
-    activeNodesMarksPlugin(),
-  ])
+  const plugins = exampleSetup({ schema, history: false }).concat([activeNodesMarksPlugin()])
   return {
     name: baseExtensionName,
     commands: {},

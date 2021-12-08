@@ -18,9 +18,5 @@ import { EditorView } from 'prosemirror-view'
 
 export type Commands = { [name: string]: (...args: any[]) => Command }
 export type CommandDispatch = (tr: Transaction) => void
-export type Command = (
-  state: EditorState,
-  dispatch?: CommandDispatch,
-  view?: EditorView
-) => boolean
+export type Command = (state: EditorState, dispatch?: CommandDispatch, view?: EditorView) => boolean
 export type HigherOrderCommand = (command: Command) => Command

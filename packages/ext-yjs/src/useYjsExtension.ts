@@ -29,9 +29,7 @@ export function useYjsExtension() {
     const cb = (newState: YjsExtensionState) => {
       setState(newState)
     }
-    const yjs = extensionProvider?.getExtension(yjsExtensionName) as
-      | YjsExtension
-      | undefined
+    const yjs = extensionProvider?.getExtension(yjsExtensionName) as YjsExtension | undefined
     if (!yjs || yjs.opts.disabled || !yjs.store) {
       return
     }

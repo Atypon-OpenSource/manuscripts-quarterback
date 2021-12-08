@@ -237,8 +237,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         const { pending_bg } = el.attrs
         const attrs = {
           class: `inserted ${status}`,
-          style:
-            status === 'pending' ? `background: ${pending_bg};` : undefined,
+          style: status === 'pending' ? `background: ${pending_bg};` : undefined,
         }
         return ['ins', attrs]
       },
@@ -257,8 +256,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         const { pending_bg } = el.attrs
         const attrs = {
           class: `deleted ${status}`,
-          style:
-            status === 'pending' ? `background: ${pending_bg};` : undefined,
+          style: status === 'pending' ? `background: ${pending_bg};` : undefined,
         }
         return ['del', attrs]
       },

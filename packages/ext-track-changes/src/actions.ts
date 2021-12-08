@@ -42,10 +42,7 @@ export type TrackChangesActionParams = {
   [TrackChangesAction.createSnapshot]: boolean
 }
 
-export function getAction<K extends keyof TrackChangesActionParams>(
-  tr: Transaction,
-  action: K
-) {
+export function getAction<K extends keyof TrackChangesActionParams>(tr: Transaction, action: K) {
   return tr.getMeta(action) as TrackChangesActionParams[K] | undefined
 }
 

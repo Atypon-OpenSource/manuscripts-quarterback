@@ -36,14 +36,8 @@ export class ExtensionProvider {
   init(ctx: EditorProviders, createExtensions: CreateExtension[]) {
     const created = createExtensions.map((ext) => ext(ctx))
     this.extensions = created
-    this.plugins = created.reduce(
-      (acc, ext) => [...acc, ...(ext.plugins || [])],
-      [] as Plugin[]
-    )
-    this.commands = created.reduce(
-      (acc, ext) => Object.assign(acc, ext.commands),
-      {} as Commands
-    )
+    this.plugins = created.reduce((acc, ext) => [...acc, ...(ext.plugins || [])], [] as Plugin[])
+    this.commands = created.reduce((acc, ext) => Object.assign(acc, ext.commands), {} as Commands)
     const state: State = {
       extensions: this.extensions,
       plugins: this.plugins,

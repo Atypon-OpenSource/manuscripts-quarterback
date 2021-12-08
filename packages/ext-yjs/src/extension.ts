@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type {
-  CreateExtensionFn,
-  EditorProviders,
-} from '@manuscripts/manuscript-editor'
+import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 import { keymap } from 'prosemirror-keymap'
-import {
-  redo,
-  undo,
-  yCursorPlugin,
-  ySyncPlugin,
-  yUndoPlugin,
-} from 'y-prosemirror'
+import { redo, undo, yCursorPlugin, ySyncPlugin, yUndoPlugin } from 'y-prosemirror'
 import { Awareness } from 'y-protocols/awareness'
 
 import * as commands from './commands'

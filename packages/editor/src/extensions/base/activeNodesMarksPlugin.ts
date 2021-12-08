@@ -20,10 +20,9 @@ import type { QuarterBackSchema } from '$schema'
 import { getActiveMarks } from './commands'
 import type { ActiveNodesMarksState } from './types'
 
-export const activeNodesMarksPluginKey = new PluginKey<
-  ActiveNodesMarksState,
-  QuarterBackSchema
->('active-nodes-marks')
+export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState, QuarterBackSchema>(
+  'active-nodes-marks'
+)
 
 export const activeNodesMarksPlugin = () => {
   return new Plugin<ActiveNodesMarksState, QuarterBackSchema>({

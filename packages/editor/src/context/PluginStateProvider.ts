@@ -33,19 +33,14 @@ export class PluginStateProvider {
     return null
   }
 
-  updatePluginListeners(
-    oldEditorState: EditorState,
-    newEditorState: EditorState
-  ) {
-    Array.from(this._observable._observers.entries()).forEach(
-      ([p, subscribers]) => {
-        const oldState = p.getState(oldEditorState)
-        const newState = p.getState(newEditorState)
-        if (oldState !== newState) {
-          this._observable.emit(p, newState)
-        }
+  updatePluginListeners(oldEditorState: EditorState, newEditorState: EditorState) {
+    Array.from(this._observable._observers.entries()).forEach(([p, subscribers]) => {
+      const oldState = p.getState(oldEditorState)
+      const newState = p.getState(newEditorState)
+      if (oldState !== newState) {
+        this._observable.emit(p, newState)
       }
-    )
+    })
   }
 
   on(pluginKey: PluginKey, cb: (data: any) => void) {

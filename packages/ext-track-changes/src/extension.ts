@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type {
-  CreateExtensionFn,
-  EditorProviders,
-} from '@manuscripts/manuscript-editor'
+import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 
 import * as commands from './commands'
 import { trackChangesPlugin } from './plugin'
@@ -24,27 +21,26 @@ import type { TrackChangesOptions } from './types/track'
 
 export const trackChangesExtensionName = 'track-changes' as const
 
-export const trackChangesExtension =
-  (opts?: TrackChangesOptions) => (ctx: EditorProviders) => {
-    if (opts?.disabled) {
-      return {
-        name: trackChangesExtensionName,
-        commands,
-        keymaps: [],
-        things: [],
-        plugins: [],
-        store: undefined,
-      }
-    }
+export const trackChangesExtension = (opts?: TrackChangesOptions) => (ctx: EditorProviders) => {
+  if (opts?.disabled) {
     return {
       name: trackChangesExtensionName,
       commands,
       keymaps: [],
-      dangs: [],
-      plugins: [trackChangesPlugin({ user: opts?.user })],
+      things: [],
+      plugins: [],
       store: undefined,
     }
   }
+  return {
+    name: trackChangesExtensionName,
+    commands,
+    keymaps: [],
+    dangs: [],
+    plugins: [trackChangesPlugin({ user: opts?.user })],
+    store: undefined,
+  }
+}
 
 // Poor man's type check. Can check only for mistypings of properties, not for extra properties
 function typeCheck(): CreateExtensionFn {

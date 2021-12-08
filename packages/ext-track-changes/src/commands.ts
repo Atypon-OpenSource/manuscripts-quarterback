@@ -18,10 +18,7 @@ import { uuidv4 } from '@manuscripts/quarterback-shared'
 import { setAction, TrackChangesAction } from './actions'
 import { CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
 import { trackChangesPluginKey } from './plugin'
-import {
-  applyAndMergeMarks,
-  deleteAndMergeSplitBlockNodes,
-} from './track/trackTransaction'
+import { applyAndMergeMarks, deleteAndMergeSplitBlockNodes } from './track/trackTransaction'
 import type { Command } from './types/editor'
 import { DeleteAttrs, InsertAttrs, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
@@ -33,9 +30,7 @@ export const toggleTrackChanges = (): Command => (state, dispatch) => {
       currentStatus === TrackChangesStatus.enabled
         ? TrackChangesStatus.disabled
         : TrackChangesStatus.enabled
-    dispatch(
-      setAction(state.tr, TrackChangesAction.setTrackingStatus, newStatus)
-    )
+    dispatch(setAction(state.tr, TrackChangesAction.setTrackingStatus, newStatus))
     return true
   }
   return false
@@ -62,15 +57,7 @@ export const setInserted = (): Command => (state, dispatch) => {
     insertColor,
     deleteColor,
   }
-  applyAndMergeMarks(
-    from,
-    to,
-    state.doc,
-    tr,
-    state.schema,
-    insertAttrs,
-    userColors
-  )
+  applyAndMergeMarks(from, to, state.doc, tr, state.schema, insertAttrs, userColors)
   dispatch(tr)
   return true
 }
@@ -119,26 +106,25 @@ export const setDeleted = (): Command => (state, dispatch) => {
   return true
 }
 
-export const addTrackedAttributesToBlockNode =
-  (): Command => (state, dispatch) => {
-    const cursor = state.selection.head
-    const blockNodePos = state.doc.resolve(cursor).start(1) - 1
-    const tr = state.tr.setNodeMarkup(blockNodePos, undefined, {
-      dataTracked: {
-        id: uuidv4(),
-        userID: '1',
-        userName: 'John',
-        operation: CHANGE_OPERATION.insert,
-        status: CHANGE_STATUS.pending,
-        time: Date.now(),
-      },
-    })
-    if (dispatch) {
-      dispatch(tr)
-      return true
-    }
-    return false
+export const addTrackedAttributesToBlockNode = (): Command => (state, dispatch) => {
+  const cursor = state.selection.head
+  const blockNodePos = state.doc.resolve(cursor).start(1) - 1
+  const tr = state.tr.setNodeMarkup(blockNodePos, undefined, {
+    dataTracked: {
+      id: uuidv4(),
+      userID: '1',
+      userName: 'John',
+      operation: CHANGE_OPERATION.insert,
+      status: CHANGE_STATUS.pending,
+      time: Date.now(),
+    },
+  })
+  if (dispatch) {
+    dispatch(tr)
+    return true
   }
+  return false
+}
 
 export const setChangeStatuses =
   (status: CHANGE_STATUS, ids: string[]): Command =>
@@ -169,9 +155,7 @@ export const toggleShownStatuses =
   (statuses: CHANGE_STATUS[]): Command =>
   (state, dispatch) => {
     if (dispatch) {
-      dispatch(
-        setAction(state.tr, TrackChangesAction.toggleShownStatuses, statuses)
-      )
+      dispatch(setAction(state.tr, TrackChangesAction.toggleShownStatuses, statuses))
       return true
     }
     return false

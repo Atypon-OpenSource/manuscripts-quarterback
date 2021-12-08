@@ -38,9 +38,7 @@ function markInlineNodeChange(
 ) {
   console.warn('schema', schema)
   const filtered = node.marks.filter(
-    (m) =>
-      m.type !== schema.marks.tracked_insert &&
-      m.type !== schema.marks.tracked_delete
+    (m) => m.type !== schema.marks.tracked_insert && m.type !== schema.marks.tracked_delete
   )
   const mark =
     insertAttrs.operation === CHANGE_OPERATION.insert
@@ -68,9 +66,7 @@ function recurseContent(
   } else if (node.isBlock) {
     const updatedChildren: PMNode[] = []
     node.content.forEach((child) => {
-      updatedChildren.push(
-        recurseContent(child, insertAttrs, userColors, schema)
-      )
+      updatedChildren.push(recurseContent(child, insertAttrs, userColors, schema))
     })
     return node.type.create(
       {
@@ -96,9 +92,7 @@ function setFragmentAsInserted(
   inserted.forEach((n) => {
     updatedInserted.push(recurseContent(n, insertAttrs, userColors, schema))
   })
-  return updatedInserted.length === 0
-    ? inserted
-    : Fragment.fromArray(updatedInserted)
+  return updatedInserted.length === 0 ? inserted : Fragment.fromArray(updatedInserted)
 }
 
 export function applyAndMergeMarks(
@@ -132,10 +126,8 @@ export function applyAndMergeMarks(
         rightNode = doc.resolve(Math.min(pos + node.nodeSize, to)).nodeAfter
         rightMarks = shouldMergeMarks(rightNode, addedAttrs, schema)
       }
-      const fromStartOfMark =
-        from - (leftNode && leftMarks ? leftNode.nodeSize : 0)
-      const toEndOfMark =
-        to + (rightNode && rightMarks ? rightNode.nodeSize : 0)
+      const fromStartOfMark = from - (leftNode && leftMarks ? leftNode.nodeSize : 0)
+      const toEndOfMark = to + (rightNode && rightMarks ? rightNode.nodeSize : 0)
       const dataTracked = createTrackedAttrs({
         ...leftMarks,
         ...rightMarks,
@@ -165,16 +157,10 @@ export function applyAndMergeMarks(
   })
 }
 
-function deleteNode(
-  node: PMNode,
-  pos: number,
-  newTr: Transaction,
-  deleteAttrs: DeleteAttrs
-) {
+function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: DeleteAttrs) {
   const dataTracked: TrackedAttrs | undefined = node.attrs.dataTracked
   const wasInsertedBySameUser =
-    dataTracked?.operation === CHANGE_OPERATION.insert &&
-    dataTracked.userID === deleteAttrs.userID
+    dataTracked?.operation === CHANGE_OPERATION.insert && dataTracked.userID === deleteAttrs.userID
   if (wasInsertedBySameUser) {
     const resPos = newTr.doc.resolve(pos)
     // TODO ensure this works and blocks at the start of doc cant be deleted (as they wont merge to node above)
@@ -213,8 +199,7 @@ function deleteInlineIfInserted(
     const leftMarks = shouldMergeMarks(leftNode, deleteAttrs, schema)
     const rightNode = newTr.doc.resolve(end).nodeAfter
     const rightMarks = shouldMergeMarks(rightNode, deleteAttrs, schema)
-    const fromStartOfMark =
-      start - (leftNode && leftMarks ? leftNode.nodeSize : 0)
+    const fromStartOfMark = start - (leftNode && leftMarks ? leftNode.nodeSize : 0)
     const toEndOfMark = end + (rightNode && rightMarks ? rightNode.nodeSize : 0)
     const dataTracked = createTrackedAttrs({
       ...leftMarks,
@@ -251,12 +236,7 @@ function getMergedNode(
     let merged
     node.content.forEach((n, _, i) => {
       if ((first && i === 0) || (!first && i === node.childCount - 1)) {
-        const { mergedContent, returnedSlice } = getMergedNode(
-          n,
-          currentDepth + 1,
-          depth,
-          first
-        )
+        const { mergedContent, returnedSlice } = getMergedNode(n, currentDepth + 1, depth, first)
         merged = mergedContent
         if (returnedSlice) {
           // @ts-ignore
@@ -482,80 +462,62 @@ export function trackTransaction(
   tr.steps.forEach((step) => {
     debug.log('\ntransaction step', step)
     if (step instanceof ReplaceStep) {
-      step
-        .getMap()
-        .forEach((fromA: number, toA: number, fromB: number, toB: number) => {
-          debug.log(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
-          // @ts-ignore
-          const { slice }: { slice: Slice } = step
-          newTr.step(step.invert(oldState.doc))
-          const { deleteMap, mergedInsertPos, newSliceContent } =
-            deleteAndMergeSplitBlockNodes(
-              fromA,
-              toA,
-              oldState.doc,
-              newTr,
-              oldState.schema,
-              deleteAttrs,
-              userData,
-              slice
-            )
-          console.log('tr after delete', newTr)
-          const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
-          // applyAndMergeMarks(deleteMap.map(fromA), toAWithOffset, oldState.doc, newTr, deleteAttrs, userColors)
-          if (newSliceContent.size > 0) {
-            const openStart =
-              slice.openStart !== slice.openEnd ? 0 : slice.openStart
-            const openEnd =
-              slice.openStart !== slice.openEnd ? 0 : slice.openEnd
-            const insertedSlice = new Slice(
-              setFragmentAsInserted(
-                newSliceContent,
-                insertAttrs,
-                userData,
-                oldState.schema
-              ),
-              openStart,
-              openEnd
-            )
-            const newStep = new ReplaceStep(
-              toAWithOffset,
-              toAWithOffset,
-              insertedSlice
-            )
-            const stepResult = newTr.maybeStep(newStep)
-            if (stepResult.failed) {
-              console.log('Insert step', newStep)
-              throw Error(`Insert ReplaceStep failed: "${stepResult.failed}"`)
-            }
-            console.log('tr after insert', newTr)
-            applyAndMergeMarks(
-              toAWithOffset,
-              toAWithOffset + insertedSlice.size,
-              newTr.doc,
-              newTr,
-              oldState.schema,
-              insertAttrs,
-              userData
-            )
-            newTr.setSelection(
-              new TextSelection(
-                newTr.doc.resolve(toAWithOffset + insertedSlice.size)
-              )
-            )
-          } else {
-            newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
-          }
-          // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
-          // @ts-ignore
-          const { meta }: { meta: { [key: string]: any } } = tr
-          // This is quite non-optimal in some sense but to ensure no information is lost
-          // we have to readd all the old meta keys, such as inputType or uiEvent.
-          // So that other plugins/widgets can rely upon them as normal.
-          Object.keys(meta).forEach((key) =>
-            newTr.setMeta(key, tr.getMeta(key))
+      step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
+        debug.log(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
+        // @ts-ignore
+        const { slice }: { slice: Slice } = step
+        newTr.step(step.invert(oldState.doc))
+        const { deleteMap, mergedInsertPos, newSliceContent } = deleteAndMergeSplitBlockNodes(
+          fromA,
+          toA,
+          oldState.doc,
+          newTr,
+          oldState.schema,
+          deleteAttrs,
+          userData,
+          slice
+        )
+        console.log('tr after delete', newTr)
+        const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
+        // applyAndMergeMarks(deleteMap.map(fromA), toAWithOffset, oldState.doc, newTr, deleteAttrs, userColors)
+        if (newSliceContent.size > 0) {
+          const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
+          const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
+          const insertedSlice = new Slice(
+            setFragmentAsInserted(newSliceContent, insertAttrs, userData, oldState.schema),
+            openStart,
+            openEnd
           )
-        })
+          const newStep = new ReplaceStep(toAWithOffset, toAWithOffset, insertedSlice)
+          const stepResult = newTr.maybeStep(newStep)
+          if (stepResult.failed) {
+            console.log('Insert step', newStep)
+            throw Error(`Insert ReplaceStep failed: "${stepResult.failed}"`)
+          }
+          console.log('tr after insert', newTr)
+          applyAndMergeMarks(
+            toAWithOffset,
+            toAWithOffset + insertedSlice.size,
+            newTr.doc,
+            newTr,
+            oldState.schema,
+            insertAttrs,
+            userData
+          )
+          newTr.setSelection(
+            new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
+          )
+        } else {
+          newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
+        }
+        // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
+        // @ts-ignore
+        const { meta }: { meta: { [key: string]: any } } = tr
+        // This is quite non-optimal in some sense but to ensure no information is lost
+        // we have to readd all the old meta keys, such as inputType or uiEvent.
+        // So that other plugins/widgets can rely upon them as normal.
+        Object.keys(meta).forEach((key) => newTr.setMeta(key, tr.getMeta(key)))
+      })
       // } else if (step instanceof ReplaceAroundStep) {
     }
   })

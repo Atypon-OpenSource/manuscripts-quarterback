@@ -25,11 +25,7 @@ import {
   TrackedAttrs,
   TrackedChange,
 } from '../ChangeSet'
-import {
-  getNodeTrackedMarks,
-  insertBlockInlineContent,
-  liftNode,
-} from './node-utils'
+import { getNodeTrackedMarks, insertBlockInlineContent, liftNode } from './node-utils'
 
 export function updateChangeAttrs(
   tr: Transaction,
@@ -43,23 +39,12 @@ export function updateChangeAttrs(
   }
   const dataTracked = { ...getNodeTrackedMarks(node, schema), ...trackedAttrs }
   const oldMark = node.marks.find(
-    (m) =>
-      m.type === schema.marks.tracked_insert ||
-      m.type === schema.marks.tracked_delete
+    (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
   )
   if (change.type === 'text-change' && oldMark) {
-    tr.addMark(
-      change.from,
-      change.to,
-      oldMark.type.create({ ...oldMark.attrs, dataTracked })
-    )
+    tr.addMark(change.from, change.to, oldMark.type.create({ ...oldMark.attrs, dataTracked }))
   } else if (change.type === 'node-change') {
-    tr.setNodeMarkup(
-      change.from,
-      undefined,
-      { ...node.attrs, dataTracked },
-      node.marks
-    )
+    tr.setNodeMarkup(change.from, undefined, { ...node.attrs, dataTracked }, node.marks)
   }
   return tr
 }
@@ -83,10 +68,8 @@ export function updateDocAndRemoveChanges(
       // throw Error('No node at the from of change' + change)
     }
     const noChangeNeeded =
-      (operation === CHANGE_OPERATION.insert &&
-        status === CHANGE_STATUS.accepted) ||
-      (operation === CHANGE_OPERATION.delete &&
-        status === CHANGE_STATUS.rejected)
+      (operation === CHANGE_OPERATION.insert && status === CHANGE_STATUS.accepted) ||
+      (operation === CHANGE_OPERATION.delete && status === CHANGE_STATUS.rejected)
     if (ChangeSet.isTextChange(change) && noChangeNeeded) {
       tr.removeMark(from, deleteMap.map(change.to), schema.marks.tracked_insert)
       tr.removeMark(from, deleteMap.map(change.to), schema.marks.tracked_delete)

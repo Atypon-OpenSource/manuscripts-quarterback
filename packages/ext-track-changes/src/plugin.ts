@@ -22,10 +22,7 @@ import { CHANGE_STATUS, ChangeSet } from './ChangeSet'
 import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
-import {
-  updateChangeAttrs,
-  updateDocAndRemoveChanges,
-} from './track/updateChangeAttrs'
+import { updateChangeAttrs, updateDocAndRemoveChanges } from './track/updateChangeAttrs'
 import { TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
@@ -43,9 +40,7 @@ export interface TrackChangesState {
   shownChangeStatuses: CHANGE_STATUS[]
 }
 
-export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>(
-  'track-changes'
-)
+export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>('track-changes')
 
 export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
   return new Plugin<TrackChangesState, any>({
@@ -91,16 +86,10 @@ export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
         }
         let changeSet = oldChangeSet
         const updatedChangeIds = getAction(tr, TrackChangesAction.updateChanges)
-        const toggledChangeStatuses = getAction(
-          tr,
-          TrackChangesAction.toggleShownStatuses
-        )
+        const toggledChangeStatuses = getAction(tr, TrackChangesAction.toggleShownStatuses)
         let shownChangeStatuses = oldShownChangeStatuses
         // TODO update changes on inspect snapshot by checking !tr.getMeta(ySyncPluginKey) ?
-        if (
-          updatedChangeIds ||
-          getAction(tr, TrackChangesAction.refreshChanges)
-        ) {
+        if (updatedChangeIds || getAction(tr, TrackChangesAction.refreshChanges)) {
           changeSet = findChanges(newState)
         }
         if (toggledChangeStatuses) {
@@ -140,32 +129,21 @@ export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
           deleteColor,
         }
         const wasAppended = tr.getMeta('appendedTransaction')
-        const wasYjs =
-          tr.getMeta(ySyncPluginKey) || wasAppended?.getMeta(ySyncPluginKey)
+        const wasYjs = tr.getMeta(ySyncPluginKey) || wasAppended?.getMeta(ySyncPluginKey)
         if (tr.docChanged && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
         if (tr.docChanged) {
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
         }
-        const setChangeStatuses = getAction(
-          tr,
-          TrackChangesAction.setChangeStatuses
-        )
+        const setChangeStatuses = getAction(tr, TrackChangesAction.setChangeStatuses)
         if (setChangeStatuses) {
           const { status, ids } = setChangeStatuses
           ids.forEach((changeId: string) => {
             const change = changeSet?.get(changeId)
             if (change) {
-              createdTr = updateChangeAttrs(
-                createdTr,
-                change,
-                { status },
-                oldState.schema
-              )
-              setAction(createdTr, TrackChangesAction.updateChanges, [
-                change.id,
-              ])
+              createdTr = updateChangeAttrs(createdTr, change, { status }, oldState.schema)
+              setAction(createdTr, TrackChangesAction.updateChanges, [change.id])
             }
           })
         } else if (getAction(tr, TrackChangesAction.createSnapshot)) {
@@ -174,12 +152,7 @@ export const trackChangesPlugin = (opts: { user?: TrackedUser }) => {
             oldState.schema,
             changeSet!.textChanges
           )
-          updateDocAndRemoveChanges(
-            createdTr,
-            oldState.schema,
-            changeSet!.nodeChanges,
-            mapping
-          )
+          updateDocAndRemoveChanges(createdTr, oldState.schema, changeSet!.nodeChanges, mapping)
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
         }
       })

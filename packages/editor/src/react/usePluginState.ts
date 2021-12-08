@@ -21,9 +21,7 @@ import { useEditorContext } from '$context'
 export function usePluginState<T>(pluginKey: PluginKey) {
   const { pluginStateProvider } = useEditorContext()
 
-  const [state, setState] = useState<T | null>(
-    pluginStateProvider?.getPluginState(pluginKey)
-  )
+  const [state, setState] = useState<T | null>(pluginStateProvider?.getPluginState(pluginKey))
 
   useEffect(() => {
     const cb = (pluginState: T) => {

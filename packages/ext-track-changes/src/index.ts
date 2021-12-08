@@ -20,11 +20,6 @@ export * as trackCommands from './commands'
 export { trackChangesExtension, trackChangesExtensionName } from './extension'
 
 export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type {
-  TrackedAttrs,
-  TrackedChange,
-  TextChange,
-  NodeChange,
-} from './ChangeSet'
+export type { TrackedAttrs, TrackedChange, TextChange, NodeChange } from './ChangeSet'
 
 export * from './types/track'

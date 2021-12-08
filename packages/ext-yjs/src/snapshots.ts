@@ -18,10 +18,7 @@ import * as Y from 'yjs'
 
 import type { YjsSnapshot } from './types'
 
-export function createYjsSnapshot(
-  ysnap: Y.Snapshot,
-  clientID: number
-): YjsSnapshot {
+export function createYjsSnapshot(ysnap: Y.Snapshot, clientID: number): YjsSnapshot {
   return {
     id: uuidv4(),
     date: new Date().getTime(),

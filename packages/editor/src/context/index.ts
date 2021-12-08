@@ -20,9 +20,9 @@ import { EditorProviders, emptyProviders } from './Providers'
 export type { EditorProviders } from './Providers'
 export type EditorContext = EditorProviders
 
-export const ReactEditorContext = createContext<
-  EditorContext | typeof emptyProviders
->(emptyProviders)
+export const ReactEditorContext = createContext<EditorContext | typeof emptyProviders>(
+  emptyProviders
+)
 
 export const useEditorContext = () => useContext(ReactEditorContext)
 export { createDefaultProviders } from './Providers'

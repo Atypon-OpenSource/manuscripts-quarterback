@@ -21,9 +21,7 @@ import { liftTarget, Mapping } from 'prosemirror-transform'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
 import { DeleteAttrs, InsertAttrs } from '../types/track'
 
-export function createTrackedAttrs(
-  attrs: InsertAttrs | DeleteAttrs
-): TrackedAttrs {
+export function createTrackedAttrs(attrs: InsertAttrs | DeleteAttrs): TrackedAttrs {
   return {
     id: uuidv4(),
     ...attrs,
@@ -37,9 +35,7 @@ export function liftNode(pos: number, tr: Transaction) {
   if (!node) {
     return undefined
   }
-  const range = startPos.blockRange(
-    tr.doc.resolve(startPos.pos + node.nodeSize)
-  )
+  const range = startPos.blockRange(tr.doc.resolve(startPos.pos + node.nodeSize))
   const targetDepth = range ? Number(liftTarget(range)) : NaN
   if (range && !Number.isNaN(targetDepth)) {
     return tr.lift(range, targetDepth)
@@ -47,11 +43,7 @@ export function liftNode(pos: number, tr: Transaction) {
   return undefined
 }
 
-export function insertBlockInlineContent(
-  pos: number,
-  tr: Transaction,
-  mapping: Mapping
-) {
+export function insertBlockInlineContent(pos: number, tr: Transaction, mapping: Mapping) {
   const startPos = tr.doc.resolve(pos)
   const nodeAbove = startPos.nodeBefore
   const node = tr.doc.nodeAt(pos)
@@ -97,20 +89,14 @@ export function isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {
   return true
 }
 
-export function getTrackedMarks(
-  node: PMNode | undefined | null,
-  schema: Schema
-) {
+export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema) {
   if (!node || !node.isInline) {
     return undefined
   }
   const marksTrackedData: Omit<Partial<TrackedAttrs>, 'operation'> &
     { operation: CHANGE_OPERATION }[] = []
   node.marks.forEach((mark) => {
-    if (
-      mark.type === schema.marks.tracked_insert ||
-      mark.type === schema.marks.tracked_delete
-    ) {
+    if (mark.type === schema.marks.tracked_insert || mark.type === schema.marks.tracked_delete) {
       const operation =
         mark.type === schema.marks.tracked_insert
           ? CHANGE_OPERATION.insert
@@ -119,9 +105,7 @@ export function getTrackedMarks(
     }
   })
   if (marksTrackedData.length > 1) {
-    throw Error(
-      'Inline node with more than 1 of tracked marks' + marksTrackedData
-    )
+    throw Error('Inline node with more than 1 of tracked marks' + marksTrackedData)
   }
   return marksTrackedData[0] || undefined
 }
@@ -130,11 +114,7 @@ export function getNodeTrackedMarks(
   node: PMNode | undefined | null,
   schema: Schema
 ): Partial<TrackedAttrs> | undefined {
-  return !node
-    ? undefined
-    : node.isInline
-    ? getTrackedMarks(node, schema)
-    : node.attrs.dataTracked
+  return !node ? undefined : node.isInline ? getTrackedMarks(node, schema) : node.attrs.dataTracked
 }
 
 interface ComparedAttrs {

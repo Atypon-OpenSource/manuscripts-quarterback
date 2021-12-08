@@ -23,10 +23,8 @@ export type YjsActionParams = {
   [YjsAction.createSnapshot]: boolean
 }
 
-export const getAction = <K extends keyof YjsActionParams & string>(
-  tr: Transaction,
-  action: K
-) => tr.getMeta(action) as YjsActionParams[K] | undefined
+export const getAction = <K extends keyof YjsActionParams & string>(tr: Transaction, action: K) =>
+  tr.getMeta(action) as YjsActionParams[K] | undefined
 
 export const setAction = <K extends keyof YjsActionParams & string>(
   tr: Transaction,
