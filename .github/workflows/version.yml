@@ -33,7 +33,7 @@ jobs:
           node-version: 16
 
       - name: install pnpm
-        uses: ./actions/pnpm_install
+        uses: ./actions/pnpm
         with:
           cache: ${{ env.PNPM_CACHE_FOLDER }}
 
