@@ -27,6 +27,7 @@ import {
   ReactEditorContext,
   useApplicationMenus,
   useEditorContext,
+  UseEditorProps,
   useEditorState,
   useEditorV2,
 } from '@manuscripts/manuscript-editor'
@@ -61,9 +62,11 @@ function Menus() {
 
 interface Props {
   className?: string
-  disableTrack: boolean
-  disableDebug: boolean
-  documentId: string
+  options: {
+    disableTrack: boolean
+    debug: boolean
+    documentId: string
+  }
   initialData: {
     yDoc: Doc
     pmDoc: Record<string, any>
@@ -72,42 +75,45 @@ interface Props {
 }
 
 export const ManuscriptsEditor = observer((props: Props) => {
-  const { className = '', disableTrack, disableDebug, documentId, initialData } = props
+  const { className = '', options, initialData } = props
   const {
     authStore: { editorUser },
   } = stores
   const editorDOMRef = useRef(null)
   const providers = useMemo(() => createDefaultProviders(), [])
-  const extensions = [
-    ...(disableTrack
-      ? []
-      : [
-          trackChangesExtension({
-            user: {
-              id: editorUser.id,
-              name: editorUser.name,
-            },
-            debug: !disableDebug,
-          }),
-        ]),
-    yjsExtension({
-      disabled: false,
-      document: {
-        id: documentId,
-      },
-      user: {
-        id: editorUser.id,
-        name: editorUser.name,
-      },
-      initial: {
-        doc: initialData.yDoc,
-        provider: initialData.provider,
-      },
-      ws_url: YJS_WS_URL,
-    }),
-  ]
-  useEditorV2(
-    {
+  const extensions = useMemo(
+    () => [
+      ...(options.disableTrack
+        ? []
+        : [
+            trackChangesExtension({
+              user: {
+                id: editorUser.id,
+                name: editorUser.name,
+              },
+              debug: options.debug,
+            }),
+          ]),
+      yjsExtension({
+        disabled: false,
+        document: {
+          id: options.documentId,
+        },
+        user: {
+          id: editorUser.id,
+          name: editorUser.name,
+        },
+        initial: {
+          doc: initialData.yDoc,
+          provider: initialData.provider,
+        },
+        ws_url: YJS_WS_URL,
+      }),
+    ],
+    [options, editorUser, initialData]
+  )
+  const editorProps = useMemo<UseEditorProps>(
+    () => ({
       ctx: providers,
       initialDoc: initialData.pmDoc,
       extensions,
@@ -115,9 +121,10 @@ export const ManuscriptsEditor = observer((props: Props) => {
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
       },
-    },
-    editorDOMRef
+    }),
+    [extensions]
   )
+  useEditorV2(editorProps, editorDOMRef)
   return (
     <ReactEditorContext.Provider value={providers}>
       <ViewGrid>

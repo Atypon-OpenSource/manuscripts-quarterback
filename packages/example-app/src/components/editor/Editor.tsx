@@ -29,40 +29,44 @@ import React, { useMemo, useState } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
+import useEditorOptions from '../../hooks/useEditorOptions'
+import { EditorOptions } from '../EditorOptions'
 import { RightPanel } from './right-panel/RightPanel'
 import { SelectUser } from './SelectUser'
 import { Toolbar } from './Toolbar'
 import { UsersList } from './UsersList'
 
 export const Editor = observer(() => {
-  const editorProviders = useMemo(() => createDefaultProviders(), [])
+  const { options, setOptions } = useEditorOptions('editor-track-options', 'abc123')
   const {
     authStore: { editorUser },
   } = stores
-  const [disableYjs, setDisableYjs] = useState(true)
-  const extensions = useMemo(
-    () => [
-      baseExtension(),
-      trackChangesExtension({
-        user: {
-          id: editorUser.id,
-          name: editorUser.name,
-        },
-      }),
-      yjsExtension({
-        disabled: false,
-        document: {
-          id: 'frontpage-doc',
-        },
-        user: {
-          id: editorUser.id,
-          name: editorUser.name,
-        },
-        ws_url: YJS_WS_URL,
-      }),
-    ],
-    []
-  )
+  const editorProviders = useMemo(() => createDefaultProviders(), [])
+  const extensions = [
+    baseExtension(),
+    ...(options.disableTrack
+      ? []
+      : [
+          trackChangesExtension({
+            user: {
+              id: editorUser.id,
+              name: editorUser.name,
+            },
+            debug: options.debug,
+          }),
+        ]),
+    yjsExtension({
+      disabled: false,
+      document: {
+        id: options.documentId,
+      },
+      user: {
+        id: editorUser.id,
+        name: editorUser.name,
+      },
+      ws_url: YJS_WS_URL,
+    }),
+  ]
 
   // eslint-disable-next-line
   function handleEdit() {}
@@ -74,6 +78,7 @@ export const Editor = observer(() => {
     <ReactEditorContext.Provider value={editorProviders}>
       <UsersList />
       <SelectUser />
+      <EditorOptions options={options} setOptions={setOptions} />
       <div>
         <ViewGrid>
           <LeftSide>
@@ -86,7 +91,7 @@ export const Editor = observer(() => {
               />
             </div>
           </LeftSide>
-          <RightPanel disableYjs={disableYjs} />
+          <RightPanel disableYjs={false} />
         </ViewGrid>
       </div>
     </ReactEditorContext.Provider>
