@@ -50,6 +50,7 @@ export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnable
     ydoc,
     permanentUserData,
     awareness: provider.awareness,
+    provider,
     yXmlFragment,
 
     init() {

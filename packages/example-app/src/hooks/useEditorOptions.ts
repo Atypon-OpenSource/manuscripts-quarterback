@@ -22,15 +22,8 @@ interface Options {
 }
 
 function useEditorOptions(storageKey: string, initialDocumentId?: string) {
-  const [mounted, setMounted] = useState(false)
-  const [options, setOptions] = useState<Options>({
-    disableTrack: false,
-    debug: true,
-    documentId: initialDocumentId || 'abc123',
-  })
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !mounted) {
+  const [options, setOptions] = useState<Options>(() => {
+    if (typeof window !== 'undefined') {
       let persisted
       try {
         persisted = JSON.parse(localStorage.getItem(storageKey) || '')
@@ -38,10 +31,17 @@ function useEditorOptions(storageKey: string, initialDocumentId?: string) {
         console.error(err)
       }
       if (persisted) {
-        setOptions(persisted)
+        return persisted
       }
-      setMounted(true)
     }
+    return {
+      disableTrack: false,
+      debug: true,
+      documentId: initialDocumentId || 'abc123',
+    }
+  })
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(storageKey, JSON.stringify(options))
     }

@@ -47,6 +47,7 @@ export function PMEditor(props: EditorProps) {
     props: EditorProps,
     oldView?: EditorView | null
   ) {
+    ctx.extensionProvider.destroy()
     ctx.extensionProvider.init(ctx, props.extensions || [])
     const state = createEditorState(ctx)
     const view = oldView || createEditorView(element, state, ctx, props)

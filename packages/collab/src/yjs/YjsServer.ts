@@ -56,8 +56,8 @@ export class YjsServer {
     this.wsServer.on('connection', this.onConnection.bind(this))
     this.httpServer = server
     this.httpServer.on('upgrade', (request, socket, head) => {
-      log.warn(`Authorization header: ${request.headers['authorization']}`)
-      log.warn(`Cookie: ${request.headers.cookie}`)
+      // log.debug(`Authorization header: ${request.headers['authorization']}`)
+      // log.debug(`Cookie: ${request.headers.cookie}`)
       // TODO parse Authorization from request, check jwt
       // and add user to the socket?
       // @ts-ignore
@@ -82,15 +82,26 @@ export class YjsServer {
     //   doc.createDefaultDoc()
     //   this.documents.set(doc.id, doc)
     // }
+
+    // Queue messages while fetching the document from persistence
+    // Otherwise they'll be lost (probably could be handled by improving WebSocketProvider)
+    // and the client's provider won't trigger 'synced' event
+    const queue: Uint8Array[] = []
+    const listener = (data: Uint8Array) => queue.push(data)
+    socket.on('message', listener)
+
     const doc = await this.redisPersistence.fetchYDoc(documentId)
     if (!this.documents.has(doc.id)) {
       this.documents.set(doc.id, doc)
     }
+    log.debug(`Documents: ${this.documents.size}`)
+
     // const clientID = doc.yDoc.clientID ???
     // const userId = socket.user.id
     doc.onYDocUpdate(this.onDocUpdate.bind(this))
     doc.onAwarenessUpdate(this.onAwarenessUpdate.bind(this))
-    log.debug(`Documents: ${this.documents.size}`)
+    socket.off('message', listener)
+
     this.connections.add(
       socket,
       request,
@@ -99,13 +110,16 @@ export class YjsServer {
       () => this.onClose(doc)
     )
     socket.send(writeSyncStep1(doc.yDoc))
+    // Replay queued messages
+    queue.forEach((d) => socket.emit('message', d))
+
     // TODO changedClients aka clientIDs???
     // socket.send(writeAwarenessUpdate(doc.awareness, [doc.awareness.clientID]))
   }
 
   onMessage(doc: Document, conn: Connection, data: ArrayBuffer) {
-    log.debug('onMessage')
     const result = readMessageYjs(data, doc, conn)
+    log.debug(`onMessage (${doc.id}) (ok ${result.ok})`)
     if (!result.ok) {
       log.error(`Failed to read socket message: ${result.error}`)
       return
@@ -120,6 +134,7 @@ export class YjsServer {
   }
 
   onClose(doc: Document) {
+    log.debug(`onClose (${doc.id})`)
     const connections = this.connections.getChannelConnections(doc.id)
     const clientIDs = Array.from(connections.values()).reduce(
       (acc, c) => [...acc, ...c.awarenessClientIDs],
@@ -127,14 +142,15 @@ export class YjsServer {
     )
     removeAwarenessStates(doc.awareness, clientIDs, null)
     if (connections.size === 0) {
-      this.documents.delete(doc.id)
-      doc.yDoc.destroy()
-      // TODO persist document here!
-      // maybe write to disk?
+      doc.decrementDeletion()
+      // TODO check documents either in pingIntervals or in another minute interval
+      // and decrementDeletion for all docs that have no connections, delete & persist
+      // them once it reaches 0
     }
   }
 
   onDocUpdate(update: Uint8Array, docId: string) {
+    log.debug(`onDocUpdate (${docId})`)
     const connections = this.connections.getChannelConnections(docId)
     const message = writeSyncUpdate(update)
     connections.forEach((conn) => {
@@ -144,7 +160,7 @@ export class YjsServer {
 
   // OutgoingMessage.createAwarenessUpdateMessage
   onAwarenessUpdate(update: AwarenessUpdate, docId: string, awareness: Awareness) {
-    log.debug(`onAwarenessUpdate: (doc.id ${docId.slice(0, 5)}) (update ${update})`)
+    log.debug(`onAwarenessUpdate: (doc.id ${docId}) (update ${update})`)
     const changedClientIDs = this.connections.updateConnections(docId, update)
     // TODO not pretty
     const clientIDs =
@@ -155,8 +171,6 @@ export class YjsServer {
       conn.socket.send(message)
     })
   }
-
-  persist(docId: string, update: Uint8Array) {}
 
   destroy() {
     this.httpServer?.close()

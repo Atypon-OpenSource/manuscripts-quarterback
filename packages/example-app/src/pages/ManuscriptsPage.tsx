@@ -40,10 +40,7 @@ export function ManuscriptsPage() {
   }>()
 
   useEffect(() => {
-    initialData?.yDoc.destroy()
-    initialData?.provider.destroy()
     history.push(documentId)
-
     const yDoc = new Doc({ gc: false })
     const provider = new WebsocketProvider(YJS_WS_URL, documentId, yDoc)
     provider.on('synced', () => {

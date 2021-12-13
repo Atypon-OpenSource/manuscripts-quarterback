@@ -42,34 +42,36 @@ export const Editor = observer(() => {
     authStore: { editorUser },
   } = stores
   const editorProviders = useMemo(() => createDefaultProviders(), [])
-  const extensions = [
-    baseExtension(),
-    ...(options.disableTrack
-      ? []
-      : [
-          trackChangesExtension({
-            user: {
-              id: editorUser.id,
-              name: editorUser.name,
-            },
-            debug: options.debug,
-          }),
-        ]),
-    yjsExtension({
-      disabled: false,
-      document: {
-        id: options.documentId,
-      },
-      user: {
-        id: editorUser.id,
-        name: editorUser.name,
-      },
-      ws_url: YJS_WS_URL,
-    }),
-  ]
-
+  const extensions = useMemo(
+    () => [
+      baseExtension(),
+      ...(options.disableTrack
+        ? []
+        : [
+            trackChangesExtension({
+              user: {
+                id: editorUser.id,
+                name: editorUser.name,
+              },
+              debug: options.debug,
+            }),
+          ]),
+      yjsExtension({
+        disabled: false,
+        document: {
+          id: options.documentId,
+        },
+        user: {
+          id: editorUser.id,
+          name: editorUser.name,
+        },
+        ws_url: YJS_WS_URL,
+      }),
+    ],
+    [options, editorUser]
+  )
   // eslint-disable-next-line
-  function handleEdit() {}
+  function handleEdit() { }
   // eslint-disable-next-line
   function handleEditorReady(ctx: EditorContext) {
     applyDevTools(ctx.viewProvider.view)

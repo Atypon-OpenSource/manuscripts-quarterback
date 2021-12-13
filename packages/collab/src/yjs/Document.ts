@@ -27,12 +27,23 @@ export class Document {
   id: string
   yDoc: Doc
   awareness: Awareness
+  deleteInMinutes: number | null = null
 
   constructor(id: string) {
     this.id = id
     this.yDoc = new Doc({ gc: true })
     this.awareness = new Awareness(this.yDoc)
     this.awareness.setLocalState(null)
+  }
+
+  decrementDeletion(reset = false) {
+    if (reset) {
+      this.deleteInMinutes = null
+    } else if (this.deleteInMinutes === null) {
+      this.deleteInMinutes = 2
+    } else {
+      this.deleteInMinutes -= 1
+    }
   }
 
   createDefaultDoc() {

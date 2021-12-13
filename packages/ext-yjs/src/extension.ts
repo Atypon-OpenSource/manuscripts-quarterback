@@ -60,6 +60,10 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
     keymaps: [],
     plugins,
     store,
+    onDestroy() {
+      store.ydoc.destroy()
+      store.provider.destroy()
+    },
   }
 }
 
