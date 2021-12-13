@@ -31,7 +31,10 @@ function useEditorOptions(storageKey: string, initialDocumentId?: string) {
         console.error(err)
       }
       if (persisted) {
-        return persisted
+        return {
+          ...persisted,
+          documentId: initialDocumentId,
+        }
       }
     }
     return {

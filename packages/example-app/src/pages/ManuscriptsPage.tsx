@@ -40,7 +40,7 @@ export function ManuscriptsPage() {
   }>()
 
   useEffect(() => {
-    history.push(documentId)
+    initialData && history.push(documentId)
     const yDoc = new Doc({ gc: false })
     const provider = new WebsocketProvider(YJS_WS_URL, documentId, yDoc)
     provider.on('synced', () => {

@@ -100,7 +100,6 @@ export class YjsServer {
     // const userId = socket.user.id
     doc.onYDocUpdate(this.onDocUpdate.bind(this))
     doc.onAwarenessUpdate(this.onAwarenessUpdate.bind(this))
-    socket.off('message', listener)
 
     this.connections.add(
       socket,
@@ -110,6 +109,7 @@ export class YjsServer {
       () => this.onClose(doc)
     )
     socket.send(writeSyncStep1(doc.yDoc))
+    socket.off('message', listener)
     // Replay queued messages
     queue.forEach((d) => socket.emit('message', d))
 
