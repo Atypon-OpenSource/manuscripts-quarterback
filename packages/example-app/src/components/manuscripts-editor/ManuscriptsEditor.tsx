@@ -18,7 +18,7 @@ import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
 import { trackChangesExtension } from '@manuscripts/ext-track-changes'
-import { yjsExtension, generateUser } from '@manuscripts/ext-yjs'
+import { generateUser, yjsExtension } from '@manuscripts/ext-yjs'
 import {
   ApplicationMenus,
   createDefaultProviders,

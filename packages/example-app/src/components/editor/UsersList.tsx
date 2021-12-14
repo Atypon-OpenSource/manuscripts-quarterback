@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 import { YjsUser } from '@manuscripts/ext-yjs'
+import { useYjsExtension } from '@manuscripts/ext-yjs'
 import React from 'react'
 import styled from 'styled-components'
-
-import { useYjsExtension } from './useYjsExtension'
 
 interface IProps {
   className?: string

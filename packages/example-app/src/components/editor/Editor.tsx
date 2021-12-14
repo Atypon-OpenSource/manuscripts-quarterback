@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { trackChangesExtension } from '@manuscripts/ext-track-changes'
-import { yjsExtension } from '@manuscripts/ext-yjs'
+import { generateUser, yjsExtension } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
   createDefaultProviders,
@@ -42,6 +42,7 @@ export const Editor = observer(() => {
     authStore: { editorUser },
   } = stores
   const editorProviders = useMemo(() => createDefaultProviders(), [])
+  const yjsUser = useMemo(() => generateUser(editorUser.clientID, editorUser.name), [editorUser])
   const extensions = useMemo(
     () => [
       baseExtension(),
@@ -61,14 +62,11 @@ export const Editor = observer(() => {
         document: {
           id: options.documentId,
         },
-        user: {
-          id: editorUser.id,
-          name: editorUser.name,
-        },
+        user: yjsUser,
         ws_url: YJS_WS_URL,
       }),
     ],
-    [options, editorUser]
+    [options, yjsUser]
   )
   // eslint-disable-next-line
   function handleEdit() { }
