@@ -16,7 +16,7 @@
 export * as yjsCommands from './commands'
 export * from './generate'
 
-export { yjsExtension, yjsExtensionName } from './extension'
+export { yjsExtension } from './extension'
 export { useYjsExtension } from './useYjsExtension'
 
 export * from './types'

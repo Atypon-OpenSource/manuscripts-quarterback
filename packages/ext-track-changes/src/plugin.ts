@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { EditorViewProvider } from '@manuscripts/manuscript-editor'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import { ySyncPluginKey } from 'y-prosemirror'
@@ -42,7 +43,7 @@ export interface TrackChangesState {
 
 export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>('track-changes')
 
-export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
+export const trackChangesPlugin = (viewProvider: EditorViewProvider, opts: TrackChangesPluginOptions) => {
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
     state: {
@@ -114,8 +115,8 @@ export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
       const pluginState = trackChangesPluginKey.getState(newState)
       if (
         !pluginState ||
-        pluginState.status === TrackChangesStatus.disabled
-        // || !editorView.editable
+        pluginState.status === TrackChangesStatus.disabled ||
+        !viewProvider.view.editable
       ) {
         return null
       }

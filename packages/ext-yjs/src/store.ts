@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 import { trackCommands } from '@manuscripts/ext-track-changes'
-import { EditorViewProvider } from '@manuscripts/manuscript-editor'
-import { Observable } from '@manuscripts/quarterback-shared'
+import type { EditorProviders } from '@manuscripts/manuscript-editor'
 import { ProsemirrorBinding, ySyncPluginKey } from 'y-prosemirror'
 import { Awareness } from 'y-protocols/awareness'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
-import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
-import { generateColor, generateUser } from './generate'
 import { createYjsSnapshot } from './snapshots'
-import type { AwarenessChange, YjsEnabled, YjsExtensionState, YjsSnapshot, YjsUser } from './types'
+import {
+  AwarenessChange,
+  YjsEnabled,
+  yjsExtensionName,
+  YjsExtensionState,
+  YjsSnapshot,
+  YjsUser,
+} from './types'
 
-export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnabled) => {
+export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
+  const { viewProvider, extensionProvider } = ctx
   const { document, user, initial, ws_url } = opts
-  const _observable = new Observable<'update'>()
-  const ydoc = initial?.doc || new Doc()
+  const ydoc = initial?.doc || new Y.Doc()
   ydoc.gc = false
   const permanentUserData = new Y.PermanentUserData(ydoc)
   permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
@@ -39,11 +43,7 @@ export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnable
   let snapshots: YjsSnapshot[] = []
   let selectedSnapshot: YjsSnapshot | null = null
 
-  let currentUser: YjsUser = {
-    clientID: Math.floor(Math.random() * 1000000),
-    color: generateColor(),
-    ...user,
-  }
+  let currentUser: YjsUser = user
   const usersMap: Map<number, YjsUser> = new Map()
 
   return {
@@ -54,8 +54,8 @@ export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnable
     yXmlFragment,
 
     init() {
+      snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
       ydoc.getArray<YjsSnapshot>('versions').observe(function callback() {
-        // yjsStore.ydoc.getArray<YjsSnapshot>('versions').unobserve(callback)
         snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
       })
       this.setUser(currentUser)
@@ -173,19 +173,11 @@ export const createYjsStore = (viewProvider: EditorViewProvider, opts: YjsEnable
 
     updateVersions() {
       snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
-      _observable.emit('update', this.getState)
+      this.update()
     },
 
     update() {
-      _observable.emit('update', this.getState)
-    },
-
-    onUpdate(cb: (data: any) => void) {
-      _observable.on('update', cb)
-    },
-
-    offUpdate(cb: (data: any) => void) {
-      _observable.off('update', cb)
+      extensionProvider.emitExtensionUpdate(yjsExtensionName, this.getState())
     },
   }
 }

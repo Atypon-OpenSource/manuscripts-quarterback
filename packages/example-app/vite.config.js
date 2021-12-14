@@ -34,7 +34,7 @@ export default defineConfig({
       'prosemirror-history',
       'prosemirror-inputrules',
       'prosemirror-keymap',
-      'prosemirror-model',
+      // 'prosemirror-model',
       'prosemirror-schema-list',
       'prosemirror-state',
       'prosemirror-tables',
@@ -55,6 +55,7 @@ export default defineConfig({
     alias: {
       '@manuscripts/manuscript-transform': resolve('../manuscript-transform'),
       lib0: resolve('node_modules/lib0'),
+      'prosemirror-model': resolve('node_modules', '@manuscripts', 'manuscript-editor', 'node_modules', 'prosemirror-model'),
       react: require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),

@@ -38,3 +38,11 @@ export function generateUser(clientID?: number, name?: string): YjsUser {
     }),
   }
 }
+
+export function generateYjsUser(user: { id: string; name: string; color?: string }): YjsUser {
+  return {
+    clientID: Math.floor(Math.random() * 1000000),
+    color: generateColor(),
+    ...user,
+  }
+}

@@ -18,7 +18,7 @@ import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
 import { trackChangesExtension } from '@manuscripts/ext-track-changes'
-import { yjsExtension } from '@manuscripts/ext-yjs'
+import { yjsExtension, generateUser } from '@manuscripts/ext-yjs'
 import {
   ApplicationMenus,
   createDefaultProviders,
@@ -81,6 +81,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
   } = stores
   const editorDOMRef = useRef(null)
   const providers = useMemo(() => createDefaultProviders(), [])
+  const yjsUser = useMemo(() => generateUser(editorUser.clientID, editorUser.name), [editorUser])
   const extensions = useMemo(
     () => [
       ...(options.disableTrack
@@ -99,10 +100,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
         document: {
           id: options.documentId,
         },
-        user: {
-          id: editorUser.id,
-          name: editorUser.name,
-        },
+        user: yjsUser,
         initial: {
           doc: initialData.yDoc,
           provider: initialData.provider,
@@ -110,7 +108,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
         ws_url: YJS_WS_URL,
       }),
     ],
-    [options, editorUser, initialData]
+    [options, yjsUser, initialData]
   )
   const editorProps = useMemo<UseEditorProps>(
     () => ({
