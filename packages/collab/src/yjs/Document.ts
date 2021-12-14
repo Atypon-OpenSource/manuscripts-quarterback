@@ -31,7 +31,7 @@ export class Document {
 
   constructor(id: string) {
     this.id = id
-    this.yDoc = new Doc({ gc: true })
+    this.yDoc = new Doc({ gc: false })
     this.awareness = new Awareness(this.yDoc)
     this.awareness.setLocalState(null)
   }

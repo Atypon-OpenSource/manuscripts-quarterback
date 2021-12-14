@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEditorContext } from '@manuscripts/manuscript-editor'
+import { ExtensionProvider, useEditorContext } from '@manuscripts/manuscript-editor'
 import { useEffect, useState } from 'react'
 
-import { yjsExtensionName } from './extension'
-import { YjsExtension, YjsExtensionState, YjsStore } from './types'
+import { YjsExtension, yjsExtensionName, YjsExtensionState, YjsStore } from './types'
 
 export function useYjsExtension() {
   const { extensionProvider } = useEditorContext()
-  // const [ext, setExt] = useState<YjsExtension>()
   const [state, setState] = useState<YjsExtensionState>()
   const [store, setStore] = useState<YjsStore>()
 
   useEffect(() => {
-    const cb = (newState: YjsExtensionState) => {
+    const updateStoreCb = (provider: ExtensionProvider) => {
+      const yjs = provider?.getExtension(yjsExtensionName) as YjsExtension | undefined
+      yjs && setStore(yjs.store)
+    }
+    const updateStateCb = (newState: YjsExtensionState) => {
       setState(newState)
     }
-    const yjs = extensionProvider?.getExtension(yjsExtensionName) as YjsExtension | undefined
-    if (!yjs || yjs.opts.disabled || !yjs.store) {
+    if (!extensionProvider) {
       return
     }
-    setStore(yjs.store)
-    const { onUpdate, offUpdate, getState } = yjs.store
-    setState(getState())
-    // setExt(yjs)
-    onUpdate(cb)
+    const yjs = extensionProvider?.getExtension(yjsExtensionName) as YjsExtension | undefined
+    updateStoreCb(extensionProvider)
+    yjs?.store && setState(yjs.store.getState())
+    extensionProvider.onExtensionUpdate(yjsExtensionName, updateStateCb)
+    extensionProvider.onUpdate(updateStoreCb)
     return () => {
-      offUpdate(cb)
+      extensionProvider.offExtensionUpdate(yjsExtensionName, updateStateCb)
+      extensionProvider.offUpdate(updateStoreCb)
     }
   }, [extensionProvider])
 

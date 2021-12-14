@@ -20,9 +20,7 @@ import { Awareness } from 'y-protocols/awareness'
 
 import * as commands from './commands'
 import { createYjsStore } from './store'
-import type { YjsOptions } from './types'
-
-export const yjsExtensionName = 'yjs' as const
+import { yjsExtensionName, YjsOptions } from './types'
 
 export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
   if (opts.disabled) {
@@ -35,7 +33,7 @@ export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
       store: undefined,
     }
   }
-  const store = createYjsStore(ctx.viewProvider, opts).init()
+  const store = createYjsStore(ctx, opts).init()
   const plugins = [
     ySyncPlugin(store.yXmlFragment, {
       permanentUserData: store.permanentUserData,

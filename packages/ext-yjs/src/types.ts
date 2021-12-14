@@ -19,6 +19,8 @@ import { Doc } from 'yjs'
 import type { yjsExtension } from './extension'
 import type { createYjsStore } from './store'
 
+export const yjsExtensionName = 'yjs' as const
+
 export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
 export type YjsOptions = YjsDisabled | YjsEnabled
 export type YjsDisabled = {
@@ -31,8 +33,9 @@ export type YjsEnabled = {
   }
   user: {
     id: string
+    clientID: number
     name: string
-    color?: string
+    color: string
   }
   initial?: {
     doc: Doc
