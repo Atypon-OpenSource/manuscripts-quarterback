@@ -49,7 +49,6 @@ export function ChangesControls(props: IProps) {
     viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function handleSnapshot() {
-    console.log(yjsStore)
     yjsStore?.createSnapshot()
   }
   return (

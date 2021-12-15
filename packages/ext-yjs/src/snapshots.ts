@@ -21,7 +21,7 @@ import type { YjsSnapshot } from './types'
 export function createYjsSnapshot(ysnap: Y.Snapshot, clientID: number): YjsSnapshot {
   return {
     id: uuidv4(),
-    date: new Date().getTime(),
+    date: Date.now(),
     snapshot: Y.encodeSnapshot(ysnap),
     clientID,
   }

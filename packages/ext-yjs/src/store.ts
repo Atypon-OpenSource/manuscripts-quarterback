@@ -55,8 +55,9 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
 
     init() {
       snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
-      ydoc.getArray<YjsSnapshot>('versions').observe(function callback() {
+      ydoc.getArray<YjsSnapshot>('versions').observe(() => {
         snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
+        this.update()
       })
       this.setUser(currentUser)
       provider.awareness.on('update', this.updateUsers.bind(this))
@@ -85,11 +86,9 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
     createSnapshot() {
       const versions = ydoc.getArray<YjsSnapshot>('versions')
       const prevVersion = versions.length === 0 ? null : versions.get(versions.length - 1)
-      console.info(prevVersion)
       const prevSnapshot =
         prevVersion === null ? Y.emptySnapshot : Y.decodeSnapshot(prevVersion.snapshot)
       const snapshot = Y.snapshot(ydoc)
-      console.info('created snapshot', snapshot)
       if (prevVersion) {
         // account for the action of adding a version to ydoc
         const prevVersionID = prevSnapshot.sv.get(prevVersion.clientID)
@@ -101,7 +100,6 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
       if (!Y.equalSnapshots(prevSnapshot, snapshot)) {
         versions.push([createYjsSnapshot(snapshot, ydoc.clientID)])
         viewProvider.execCommand(trackCommands.createSnapshot())
-        this.updateVersions()
       }
     },
 
@@ -109,22 +107,24 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
       if (!snap || selectedSnapshot?.id === snap.id) {
         return this.resumeEditing()
       }
-      const versions = ydoc.getArray<YjsSnapshot>('versions')
       const ySnapshot = Y.decodeSnapshot(snap.snapshot)
-      console.log('inspect snapshot', ySnapshot)
-      let prevYSnapshot: Y.Snapshot = Y.emptySnapshot,
-        foundPrevVersion = false
-      versions.forEach((s) => {
+      let prevSnapshot: YjsSnapshot | undefined,
+        foundPrevSnapshot = false
+      ydoc.getArray<YjsSnapshot>('versions').forEach((s) => {
         if (s.id === snap.id) {
-          foundPrevVersion = true
-        } else if (!foundPrevVersion) {
-          prevYSnapshot = Y.decodeSnapshot(s.snapshot)
+          foundPrevSnapshot = true
+        } else if (!foundPrevSnapshot) {
+          prevSnapshot = s
         }
       })
       const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(viewProvider.state).binding
-      if (binding) {
-        binding.renderSnapshot(ySnapshot, prevYSnapshot)
+      if (!binding) {
+        throw Error('Failed to retrieve ProsemirrorBinding from ySyncPlugin')
       }
+      binding.renderSnapshot(
+        ySnapshot,
+        prevSnapshot ? Y.decodeSnapshot(prevSnapshot.snapshot) : Y.emptySnapshot
+      )
       selectedSnapshot = snap
       this.update()
       setTimeout(() => {
@@ -138,16 +138,16 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
       versions.forEach((v, i) => {
         if (v.id === snap.id) {
           versions.delete(i)
-          this.updateVersions()
         }
       })
     },
 
     resumeEditing() {
       const binding: ProsemirrorBinding | null = ySyncPluginKey.getState(viewProvider.state).binding
-      if (binding) {
-        binding.unrenderSnapshot()
+      if (!binding) {
+        throw Error('Failed to retrieve ProsemirrorBinding from ySyncPlugin')
       }
+      binding.unrenderSnapshot()
       selectedSnapshot = null
       viewProvider.execCommand(trackCommands.refreshChanges())
       this.update()
@@ -168,11 +168,6 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
         }
       })
       removed.forEach((clientID) => usersMap.delete(clientID))
-      this.update()
-    },
-
-    updateVersions() {
-      snapshots = ydoc.getArray<YjsSnapshot>('versions').toArray()
       this.update()
     },
 

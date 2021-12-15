@@ -52,9 +52,8 @@ export function ChangeList(props: IProps) {
               {renderChangeContent(c)}
             </TitleWrapper>
             <Ranges>
-              <span className="msg">from: {c.from}</span>
-              {c.type === 'text-change' && <span className="msg">to: {c.to}</span>}
-              {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
+              <span className="field">from: {c.from}</span>
+              {c.type === 'text-change' && <span className="field">to: {c.to}</span>}
             </Ranges>
           </ListItem>
         ))}
@@ -109,7 +108,7 @@ const TitleWrapper = styled.div`
 const Ranges = styled.div`
   align-items: center;
   display: flex;
-  & > .msg {
+  & > .field {
     margin-right: 1rem;
   }
 `

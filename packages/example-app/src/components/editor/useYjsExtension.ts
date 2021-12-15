@@ -34,9 +34,9 @@ export function useYjsExtension() {
     if (!extensionProvider) {
       return
     }
-    const yjs = extensionProvider?.getExtension(yjsExtensionName) as YjsExtension | undefined
     updateStoreCb(extensionProvider)
-    yjs?.store && setState(yjs.store.getState())
+    const yjs = extensionProvider.getExtension<YjsExtension>(yjsExtensionName)
+    setState(yjs.store ? yjs.store.getState() : undefined)
     extensionProvider.onExtensionUpdate(yjsExtensionName, updateStateCb)
     extensionProvider.onUpdate(updateStoreCb)
     return () => {
