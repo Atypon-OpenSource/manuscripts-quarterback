@@ -18,7 +18,7 @@ import { Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
-import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
+import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../types/change'
 import { DeleteAttrs, InsertAttrs } from '../types/track'
 
 export function createTrackedAttrs(attrs: InsertAttrs | DeleteAttrs): TrackedAttrs {

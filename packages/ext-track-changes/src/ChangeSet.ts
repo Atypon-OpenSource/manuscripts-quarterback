@@ -13,52 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export enum CHANGE_OPERATION {
-  insert = 'insert',
-  delete = 'delete',
-  update = 'update',
-}
-export enum CHANGE_STATUS {
-  accepted = 'accepted',
-  rejected = 'rejected',
-  pending = 'pending',
-}
-export interface TrackedAttrs {
-  id: string
-  userID: string
-  userName: string
-  operation: CHANGE_OPERATION
-  status: CHANGE_STATUS
-  time: number
-}
-export type TextChange = {
-  id: string
-  type: 'text-change'
-  from: number
-  to: number
-  attrs: TrackedAttrs
-  incompleteAttrs: boolean
-}
-export type NodeChange = {
-  id: string
-  type: 'node-change'
-  from: number
-  nodeType: string
-  attrs: TrackedAttrs
-  incompleteAttrs: boolean
-}
-export type IncompleteTextChange = Omit<TextChange, 'attrs'> & {
-  attrs: Partial<TrackedAttrs>
-}
-export type IncompleteNodeChange = Omit<NodeChange, 'attrs'> & {
-  attrs: Partial<TrackedAttrs>
-}
-export type TrackedChange = TextChange | NodeChange
-export type PartialTrackedChange =
-  | TextChange
-  | NodeChange
-  | IncompleteTextChange
-  | IncompleteNodeChange
+import {
+  CHANGE_STATUS,
+  IncompleteNodeChange,
+  IncompleteTextChange,
+  NodeChange,
+  PartialTrackedChange,
+  TextChange,
+  TrackedChange,
+} from './types/change'
 
 export class ChangeSet {
   _changes: PartialTrackedChange[]
@@ -71,16 +34,40 @@ export class ChangeSet {
     return this._changes.filter((c) => !c.incompleteAttrs) as TrackedChange[]
   }
 
+  get changeTree() {
+    const rootNodes: TrackedChange[] = []
+    let currentNodeChange: NodeChange | undefined
+    this.changes.forEach((c) => {
+      if (currentNodeChange && c.from >= currentNodeChange.to) {
+        rootNodes.push(currentNodeChange)
+        currentNodeChange = undefined
+      }
+      if (c.type === 'node-change' && currentNodeChange && c.from < currentNodeChange.to) {
+        currentNodeChange.children.push(c)
+      } else if (c.type === 'node-change') {
+        currentNodeChange = { ...c, children: [] }
+      } else if (c.type === 'text-change' && currentNodeChange && c.from < currentNodeChange.to) {
+        currentNodeChange.children.push(c)
+      } else if (c.type === 'text-change') {
+        rootNodes.push(c)
+      }
+    })
+    if (currentNodeChange) {
+      rootNodes.push(currentNodeChange)
+    }
+    return rootNodes
+  }
+
   get pending() {
-    return this.changes.filter((c) => c.attrs.status === CHANGE_STATUS.pending)
+    return this.changeTree.filter((c) => c.attrs.status === CHANGE_STATUS.pending)
   }
 
   get accepted() {
-    return this.changes.filter((c) => c.attrs.status === CHANGE_STATUS.accepted)
+    return this.changeTree.filter((c) => c.attrs.status === CHANGE_STATUS.accepted)
   }
 
   get rejected() {
-    return this.changes.filter((c) => c.attrs.status === CHANGE_STATUS.rejected)
+    return this.changeTree.filter((c) => c.attrs.status === CHANGE_STATUS.rejected)
   }
 
   get textChanges() {

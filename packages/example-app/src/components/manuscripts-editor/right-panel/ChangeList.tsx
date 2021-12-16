@@ -27,6 +27,39 @@ interface IProps {
   toggleVisibility: () => void
 }
 
+interface ChildListProps {
+  changes: TrackedChange[]
+  renderChangeContent: (c: TrackedChange) => React.ReactNode
+}
+
+function ChildChangeList(props: ChildListProps) {
+  const { changes, renderChangeContent } = props
+  function changeTitle(c: TrackedChange) {
+    if (ChangeSet.isTextChange(c)) {
+      return `Text ${c.attrs.operation}`
+    } else if (ChangeSet.isNodeChange(c)) {
+      return `${c.nodeType.charAt(0).toUpperCase()}${c.nodeType.slice(1)} ${c.attrs.operation}`
+    }
+    return 'Unknown change!'
+  }
+  return (
+    <List indent>
+      {changes.map((c: TrackedChange, i: number) => (
+        <ListItem key={`${c.id}-${i}`} data-test="change-item">
+          <TitleWrapper>
+            <h4>{changeTitle(c)}</h4>
+            {renderChangeContent(c)}
+          </TitleWrapper>
+          <Ranges>
+            <span className="msg">from: {c.from}</span>
+            <span className="msg">to: {c.to}</span>
+          </Ranges>
+        </ListItem>
+      ))}
+    </List>
+  )
+}
+
 export function ChangeList(props: IProps) {
   const { className, changes, isVisible, title, renderChangeContent, toggleVisibility } = props
 
@@ -53,9 +86,12 @@ export function ChangeList(props: IProps) {
             </TitleWrapper>
             <Ranges>
               <span className="msg">from: {c.from}</span>
-              {c.type === 'text-change' && <span className="msg">to: {c.to}</span>}
+              <span className="msg">to: {c.to}</span>
               {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
             </Ranges>
+            {ChangeSet.isNodeChange(c) && c.children.length > 0 && (
+              <ChildChangeList changes={c.children} renderChangeContent={renderChangeContent} />
+            )}
           </ListItem>
         ))}
       </List>
@@ -82,11 +118,11 @@ const Header = styled.button`
     text-transform: uppercase;
   }
 `
-const List = styled.ul`
+const List = styled.ul<{ indent?: boolean }>`
   display: flex;
   flex-direction: column;
   list-style: none;
-  margin: 0;
+  margin: ${({ indent }) => (indent ? '0 0 0 1rem' : 0)};
   padding: 0;
   & > li + li {
     margin-top: 1rem;

@@ -15,7 +15,7 @@
  */
 import { Transaction } from 'prosemirror-state'
 
-import { CHANGE_STATUS } from './ChangeSet'
+import { CHANGE_STATUS } from './types/change'
 import { TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 

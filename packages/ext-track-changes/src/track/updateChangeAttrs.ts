@@ -17,14 +17,14 @@ import { Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
 
+import { ChangeSet } from '../ChangeSet'
 import {
   CHANGE_OPERATION,
   CHANGE_STATUS,
-  ChangeSet,
   PartialTrackedChange,
   TrackedAttrs,
   TrackedChange,
-} from '../ChangeSet'
+} from '../types/change'
 import { getNodeTrackedMarks, insertBlockInlineContent, liftNode } from './node-utils'
 
 export function updateChangeAttrs(

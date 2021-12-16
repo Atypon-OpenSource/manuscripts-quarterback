@@ -19,11 +19,12 @@ import { EditorView } from 'prosemirror-view'
 import { ySyncPluginKey } from 'y-prosemirror'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
-import { CHANGE_STATUS, ChangeSet } from './ChangeSet'
+import { ChangeSet } from './ChangeSet'
 import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
 import { updateChangeAttrs, updateDocAndRemoveChanges } from './track/updateChangeAttrs'
+import { CHANGE_STATUS } from './types/change'
 import { TrackChangesPluginOptions, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
@@ -43,7 +44,10 @@ export interface TrackChangesState {
 
 export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>('track-changes')
 
-export const trackChangesPlugin = (viewProvider: EditorViewProvider, opts: TrackChangesPluginOptions) => {
+export const trackChangesPlugin = (
+  viewProvider: EditorViewProvider,
+  opts: TrackChangesPluginOptions
+) => {
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
     state: {
@@ -134,9 +138,6 @@ export const trackChangesPlugin = (viewProvider: EditorViewProvider, opts: Track
         if (tr.docChanged && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
-        if (tr.docChanged) {
-          setAction(createdTr, TrackChangesAction.refreshChanges, true)
-        }
         const setChangeStatuses = getAction(tr, TrackChangesAction.setChangeStatuses)
         if (setChangeStatuses) {
           const { status, ids } = setChangeStatuses
@@ -163,7 +164,7 @@ export const trackChangesPlugin = (viewProvider: EditorViewProvider, opts: Track
         createdTr,
         oldState.schema
       )
-      if (changed) {
+      if (createdTr.docChanged || changed) {
         setAction(createdTr, TrackChangesAction.refreshChanges, true)
       }
       return createdTr
