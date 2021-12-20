@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+  CHANGE_OPERATION,
   CHANGE_STATUS,
   IncompleteNodeChange,
   IncompleteTextChange,
@@ -71,11 +72,11 @@ export class ChangeSet {
   }
 
   get textChanges() {
-    return this.changes.filter((c) => c.type === 'text-change')
+    return this.changeTree.filter((c) => c.type === 'text-change')
   }
 
   get nodeChanges() {
-    return this.changes.filter((c) => c.type === 'node-change')
+    return this.changeTree.filter((c) => c.type === 'node-change')
   }
 
   get isEmpty() {
@@ -96,8 +97,20 @@ export class ChangeSet {
     return this._changes.filter((c) => ids.includes(c.id))
   }
 
-  push(change: PartialTrackedChange) {
-    this._changes.push(change)
+  static shouldNotDelete(change: TrackedChange) {
+    const { status, operation } = change.attrs
+    return (
+      (operation === CHANGE_OPERATION.insert && status === CHANGE_STATUS.accepted) ||
+      (operation === CHANGE_OPERATION.delete && status === CHANGE_STATUS.rejected)
+    )
+  }
+
+  static shouldDeleteChange(change: TrackedChange) {
+    const { status, operation } = change.attrs
+    return (
+      (operation === CHANGE_OPERATION.insert && status === CHANGE_STATUS.rejected) ||
+      (operation === CHANGE_OPERATION.delete && status === CHANGE_STATUS.accepted)
+    )
   }
 
   static isIncompleteChange(

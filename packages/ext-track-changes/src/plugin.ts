@@ -125,7 +125,8 @@ export const trackChangesPlugin = (
         return null
       }
       const { currentUser, insertColor, deleteColor, changeSet } = pluginState
-      let createdTr = newState.tr
+      let createdTr = newState.tr,
+        docChanged = false
       trs.forEach((tr) => {
         const userData = {
           userID: currentUser.id,
@@ -138,6 +139,7 @@ export const trackChangesPlugin = (
         if (tr.docChanged && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
+        docChanged = docChanged || tr.docChanged
         const setChangeStatuses = getAction(tr, TrackChangesAction.setChangeStatuses)
         if (setChangeStatuses) {
           const { status, ids } = setChangeStatuses
@@ -152,9 +154,14 @@ export const trackChangesPlugin = (
           const mapping = updateDocAndRemoveChanges(
             createdTr,
             oldState.schema,
-            changeSet!.textChanges
+            changeSet!.changeTree.filter((c) => c.type === 'node-change')
           )
-          updateDocAndRemoveChanges(createdTr, oldState.schema, changeSet!.nodeChanges, mapping)
+          updateDocAndRemoveChanges(
+            createdTr,
+            oldState.schema,
+            changeSet!.changes.filter((c) => c.type === 'text-change'),
+            mapping
+          )
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
         }
       })
@@ -164,7 +171,7 @@ export const trackChangesPlugin = (
         createdTr,
         oldState.schema
       )
-      if (createdTr.docChanged || changed) {
+      if (docChanged || createdTr.docChanged || changed) {
         setAction(createdTr, TrackChangesAction.refreshChanges, true)
       }
       return createdTr

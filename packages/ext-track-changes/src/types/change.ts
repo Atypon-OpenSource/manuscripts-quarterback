@@ -44,6 +44,7 @@ export type TextChange = Change & {
 export type NodeChange = Change & {
   type: 'node-change'
   nodeType: string
+  mergeInsteadOfDelete: boolean
   children: TrackedChange[]
 }
 export type IncompleteTextChange = Omit<TextChange, 'attrs'> & {

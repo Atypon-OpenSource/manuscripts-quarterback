@@ -45,6 +45,7 @@ export function findChanges(state: EditorState) {
           from: pos,
           to: pos + node.nodeSize,
           nodeType: node.type.name,
+          mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
           children: [],
           attrs,
           incompleteAttrs,

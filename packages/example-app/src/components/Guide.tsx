@@ -73,8 +73,13 @@ export function Guide(props: Props) {
           created in the same transaction but which all depend on the <code>table_element</code>{' '}
           being accepted. If it's rejected, all the changes within the <code>table_element</code>{' '}
           should be as well deleted. In some cases, however, such as deleting paragraphs the
-          contents should be merged into the previous node which increases already very complicated
+          contents should be merged into the previous node which complicates already very complex
           work flow even further.
+        </p>
+        <p>
+          As a simple solution only deletions of basic nodes (paragraphs, blockquotes) merge
+          content. Deleting all the other, more complex nodes (tables, figures etc) will always
+          delete everything within them unless somehow prevented.
         </p>
       </Container>
       <div>
