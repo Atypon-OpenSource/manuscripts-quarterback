@@ -16,9 +16,9 @@
 import { uuidv4 } from '@manuscripts/quarterback-shared'
 
 import { setAction, TrackChangesAction } from './actions'
-import { CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
 import { trackChangesPluginKey } from './plugin'
 import { applyAndMergeMarks, deleteAndMergeSplitBlockNodes } from './track/trackTransaction'
+import { CHANGE_OPERATION, CHANGE_STATUS } from './types/change'
 import type { Command } from './types/editor'
 import { DeleteAttrs, InsertAttrs, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'

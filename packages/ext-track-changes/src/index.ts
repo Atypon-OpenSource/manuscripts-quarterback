@@ -19,7 +19,7 @@ export type { TrackChangesState } from './plugin'
 export * as trackCommands from './commands'
 export { trackChangesExtension, trackChangesExtensionName } from './extension'
 
-export { ChangeSet, CHANGE_OPERATION, CHANGE_STATUS } from './ChangeSet'
-export type { TrackedAttrs, TrackedChange, TextChange, NodeChange } from './ChangeSet'
+export { ChangeSet } from './ChangeSet'
 
+export * from './types/change'
 export * from './types/track'

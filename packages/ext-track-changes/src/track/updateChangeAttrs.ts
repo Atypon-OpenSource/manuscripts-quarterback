@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Schema } from 'prosemirror-model'
+import { Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
 
+import { ChangeSet } from '../ChangeSet'
 import {
   CHANGE_OPERATION,
   CHANGE_STATUS,
-  ChangeSet,
   PartialTrackedChange,
   TrackedAttrs,
   TrackedChange,
-} from '../ChangeSet'
-import { getNodeTrackedMarks, insertBlockInlineContent, liftNode } from './node-utils'
+} from '../types/change'
+import {
+  getChangeContent,
+  getNodeTrackedMarks,
+  getPosToInsertMergedContent,
+  updateChangeChildrenAttributes,
+} from './node-utils'
 
 export function updateChangeAttrs(
   tr: Transaction,
@@ -79,10 +84,18 @@ export function updateDocAndRemoveChanges(
     } else if (ChangeSet.isNodeChange(change) && noChangeNeeded) {
       const attrs = { ...node.attrs, dataTracked: null }
       tr.setNodeMarkup(from, undefined, attrs, node.marks)
+      updateChangeChildrenAttributes(change.children, tr, deleteMap)
     } else if (ChangeSet.isNodeChange(change)) {
-      // lift?
-      // liftNode(change.from + offset, tr)
-      insertBlockInlineContent(from, tr, deleteMap)
+      if (change.mergeInsteadOfDelete) {
+        const notDeleted = getChangeContent(change.children, tr.doc, deleteMap)
+        const pos = getPosToInsertMergedContent(from, tr, deleteMap)
+        if (pos !== undefined && notDeleted.length > 0) {
+          tr.insert(pos, notDeleted)
+          deleteMap.appendMap(tr.steps[tr.steps.length - 1].getMap())
+        }
+      }
+      tr.delete(deleteMap.map(change.from), deleteMap.map(change.to))
+      deleteMap.appendMap(tr.steps[tr.steps.length - 1].getMap())
     }
   })
   return deleteMap

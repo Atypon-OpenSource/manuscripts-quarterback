@@ -17,7 +17,8 @@ import { uuidv4 } from '@manuscripts/quarterback-shared'
 import { Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 
-import { CHANGE_OPERATION, CHANGE_STATUS, ChangeSet } from '../ChangeSet'
+import { ChangeSet } from '../ChangeSet'
+import { CHANGE_OPERATION, CHANGE_STATUS } from '../types/change'
 import { TrackedUser } from '../types/user'
 import { updateChangeAttrs } from './updateChangeAttrs'
 

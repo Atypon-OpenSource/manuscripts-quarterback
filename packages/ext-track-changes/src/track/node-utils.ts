@@ -18,7 +18,8 @@ import { Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
-import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
+import { ChangeSet } from '../ChangeSet'
+import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs, TrackedChange } from '../types/change'
 import { DeleteAttrs, InsertAttrs } from '../types/track'
 
 export function createTrackedAttrs(attrs: InsertAttrs | DeleteAttrs): TrackedAttrs {
@@ -43,7 +44,38 @@ export function liftNode(pos: number, tr: Transaction) {
   return undefined
 }
 
-export function insertBlockInlineContent(pos: number, tr: Transaction, mapping: Mapping) {
+export function updateChangeChildrenAttributes(
+  changes: TrackedChange[],
+  tr: Transaction,
+  mapping: Mapping
+) {
+  const nodes: PMNode[] = []
+  changes.forEach((c) => {
+    if (c.type === 'node-change' && ChangeSet.shouldNotDelete(c)) {
+      const from = mapping.map(c.from)
+      const node = tr.doc.nodeAt(from)
+      if (!node) {
+        return
+      }
+      const attrs = { ...node.attrs, dataTracked: null }
+      tr.setNodeMarkup(from, undefined, attrs, node.marks)
+    }
+  })
+  return nodes
+}
+
+export function getChangeContent(changes: TrackedChange[], doc: PMNode, mapping: Mapping) {
+  const nodes: PMNode[] = []
+  changes.forEach((c) => {
+    if (ChangeSet.shouldNotDelete(c)) {
+      const node = doc.nodeAt(mapping.map(c.from))
+      node && nodes.push(node)
+    }
+  })
+  return nodes
+}
+
+export function getPosToInsertMergedContent(pos: number, tr: Transaction, mapping: Mapping) {
   const startPos = tr.doc.resolve(pos)
   const nodeAbove = startPos.nodeBefore
   const node = tr.doc.nodeAt(pos)
@@ -52,16 +84,17 @@ export function insertBlockInlineContent(pos: number, tr: Transaction, mapping: 
   if (!node) {
     return undefined
   }
-  tr.delete(pos, pos + node.nodeSize)
-  mapping.appendMap(tr.steps[tr.steps.length - 1].getMap())
-  if (node.content.size > 0 && nodeAbove && nodeAbove.isBlock) {
-    tr.insert(pos - 1, node.content)
-    mapping.appendMap(tr.steps[tr.steps.length - 1].getMap())
-  } else if (node.content.size > 0 && nodeBelow && nodeBelow.isBlock) {
-    tr.insert(mapping.map(nodeBelowPos) + 1, node.content)
-    mapping.appendMap(tr.steps[tr.steps.length - 1].getMap())
+  if (node.content.size > 0 && nodeAbove && nodeAbove.isBlock && nodeAbove.type === node.type) {
+    return pos - 1
+  } else if (
+    node.content.size > 0 &&
+    nodeBelow &&
+    nodeBelow.isBlock &&
+    nodeBelow.type === node.type
+  ) {
+    return mapping.map(nodeBelowPos) + 1
   }
-  return true
+  return undefined
 }
 
 export function isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {

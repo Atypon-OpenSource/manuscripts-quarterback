@@ -15,11 +15,12 @@
  */
 import { EditorState } from 'prosemirror-state'
 
-import { ChangeSet, PartialTrackedChange } from '../ChangeSet'
+import { ChangeSet } from '../ChangeSet'
+import { PartialTrackedChange } from '../types/change'
 import { getNodeTrackedMarks, isValidTrackedAttrs } from './node-utils'
 
 export function findChanges(state: EditorState) {
-  const changes = new ChangeSet()
+  const changes: PartialTrackedChange[] = []
   const iteratedIds = new Set()
   state.doc.descendants((node, pos) => {
     const attrs = getNodeTrackedMarks(node, state.schema)
@@ -42,14 +43,17 @@ export function findChanges(state: EditorState) {
           id,
           type: 'node-change',
           from: pos,
+          to: pos + node.nodeSize,
           nodeType: node.type.name,
+          mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
+          children: [],
           attrs,
           incompleteAttrs,
         })
       }
     }
   })
-  return changes
+  return new ChangeSet(changes)
 }
 
 export function updateChanges(

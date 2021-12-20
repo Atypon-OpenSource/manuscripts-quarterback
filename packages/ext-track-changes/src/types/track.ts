@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_OPERATION, TrackedAttrs } from '../ChangeSet'
+import { CHANGE_OPERATION, TrackedAttrs } from './change'
 import type { TrackedUser } from './user'
 
 export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {

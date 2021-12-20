@@ -25,8 +25,8 @@ import {
   StepMap,
 } from 'prosemirror-transform'
 
-import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../ChangeSet'
 import { logger } from '../logger'
+import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../types/change'
 import { DeleteAttrs, InsertAttrs, UserData } from '../types/track'
 import { createTrackedAttrs, shouldMergeMarks } from './node-utils'
 
@@ -70,8 +70,7 @@ function recurseContent(
     return node.type.create(
       {
         ...node.attrs,
-        // 8.12.2021 DISABLED node changes
-        // dataTracked: createTrackedAttrs(insertAttrs),
+        dataTracked: createTrackedAttrs(insertAttrs),
       },
       Fragment.fromArray(updatedChildren),
       node.marks
@@ -169,14 +168,11 @@ function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: 
       newTr.replaceWith(pos - 1, pos + 1, Fragment.empty)
     }
   } else {
-    // 8.12.2021 DISABLED node changes
-    // const attrs = {
-    //   ...node.attrs,
-    //   dataTracked: createTrackedAttrs(deleteAttrs),
-    // }
-    // newTr.setNodeMarkup(pos, undefined, attrs, node.marks)
-    // REPLACEMENT:
-    newTr.replaceWith(pos - 1, pos + 1, Fragment.empty)
+    const attrs = {
+      ...node.attrs,
+      dataTracked: createTrackedAttrs(deleteAttrs),
+    }
+    newTr.setNodeMarkup(pos, undefined, attrs, node.marks)
   }
 }
 
@@ -454,7 +450,7 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
-  logger('TRACKED Transaction', tr)
+  logger('ORIGINAL transaction', tr)
   tr.steps.forEach((step) => {
     logger('\ntransaction step', step)
     if (step instanceof ReplaceStep) {
@@ -473,7 +469,7 @@ export function trackTransaction(
           userData,
           slice
         )
-        logger('tr after delete', newTr)
+        logger('newTr after applying delete', newTr)
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
         if (newSliceContent.size > 0) {
           const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
@@ -486,10 +482,10 @@ export function trackTransaction(
           const newStep = new ReplaceStep(toAWithOffset, toAWithOffset, insertedSlice)
           const stepResult = newTr.maybeStep(newStep)
           if (stepResult.failed) {
-            console.log('Insert step', newStep)
+            logger('failed insert step', newStep)
             throw Error(`Insert ReplaceStep failed: "${stepResult.failed}"`)
           }
-          logger('tr after insert', newTr)
+          logger('newTr after applying insert', newTr)
           applyAndMergeMarks(
             toAWithOffset,
             toAWithOffset + insertedSlice.size,
@@ -516,5 +512,6 @@ export function trackTransaction(
       // } else if (step instanceof ReplaceAroundStep) {
     }
   })
+  logger('NEW transaction', newTr)
   return newTr.setMeta('track-changes-enabled', true)
 }

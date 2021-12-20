@@ -23,6 +23,7 @@ import { WebsocketProvider } from 'y-websocket'
 import { Doc } from 'yjs'
 
 import { EditorOptions } from '../components/EditorOptions'
+import { Guide } from '../components/Guide'
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
 
 export function ManuscriptsPage() {
@@ -59,6 +60,7 @@ export function ManuscriptsPage() {
     <Container>
       <header>
         <h1>Track changes with Yjs</h1>
+        <Guide />
         <EditorOptions options={options} setOptions={setOptions} />
       </header>
       {initialData && <ManuscriptsEditor options={options} initialData={initialData} />}
