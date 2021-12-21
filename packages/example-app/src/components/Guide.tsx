@@ -77,7 +77,7 @@ export function Guide(props: Props) {
           work flow even further.
         </p>
         <p>
-          As a simple solution only deletions of basic nodes (paragraphs, blockquotes) merge
+          As a simple solution only deletions of basic nodes (only paragraphs at the moment) merge
           content. Deleting all the other, more complex nodes (tables, figures etc) will always
           delete everything within them unless somehow prevented.
         </p>

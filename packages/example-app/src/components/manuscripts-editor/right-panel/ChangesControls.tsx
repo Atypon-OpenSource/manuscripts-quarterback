@@ -36,11 +36,15 @@ export function ChangesControls(props: IProps) {
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey)
 
   function handleAcceptPending() {
-    const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
+    if (!trackChangesState) return
+    const { changeSet } = trackChangesState
+    const ids = changeSet.flatten(changeSet.pending)
     viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
   function handleRejectPending() {
-    const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []
+    if (!trackChangesState) return
+    const { changeSet } = trackChangesState
+    const ids = changeSet.flatten(changeSet.pending)
     viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
   function handleReset() {

@@ -55,7 +55,10 @@ export function ChildrenChangeList(props: Props) {
                 {c.attrs.status !== CHANGE_STATUS.accepted && (
                   <button
                     onClick={() => handleAcceptChange(c)}
-                    disabled={c.type === 'node-change' || !parent.mergeInsteadOfDelete}
+                    disabled={
+                      c.type === 'node-change' ||
+                      (!parent.mergeInsteadOfDelete && ChangeSet.shouldDeleteChange(parent))
+                    }
                     aria-label="accept-btn"
                   >
                     Accept
@@ -64,7 +67,10 @@ export function ChildrenChangeList(props: Props) {
                 {c.attrs.status !== CHANGE_STATUS.rejected && (
                   <button
                     onClick={() => handleRejectChange(c)}
-                    disabled={c.type === 'node-change' || !parent.mergeInsteadOfDelete}
+                    disabled={
+                      c.type === 'node-change' ||
+                      (!parent.mergeInsteadOfDelete && ChangeSet.shouldDeleteChange(parent))
+                    }
                     aria-label="reject-btn"
                   >
                     Reject
@@ -73,7 +79,10 @@ export function ChildrenChangeList(props: Props) {
                 {c.attrs.status !== CHANGE_STATUS.pending && (
                   <button
                     onClick={() => handleResetChange(c)}
-                    disabled={c.type === 'node-change' || !parent.mergeInsteadOfDelete}
+                    disabled={
+                      c.type === 'node-change' ||
+                      (!parent.mergeInsteadOfDelete && ChangeSet.shouldDeleteChange(parent))
+                    }
                     aria-label="reset-btn"
                   >
                     Reset

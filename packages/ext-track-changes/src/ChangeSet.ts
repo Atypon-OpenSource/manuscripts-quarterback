@@ -97,6 +97,12 @@ export class ChangeSet {
     return this._changes.filter((c) => ids.includes(c.id))
   }
 
+  flatten(changes: TrackedChange[]) {
+    return changes.flatMap((c) =>
+      c.type === 'text-change' ? c.id : [c.id, ...c.children.map((c) => c.id)]
+    )
+  }
+
   static shouldNotDelete(change: TrackedChange) {
     const { status, operation } = change.attrs
     return (
