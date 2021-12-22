@@ -13,5 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { setAction, TrackChangesAction } from '@manuscripts/ext-track-changes'
 
-export {}
+Cypress.Commands.add('resetDoc', () => {
+  return cy.window().then(async (window) => {
+    const { editorView: view } = window
+    const tr = view.state.tr
+    const doc = view.state.schema.nodes.manuscript.createAndFill()
+    tr.replaceWith(0, view.state.doc.nodeSize - 2, doc)
+    setAction(tr, TrackChangesAction.skipTrack, true)
+    view.dispatch(tr)
+  })
+})
+
+Cypress.Commands.add('insertText', (text: string, pos?: number, skipTrack = false) => {
+  return cy.window().then(async (window) => {
+    const { editorView: view } = window
+    const tr = view.state.tr
+    tr.insertText(text, pos)
+    skipTrack && setAction(tr, TrackChangesAction.skipTrack, true)
+    view.dispatch(tr)
+  })
+})

@@ -56,10 +56,14 @@ export function EditorOptions(props: Props) {
         <Field className="row">
           <button
             onClick={() => setOptions((opt) => ({ ...opt, disableTrack: !opt.disableTrack }))}
+            aria-label="toggle-track-changes"
           >
             {options.disableTrack ? 'Enable' : 'Disable'} track changes
           </button>
-          <button onClick={() => setOptions((opt) => ({ ...opt, debug: !opt.debug }))}>
+          <button
+            onClick={() => setOptions((opt) => ({ ...opt, debug: !opt.debug }))}
+            aria-label="toggle-track-debug"
+          >
             {options.debug ? 'Disable' : 'Enable'} track changes debug
           </button>
         </Field>

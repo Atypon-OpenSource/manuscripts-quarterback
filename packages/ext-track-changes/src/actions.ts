@@ -20,6 +20,7 @@ import { TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
 export enum TrackChangesAction {
+  skipTrack = 'track-changes-skip-tracking',
   setUser = 'track-changes-set-user',
   setTrackingStatus = 'track-changes-set-track-status',
   setChangeStatuses = 'track-changes-set-change-statuses',
@@ -30,6 +31,7 @@ export enum TrackChangesAction {
 }
 
 export type TrackChangesActionParams = {
+  [TrackChangesAction.skipTrack]: boolean
   [TrackChangesAction.setUser]: TrackedUser
   [TrackChangesAction.setTrackingStatus]: TrackChangesStatus
   [TrackChangesAction.setChangeStatuses]: {

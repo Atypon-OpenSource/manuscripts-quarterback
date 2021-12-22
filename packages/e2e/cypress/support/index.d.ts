@@ -18,6 +18,6 @@
 
 declare namespace Cypress {
   interface Chainable {
-    noop: () => Cypress.Chainable<JQuery<HTMLElement>>
+    resetDoc: () => Cypress.Chainable<JQuery<HTMLElement>>
   }
 }

@@ -83,6 +83,7 @@ export function LoginForm(props: Props) {
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  width: 320px;
 `
 const Field = styled.div`
   margin-top: 1rem;

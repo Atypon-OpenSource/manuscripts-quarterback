@@ -118,6 +118,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
       manuscriptsProps: defaultEditorProps,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
+        window.commands = ctx.extensionProvider.commands
       },
     }),
     [extensions]

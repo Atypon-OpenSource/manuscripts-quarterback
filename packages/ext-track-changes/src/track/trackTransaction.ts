@@ -458,9 +458,14 @@ export function trackTransaction(
         logger(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
         // @ts-ignore
         const { slice }: { slice: Slice } = step
-        const stepResult = newTr.maybeStep(step.invert(oldState.doc))
+        const newStep = step.invert(oldState.doc)
+        const stepResult = newTr.maybeStep(newStep)
         if (stepResult.failed) {
-          logger(`%c ERROR invert ReplaceStep failed: "${stepResult.failed}"`, 'color: #ff4242')
+          logger(
+            `%c ERROR invert ReplaceStep failed: "${stepResult.failed}"`,
+            'color: #ff4242',
+            newStep
+          )
           return
         }
         const { deleteMap, mergedInsertPos, newSliceContent } = deleteAndMergeSplitBlockNodes(
@@ -489,7 +494,7 @@ export function trackTransaction(
             logger(
               `%c ERROR insert ReplaceStep failed: "${stepResult.failed}"`,
               'color: #ff4242',
-              stepResult.failed
+              newStep
             )
             return
           }

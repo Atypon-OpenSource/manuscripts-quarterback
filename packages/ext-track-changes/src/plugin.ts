@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import type { EditorViewProvider } from '@manuscripts/manuscript-editor'
-import { Plugin, PluginKey } from 'prosemirror-state'
+import { Plugin, PluginKey, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import { ySyncPluginKey } from 'y-prosemirror'
 
@@ -134,9 +134,12 @@ export const trackChangesPlugin = (
           insertColor,
           deleteColor,
         }
-        const wasAppended = tr.getMeta('appendedTransaction')
+        const wasAppended = tr.getMeta('appendedTransaction') as Transaction | undefined
         const wasYjs = tr.getMeta(ySyncPluginKey) || wasAppended?.getMeta(ySyncPluginKey)
-        if (tr.docChanged && !tr.getMeta('history$') && !wasYjs) {
+        const skipTrack =
+          getAction(tr, TrackChangesAction.skipTrack) ||
+          (wasAppended && getAction(wasAppended, TrackChangesAction.skipTrack))
+        if (tr.docChanged && !skipTrack && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
         }
         docChanged = docChanged || tr.docChanged
