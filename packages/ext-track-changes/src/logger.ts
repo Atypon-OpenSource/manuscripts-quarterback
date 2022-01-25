@@ -17,6 +17,8 @@ import debug from 'debug'
 
 export const logger = debug('track')
 
+debug.enable('track')
+
 export const enableDebug = (enabled: boolean) => {
   if (enabled) {
     debug.enable('track')

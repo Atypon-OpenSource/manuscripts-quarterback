@@ -55,7 +55,8 @@ export default defineConfig({
     alias: {
       '@manuscripts/manuscript-transform': resolve('../manuscript-transform'),
       lib0: resolve('node_modules/lib0'),
-      'prosemirror-model': resolve('node_modules', '@manuscripts', 'manuscript-editor', 'node_modules', 'prosemirror-model'),
+      'prosemirror-model': resolve('node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-model'),
+      'prosemirror-transform': resolve('node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-transform'),
       react: require.resolve('react'),
       'react-popper': require.resolve('react-popper'),
       'react-router-dom': require.resolve('react-router-dom'),

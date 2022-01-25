@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 export { trackChangesPluginKey, trackChangesPlugin } from './plugin'
-export type { TrackChangesState } from './plugin'
 
 export * from './actions'
 export * as trackCommands from './commands'
 export { trackChangesExtension, trackChangesExtensionName } from './extension'
+export * from './logger'
 
 export { ChangeSet } from './ChangeSet'
 

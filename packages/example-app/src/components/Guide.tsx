@@ -49,13 +49,12 @@ export function Guide(props: Props) {
       <Container visible={visible}>
         <p>
           This editor implements track changes and Yjs-based collaboration. All changes to the
-          document are persisted to Redis instance and they should, once it's implemented, be saved
-          as a regular ProseMirror or Manuscript JSON to Postgres after a certain cache duration has
-          passed.
+          document are persisted to Redis and they should, once implemented, be saved as regular
+          ProseMirror or Manuscript JSON doc to Postgres after a certain cache duration has passed.
         </p>
         <p>
-          Tracking changes happen by intercepting transactions and adding marks to text or
-          attributes to nodes which contain the change data which currently are categorized as
+          Changes are tracked by intercepting transactions and adding insert/delete marks to text or
+          adding attributes to nodes which contain the change data currently categorized as
           inserts/deletes/updates. This encompasses changes caused by{' '}
           <a
             href="https://prosemirror.net/docs/ref/#transform.ReplaceStep"
@@ -68,18 +67,19 @@ export function Guide(props: Props) {
           are not tracked at the moment.
         </p>
         <p>
-          Tracking simple changes as such works but becomes convoluted when context-dependent
-          changes are applied. For example inserting a table contains multiple nodes that are
-          created in the same transaction but which all depend on the <code>table_element</code>{' '}
-          being accepted. If it's rejected, all the changes within the <code>table_element</code>{' '}
-          should be as well deleted. In some cases, however, such as deleting paragraphs the
-          contents should be merged into the previous node which complicates already very complex
-          work flow even further.
+          Tracking simple text changes with this method is relatively straightforward. Of course
+          handling the copy/pasting of content + ReplaceAroundSteps is a lot of work given the
+          various edge-cases. What adds even more complexity are context-dependent changes. For
+          example, inserting a table contains multiple nodes that are created in the same
+          transaction but which all depend on the <code>table_element</code> being accepted. If it's
+          rejected, all the changes within the <code>table_element</code> should be as well deleted.
+          In some cases, however, such as deleting paragraphs the contents should be merged into the
+          previous paragraph which again needs to be handled separately.
         </p>
         <p>
-          As a simple solution only deletions of basic nodes (only paragraphs at the moment) merge
-          content. Deleting all the other, more complex nodes (tables, figures etc) will always
-          delete everything within them unless somehow prevented.
+          As of now, only deletions of basic nodes (only paragraphs at the moment) merge content.
+          Deleting all the other, more complex nodes (tables, figures etc), will always delete
+          everything within them unless somehow prevented.
         </p>
       </Container>
       <div>

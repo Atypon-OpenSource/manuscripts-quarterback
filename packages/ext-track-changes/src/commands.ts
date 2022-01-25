@@ -23,18 +23,16 @@ import type { Command } from './types/editor'
 import { DeleteAttrs, InsertAttrs, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
-export const toggleTrackChanges = (): Command => (state, dispatch) => {
-  const currentStatus = trackChangesPluginKey.getState(state)?.status
-  if (dispatch && currentStatus) {
-    const newStatus =
-      currentStatus === TrackChangesStatus.enabled
-        ? TrackChangesStatus.disabled
-        : TrackChangesStatus.enabled
-    dispatch(setAction(state.tr, TrackChangesAction.setTrackingStatus, newStatus))
-    return true
+export const setTrackChangesStatus =
+  (status: TrackChangesStatus): Command =>
+  (state, dispatch) => {
+    const currentStatus = trackChangesPluginKey.getState(state)?.status
+    if (dispatch && currentStatus) {
+      dispatch(setAction(state.tr, TrackChangesAction.setPluginStatus, status))
+      return true
+    }
+    return false
   }
-  return false
-}
 
 export const setInserted = (): Command => (state, dispatch) => {
   const pluginState = trackChangesPluginKey.getState(state)

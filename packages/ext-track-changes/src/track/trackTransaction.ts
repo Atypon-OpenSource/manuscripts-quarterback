@@ -450,9 +450,22 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
+  let iters = 0
   logger('ORIGINAL transaction', tr)
   tr.steps.forEach((step) => {
     logger('\ntransaction step', step)
+    if (iters > 10) {
+      console.error('Possible infinite loop in trackTransaction!', newTr)
+      return newTr
+    }
+    iters += 1
+    const multipleTransforms =
+      !(step instanceof ReplaceStep) && step.constructor.name === 'ReplaceStep'
+    if (multipleTransforms) {
+      throw new Error(
+        'Multiple prosemirror-transform packages imported, dedupe them or instanceof checks fail'
+      )
+    }
     if (step instanceof ReplaceStep) {
       step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
         logger(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
@@ -519,7 +532,8 @@ export function trackTransaction(
         const { meta }: { meta: { [key: string]: any } } = tr
         // This is quite non-optimal in some sense but to ensure no information is lost
         // we have to readd all the old meta keys, such as inputType or uiEvent.
-        // So that other plugins/widgets can rely upon them as normal.
+        // This should prevent bugs incase other plugins/widgets rely upon them existing (and they
+        // are not able to process the transactions before track-changes).
         Object.keys(meta).forEach((key) => newTr.setMeta(key, tr.getMeta(key)))
       })
       // } else if (step instanceof ReplaceAroundStep) {

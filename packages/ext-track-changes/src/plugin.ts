@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { EditorViewProvider } from '@manuscripts/manuscript-editor'
 import { Plugin, PluginKey, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import { ySyncPluginKey } from 'y-prosemirror'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
 import { ChangeSet } from './ChangeSet'
+import { logger } from './logger'
 import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
 import { updateChangeAttrs, updateDocAndRemoveChanges } from './track/updateChangeAttrs'
 import { CHANGE_STATUS } from './types/change'
-import { TrackChangesPluginOptions, TrackChangesStatus } from './types/track'
+import { TrackChangesPluginOptions, TrackChangesState, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
 const DEFAULT_USER = {
@@ -33,23 +33,22 @@ const DEFAULT_USER = {
   name: 'Unknown',
 }
 
-export interface TrackChangesState {
-  status: TrackChangesStatus
-  currentUser: TrackedUser
-  insertColor: string
-  deleteColor: string
-  changeSet: ChangeSet
-  shownChangeStatuses: CHANGE_STATUS[]
-}
-
 export const trackChangesPluginKey = new PluginKey<TrackChangesState, any>('track-changes')
 
-export const trackChangesPlugin = (
-  viewProvider: EditorViewProvider,
-  opts: TrackChangesPluginOptions
-) => {
+const infiniteLoopCounter = {
+  start: 0,
+  iters: 0,
+}
+
+export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
+  let editorView: EditorView | undefined
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
+    props: {
+      editable(state) {
+        return this.getState(state).status !== TrackChangesStatus.viewSnapshots
+      },
+    },
     state: {
       init(config, state) {
         const changeSet = findChanges(state)
@@ -67,32 +66,29 @@ export const trackChangesPlugin = (
         }
       },
 
-      apply(tr, value, oldState, newState): TrackChangesState {
+      apply(tr, pluginState, oldState, newState): TrackChangesState {
         const setUser = getAction(tr, TrackChangesAction.setUser)
-        const setStatus = getAction(tr, TrackChangesAction.setTrackingStatus)
+        const setStatus = getAction(tr, TrackChangesAction.setPluginStatus)
         if (setUser) {
-          return { ...value, currentUser: setUser }
+          return { ...pluginState, currentUser: setUser }
         } else if (setStatus) {
           return {
-            ...value,
+            ...pluginState,
             status: setStatus,
             changeSet: findChanges(newState),
           }
+        } else if (pluginState.status === TrackChangesStatus.disabled) {
+          return pluginState
         }
         const {
-          currentUser,
-          status,
           changeSet: oldChangeSet,
           shownChangeStatuses: oldShownChangeStatuses,
           ...rest
-        } = value
-        if (status === TrackChangesStatus.disabled) {
-          return value
-        }
-        let changeSet = oldChangeSet
+        } = pluginState
+        let changeSet = oldChangeSet,
+          shownChangeStatuses = oldShownChangeStatuses
         const updatedChangeIds = getAction(tr, TrackChangesAction.updateChanges)
         const toggledChangeStatuses = getAction(tr, TrackChangesAction.toggleShownStatuses)
-        let shownChangeStatuses = oldShownChangeStatuses
         // TODO update changes on inspect snapshot by checking !tr.getMeta(ySyncPluginKey) ?
         if (updatedChangeIds || getAction(tr, TrackChangesAction.refreshChanges)) {
           changeSet = findChanges(newState)
@@ -107,21 +103,34 @@ export const trackChangesPlugin = (
           })
         }
         return {
-          status,
-          currentUser,
           changeSet,
           shownChangeStatuses,
           ...rest,
         }
       },
     },
+    view(p) {
+      editorView = p
+      return {
+        update: undefined,
+        destroy: undefined,
+      }
+    },
     appendTransaction(trs, oldState, newState) {
       const pluginState = trackChangesPluginKey.getState(newState)
       if (
         !pluginState ||
         pluginState.status === TrackChangesStatus.disabled ||
-        !viewProvider.view.editable
+        !editorView?.editable
       ) {
+        return null
+      }
+      if (infiniteLoopCounter.start < Date.now() - 10000) {
+        infiniteLoopCounter.start = Date.now()
+        infiniteLoopCounter.iters = 0
+      }
+      if (infiniteLoopCounter.iters >= 100) {
+        console.error('Detected probable infinite loop in track changes!')
         return null
       }
       const { currentUser, insertColor, deleteColor, changeSet } = pluginState
@@ -141,6 +150,7 @@ export const trackChangesPlugin = (
           (wasAppended && getAction(wasAppended, TrackChangesAction.skipTrack))
         if (tr.docChanged && !skipTrack && !tr.getMeta('history$') && !wasYjs) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
+          infiniteLoopCounter.iters += 1
         }
         docChanged = docChanged || tr.docChanged
         const setChangeStatuses = getAction(tr, TrackChangesAction.setChangeStatuses)

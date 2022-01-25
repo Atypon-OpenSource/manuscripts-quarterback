@@ -13,8 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_OPERATION, TrackedAttrs } from './change'
+import { ChangeSet } from '../ChangeSet'
+import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from './change'
 import type { TrackedUser } from './user'
+
+export interface TrackChangesOptions {
+  disabled?: boolean
+  debug?: boolean
+  user: TrackedUser
+}
+
+export interface TrackChangesPluginOptions {
+  user?: TrackedUser
+}
+
+export interface TrackChangesState {
+  status: TrackChangesStatus
+  currentUser: TrackedUser
+  insertColor: string
+  deleteColor: string
+  changeSet: ChangeSet
+  shownChangeStatuses: CHANGE_STATUS[]
+}
 
 export type InsertAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
   operation: CHANGE_OPERATION.insert
@@ -25,6 +45,7 @@ export type DeleteAttrs = Omit<TrackedAttrs, 'id' | 'operation'> & {
 
 export enum TrackChangesStatus {
   enabled = 'enabled',
+  viewSnapshots = 'view-snapshots',
   disabled = 'disabled',
 }
 export interface UserData {
@@ -32,14 +53,4 @@ export interface UserData {
   userName: string
   insertColor: string
   deleteColor: string
-}
-
-export interface TrackChangesOptions {
-  disabled?: boolean
-  debug?: boolean
-  user: TrackedUser
-}
-
-export interface TrackChangesPluginOptions {
-  user?: TrackedUser
 }

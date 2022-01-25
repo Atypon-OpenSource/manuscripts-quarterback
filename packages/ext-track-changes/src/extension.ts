@@ -37,7 +37,7 @@ export const trackChangesExtension = (opts?: TrackChangesOptions) => (ctx: Edito
     name: trackChangesExtensionName,
     commands,
     keymaps: [],
-    plugins: [trackChangesPlugin(ctx.viewProvider, { user: opts?.user })],
+    plugins: [trackChangesPlugin({ user: opts?.user })],
     store: undefined,
   }
 }
