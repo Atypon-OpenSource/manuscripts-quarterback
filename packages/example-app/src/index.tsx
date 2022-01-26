@@ -17,10 +17,17 @@ import './index.css'
 
 import * as React from 'react'
 import { render } from 'react-dom'
+import { ThemeProvider } from 'styled-components'
 
 import { Routes } from './routes'
 import { confMobx } from './stores/mobxConf'
+import { theme } from './theme/theme'
 
 confMobx()
 
-render(<Routes />, document.getElementById('root'))
+render(
+  <ThemeProvider theme={theme}>
+    <Routes />
+  </ThemeProvider>,
+  document.getElementById('root')
+)

@@ -69,7 +69,7 @@ export const Editor = observer(() => {
     [options, yjsUser]
   )
   // eslint-disable-next-line
-  function handleEdit() { }
+  function handleEdit() {}
   // eslint-disable-next-line
   function handleEditorReady(ctx: EditorContext) {
     applyDevTools(ctx.viewProvider.view)

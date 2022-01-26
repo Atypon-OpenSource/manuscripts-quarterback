@@ -20,15 +20,10 @@ import '@manuscripts/manuscript-editor/styles/popper.css'
 import { trackChangesExtension } from '@manuscripts/ext-track-changes'
 import { generateUser, yjsExtension } from '@manuscripts/ext-yjs'
 import {
-  ApplicationMenus,
   createDefaultProviders,
-  createMenus,
   // styles,
   ReactEditorContext,
-  useApplicationMenus,
-  useEditorContext,
   UseEditorProps,
-  useEditorState,
   useEditorV2,
 } from '@manuscripts/manuscript-editor'
 import { YJS_WS_URL } from 'config'
@@ -37,8 +32,8 @@ import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
-import { WebsocketProvider } from 'y-websocket'
-import { Doc } from 'yjs'
+import type { WebsocketProvider } from 'y-websocket'
+import type { Doc } from 'yjs'
 
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'
@@ -47,18 +42,7 @@ import { Doc } from 'yjs'
 // import 'codemirror/lib/codemirror.css'
 import { defaultEditorProps } from './default-editor-data'
 import { RightPanel } from './right-panel/RightPanel'
-
-function Menus() {
-  const { viewProvider } = useEditorContext()
-  const editorState = useEditorState()
-  const menuSpec = useMemo(
-    () =>
-      editorState && viewProvider ? createMenus()(editorState, viewProvider?.execCommand) : [],
-    [editorState, viewProvider?.execCommand]
-  )
-  const menus = useApplicationMenus(menuSpec)
-  return <ApplicationMenus {...menus} />
-}
+import { Menus, Toolbar } from './Toolbar'
 
 interface Props {
   className?: string
@@ -126,6 +110,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
   useEditorV2(editorProps, editorDOMRef)
   return (
     <ReactEditorContext.Provider value={providers}>
+      <Toolbar />
       <ViewGrid>
         <LeftSide>
           <Menus />
@@ -147,22 +132,3 @@ const ViewGrid = styled.div`
 const LeftSide = styled.div`
   margin-right: 1rem;
 `
-
-// export function ManuscriptsEditorOld(props: Props) {
-//   const { disableTrack } = props
-//   const plugins: Plugin[] = disableTrack
-//     ? []
-//     : [trackChangesPlugin({ user: undefined })]
-//   const editor = useEditor(createState({ plugins }), createView())
-//   const { onRender } = editor
-//   const menus = useApplicationMenus(getMenus(editor, () => null))
-//   // @ts-ignore
-//   window.view = editor.view
-//   return (
-//     <div>
-//       <ApplicationMenus {...menus} />
-//       <hr />
-//       <div ref={onRender} id="editor"></div>
-//     </div>
-//   )
-// }
