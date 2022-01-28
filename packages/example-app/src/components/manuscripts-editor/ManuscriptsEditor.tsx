@@ -32,6 +32,7 @@ import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
+import { ySyncPluginKey } from 'y-prosemirror'
 import type { WebsocketProvider } from 'y-websocket'
 import type { Doc } from 'yjs'
 
@@ -72,9 +73,12 @@ export const ManuscriptsEditor = observer((props: Props) => {
         ? []
         : [
             trackChangesExtension({
-              user: {
-                id: editorUser.id,
-                name: editorUser.name,
+              pluginOpts: {
+                user: {
+                  id: editorUser.id,
+                  name: editorUser.name,
+                },
+                skipTrsWithMetas: [ySyncPluginKey],
               },
               debug: options.debug,
             }),

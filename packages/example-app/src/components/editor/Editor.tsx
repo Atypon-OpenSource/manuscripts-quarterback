@@ -28,6 +28,7 @@ import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useState } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
+import { ySyncPluginKey } from 'y-prosemirror'
 
 import useEditorOptions from '../../hooks/useEditorOptions'
 import { EditorOptions } from '../EditorOptions'
@@ -50,9 +51,12 @@ export const Editor = observer(() => {
         ? []
         : [
             trackChangesExtension({
-              user: {
-                id: editorUser.id,
-                name: editorUser.name,
+              pluginOpts: {
+                user: {
+                  id: editorUser.id,
+                  name: editorUser.name,
+                },
+                skipTrsWithMetas: [ySyncPluginKey],
               },
               debug: options.debug,
             }),

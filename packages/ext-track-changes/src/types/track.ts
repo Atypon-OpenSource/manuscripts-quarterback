@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { PluginKey } from 'prosemirror-state'
+
 import { ChangeSet } from '../ChangeSet'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from './change'
 import type { TrackedUser } from './user'
@@ -20,11 +22,12 @@ import type { TrackedUser } from './user'
 export interface TrackChangesOptions {
   disabled?: boolean
   debug?: boolean
-  user: TrackedUser
+  pluginOpts?: TrackChangesPluginOptions
 }
 
 export interface TrackChangesPluginOptions {
   user?: TrackedUser
+  skipTrsWithMetas?: (PluginKey | string)[]
 }
 
 export interface TrackChangesState {

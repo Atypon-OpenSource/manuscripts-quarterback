@@ -15,7 +15,6 @@
  */
 import { Plugin, PluginKey, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
-import { ySyncPluginKey } from 'y-prosemirror'
 
 import { getAction, setAction, TrackChangesAction } from './actions'
 import { ChangeSet } from './ChangeSet'
@@ -40,7 +39,10 @@ const infiniteLoopCounter = {
   iters: 0,
 }
 
-export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
+export const trackChangesPlugin = ({
+  user = DEFAULT_USER,
+  skipTrsWithMetas = [],
+}: TrackChangesPluginOptions) => {
   let editorView: EditorView | undefined
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
@@ -54,7 +56,7 @@ export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
         const changeSet = findChanges(state)
         return {
           status: TrackChangesStatus.enabled,
-          currentUser: opts.user || DEFAULT_USER,
+          currentUser: user,
           insertColor: 'greenyellow',
           deleteColor: '#ffa4a4',
           changeSet: changeSet,
@@ -144,11 +146,11 @@ export const trackChangesPlugin = (opts: TrackChangesPluginOptions) => {
           deleteColor,
         }
         const wasAppended = tr.getMeta('appendedTransaction') as Transaction | undefined
-        const wasYjs = tr.getMeta(ySyncPluginKey) || wasAppended?.getMeta(ySyncPluginKey)
+        const skipMetaUsed = skipTrsWithMetas.some((m) => tr.getMeta(m) || wasAppended?.getMeta(m))
         const skipTrack =
           getAction(tr, TrackChangesAction.skipTrack) ||
           (wasAppended && getAction(wasAppended, TrackChangesAction.skipTrack))
-        if (tr.docChanged && !skipTrack && !tr.getMeta('history$') && !wasYjs) {
+        if (tr.docChanged && !skipMetaUsed && !skipTrack && !tr.getMeta('history$')) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
           infiniteLoopCounter.iters += 1
         }

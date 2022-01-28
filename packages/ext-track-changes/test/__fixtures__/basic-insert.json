@@ -1,0 +1,44 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "attrs": {
+          "dataTracked": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "tracked_insert",
+                "attrs": {
+                  "dataTracked": {
+                    "id": "MOCK-ID-1",
+                    "userID": "1",
+                    "userName": "Mike",
+                    "time": 1577836800000,
+                    "status": "pending",
+                    "operation": "insert"
+                  },
+                  "pending_bg": "greenyellow"
+                }
+              }
+            ],
+            "text": "inserted text"
+          },
+          {
+            "type": "text",
+            "text": "hello world"
+          }
+        ]
+      }
+    ]
+  },
+  "selection": {
+    "type": "text",
+    "anchor": 14,
+    "head": 14
+  }
+}
