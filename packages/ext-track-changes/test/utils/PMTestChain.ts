@@ -17,6 +17,8 @@ import { Command } from 'prosemirror-commands'
 import { Schema } from 'prosemirror-model'
 import { EditorView } from 'prosemirror-view'
 
+import { backspace, selectText } from './commands'
+
 export class ProsemirrorTestChain<S extends Schema> {
   view: EditorView<S>
 
@@ -26,6 +28,22 @@ export class ProsemirrorTestChain<S extends Schema> {
 
   cmd(cmd: Command) {
     cmd(this.view.state, this.view.dispatch)
+    return this
+  }
+
+  backspace(times = 1) {
+    this.cmd(backspace(times))
+    return this
+  }
+
+  moveCursor(moved: number) {
+    const { from } = this.view.state.selection
+    this.cmd(selectText(from + moved))
+    return this
+  }
+
+  selectText(start: number, end?: number) {
+    this.cmd(selectText(start, end))
     return this
   }
 

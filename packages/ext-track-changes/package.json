@@ -19,7 +19,7 @@
     "build": "rollup -c",
     "watch": "rollup -cw",
     "test": "jest --runInBand",
-    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
+    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/ test/",
     "lint": "eslint --cache --ext .js,.ts, ./src ./test",
     "lint:fix": "eslint --fix --ext .js,.ts, ./src ./test"
   },

@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { uuidv4 } from '@manuscripts/quarterback-shared'
-
-import basicInsert from './__fixtures__/basic-insert.json'
+import docs from './__fixtures__/docs'
 import { insertText } from './utils/commands'
 import { setupEditor } from './utils/setupEditor'
 // import { promises as fs } from 'fs'
 
 let counter = 0
-
+// https://stackoverflow.com/questions/65554910/jest-referenceerror-cannot-access-before-initialization
 // eslint-disable-next-line
 var uuidv4Mock: jest.Mock
 
@@ -39,11 +37,30 @@ jest.mock('@manuscripts/quarterback-shared', () => {
 jest.useFakeTimers().setSystemTime(new Date('2020-01-01').getTime())
 
 describe('track changes', () => {
-  test('should track basic text operations', async () => {
-    const tester = setupEditor().cmd(insertText('inserted text'))
+  test('should track basic text inserts', async () => {
+    const tester = setupEditor({
+      doc: docs.defaultDoc.doc,
+    }).cmd(insertText('inserted text'))
+
     // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
 
-    expect(tester.toJSON()).toEqual(basicInsert)
-    expect(uuidv4).toBeCalledTimes(2)
+    expect(tester.toJSON()).toEqual(docs.basicInsert)
+    expect(uuidv4Mock.mock.calls.length).toBe(2)
+  })
+
+  test('should track basic text inserts and deletes', async () => {
+    counter = 0
+    uuidv4Mock.mockClear()
+
+    const tester = setupEditor({
+      doc: docs.defaultDoc.doc,
+    })
+      .cmd(insertText('inserted text'))
+      .backspace(4)
+      .moveCursor(5)
+      .backspace(4)
+
+    expect(tester.toJSON()).toEqual(docs.basicDelete)
+    expect(uuidv4Mock.mock.calls.length).toBe(3)
   })
 })

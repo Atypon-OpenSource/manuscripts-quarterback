@@ -26,11 +26,35 @@
                 }
               }
             ],
-            "text": "inserted text"
+            "text": "inserted "
           },
           {
             "type": "text",
-            "text": "Hello World"
+            "text": "H"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "tracked_delete",
+                "attrs": {
+                  "dataTracked": {
+                    "id": "MOCK-ID-2",
+                    "userID": "1",
+                    "userName": "Mike",
+                    "time": 1577836800000,
+                    "status": "pending",
+                    "operation": "delete"
+                  },
+                  "pending_bg": "#ffa4a4"
+                }
+              }
+            ],
+            "text": "ello"
+          },
+          {
+            "type": "text",
+            "text": " World"
           }
         ]
       }
@@ -38,7 +62,7 @@
   },
   "selection": {
     "type": "text",
-    "anchor": 14,
-    "head": 14
+    "anchor": 11,
+    "head": 11
   }
 }

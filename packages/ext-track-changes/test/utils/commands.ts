@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import type { Command } from 'prosemirror-commands'
+import { TextSelection } from 'prosemirror-state'
 
 export const insertText =
   (text: string, pos?: number): Command =>
@@ -25,6 +26,57 @@ export const insertText =
     const { from } = state.selection
     tr.insertText(text, pos !== undefined ? pos : from)
 
+    dispatch(tr)
+    return true
+  }
+
+export const deleteBetween =
+  (size: number, pos?: number): Command =>
+  (state, dispatch) => {
+    if (!dispatch) {
+      return false
+    }
+    const tr = state.tr
+    const { from, to } = state.selection
+    const start = pos !== undefined ? pos : from
+    tr.delete(start, start + size)
+
+    dispatch(tr)
+    return true
+  }
+
+export const backspace =
+  (times = 1): Command =>
+  (state, dispatch) => {
+    const { selection, tr } = state
+    const { from, empty } = selection
+
+    if (!dispatch) {
+      return false
+    }
+    if (empty) {
+      dispatch(tr.delete(from - times, from))
+      return true
+    }
+
+    tr.deleteSelection()
+
+    if (times > 1) {
+      tr.delete(from - (times - 1), from)
+    }
+
+    dispatch(tr)
+    return true
+  }
+
+export const selectText =
+  (start: number, end?: number): Command =>
+  (state, dispatch) => {
+    if (!dispatch) {
+      return false
+    }
+    const { tr } = state
+    tr.setSelection(TextSelection.create(state.doc, start, end))
     dispatch(tr)
     return true
   }

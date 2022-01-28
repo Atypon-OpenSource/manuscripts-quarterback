@@ -25,7 +25,7 @@ import { ProsemirrorTestChain } from './PMTestChain'
 
 interface SetupEditorOptions<S extends Schema> {
   doc: Record<string, any> | undefined
-  schema: S
+  schema?: S
 }
 
 export function setupEditor<S extends Schema = QuarterBackSchema>(
