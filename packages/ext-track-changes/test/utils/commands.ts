@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import type { Command } from 'prosemirror-commands'
+import { Fragment, Node as PMNode } from 'prosemirror-model'
 import { TextSelection } from 'prosemirror-state'
 
 export const insertText =
@@ -65,6 +66,18 @@ export const backspace =
       tr.delete(from - (times - 1), from)
     }
 
+    dispatch(tr)
+    return true
+  }
+
+export const replace =
+  (content: Fragment | PMNode | PMNode[], start?: number, end?: number): Command =>
+  (state, dispatch) => {
+    if (!dispatch) {
+      return false
+    }
+    const { tr } = state
+    tr.replaceWith(start || 0, end === undefined ? state.doc.nodeSize - 2 : end, content)
     dispatch(tr)
     return true
   }

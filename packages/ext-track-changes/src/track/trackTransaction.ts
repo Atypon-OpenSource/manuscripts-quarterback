@@ -27,6 +27,7 @@ import {
 
 import { logger } from '../logger'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../types/change'
+import { ExposedFragment, ExposedReplaceStep, ExposedSlice } from '../types/pm'
 import { DeleteAttrs, InsertAttrs, UserData } from '../types/track'
 import { createTrackedAttrs, shouldMergeMarks } from './node-utils'
 
@@ -76,7 +77,7 @@ function recurseContent(
       node.marks
     )
   } else {
-    console.warn('Unhandled node type!')
+    logger(`%c ERROR Unhandled node type: "${node}"`, 'color: #ff4242', node)
     return node
   }
 }
@@ -239,7 +240,6 @@ function getMergedNode(
         const { mergedContent, returnedSlice } = getMergedNode(n, currentDepth + 1, depth, first)
         merged = mergedContent
         if (returnedSlice) {
-          // @ts-ignore
           result.push(...returnedSlice.content)
         }
       } else {
@@ -249,7 +249,7 @@ function getMergedNode(
     if (result.length > 0) {
       return {
         mergedContent: merged,
-        returnedSlice: Fragment.fromArray(result),
+        returnedSlice: Fragment.fromArray(result) as ExposedFragment,
       }
     }
     return {
@@ -259,9 +259,8 @@ function getMergedNode(
   }
 }
 
-function splitSliceIntoMergedParts(insertSlice: Slice) {
+function splitSliceIntoMergedParts(insertSlice: ExposedSlice) {
   const { openStart, openEnd, content } = insertSlice
-  // @ts-ignore
   const nodes: PMNode[] = content.content
   let updatedSliceNodes: PMNode[] | undefined
   const firstMergedNode =
@@ -275,11 +274,7 @@ function splitSliceIntoMergedParts(insertSlice: Slice) {
   if (firstMergedNode) {
     updatedSliceNodes = nodes.filter((_, i) => i !== 0)
     if (firstMergedNode.returnedSlice) {
-      updatedSliceNodes = [
-        // @ts-ignore
-        ...firstMergedNode.returnedSlice.content,
-        ...updatedSliceNodes,
-      ]
+      updatedSliceNodes = [...firstMergedNode.returnedSlice.content, ...updatedSliceNodes]
     }
   }
   if (lastMergedNode) {
@@ -287,11 +282,7 @@ function splitSliceIntoMergedParts(insertSlice: Slice) {
       (_, i) => i + 1 !== (updatedSliceNodes || nodes).length
     )
     if (lastMergedNode.returnedSlice) {
-      updatedSliceNodes = [
-        ...updatedSliceNodes,
-        // @ts-ignore
-        ...lastMergedNode.returnedSlice.content,
-      ]
+      updatedSliceNodes = [...updatedSliceNodes, ...lastMergedNode.returnedSlice.content]
     }
   }
   return {
@@ -309,7 +300,7 @@ export function deleteAndMergeSplitBlockNodes(
   schema: Schema,
   deleteAttrs: DeleteAttrs,
   userColors: UserData,
-  insertSlice: Slice
+  insertSlice: ExposedSlice
 ) {
   const deleteMap = new Mapping()
   let mergedInsertPos = undefined
@@ -463,14 +454,13 @@ export function trackTransaction(
       !(step instanceof ReplaceStep) && step.constructor.name === 'ReplaceStep'
     if (multipleTransforms) {
       throw new Error(
-        'Multiple prosemirror-transform packages imported, dedupe them or instanceof checks fail'
+        'Multiple prosemirror-transform packages imported, alias/dedupe them or instanceof checks fail'
       )
     }
     if (step instanceof ReplaceStep) {
       step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
         logger(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
-        // @ts-ignore
-        const { slice }: { slice: Slice } = step
+        const { slice } = step as ExposedReplaceStep
         const newStep = step.invert(oldState.doc)
         const stepResult = newTr.maybeStep(newStep)
         if (stepResult.failed) {
@@ -528,8 +518,9 @@ export function trackTransaction(
           newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
-        // @ts-ignore
-        const { meta }: { meta: { [key: string]: any } } = tr
+        const { meta }: { meta: { [key: string]: any } } = tr as Transaction & {
+          meta: Record<string, any>
+        }
         // This is quite non-optimal in some sense but to ensure no information is lost
         // we have to readd all the old meta keys, such as inputType or uiEvent.
         // This should prevent bugs incase other plugins/widgets rely upon them existing (and they

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { uuidv4 } from '@manuscripts/quarterback-shared'
+import { ExposedSlice } from 'types/pm'
 
 import { setAction, TrackChangesAction } from './actions'
 import { trackChangesPluginKey } from './plugin'
@@ -89,7 +90,7 @@ export const setDeleted = (): Command => (state, dispatch) => {
     state.schema,
     deleteAttrs,
     userColors,
-    state.doc.slice(0, 0)
+    state.doc.slice(0, 0) as ExposedSlice
   )
   applyAndMergeMarks(
     deleteMap.map(from),

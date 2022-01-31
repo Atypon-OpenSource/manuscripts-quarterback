@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 import { Command } from 'prosemirror-commands'
-import { Schema } from 'prosemirror-model'
+import { exampleSetup } from 'prosemirror-example-setup'
+import { Node as PMNode, Schema } from 'prosemirror-model'
+import { Plugin, TextSelection } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
-import { backspace, selectText } from './commands'
+import * as cmds from './commands'
 
 export class ProsemirrorTestChain<S extends Schema> {
   view: EditorView<S>
@@ -26,24 +28,65 @@ export class ProsemirrorTestChain<S extends Schema> {
     this.view = view
   }
 
+  reconfigurePlugins(plugins: Plugin[]) {
+    const state = this.view.state.reconfigure({
+      plugins: exampleSetup({ schema: this.view.state.schema }).concat(plugins),
+    })
+    this.view.setProps({
+      state,
+    })
+    this.view.updateState(state)
+    return this
+  }
+
+  replaceDoc(json: Record<string, any>) {
+    const node = this.view.state.schema.nodeFromJSON(json)
+    this.cmd(cmds.replace(node))
+    return this
+  }
+
   cmd(cmd: Command) {
     cmd(this.view.state, this.view.dispatch)
     return this
   }
 
-  backspace(times = 1) {
-    this.cmd(backspace(times))
+  insertText(text: string) {
+    this.cmd(cmds.insertText(text))
     return this
   }
 
-  moveCursor(moved: number) {
+  insertNode(node: PMNode | null | undefined) {
+    if (!node) {
+      throw Error('No PMNode provided for insertNode!')
+    }
+    const { selection, tr } = this.view.state
+    const { from } = selection
+    tr.insert(from, node)
+    this.view.dispatch(tr)
+    return this
+  }
+
+  backspace(times = 1) {
+    this.cmd(cmds.backspace(times))
+    return this
+  }
+
+  moveCursor(moved: 'start' | 'end' | number) {
     const { from } = this.view.state.selection
-    this.cmd(selectText(from + moved))
+    if (moved === 'start') {
+      this.view.dispatch(
+        this.view.state.tr.setSelection(TextSelection.atStart(this.view.state.doc))
+      )
+    } else if (moved === 'end') {
+      this.view.dispatch(this.view.state.tr.setSelection(TextSelection.atEnd(this.view.state.doc)))
+    } else {
+      this.cmd(cmds.selectText(from + moved))
+    }
     return this
   }
 
   selectText(start: number, end?: number) {
-    this.cmd(selectText(start, end))
+    this.cmd(cmds.selectText(start, end))
     return this
   }
 

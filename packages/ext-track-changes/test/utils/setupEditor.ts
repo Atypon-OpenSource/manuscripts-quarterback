@@ -20,8 +20,11 @@ import { EditorView } from 'prosemirror-view'
 
 import { DEFAULT_USER } from '../__fixtures__/users'
 import { trackChangesPlugin } from '../../src'
+import { enableDebug } from '../../src/logger'
 import { QuarterBackSchema, schema as defaultSchema } from '../schema'
 import { ProsemirrorTestChain } from './PMTestChain'
+
+enableDebug(false)
 
 interface SetupEditorOptions<S extends Schema> {
   doc: Record<string, any> | undefined
@@ -40,7 +43,7 @@ export function setupEditor<S extends Schema = QuarterBackSchema>(
   } else if (schema) {
     pmDoc = schema.nodes.doc.createAndFill()
   } else {
-    pmDoc = createSimpleDoc('hello world')
+    pmDoc = createSimpleDoc('Hello World')
   }
   const div = document.createElement('div')
 

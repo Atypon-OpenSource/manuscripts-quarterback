@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 export const DEFAULT_USER = {
-  id: '1',
+  id: '1-mike',
   name: 'Mike',
+}
+
+export const SECOND_USER = {
+  id: '2-rebecca',
+  name: 'Rebecca',
 }

@@ -1,5 +1,5 @@
 /*!
- * © 2022 Atypon Systems LLC
+ * © 2021 Atypon Systems LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import basicNodeInsert from './basic-node-ins.json'
-import basicTextDelete from './basic-text-del.json'
-import basicTextInconsistent from './basic-text-inconsistent-track.json'
-import basicTextInsert from './basic-text-ins.json'
-import basicTextJoin from './basic-text-join.json'
-import defaultDoc from './default-doc.json'
+import { Fragment, Node as PMNode, Slice } from 'prosemirror-model'
+import { ReplaceStep } from 'prosemirror-transform'
 
-export default {
-  defaultDoc,
-  basicTextDelete,
-  basicTextInconsistent,
-  basicTextInsert,
-  basicNodeInsert,
-  basicTextJoin,
+export type ExposedReplaceStep = ReplaceStep & {
+  slice: ExposedSlice
+}
+export type ExposedSlice = Slice & {
+  content: ExposedFragment
+}
+export type ExposedFragment = Fragment & {
+  content: PMNode[]
 }
