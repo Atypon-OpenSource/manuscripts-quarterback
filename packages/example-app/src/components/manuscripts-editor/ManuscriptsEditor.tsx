@@ -84,7 +84,6 @@ export const ManuscriptsEditor = observer((props: Props) => {
             }),
           ]),
       yjsExtension({
-        disabled: false,
         document: {
           id: options.documentId,
         },

@@ -62,7 +62,6 @@ export const Editor = observer(() => {
             }),
           ]),
       yjsExtension({
-        disabled: false,
         document: {
           id: options.documentId,
         },

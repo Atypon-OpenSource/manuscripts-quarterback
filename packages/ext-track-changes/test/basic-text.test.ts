@@ -84,7 +84,7 @@ describe('track changes', () => {
       .insertText('c')
 
     expect(tester.toJSON()).toEqual(docs.basicTextJoin[0])
-    expect(uuidv4Mock.mock.calls.length).toBe(8)
+    expect(uuidv4Mock.mock.calls.length).toBe(6)
 
     tester
       .cmd(trackCommands.setUser(SECOND_USER))
@@ -96,7 +96,6 @@ describe('track changes', () => {
       .insertText('g')
       .moveCursor(-2)
       .backspace(2) // Delete Mike's insertions to see that Rebecca's insertions are joined
-      .insertText('f')
       .moveCursor('end')
       .insertText('h')
       .moveCursor(-2)
@@ -104,9 +103,8 @@ describe('track changes', () => {
       .backspace(1) // Deletes Mike's inserted 'c'
       .backspace(1) // Regular deletion of 'r'
 
-    // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.basicTextJoin[1])
-    expect(uuidv4Mock.mock.calls.length).toBe(20)
+    expect(uuidv4Mock.mock.calls.length).toBe(15)
   })
 
   test('should fix inconsistent text inserts and deletes', async () => {
@@ -138,6 +136,6 @@ describe('track changes', () => {
 
     // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[1])
-    expect(uuidv4Mock.mock.calls.length).toBe(5)
+    expect(uuidv4Mock.mock.calls.length).toBe(4)
   })
 })

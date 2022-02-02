@@ -23,15 +23,6 @@ import type { TrackChangesOptions } from './types/track'
 export const trackChangesExtensionName = 'track-changes' as const
 
 export const trackChangesExtension = (opts?: TrackChangesOptions) => (ctx: EditorProviders) => {
-  if (opts?.disabled) {
-    return {
-      name: trackChangesExtensionName,
-      commands,
-      keymaps: [],
-      plugins: [],
-      store: undefined,
-    }
-  }
   enableDebug(!!opts?.debug)
   return {
     name: trackChangesExtensionName,

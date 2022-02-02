@@ -28,6 +28,7 @@ export class ProsemirrorTestChain<S extends Schema> {
     this.view = view
   }
 
+  // TODO doesnt replace old trackChanges plugin
   reconfigurePlugins(plugins: Plugin[]) {
     const state = this.view.state.reconfigure({
       plugins: exampleSetup({ schema: this.view.state.schema }).concat(plugins),

@@ -25,7 +25,7 @@ export const insertText =
     }
     const tr = state.tr
     const { from } = state.selection
-    tr.insertText(text, pos !== undefined ? pos : from)
+    tr.insertText(text, pos ?? from)
 
     dispatch(tr)
     return true
@@ -39,8 +39,7 @@ export const deleteBetween =
     }
     const tr = state.tr
     const { from, to } = state.selection
-    const start = pos !== undefined ? pos : from
-    tr.delete(start, start + size)
+    tr.delete(pos ?? from, pos ?? from + size)
 
     dispatch(tr)
     return true
@@ -77,7 +76,7 @@ export const replace =
       return false
     }
     const { tr } = state
-    tr.replaceWith(start || 0, end === undefined ? state.doc.nodeSize - 2 : end, content)
+    tr.replaceWith(start ?? 0, end ?? state.doc.nodeSize - 2, content)
     dispatch(tr)
     return true
   }

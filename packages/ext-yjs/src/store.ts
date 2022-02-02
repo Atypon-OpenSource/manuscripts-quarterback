@@ -23,14 +23,14 @@ import * as Y from 'yjs'
 import { createYjsSnapshot } from './snapshots'
 import {
   AwarenessChange,
-  YjsEnabled,
   yjsExtensionName,
   YjsExtensionState,
+  YjsOptions,
   YjsSnapshot,
   YjsUser,
 } from './types'
 
-export const createYjsStore = (ctx: EditorProviders, opts: YjsEnabled) => {
+export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
   const { viewProvider, extensionProvider } = ctx
   const { document, user, initial, ws_url } = opts
   const ydoc = initial?.doc || new Y.Doc()

@@ -54,6 +54,15 @@ export function updateChangeAttrs(
   return tr
 }
 
+/**
+ * Applies the accepted/rejected changes in the current document and sets them untracked
+ *
+ * @param tr
+ * @param schema
+ * @param changes
+ * @param mapping
+ * @returns
+ */
 export function updateDocAndRemoveChanges(
   tr: Transaction,
   schema: Schema,

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import { uuidv4 } from '@manuscripts/quarterback-shared'
-import { Node as PMNode, Schema } from 'prosemirror-model'
+import { logger } from '../logger'
+import { Mark, Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
@@ -22,11 +23,14 @@ import { ChangeSet } from '../ChangeSet'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs, TrackedChange } from '../types/change'
 import { DeleteAttrs, InsertAttrs } from '../types/track'
 
-export function createTrackedAttrs(attrs: InsertAttrs | DeleteAttrs): TrackedAttrs {
-  return {
-    id: uuidv4(),
-    ...attrs,
+export function addTrackIdIfDoesntExist(attrs: Partial<TrackedAttrs>) {
+  if (!attrs.id) {
+    return {
+      id: uuidv4(),
+      ...attrs,
+    }
   }
+  return attrs
 }
 
 export function liftNode(pos: number, tr: Transaction) {
@@ -98,28 +102,14 @@ export function getPosToInsertMergedContent(pos: number, tr: Transaction, mappin
 }
 
 export function isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {
-  if (!attrs) {
-    return false
-  }
-  if (!attrs.id) {
-    return false
-  }
-  if (!attrs.userID) {
-    return false
-  }
-  if (!attrs.userName) {
-    return false
-  }
-  if (!attrs.operation) {
-    return false
-  }
-  if (!attrs.status) {
-    return false
-  }
-  if (!attrs.time) {
-    return false
-  }
-  return true
+  return (
+    attrs?.id &&
+    attrs?.userID &&
+    attrs?.userName &&
+    attrs?.operation &&
+    attrs?.status &&
+    attrs?.time
+  )
 }
 
 export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema) {
@@ -165,4 +155,22 @@ export function shouldMergeMarks(
   const sameOperation = nodeAttrs?.operation === attrs.operation
   const sameUser = nodeAttrs?.userID === attrs.userID
   return sameStatus && sameOperation && sameUser ? nodeAttrs : null
+}
+
+export function shouldMergeTrackedAttributes(
+  left?: Partial<TrackedAttrs>,
+  right?: Partial<TrackedAttrs>
+) {
+  if (!left || !right) {
+    logger(
+      `%c WARNING passed undefined dataTracked attributes for shouldMergeTrackedAttributes`,
+      'color: #f3f32c',
+      left || right
+    )
+    return false
+  }
+  const sameStatus = left.status === right.status
+  const sameOperation = left.operation === right.operation
+  const sameUser = left.userID === right.userID
+  return sameStatus && sameOperation && sameUser
 }

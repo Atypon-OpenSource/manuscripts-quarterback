@@ -22,12 +22,7 @@ import type { createYjsStore } from './store'
 export const yjsExtensionName = 'yjs' as const
 
 export type YjsExtension = ReturnType<ReturnType<typeof yjsExtension>>
-export type YjsOptions = YjsDisabled | YjsEnabled
-export type YjsDisabled = {
-  disabled: true
-}
-export type YjsEnabled = {
-  disabled: false
+export type YjsOptions = {
   document: {
     id: string
   }

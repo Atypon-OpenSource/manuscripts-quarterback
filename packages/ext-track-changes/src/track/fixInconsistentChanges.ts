@@ -22,6 +22,18 @@ import { CHANGE_OPERATION, CHANGE_STATUS } from '../types/change'
 import { TrackedUser } from '../types/user'
 import { updateChangeAttrs } from './updateChangeAttrs'
 
+/**
+ * Iterates over a ChangeSet to check all changes have their required attributes
+ *
+ * This inconsistency might happen due to a bug in the track changes implementation
+ * or by a user somehow applying an empty insert/delete mark that doesn't contain
+ * proper data. Also this checks the track IDs for duplicates.
+ * @param changeSet
+ * @param currentUser
+ * @param newTr
+ * @param schema
+ * @returns
+ */
 export function fixInconsistentChanges(
   changeSet: ChangeSet,
   currentUser: TrackedUser,

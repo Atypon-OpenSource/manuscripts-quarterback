@@ -20,7 +20,6 @@ import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from './change'
 import type { TrackedUser } from './user'
 
 export interface TrackChangesOptions {
-  disabled?: boolean
   debug?: boolean
   pluginOpts?: TrackChangesPluginOptions
 }

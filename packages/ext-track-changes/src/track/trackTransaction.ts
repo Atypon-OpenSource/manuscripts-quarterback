@@ -29,7 +29,11 @@ import { logger } from '../logger'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs } from '../types/change'
 import { ExposedFragment, ExposedReplaceStep, ExposedSlice } from '../types/pm'
 import { DeleteAttrs, InsertAttrs, UserData } from '../types/track'
-import { createTrackedAttrs, shouldMergeMarks } from './node-utils'
+import {
+  addTrackIdIfDoesntExist,
+  shouldMergeMarks,
+  shouldMergeTrackedAttributes,
+} from './node-utils'
 
 function markInlineNodeChange(
   node: PMNode<any>,
@@ -49,7 +53,7 @@ function markInlineNodeChange(
       ? userColors.insertColor
       : userColors.deleteColor
   const createdMark = mark.create({
-    dataTracked: createTrackedAttrs(insertAttrs),
+    dataTracked: addTrackIdIfDoesntExist(insertAttrs),
     pending_bg,
   })
   return node.mark(filtered.concat(createdMark))
@@ -71,7 +75,7 @@ function recurseContent(
     return node.type.create(
       {
         ...node.attrs,
-        dataTracked: createTrackedAttrs(insertAttrs),
+        dataTracked: addTrackIdIfDoesntExist(insertAttrs),
       },
       Fragment.fromArray(updatedChildren),
       node.marks
@@ -96,6 +100,43 @@ function setFragmentAsInserted(
   return updatedInserted.length === 0 ? inserted : Fragment.fromArray(updatedInserted)
 }
 
+function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, schema: Schema) {
+  const resolved = doc.resolve(pos)
+  const { nodeAfter, nodeBefore } = resolved
+  const leftMark = nodeBefore?.marks.filter(
+    (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
+  )[0]
+  const rightMark = nodeAfter?.marks.filter(
+    (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
+  )[0]
+  if (!nodeAfter || !nodeBefore || !leftMark || !rightMark || leftMark.type !== rightMark.type) {
+    return
+  }
+  const leftAttrs = leftMark.attrs
+  const rightAttrs = rightMark.attrs
+  if (!shouldMergeTrackedAttributes(leftAttrs.dataTracked, rightAttrs.dataTracked)) {
+    return
+  }
+  const newAttrs = { ...leftAttrs }
+  newAttrs.time = Math.max(leftAttrs.time || 0, rightAttrs.time || 0)
+  const fromStartOfMark = pos - nodeBefore?.nodeSize
+  const toEndOfMark = pos + nodeAfter?.nodeSize
+  newTr.addMark(fromStartOfMark, toEndOfMark, leftMark.type.create(newAttrs))
+}
+
+/**
+ * Applies marks between from and to, joining adjacent marks if they share same operation and user id
+ *
+ *
+ * @param from
+ * @param to
+ * @param doc
+ * @param newTr
+ * @param schema
+ * @param addedAttrs
+ * @param userColors
+ * @returns
+ */
 export function applyAndMergeMarks(
   from: number,
   to: number,
@@ -113,6 +154,9 @@ export function applyAndMergeMarks(
     rightMarks: Partial<TrackedAttrs> | null | undefined,
     rightNode: PMNode<any> | null | undefined
 
+  // Removes old marks
+  // TODO -> or dont? incase we want to persist the original author
+  // makes things a lot more complicated though
   newTr.removeMark(from, to, schema.marks.tracked_insert)
   newTr.removeMark(from, to, schema.marks.tracked_delete)
   doc.nodesBetween(from, to, (node, pos) => {
@@ -129,7 +173,7 @@ export function applyAndMergeMarks(
       }
       const fromStartOfMark = from - (leftNode && leftMarks ? leftNode.nodeSize : 0)
       const toEndOfMark = to + (rightNode && rightMarks ? rightNode.nodeSize : 0)
-      const dataTracked = createTrackedAttrs({
+      const dataTracked = addTrackIdIfDoesntExist({
         ...leftMarks,
         ...rightMarks,
         ...addedAttrs,
@@ -171,7 +215,7 @@ function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: 
   } else {
     const attrs = {
       ...node.attrs,
-      dataTracked: createTrackedAttrs(deleteAttrs),
+      dataTracked: addTrackIdIfDoesntExist(deleteAttrs),
     }
     newTr.setNodeMarkup(pos, undefined, attrs, node.marks)
   }
@@ -202,7 +246,7 @@ function deleteInlineIfInserted(
     const rightMarks = shouldMergeMarks(rightNode, deleteAttrs, schema)
     const fromStartOfMark = start - (leftNode && leftMarks ? leftNode.nodeSize : 0)
     const toEndOfMark = end + (rightNode && rightMarks ? rightNode.nodeSize : 0)
-    const dataTracked = createTrackedAttrs({
+    const dataTracked = addTrackIdIfDoesntExist({
       ...leftMarks,
       ...rightMarks,
       ...deleteAttrs,
@@ -259,6 +303,14 @@ function getMergedNode(
   }
 }
 
+/**
+ * Splits inserted slice from a copy-paste transaction into separate parts
+ *
+ * These parts can be then applied in subsequent iterations so instead of just applying
+ * `<p>as|df</p><p>bye</p>|` we get two nodes: `[<p>df</p>,<p>bye</p>]`
+ * @param insertSlice
+ * @returns
+ */
 function splitSliceIntoMergedParts(insertSlice: ExposedSlice) {
   const { openStart, openEnd, content } = insertSlice
   const nodes: PMNode[] = content.content
@@ -304,6 +356,7 @@ export function deleteAndMergeSplitBlockNodes(
 ) {
   const deleteMap = new Mapping()
   let mergedInsertPos = undefined
+  // No deletion applied, return default values
   if (from === to) {
     return {
       deleteMap,
@@ -342,7 +395,7 @@ export function deleteAndMergeSplitBlockNodes(
         } else if (nodeEnd > offsetFrom && nodeEnd <= offsetTo) {
           // The end token deleted: <p>asdf|</p><p>bye</p>| + [<p>] hello</p> -> <p>asdf hello</p>
           // How about <p>asdf|</p><p>|bye</p> + [<p>] hello</p><p>good[</p>] -> <p>asdf hello</p><p>goodbye</p>
-          // This doesnt work at least: <p>asdf|</p><p>|bye</p> + empty -> <p>asdfbye</p>
+          // This doesn't work at least: <p>asdf|</p><p>|bye</p> + empty -> <p>asdfbye</p>
           // Depth + 1 because the original pos was at text level(?) and we always want to insert at the correct
           // block level therefore we increment the depth. Or something like that. Does work though.
           const depth = newTr.doc.resolve(offsetPos).depth + 1
@@ -413,14 +466,29 @@ export function deleteAndMergeSplitBlockNodes(
     }
   })
   return {
-    deleteMap,
+    deleteMap, // Mapping to adjust the positions for the insert position tracking
     mergedInsertPos,
     newSliceContent: updatedSliceNodes
       ? Fragment.fromArray(updatedSliceNodes)
-      : insertSlice.content,
+      : insertSlice.content, // The new insert slice from which all deleted content has been removed
   }
 }
 
+/**
+ * Applies and immediately inverts transactions to wrap their contents/operations with track data instead
+ *
+ * The main method of track changes that holds the most complex parts of this whole library.
+ * Takes in as arguments the data from appendTransaction to reapply it with the track marks/attributes.
+ * We could prevent the initial transaction from being applied all together but since invert works just
+ * as well and we can use the intermediate doc for checking which nodes are changed, it's not prevented.
+ *
+ *
+ * @param tr Original transaction
+ * @param oldState State before transaction
+ * @param newTr Transaction created from the new editor state
+ * @param userData User data
+ * @returns newTr that inverts the initial tr and applies track attributes/marks
+ */
 export function trackTransaction(
   tr: Transaction,
   oldState: EditorState,
@@ -444,7 +512,7 @@ export function trackTransaction(
   let iters = 0
   logger('ORIGINAL transaction', tr)
   tr.steps.forEach((step) => {
-    logger('\ntransaction step', step)
+    logger('transaction step', step)
     if (iters > 10) {
       console.error('Possible infinite loop in trackTransaction!', newTr)
       return newTr
@@ -484,6 +552,8 @@ export function trackTransaction(
         logger('newTr after applying delete', newTr)
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
         if (newSliceContent.size > 0) {
+          // Since deleteAndMergeSplitBlockNodes prevented insertions of slices from deleting content,
+          // the new slice ends wont be of different depths.
           const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
           const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
           const insertedSlice = new Slice(
@@ -515,6 +585,8 @@ export function trackTransaction(
             new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
           )
         } else {
+          // Incase only deletion was applied, check whether tracked marks around deleted content can be merged
+          mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)

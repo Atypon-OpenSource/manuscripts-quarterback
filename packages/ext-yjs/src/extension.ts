@@ -23,16 +23,6 @@ import { createYjsStore } from './store'
 import { yjsExtensionName, YjsOptions } from './types'
 
 export const yjsExtension = (opts: YjsOptions) => (ctx: EditorProviders) => {
-  if (opts.disabled) {
-    return {
-      name: yjsExtensionName,
-      opts,
-      commands: { ...commands },
-      keymaps: [],
-      plugins: [],
-      store: undefined,
-    }
-  }
   const store = createYjsStore(ctx, opts).init()
   const plugins = [
     ySyncPlugin(store.yXmlFragment, {
