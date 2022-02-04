@@ -24,12 +24,16 @@ import type { Command } from './types/editor'
 import { DeleteAttrs, InsertAttrs, TrackChangesStatus } from './types/track'
 import { TrackedUser } from './types/user'
 
-export const setTrackChangesStatus =
-  (status: TrackChangesStatus): Command =>
+export const setTrackingStatus =
+  (status?: TrackChangesStatus): Command =>
   (state, dispatch) => {
     const currentStatus = trackChangesPluginKey.getState(state)?.status
-    if (dispatch && currentStatus) {
-      dispatch(setAction(state.tr, TrackChangesAction.setPluginStatus, status))
+    if (currentStatus) {
+      const newStatus =
+        status ?? currentStatus === TrackChangesStatus.enabled
+          ? TrackChangesStatus.disabled
+          : TrackChangesStatus.enabled
+      dispatch && dispatch(setAction(state.tr, TrackChangesAction.setPluginStatus, newStatus))
       return true
     }
     return false
@@ -37,7 +41,7 @@ export const setTrackChangesStatus =
 
 export const setInserted = (): Command => (state, dispatch) => {
   const pluginState = trackChangesPluginKey.getState(state)
-  if (!dispatch || !pluginState) {
+  if (!pluginState) {
     return false
   }
   const { currentUser, insertColor, deleteColor } = pluginState
@@ -57,13 +61,13 @@ export const setInserted = (): Command => (state, dispatch) => {
     deleteColor,
   }
   applyAndMergeMarks(from, to, state.doc, tr, state.schema, insertAttrs, userColors)
-  dispatch(tr)
+  dispatch && dispatch(tr)
   return true
 }
 
 export const setDeleted = (): Command => (state, dispatch) => {
   const pluginState = trackChangesPluginKey.getState(state)
-  if (!dispatch || !pluginState) {
+  if (!pluginState) {
     return false
   }
   const { currentUser, insertColor, deleteColor } = pluginState
@@ -101,7 +105,7 @@ export const setDeleted = (): Command => (state, dispatch) => {
     deleteAttrs,
     userColors
   )
-  dispatch(tr)
+  dispatch && dispatch(tr)
   return true
 }
 
@@ -118,60 +122,43 @@ export const addTrackedAttributesToBlockNode = (): Command => (state, dispatch) 
       time: Date.now(),
     },
   })
-  if (dispatch) {
-    dispatch(tr)
-    return true
-  }
-  return false
+  dispatch && dispatch(tr)
+  return true
 }
 
 export const setChangeStatuses =
   (status: CHANGE_STATUS, ids: string[]): Command =>
   (state, dispatch) => {
-    if (dispatch) {
+    dispatch &&
       dispatch(
         setAction(state.tr, TrackChangesAction.setChangeStatuses, {
           status,
           ids,
         })
       )
-      return true
-    }
-    return false
+    return true
   }
 
 export const setUser =
   (user: TrackedUser): Command =>
   (state, dispatch) => {
-    if (dispatch) {
-      dispatch(setAction(state.tr, TrackChangesAction.setUser, user))
-      return true
-    }
-    return false
+    dispatch && dispatch(setAction(state.tr, TrackChangesAction.setUser, user))
+    return true
   }
 
 export const toggleShownStatuses =
   (statuses: CHANGE_STATUS[]): Command =>
   (state, dispatch) => {
-    if (dispatch) {
-      dispatch(setAction(state.tr, TrackChangesAction.toggleShownStatuses, statuses))
-      return true
-    }
-    return false
-  }
-
-export const createSnapshot = (): Command => (state, dispatch) => {
-  if (dispatch) {
-    dispatch(setAction(state.tr, TrackChangesAction.createSnapshot, true))
+    dispatch && dispatch(setAction(state.tr, TrackChangesAction.toggleShownStatuses, statuses))
     return true
   }
-  return false
+
+export const applyAndRemoveChanges = (): Command => (state, dispatch) => {
+  dispatch && dispatch(setAction(state.tr, TrackChangesAction.applyAndRemoveChanges, true))
+  return true
 }
 
 export const refreshChanges = (): Command => (state, dispatch) => {
-  if (dispatch) {
-    dispatch(setAction(state.tr, TrackChangesAction.updateChanges, []))
-    return true
-  }
-  return false
+  dispatch && dispatch(setAction(state.tr, TrackChangesAction.updateChanges, []))
+  return true
 }

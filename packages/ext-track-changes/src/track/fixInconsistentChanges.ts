@@ -25,14 +25,12 @@ import { updateChangeAttrs } from './updateChangeAttrs'
 /**
  * Iterates over a ChangeSet to check all changes have their required attributes
  *
- * This inconsistency might happen due to a bug in the track changes implementation
- * or by a user somehow applying an empty insert/delete mark that doesn't contain
- * proper data. Also this checks the track IDs for duplicates.
+ * This inconsistency might happen due to a bug in the track changes implementation or by a user somehow applying an empty insert/delete mark that doesn't contain proper data. Also this checks the track IDs for duplicates.
  * @param changeSet
  * @param currentUser
  * @param newTr
  * @param schema
- * @returns
+ * @return docWasChanged, a boolean
  */
 export function fixInconsistentChanges(
   changeSet: ChangeSet,
@@ -43,7 +41,7 @@ export function fixInconsistentChanges(
   const iteratedIds = new Set()
   let changed = false
   changeSet._changes.forEach((c) => {
-    if (ChangeSet.isIncompleteChange(c)) {
+    if (iteratedIds.has(c.attrs.id) || !ChangeSet.isValidTrackedAttrs(c)) {
       const { id, userID, userName, operation, status, time } = c.attrs
       const newAttrs = {
         ...((!id || iteratedIds.has(id)) && { id: uuidv4() }),

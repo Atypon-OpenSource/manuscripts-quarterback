@@ -18,6 +18,7 @@ import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
 
 import { ChangeSet } from '../ChangeSet'
+import { logger } from '../logger'
 import {
   CHANGE_OPERATION,
   CHANGE_STATUS,
@@ -63,7 +64,7 @@ export function updateChangeAttrs(
  * @param mapping
  * @returns
  */
-export function updateDocAndRemoveChanges(
+export function applyAcceptedRejectedChanges(
   tr: Transaction,
   schema: Schema,
   changes: TrackedChange[],
@@ -78,8 +79,8 @@ export function updateDocAndRemoveChanges(
     const from = deleteMap.map(change.from)
     const node = tr.doc.nodeAt(from)
     if (!node) {
+      logger(`%c WARNING no node found to update for change`, 'color: #f3f32c', change)
       return
-      // throw Error('No node at the from of change' + change)
     }
     const noChangeNeeded =
       (operation === CHANGE_OPERATION.insert && status === CHANGE_STATUS.accepted) ||

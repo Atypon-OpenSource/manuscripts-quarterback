@@ -21,18 +21,20 @@ import {
   NodeChange,
   PartialTrackedChange,
   TextChange,
+  TrackedAttrs,
   TrackedChange,
 } from './types/change'
 
 export class ChangeSet {
   _changes: PartialTrackedChange[]
+  empty!: ChangeSet
 
   constructor(changes: PartialTrackedChange[] = []) {
     this._changes = changes
   }
 
   get changes(): TrackedChange[] {
-    return this._changes.filter((c) => !c.incompleteAttrs) as TrackedChange[]
+    return this._changes.filter((c) => !ChangeSet.isValidTrackedAttrs(c.attrs)) as TrackedChange[]
   }
 
   get changeTree() {
@@ -83,6 +85,24 @@ export class ChangeSet {
     return this._changes.length === 0
   }
 
+  get hasInconsistentData() {
+    return this.hasDuplicateIds || this.hasIncompleteAttrs
+  }
+
+  get hasDuplicateIds() {
+    const iterated = new Set()
+    return this._changes.some((c) => {
+      if (iterated.has(c.id)) {
+        return true
+      }
+      iterated.add(c.id)
+    })
+  }
+
+  get hasIncompleteAttrs() {
+    return this._changes.some((c) => !ChangeSet.isValidTrackedAttrs(c.attrs))
+  }
+
   get(id: string) {
     return this._changes.find((c) => c.id === id)
   }
@@ -103,6 +123,10 @@ export class ChangeSet {
     )
   }
 
+  static empty() {
+    return empty
+  }
+
   static shouldNotDelete(change: TrackedChange) {
     const { status, operation } = change.attrs
     return (
@@ -119,10 +143,15 @@ export class ChangeSet {
     )
   }
 
-  static isIncompleteChange(
-    change: PartialTrackedChange
-  ): change is IncompleteTextChange | IncompleteNodeChange {
-    return change.incompleteAttrs
+  static isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {
+    return (
+      attrs?.id &&
+      attrs?.userID &&
+      attrs?.userName &&
+      attrs?.operation &&
+      attrs?.status &&
+      attrs?.time
+    )
   }
 
   static isTextChange(change: TrackedChange): change is TextChange {
@@ -133,3 +162,5 @@ export class ChangeSet {
     return change.type === 'node-change'
   }
 }
+
+const empty = new ChangeSet()

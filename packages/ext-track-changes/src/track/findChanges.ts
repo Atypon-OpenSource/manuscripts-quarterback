@@ -17,7 +17,7 @@ import { EditorState } from 'prosemirror-state'
 
 import { ChangeSet } from '../ChangeSet'
 import { PartialTrackedChange } from '../types/change'
-import { getNodeTrackedMarks, isValidTrackedAttrs } from './node-utils'
+import { getNodeTrackedMarks } from './node-utils'
 
 /**
  * Finds all changes (basically text marks or node attributes) from document
@@ -30,14 +30,10 @@ import { getNodeTrackedMarks, isValidTrackedAttrs } from './node-utils'
  */
 export function findChanges(state: EditorState) {
   const changes: PartialTrackedChange[] = []
-  const iteratedIds = new Set()
   state.doc.descendants((node, pos) => {
     const attrs = getNodeTrackedMarks(node, state.schema)
     if (attrs) {
-      const id = attrs?.id || 'undefined'
-      const duplicateId = iteratedIds.has(id)
-      const incompleteAttrs = !isValidTrackedAttrs(attrs) || duplicateId
-      iteratedIds.add(id)
+      const id = attrs?.id || ''
       if (node.isInline) {
         changes.push({
           id,
@@ -45,7 +41,6 @@ export function findChanges(state: EditorState) {
           from: pos,
           to: pos + node.nodeSize,
           attrs,
-          incompleteAttrs,
         })
       } else {
         changes.push({
@@ -57,7 +52,6 @@ export function findChanges(state: EditorState) {
           mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
           children: [],
           attrs,
-          incompleteAttrs,
         })
       }
     }

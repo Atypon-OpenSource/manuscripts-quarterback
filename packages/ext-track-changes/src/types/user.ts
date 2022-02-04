@@ -17,9 +17,3 @@ export interface TrackedUser {
   id: string
   name: string
 }
-export interface YjsUser {
-  id: string
-  clientID: number
-  name: string
-  color: string
-}

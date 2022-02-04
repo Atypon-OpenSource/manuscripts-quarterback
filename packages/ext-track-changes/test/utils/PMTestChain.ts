@@ -19,6 +19,7 @@ import { Node as PMNode, Schema } from 'prosemirror-model'
 import { Plugin, TextSelection } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
+import { trackChangesPluginKey } from '../../src'
 import * as cmds from './commands'
 
 export class ProsemirrorTestChain<S extends Schema> {
@@ -26,6 +27,14 @@ export class ProsemirrorTestChain<S extends Schema> {
 
   constructor(view: EditorView<S>) {
     this.view = view
+  }
+
+  trackState() {
+    const trackState = trackChangesPluginKey.getState(this.view.state)
+    if (!trackState) {
+      return undefined
+    }
+    return trackState
   }
 
   // TODO doesnt replace old trackChanges plugin
@@ -56,19 +65,23 @@ export class ProsemirrorTestChain<S extends Schema> {
     return this
   }
 
-  insertNode(node: PMNode | null | undefined) {
+  insertNode(node: PMNode | null | undefined, pos?: number) {
     if (!node) {
       throw Error('No PMNode provided for insertNode!')
     }
     const { selection, tr } = this.view.state
-    const { from } = selection
-    tr.insert(from, node)
+    tr.insert(pos ?? selection.head, node)
     this.view.dispatch(tr)
     return this
   }
 
   backspace(times = 1) {
     this.cmd(cmds.backspace(times))
+    return this
+  }
+
+  delete(start?: number, end?: number) {
+    this.cmd(cmds.deleteBetween(start ?? 0, end ?? this.view.state.doc.nodeSize - 2))
     return this
   }
 

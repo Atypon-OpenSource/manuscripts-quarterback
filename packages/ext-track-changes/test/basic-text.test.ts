@@ -46,18 +46,19 @@ describe('track changes', () => {
 
   test('should track basic text inserts', async () => {
     const tester = setupEditor({
-      doc: docs.defaultDoc.doc,
+      doc: docs.defaultDocs[0],
     }).insertText('inserted text')
 
     // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
 
     expect(tester.toJSON()).toEqual(docs.basicTextInsert)
-    expect(uuidv4Mock.mock.calls.length).toBe(2)
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(1)
   })
 
   test('should track basic text inserts and deletes', async () => {
     const tester = setupEditor({
-      doc: docs.defaultDoc.doc,
+      doc: docs.defaultDocs[0],
     })
       .insertText('inserted text')
       .backspace(4)
@@ -65,7 +66,8 @@ describe('track changes', () => {
       .backspace(4)
 
     expect(tester.toJSON()).toEqual(docs.basicTextDelete)
-    expect(uuidv4Mock.mock.calls.length).toBe(3)
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(2)
   })
 
   test('should join adjacent text inserts and deletes by same user', async () => {
@@ -74,7 +76,7 @@ describe('track changes', () => {
     // check inserts joined, deletes still separate
     // MISSING: check timestamps merged correctly
     const tester = setupEditor({
-      doc: docs.defaultDoc.doc,
+      doc: docs.defaultDocs[0],
     })
       .insertText('a')
       .insertText('b')
@@ -84,7 +86,8 @@ describe('track changes', () => {
       .insertText('c')
 
     expect(tester.toJSON()).toEqual(docs.basicTextJoin[0])
-    expect(uuidv4Mock.mock.calls.length).toBe(6)
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(4)
 
     tester
       .cmd(trackCommands.setUser(SECOND_USER))
@@ -104,18 +107,30 @@ describe('track changes', () => {
       .backspace(1) // Regular deletion of 'r'
 
     expect(tester.toJSON()).toEqual(docs.basicTextJoin[1])
-    expect(uuidv4Mock.mock.calls.length).toBe(15)
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(10)
   })
 
   test('should fix inconsistent text inserts and deletes', async () => {
     const tester = setupEditor({
-      doc: docs.defaultDoc.doc,
+      doc: docs.defaultDocs[0],
     })
       .insertText('abcd')
       .cmd((state, dispatch) => {
         const tr = state.tr
+        tr.removeMark(1, 2)
         tr.addMark(
-          1,
+          2,
+          3,
+          state.schema.marks.tracked_delete.create({
+            dataTracked: {
+              id: 'MOCK-ID-0',
+            },
+            pending_bg: 'red',
+          })
+        )
+        tr.addMark(
+          3,
           4,
           state.schema.marks.tracked_insert.create({
             dataTracked: {},
@@ -129,13 +144,16 @@ describe('track changes', () => {
 
     // Check the insert mark was overwritten and the data is now inconsistent
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[0])
-    expect(uuidv4Mock.mock.calls.length).toBe(2)
+    // Should contain one duplicate id
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(true)
+    expect(uuidv4Mock.mock.calls.length).toBe(1)
 
     // TODO should join with the inconsistent inserted text?
-    tester.insertText('e').backspace(1)
+    tester.insertText('e').moveCursor(-4).backspace()
 
-    // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
+    await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[1])
-    expect(uuidv4Mock.mock.calls.length).toBe(4)
+    expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(5)
   })
 })

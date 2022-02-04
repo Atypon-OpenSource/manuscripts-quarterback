@@ -118,16 +118,16 @@ function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, schema:
     return
   }
   const newAttrs = { ...leftAttrs }
-  newAttrs.time = Math.max(leftAttrs.time || 0, rightAttrs.time || 0)
-  const fromStartOfMark = pos - nodeBefore?.nodeSize
-  const toEndOfMark = pos + nodeAfter?.nodeSize
+  newAttrs.time = Math.max(leftAttrs.time || 0, rightAttrs.time || 0) || Date.now()
+  const fromStartOfMark = pos - nodeBefore.nodeSize
+  const toEndOfMark = pos + nodeAfter.nodeSize
   newTr.addMark(fromStartOfMark, toEndOfMark, leftMark.type.create(newAttrs))
 }
 
 /**
  * Applies marks between from and to, joining adjacent marks if they share same operation and user id
  *
- *
+ * @deprecated
  * @param from
  * @param to
  * @param doc
@@ -477,7 +477,7 @@ export function deleteAndMergeSplitBlockNodes(
 /**
  * Applies and immediately inverts transactions to wrap their contents/operations with track data instead
  *
- * The main method of track changes that holds the most complex parts of this whole library.
+ * The main function of track changes that holds the most complex parts of this whole library.
  * Takes in as arguments the data from appendTransaction to reapply it with the track marks/attributes.
  * We could prevent the initial transaction from being applied all together but since invert works just
  * as well and we can use the intermediate doc for checking which nodes are changed, it's not prevented.
@@ -515,7 +515,7 @@ export function trackTransaction(
     logger('transaction step', step)
     if (iters > 10) {
       console.error('Possible infinite loop in trackTransaction!', newTr)
-      return newTr
+      return
     }
     iters += 1
     const multipleTransforms =
@@ -539,6 +539,8 @@ export function trackTransaction(
           )
           return
         }
+        // First apply the deleted range and update the insert slice to not include content that was deleted,
+        // eg partial nodes in an open-ended slice
         const { deleteMap, mergedInsertPos, newSliceContent } = deleteAndMergeSplitBlockNodes(
           fromA,
           toA,
@@ -552,8 +554,8 @@ export function trackTransaction(
         logger('newTr after applying delete', newTr)
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
         if (newSliceContent.size > 0) {
-          // Since deleteAndMergeSplitBlockNodes prevented insertions of slices from deleting content,
-          // the new slice ends wont be of different depths.
+          // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any partial slices,
+          // the new slice should contain only complete nodes therefore the depths should be equal
           const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
           const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
           const insertedSlice = new Slice(
@@ -572,15 +574,17 @@ export function trackTransaction(
             return
           }
           logger('newTr after applying insert', newTr)
-          applyAndMergeMarks(
-            toAWithOffset,
-            toAWithOffset + insertedSlice.size,
-            newTr.doc,
-            newTr,
-            oldState.schema,
-            insertAttrs,
-            userData
-          )
+          mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
+          mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
+          // applyAndMergeMarks(
+          //   toAWithOffset,
+          //   toAWithOffset + insertedSlice.size,
+          //   newTr.doc,
+          //   newTr,
+          //   oldState.schema,
+          //   insertAttrs,
+          //   userData
+          // )
           newTr.setSelection(
             new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
           )
@@ -590,18 +594,19 @@ export function trackTransaction(
           newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
-        const { meta }: { meta: { [key: string]: any } } = tr as Transaction & {
+        const { meta } = tr as Transaction & {
           meta: Record<string, any>
         }
         // This is quite non-optimal in some sense but to ensure no information is lost
-        // we have to readd all the old meta keys, such as inputType or uiEvent.
+        // we have to re-add all the old meta keys, such as inputType or uiEvent.
         // This should prevent bugs incase other plugins/widgets rely upon them existing (and they
         // are not able to process the transactions before track-changes).
+        // TODO: will this cause race-condition if a meta causes another appendTransaction to fire
         Object.keys(meta).forEach((key) => newTr.setMeta(key, tr.getMeta(key)))
       })
       // } else if (step instanceof ReplaceAroundStep) {
     }
   })
   logger('NEW transaction', newTr)
-  return newTr.setMeta('track-changes-enabled', true)
+  return newTr
 }

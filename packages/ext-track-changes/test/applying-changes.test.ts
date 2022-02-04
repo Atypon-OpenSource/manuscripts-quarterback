@@ -51,47 +51,35 @@ describe('track changes', () => {
     uuidv4Mock.mockClear()
   })
 
-  test('should track inserts of paragraphs', async () => {
+  test.skip('should update marks/attributes status correctly', async () => {
     const tester = setupEditor({
       doc: docs.defaultDocs[0],
-    }).insertNode(defaultSchema.nodes.paragraph.createAndFill(), 0)
-
-    expect(tester.toJSON()).toEqual(docs.basicNodeInsert)
-    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
-    expect(uuidv4Mock.mock.calls.length).toBe(1)
-  })
-
-  test.skip('should prevent deletion of paragraphs unless already inserted', async () => {
-    const tester = setupEditor({
-      doc: docs.defaultDocs[1],
     })
-      .insertNode(defaultSchema.nodes.paragraph.createAndFill(), 13)
+      .insertNode(defaultSchema.nodes.paragraph.createAndFill(), 0)
+      .moveCursor('start')
       .insertText('inserted text')
-      .selectText(44)
-      .backspace(12)
-      .backspace(1)
-      .backspace(1)
-      .backspace(1)
-    // .delete(0, 44)
-
-    // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
-
-    expect(tester.toJSON()).toEqual(docs.basicNodeDelete)
-    expect(uuidv4Mock.mock.calls.length).toBe(9)
-  })
-
-  test.skip('should track node attribute updates', async () => {
-    const tester = setupEditor({
-      doc: docs.defaultDocs[0],
-    })
       .insertNode(
         defaultSchema.nodes.image.createAndFill({
           src: 'https://i.imgur.com/lFAxY.png',
           title: 'Image',
         }),
-        1
+        1 + 13
       )
-      .insertText('inserted text')
+      .insertText('after image')
+      .insertNode(defaultSchema.nodes.blockquote.createAndFill(), 0)
+      .moveCursor('start')
+      .insertText('quoted text')
+      .insertNode(defaultSchema.nodes.heading.createAndFill({ level: 2 }), 0)
+      .moveCursor('start')
+      .insertText('header text')
+      .insertNode(defaultSchema.nodes.horizontal_rule.createAndFill(), 0)
+      .insertNode(defaultSchema.nodes.code_block.createAndFill(), 0)
+      .moveCursor('start')
+      .insertText('code text')
+      .insertNode(defaultSchema.nodes.hard_break.createAndFill(), 0)
+      .insertNode(defaultSchema.nodes.ordered_list.createAndFill(), 0)
+      .moveCursor('start')
+      .insertText('ordered list text')
       .cmd((state, dispatch) => {
         const trackChangesState = trackChangesPluginKey.getState(state)
         if (!trackChangesState) {
@@ -102,7 +90,7 @@ describe('track changes', () => {
         trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids)(state, dispatch)
         return true
       })
-      .cmd(trackCommands.applyAndRemoveChanges())
+    // .cmd(trackCommands.applyAndRemoveChanges())
 
     await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
 

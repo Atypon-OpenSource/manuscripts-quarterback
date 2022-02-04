@@ -15,7 +15,7 @@
  */
 import { exampleSetup } from 'prosemirror-example-setup'
 import { Schema } from 'prosemirror-model'
-import { EditorState } from 'prosemirror-state'
+import { EditorState, Plugin } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
 import { DEFAULT_USER } from '../__fixtures__/users'
@@ -29,12 +29,14 @@ enableDebug(false)
 interface SetupEditorOptions<S extends Schema> {
   doc: Record<string, any> | undefined
   schema?: S
+  useDefaultPlugins?: boolean
+  plugins?: Plugin[]
 }
 
 export function setupEditor<S extends Schema = QuarterBackSchema>(
   opts?: SetupEditorOptions<S>
 ): ProsemirrorTestChain<S> {
-  const { doc, schema } = opts || {}
+  const { doc, schema, useDefaultPlugins, plugins } = opts || {}
   let pmDoc
   if (doc && schema) {
     pmDoc = schema.nodeFromJSON(doc)
@@ -46,16 +48,20 @@ export function setupEditor<S extends Schema = QuarterBackSchema>(
     pmDoc = createSimpleDoc('Hello World')
   }
   const div = document.createElement('div')
-
+  const editorPlugins = (
+    useDefaultPlugins ? exampleSetup({ schema: schema || defaultSchema }) : []
+  ).concat(
+    plugins || [
+      trackChangesPlugin({
+        user: DEFAULT_USER,
+      }),
+    ]
+  )
   const view = new EditorView<S>(div, {
     state: EditorState.create<S>({
       // @ts-ignore
       doc: pmDoc,
-      plugins: exampleSetup({ schema: schema || defaultSchema }).concat([
-        trackChangesPlugin({
-          user: DEFAULT_USER,
-        }),
-      ]),
+      plugins: editorPlugins,
     }),
   })
 

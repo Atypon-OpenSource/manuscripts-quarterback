@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import basicNodeDelete from './basic-node-del.json'
 import basicNodeInsert from './basic-node-ins.json'
 import basicTextDelete from './basic-text-del.json'
 import basicTextInconsistent from './basic-text-inconsistent-track.json'
 import basicTextInsert from './basic-text-ins.json'
 import basicTextJoin from './basic-text-join.json'
-import defaultDoc from './default-doc.json'
+import defaultDocs from './default-docs.json'
 
 export default {
-  defaultDoc,
+  defaultDocs,
+  basicNodeDelete,
+  basicNodeInsert,
   basicTextDelete,
   basicTextInconsistent,
   basicTextInsert,
-  basicNodeInsert,
   basicTextJoin,
 }

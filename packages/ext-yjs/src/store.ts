@@ -99,7 +99,7 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
       }
       if (!Y.equalSnapshots(prevSnapshot, snapshot)) {
         versions.push([createYjsSnapshot(snapshot, ydoc.clientID)])
-        viewProvider.execCommand(trackCommands.createSnapshot())
+        viewProvider.execCommand(trackCommands.applyAndRemoveChanges())
       }
     },
 

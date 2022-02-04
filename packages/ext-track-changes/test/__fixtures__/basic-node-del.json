@@ -1,0 +1,155 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "attrs": {
+          "dataTracked": {
+            "id": "MOCK-ID-4",
+            "userID": "1-mike",
+            "userName": "Mike",
+            "time": 1577836800000,
+            "status": "pending",
+            "operation": "delete"
+          }
+        },
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "tracked_delete",
+                "attrs": {
+                  "dataTracked": {
+                    "id": "MOCK-ID-5",
+                    "userID": "1-mike",
+                    "userName": "Mike",
+                    "time": 1577836800000,
+                    "status": "pending",
+                    "operation": "delete"
+                  },
+                  "pending_bg": "#ffa4a4"
+                }
+              }
+            ],
+            "text": "Hello world"
+          }
+        ]
+      },
+      {
+        "type": "blockquote",
+        "attrs": {
+          "dataTracked": {
+            "id": "MOCK-ID-6",
+            "userID": "1-mike",
+            "userName": "Mike",
+            "time": 1577836800000,
+            "status": "pending",
+            "operation": "delete"
+          }
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "dataTracked": {
+                "id": "MOCK-ID-7",
+                "userID": "1-mike",
+                "userName": "Mike",
+                "time": 1577836800000,
+                "status": "pending",
+                "operation": "delete"
+              }
+            },
+            "content": [
+              {
+                "type": "text",
+                "marks": [
+                  {
+                    "type": "tracked_delete",
+                    "attrs": {
+                      "dataTracked": {
+                        "id": "MOCK-ID-8",
+                        "userID": "1-mike",
+                        "userName": "Mike",
+                        "time": 1577836800000,
+                        "status": "pending",
+                        "operation": "delete"
+                      },
+                      "pending_bg": "#ffa4a4"
+                    }
+                  }
+                ],
+                "text": "I am a quote"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "dataTracked": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold",
+                "attrs": {
+                  "dataTracked": null
+                }
+              }
+            ],
+            "text": "Bolded"
+          },
+          {
+            "type": "text",
+            "text": " "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "italic",
+                "attrs": {
+                  "dataTracked": null
+                }
+              }
+            ],
+            "text": "italic"
+          },
+          {
+            "type": "text",
+            "text": " "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "italic",
+                "attrs": {
+                  "dataTracked": null
+                }
+              },
+              {
+                "type": "bold",
+                "attrs": {
+                  "dataTracked": null
+                }
+              }
+            ],
+            "text": "both"
+          }
+        ]
+      }
+    ]
+  },
+  "selection": {
+    "type": "text",
+    "anchor": 0,
+    "head": 0
+  }
+}

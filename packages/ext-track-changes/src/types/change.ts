@@ -36,7 +36,6 @@ export type Change = {
   from: number
   to: number
   attrs: TrackedAttrs
-  incompleteAttrs: boolean
 }
 export type TextChange = Change & {
   type: 'text-change'

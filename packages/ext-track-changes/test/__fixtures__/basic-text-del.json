@@ -15,7 +15,7 @@
                 "type": "tracked_insert",
                 "attrs": {
                   "dataTracked": {
-                    "id": "MOCK-ID-1",
+                    "id": "MOCK-ID-0",
                     "userID": "1-mike",
                     "userName": "Mike",
                     "time": 1577836800000,
@@ -39,7 +39,7 @@
                 "type": "tracked_delete",
                 "attrs": {
                   "dataTracked": {
-                    "id": "MOCK-ID-2",
+                    "id": "MOCK-ID-1",
                     "userID": "1-mike",
                     "userName": "Mike",
                     "time": 1577836800000,

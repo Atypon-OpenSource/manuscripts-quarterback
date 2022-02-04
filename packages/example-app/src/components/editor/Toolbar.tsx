@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { trackCommands } from '@manuscripts/ext-track-changes'
 import {
   activeNodesMarksPluginKey,
   ActiveNodesMarksState,
@@ -104,18 +105,18 @@ export function Toolbar(props: IProps) {
       case 'toggle-blockquote':
         return
       case 'update-attribute':
-        viewProvider?.execCommand(commands.trackCommands.addTrackedAttributesToBlockNode())
+        viewProvider?.execCommand(trackCommands.addTrackedAttributesToBlockNode())
         return
       case 'toggle-split-view':
         return
       case 'toggle-track-changes':
-        viewProvider?.execCommand(commands.trackCommands.toggleTrackChanges())
+        viewProvider?.execCommand(trackCommands.setTrackingStatus())
         return
       case 'set-inserted':
-        viewProvider?.execCommand(commands.trackCommands.setInserted())
+        viewProvider?.execCommand(trackCommands.setInserted())
         return
       case 'set-deleted':
-        viewProvider?.execCommand(commands.trackCommands.setDeleted())
+        viewProvider?.execCommand(trackCommands.setDeleted())
         return
     }
   }

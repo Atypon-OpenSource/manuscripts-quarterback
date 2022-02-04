@@ -5,14 +5,8 @@
       {
         "type": "paragraph",
         "attrs": {
-          "dataTracked": null
-        }
-      },
-      {
-        "type": "paragraph",
-        "attrs": {
           "dataTracked": {
-            "id": "MOCK-ID-1",
+            "id": "MOCK-ID-0",
             "userID": "1-mike",
             "userName": "Mike",
             "time": 1577836800000,
@@ -37,7 +31,7 @@
   },
   "selection": {
     "type": "text",
-    "anchor": 5,
-    "head": 5
+    "anchor": 2,
+    "head": 2
   }
 }

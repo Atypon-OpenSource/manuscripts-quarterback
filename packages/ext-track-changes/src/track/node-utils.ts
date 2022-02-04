@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 import { uuidv4 } from '@manuscripts/quarterback-shared'
-import { logger } from '../logger'
 import { Mark, Node as PMNode, Schema } from 'prosemirror-model'
 import { Transaction } from 'prosemirror-state'
 import { liftTarget, Mapping } from 'prosemirror-transform'
 
 import { ChangeSet } from '../ChangeSet'
+import { logger } from '../logger'
 import { CHANGE_OPERATION, CHANGE_STATUS, TrackedAttrs, TrackedChange } from '../types/change'
-import { DeleteAttrs, InsertAttrs } from '../types/track'
 
 export function addTrackIdIfDoesntExist(attrs: Partial<TrackedAttrs>) {
   if (!attrs.id) {
@@ -99,17 +98,6 @@ export function getPosToInsertMergedContent(pos: number, tr: Transaction, mappin
     return mapping.map(nodeBelowPos) + 1
   }
   return undefined
-}
-
-export function isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {
-  return (
-    attrs?.id &&
-    attrs?.userID &&
-    attrs?.userName &&
-    attrs?.operation &&
-    attrs?.status &&
-    attrs?.time
-  )
 }
 
 export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema) {

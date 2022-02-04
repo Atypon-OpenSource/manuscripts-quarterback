@@ -20,28 +20,20 @@ import { TextSelection } from 'prosemirror-state'
 export const insertText =
   (text: string, pos?: number): Command =>
   (state, dispatch) => {
-    if (!dispatch) {
-      return false
-    }
     const tr = state.tr
     const { from } = state.selection
     tr.insertText(text, pos ?? from)
-
-    dispatch(tr)
+    dispatch && dispatch(tr)
     return true
   }
 
 export const deleteBetween =
-  (size: number, pos?: number): Command =>
+  (start?: number, end?: number): Command =>
   (state, dispatch) => {
-    if (!dispatch) {
-      return false
-    }
     const tr = state.tr
     const { from, to } = state.selection
-    tr.delete(pos ?? from, pos ?? from + size)
-
-    dispatch(tr)
+    tr.delete(start ?? from, end ?? to)
+    dispatch && dispatch(tr)
     return true
   }
 
@@ -51,44 +43,33 @@ export const backspace =
     const { selection, tr } = state
     const { from, empty } = selection
 
-    if (!dispatch) {
-      return false
-    }
     if (empty) {
-      dispatch(tr.delete(from - times, from))
-      return true
+      tr.delete(from - times, from)
+    } else {
+      tr.deleteSelection()
+      if (times > 1) {
+        tr.delete(from - (times - 1), from)
+      }
     }
 
-    tr.deleteSelection()
-
-    if (times > 1) {
-      tr.delete(from - (times - 1), from)
-    }
-
-    dispatch(tr)
+    dispatch && dispatch(tr)
     return true
   }
 
 export const replace =
   (content: Fragment | PMNode | PMNode[], start?: number, end?: number): Command =>
   (state, dispatch) => {
-    if (!dispatch) {
-      return false
-    }
     const { tr } = state
     tr.replaceWith(start ?? 0, end ?? state.doc.nodeSize - 2, content)
-    dispatch(tr)
+    dispatch && dispatch(tr)
     return true
   }
 
 export const selectText =
   (start: number, end?: number): Command =>
   (state, dispatch) => {
-    if (!dispatch) {
-      return false
-    }
     const { tr } = state
     tr.setSelection(TextSelection.create(state.doc, start, end))
-    dispatch(tr)
+    dispatch && dispatch(tr)
     return true
   }

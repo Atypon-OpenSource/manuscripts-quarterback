@@ -27,7 +27,7 @@ export enum TrackChangesAction {
   toggleShownStatuses = 'track-changes-toggle-shown-change-statuses',
   updateChanges = 'track-changes-update-changes',
   refreshChanges = 'track-changes-refresh-changes',
-  createSnapshot = 'track-changes-create-snapshot',
+  applyAndRemoveChanges = 'track-changes-apply-remove-changes',
 }
 
 export type TrackChangesActionParams = {
@@ -41,7 +41,7 @@ export type TrackChangesActionParams = {
   [TrackChangesAction.toggleShownStatuses]: CHANGE_STATUS[]
   [TrackChangesAction.updateChanges]: string[]
   [TrackChangesAction.refreshChanges]: boolean
-  [TrackChangesAction.createSnapshot]: boolean
+  [TrackChangesAction.applyAndRemoveChanges]: boolean
 }
 
 export function getAction<K extends keyof TrackChangesActionParams>(tr: Transaction, action: K) {

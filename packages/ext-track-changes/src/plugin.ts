@@ -22,10 +22,9 @@ import { logger } from './logger'
 import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
-import { updateChangeAttrs, updateDocAndRemoveChanges } from './track/updateChangeAttrs'
+import { applyAcceptedRejectedChanges, updateChangeAttrs } from './track/updateChangeAttrs'
 import { CHANGE_STATUS } from './types/change'
 import { TrackChangesPluginOptions, TrackChangesState, TrackChangesStatus } from './types/track'
-import { TrackedUser } from './types/user'
 
 const DEFAULT_USER = {
   id: '0',
@@ -44,6 +43,7 @@ export const trackChangesPlugin = ({
   skipTrsWithMetas = [],
 }: TrackChangesPluginOptions) => {
   let editorView: EditorView | undefined
+
   return new Plugin<TrackChangesState, any>({
     key: trackChangesPluginKey,
     props: {
@@ -80,7 +80,10 @@ export const trackChangesPlugin = ({
             changeSet: findChanges(newState),
           }
         } else if (pluginState.status === TrackChangesStatus.disabled) {
-          return pluginState
+          if (pluginState.changeSet.isEmpty) {
+            return pluginState
+          }
+          return { ...pluginState, changeSet: ChangeSet.empty() }
         }
         const {
           changeSet: oldChangeSet,
@@ -147,10 +150,10 @@ export const trackChangesPlugin = ({
         }
         const wasAppended = tr.getMeta('appendedTransaction') as Transaction | undefined
         const skipMetaUsed = skipTrsWithMetas.some((m) => tr.getMeta(m) || wasAppended?.getMeta(m))
-        const skipTrack =
+        const skipTrackUsed =
           getAction(tr, TrackChangesAction.skipTrack) ||
           (wasAppended && getAction(wasAppended, TrackChangesAction.skipTrack))
-        if (tr.docChanged && !skipMetaUsed && !skipTrack && !tr.getMeta('history$')) {
+        if (tr.docChanged && !skipMetaUsed && !skipTrackUsed && !tr.getMeta('history$')) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
           infiniteLoopCounter.iters += 1
         }
@@ -165,13 +168,13 @@ export const trackChangesPlugin = ({
               setAction(createdTr, TrackChangesAction.updateChanges, [change.id])
             }
           })
-        } else if (getAction(tr, TrackChangesAction.createSnapshot)) {
-          const mapping = updateDocAndRemoveChanges(
+        } else if (getAction(tr, TrackChangesAction.applyAndRemoveChanges)) {
+          const mapping = applyAcceptedRejectedChanges(
             createdTr,
             oldState.schema,
             changeSet!.changeTree.filter((c) => c.type === 'node-change')
           )
-          updateDocAndRemoveChanges(
+          applyAcceptedRejectedChanges(
             createdTr,
             oldState.schema,
             changeSet!.changes.filter((c) => c.type === 'text-change'),
@@ -186,6 +189,9 @@ export const trackChangesPlugin = ({
         createdTr,
         oldState.schema
       )
+      if (changed) {
+        logger(`%c WARNING had to fix inconsistent changes in`, 'color: #f3f32c', createdTr)
+      }
       if (docChanged || createdTr.docChanged || changed) {
         setAction(createdTr, TrackChangesAction.refreshChanges, true)
       }
