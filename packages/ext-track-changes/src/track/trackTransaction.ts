@@ -551,7 +551,7 @@ export function trackTransaction(
           userData,
           slice
         )
-        logger('newTr after applying delete', newTr)
+        logger('TR: new steps after applying delete', [...newTr.steps])
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
         if (newSliceContent.size > 0) {
           // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any partial slices,
@@ -573,7 +573,7 @@ export function trackTransaction(
             )
             return
           }
-          logger('newTr after applying insert', newTr)
+          logger('new steps after applying insert', [...newTr.steps])
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
           newTr.setSelection(

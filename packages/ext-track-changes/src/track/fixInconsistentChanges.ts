@@ -41,7 +41,7 @@ export function fixInconsistentChanges(
   const iteratedIds = new Set()
   let changed = false
   changeSet._changes.forEach((c) => {
-    if (iteratedIds.has(c.attrs.id) || !ChangeSet.isValidTrackedAttrs(c)) {
+    if (iteratedIds.has(c.attrs.id) || !ChangeSet.isValidTrackedAttrs(c.attrs)) {
       const { id, userID, userName, operation, status, time } = c.attrs
       const newAttrs = {
         ...((!id || iteratedIds.has(id)) && { id: uuidv4() }),

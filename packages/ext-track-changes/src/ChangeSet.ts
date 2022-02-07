@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { logger } from './logger'
 import {
   CHANGE_OPERATION,
   CHANGE_STATUS,
@@ -141,14 +142,19 @@ export class ChangeSet {
     )
   }
 
-  static isValidTrackedAttrs(attrs?: Partial<TrackedAttrs>) {
+  static isValidTrackedAttrs(attrs: Partial<TrackedAttrs> = {}): boolean {
+    if ('attrs' in attrs) {
+      logger(
+        `%c WARNING passed "attrs" as property to isValidTrackedAttrs(attrs)`,
+        'color: #f3f32c',
+        attrs
+      )
+    }
+    const keys = ['id', 'userID', 'userName', 'operation', 'status', 'time']
+    const entries = Object.entries(attrs)
     return (
-      attrs?.id &&
-      attrs?.userID &&
-      attrs?.userName &&
-      attrs?.operation &&
-      attrs?.status &&
-      attrs?.time
+      entries.length === keys.length &&
+      entries.every(([key, val]) => keys.includes(key) && val !== undefined)
     )
   }
 

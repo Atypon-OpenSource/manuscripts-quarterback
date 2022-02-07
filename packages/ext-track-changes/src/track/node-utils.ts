@@ -166,8 +166,9 @@ export function shouldMergeTrackedAttributes(
     )
     return false
   }
-  const sameStatus = left.status === right.status
-  const sameOperation = left.operation === right.operation
-  const sameUser = left.userID === right.userID
-  return sameStatus && sameOperation && sameUser
+  return (
+    left.status === right.status &&
+    left.operation === right.operation &&
+    left.userID === right.userID
+  )
 }

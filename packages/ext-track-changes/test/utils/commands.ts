@@ -21,8 +21,7 @@ export const insertText =
   (text: string, pos?: number): Command =>
   (state, dispatch) => {
     const tr = state.tr
-    const { from } = state.selection
-    tr.insertText(text, pos ?? from)
+    tr.insertText(text, pos)
     dispatch && dispatch(tr)
     return true
   }
