@@ -15,16 +15,12 @@
  */
 import React, { useEffect, useState } from 'react'
 
-interface Options {
-  disableTrack: boolean
-  debug: boolean
-  documentId: string
-}
+import type { TrackOptions } from '../components/TrackOptions'
 
-function useEditorOptions(storageKey: string, initialDocumentId?: string) {
-  const [options, setOptions] = useState<Options>(() => {
+function useTrackOptions(storageKey: string, initial?: Partial<TrackOptions>) {
+  const [options, setOptions] = useState<TrackOptions>((): TrackOptions => {
     if (typeof window !== 'undefined') {
-      let persisted
+      let persisted: TrackOptions | undefined
       try {
         persisted = JSON.parse(localStorage.getItem(storageKey) || '')
       } catch (err) {
@@ -33,14 +29,21 @@ function useEditorOptions(storageKey: string, initialDocumentId?: string) {
       if (persisted) {
         return {
           ...persisted,
-          documentId: initialDocumentId,
+          ...initial,
         }
       }
     }
     return {
       disableTrack: false,
       debug: true,
-      documentId: initialDocumentId || 'abc123',
+      user: {
+        id: '1-mike',
+        name: 'Mike',
+        clientID: 1,
+        color: '#ff0000',
+      },
+      documentId: 'abc123',
+      ...initial
     }
   })
 
@@ -48,9 +51,9 @@ function useEditorOptions(storageKey: string, initialDocumentId?: string) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(storageKey, JSON.stringify(options))
     }
-  }, [options])
+  }, [storageKey, options])
 
   return { options, setOptions }
 }
 
-export default useEditorOptions
+export default useTrackOptions

@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { YjsUser } from '@manuscripts/ext-yjs'
-import { useYjsExtension } from '@manuscripts/ext-yjs'
-import React from 'react'
+import { YjsExtensionState, YjsUser } from '@manuscripts/ext-yjs'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 
 interface IProps {
   className?: string
+  yjsState?: YjsExtensionState
 }
 
-export function UsersList(props: IProps) {
-  const { className } = props
-  const [yjsState] = useYjsExtension()
+export const UsersList = memo((props: IProps) => {
+  const { className, yjsState } = props
+  // TODO yjs keeps creating same users with different clientIDs as I cant reuse them
+  const users = Array.from(yjsState?.usersMap.values() || []).reduce((acc, cur) => {
+    if (!acc.find(u => u.id === cur.id)) {
+      acc.push(cur)
+    }
+    return acc
+  }, [] as YjsUser[])
   return (
     <div className={className}>
       <Header>
         <h2>Your name: {yjsState?.currentUser.name}</h2>
       </Header>
       <List>
-        {yjsState?.users.map((user: YjsUser, i: number) => (
+        {users.map((user: YjsUser, i: number) => (
           <ListItem key={`${user.id}`}>
             <UserCircle
               title={user.name}
               color={user.color}
-              currentUser={user.id === yjsState.currentUser.id}
+              currentUser={user.id === yjsState?.currentUser.id}
             >
               {user.name.charAt(0)}
             </UserCircle>
@@ -45,7 +51,7 @@ export function UsersList(props: IProps) {
       </List>
     </div>
   )
-}
+})
 
 const Header = styled.button`
   align-items: center;

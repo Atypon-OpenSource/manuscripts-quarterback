@@ -19,22 +19,20 @@ import {
   TrackChangesState,
   trackCommands,
 } from '@manuscripts/ext-track-changes'
-import { useEditorContext, usePluginState } from '@manuscripts/quarterback-editor'
+import { YjsExtension } from '@manuscripts/ext-yjs'
+import { EditorViewProvider } from '@manuscripts/quarterback-editor'
 import React from 'react'
 import styled from 'styled-components'
 
-import { useYjsExtension } from '../useYjsExtension'
-
 interface IProps {
   className?: string
-  disableYjs?: boolean
+  yjsStore?: YjsExtension['store']
+  viewProvider?: EditorViewProvider
+  trackChangesState: TrackChangesState | null
 }
 
 export function ChangesControls(props: IProps) {
-  const { className } = props
-  const { viewProvider } = useEditorContext()
-  const [_, yjsStore] = useYjsExtension()
-  const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey)
+  const { className, yjsStore, viewProvider, trackChangesState } = props
 
   function handleAcceptPending() {
     const ids = trackChangesState?.changeSet.pending.map((c) => c.id) || []

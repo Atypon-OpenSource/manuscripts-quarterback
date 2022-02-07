@@ -18,7 +18,7 @@ import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
 import { trackChangesExtension } from '@manuscripts/ext-track-changes'
-import { generateUser, yjsExtension } from '@manuscripts/ext-yjs'
+import { yjsExtension } from '@manuscripts/ext-yjs'
 import {
   createDefaultProviders,
   // styles,
@@ -30,11 +30,12 @@ import { YJS_WS_URL } from 'config'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
 import React, { useMemo, useRef } from 'react'
-import { stores } from 'stores'
 import styled from 'styled-components'
 import { ySyncPluginKey } from 'y-prosemirror'
 import type { WebsocketProvider } from 'y-websocket'
 import type { Doc } from 'yjs'
+
+import { TrackOptions } from '../TrackOptions'
 
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'
@@ -47,11 +48,7 @@ import { Menus, Toolbar } from './Toolbar'
 
 interface Props {
   className?: string
-  options: {
-    disableTrack: boolean
-    debug: boolean
-    documentId: string
-  }
+  options: TrackOptions
   initialData: {
     yDoc: Doc
     pmDoc: Record<string, any>
@@ -61,12 +58,8 @@ interface Props {
 
 export const ManuscriptsEditor = observer((props: Props) => {
   const { className = '', options, initialData } = props
-  const {
-    authStore: { editorUser },
-  } = stores
   const editorDOMRef = useRef(null)
   const providers = useMemo(() => createDefaultProviders(), [])
-  const yjsUser = useMemo(() => generateUser(editorUser.clientID, editorUser.name), [editorUser])
   const extensions = useMemo(
     () => [
       ...(options.disableTrack
@@ -75,8 +68,8 @@ export const ManuscriptsEditor = observer((props: Props) => {
             trackChangesExtension({
               pluginOpts: {
                 user: {
-                  id: editorUser.id,
-                  name: editorUser.name,
+                  id: options.user.id,
+                  name: options.user.name,
                 },
                 skipTrsWithMetas: [ySyncPluginKey],
               },
@@ -87,7 +80,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
         document: {
           id: options.documentId,
         },
-        user: yjsUser,
+        user: options.user,
         initial: {
           doc: initialData.yDoc,
           provider: initialData.provider,
@@ -95,7 +88,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
         ws_url: YJS_WS_URL,
       }),
     ],
-    [options, yjsUser, initialData]
+    [options, initialData]
   )
   const editorProps = useMemo<UseEditorProps>(
     () => ({

@@ -24,25 +24,17 @@ export const generateColor = () =>
     luminosity: 'dark',
   })
 
-export function generateUser(clientID?: number, name?: string): YjsUser {
+export function generateUser(old: Partial<YjsUser> = {}): YjsUser {
   return {
-    id: uuidv4(),
-    clientID: clientID || Math.floor(Math.random() * 1000000),
+    id: old.id || uuidv4(),
+    clientID: old.clientID || Math.floor(Math.random() * 1000000),
     name:
-      name ||
+      old.name ||
       uniqueNamesGenerator({
         dictionaries: [names],
       }),
-    color: randomColor({
+    color: old.color || randomColor({
       luminosity: 'dark',
     }),
-  }
-}
-
-export function generateYjsUser(user: { id: string; name: string; color?: string }): YjsUser {
-  return {
-    clientID: Math.floor(Math.random() * 1000000),
-    color: generateColor(),
-    ...user,
   }
 }

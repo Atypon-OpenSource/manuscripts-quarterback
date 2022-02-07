@@ -13,37 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { trackChangesExtension } from '@manuscripts/ext-track-changes'
-import { generateUser, yjsExtension } from '@manuscripts/ext-yjs'
+import {
+  trackChangesExtension,
+  trackChangesPluginKey,
+  TrackChangesState,
+} from '@manuscripts/ext-track-changes'
+import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
-  createDefaultProviders,
-  EditorContext,
-  PMEditor,
-  ReactEditorContext,
+  EditorProps,
+  useEditor,
+  useEditorContext,
+  usePluginState,
 } from '@manuscripts/quarterback-editor'
 import { YJS_WS_URL } from 'config'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 import { ySyncPluginKey } from 'y-prosemirror'
 
-import useEditorOptions from '../../hooks/useEditorOptions'
-import { EditorOptions } from '../EditorOptions'
-import { RightPanel } from './right-panel/RightPanel'
-import { SelectUser } from './SelectUser'
+import useTrackOptions from '../../hooks/useTrackOptions'
+import { TrackOptions } from '../TrackOptions'
+import { RightPanel } from '../right-panel/RightPanel'
 import { Toolbar } from './Toolbar'
 import { UsersList } from './UsersList'
+import { useYjsExtension } from './useYjsExtension'
 
 export const Editor = observer(() => {
-  const { options, setOptions } = useEditorOptions('editor-track-options', 'abc123')
   const {
-    authStore: { editorUser },
+    authStore: { user: loggedUser, setEditorUser },
   } = stores
-  const editorProviders = useMemo(() => createDefaultProviders(), [])
-  const yjsUser = useMemo(() => generateUser(editorUser.clientID, editorUser.name), [editorUser])
+  const editorDOMRef = useRef(null)
+  const { options, setOptions } = useTrackOptions('editor-track-options', {
+    documentId: 'abc123',
+  })
+  const ctx = useEditorContext()
+  const { yjsState, yjsStore } = useYjsExtension(100)
+  const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
   const extensions = useMemo(
     () => [
       baseExtension(),
@@ -53,8 +61,8 @@ export const Editor = observer(() => {
             trackChangesExtension({
               pluginOpts: {
                 user: {
-                  id: editorUser.id,
-                  name: editorUser.name,
+                  id: options.user.id,
+                  name: options.user.name,
                 },
                 skipTrsWithMetas: [ySyncPluginKey],
               },
@@ -65,39 +73,57 @@ export const Editor = observer(() => {
         document: {
           id: options.documentId,
         },
-        user: yjsUser,
+        user: options.user,
         ws_url: YJS_WS_URL,
       }),
     ],
-    [options, yjsUser]
+    [options]
   )
-  // eslint-disable-next-line
-  function handleEdit() {}
-  // eslint-disable-next-line
-  function handleEditorReady(ctx: EditorContext) {
-    applyDevTools(ctx.viewProvider.view)
+  const editorProps = useMemo<EditorProps>(
+    () => ({
+      extensions,
+      onEditorReady: (ctx) => {
+        applyDevTools(ctx.viewProvider.view)
+        window.commands = ctx.extensionProvider.commands
+      },
+    }),
+    [extensions]
+  )
+  useEditor(editorProps, editorDOMRef)
+
+  function handleSetUser(type: 'new' | 'logged', cb: (user: YjsUser) => void) {
+    if (type === 'new') {
+      const user = generateUser()
+      setEditorUser(user)
+      cb(user)
+    } else if (type === 'logged' && loggedUser) {
+      const user = generateUser({
+        id: loggedUser.id,
+        name: loggedUser.firstname,
+        clientID: loggedUser.firstname.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0),
+      })
+      cb(user)
+    }
   }
   return (
-    <ReactEditorContext.Provider value={editorProviders}>
-      <UsersList />
-      <SelectUser />
-      <EditorOptions options={options} setOptions={setOptions} />
+    <>
+      <UsersList yjsState={yjsState} />
+      <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
       <div>
         <ViewGrid>
           <LeftSide>
-            <Toolbar className="toolbar full-width" />
-            <div className="pm-editor full-width">
-              <PMEditor
-                extensions={extensions}
-                onEdit={handleEdit}
-                onEditorReady={handleEditorReady}
-              />
-            </div>
+            <Toolbar />
+            <div className="pm-editor" ref={editorDOMRef} />
           </LeftSide>
-          <RightPanel disableYjs={false} />
+          <RightPanel
+            yjsState={yjsState}
+            yjsStore={yjsStore}
+            viewProvider={ctx.viewProvider}
+            trackChangesState={trackChangesState}
+          />
         </ViewGrid>
       </div>
-    </ReactEditorContext.Provider>
+    </>
   )
 })
 
@@ -106,6 +132,10 @@ const ViewGrid = styled.div`
   grid-template-columns: 2fr 1fr;
   grid-template-rows: auto auto;
   margin-top: 1rem;
+
+  .pm-editor {
+    border: 1px solid black;
+  }
 `
 const LeftSide = styled.div`
   margin-right: 1rem;

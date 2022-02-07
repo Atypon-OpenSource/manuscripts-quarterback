@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { YjsSnapshot } from '@manuscripts/ext-yjs'
+import { YjsExtension, YjsExtensionState, YjsSnapshot } from '@manuscripts/ext-yjs'
 import React, { useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import styled from 'styled-components'
 
-import { useYjsExtension } from '../useYjsExtension'
-
 interface IProps {
   className?: string
-  disableYjs?: boolean
+  yjsState?: YjsExtensionState
+  yjsStore?: YjsExtension['store']
 }
 
 export function SnapshotsList(props: IProps) {
-  const { className } = props
+  const { className, yjsState, yjsStore } = props
   const [isVisible, setIsVisible] = useState(true)
-  const [yjsState, yjsStore] = useYjsExtension()
   const snapshots = useMemo(() => yjsState?.snapshots || [], [yjsState])
   const selectedSnapshot = useMemo(() => yjsState?.selectedSnapshot, [yjsState])
 

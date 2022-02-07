@@ -32,6 +32,12 @@ export function addTrackIdIfDoesntExist(attrs: Partial<TrackedAttrs>) {
   return attrs
 }
 
+/**
+ * Not in use, maybe for ReplaceAroundSteps but we'll see
+ * @param pos
+ * @param tr
+ * @returns
+ */
 export function liftNode(pos: number, tr: Transaction) {
   const startPos = tr.doc.resolve(pos)
   const node = tr.doc.nodeAt(pos)
@@ -133,6 +139,9 @@ interface ComparedAttrs {
   operation: CHANGE_OPERATION
   status: CHANGE_STATUS
 }
+/**
+ * @deprecated
+ */
 export function shouldMergeMarks(
   node: PMNode | undefined | null,
   attrs: ComparedAttrs,

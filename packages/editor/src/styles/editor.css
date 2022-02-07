@@ -1,7 +1,3 @@
-#example-editor {
-  border: 1px solid black;
-}
-
 .ProseMirror {
   min-height: 140px;
   overflow-wrap: break-word;

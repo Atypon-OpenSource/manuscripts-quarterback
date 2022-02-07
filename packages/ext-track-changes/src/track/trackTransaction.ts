@@ -81,7 +81,7 @@ function recurseContent(
       node.marks
     )
   } else {
-    logger(`%c ERROR Unhandled node type: "${node}"`, 'color: #ff4242', node)
+    logger(`%c ERROR Unhandled node type: "${node.type.name}"`, 'color: #ff4242', node)
     return node
   }
 }
@@ -576,15 +576,6 @@ export function trackTransaction(
           logger('newTr after applying insert', newTr)
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
-          // applyAndMergeMarks(
-          //   toAWithOffset,
-          //   toAWithOffset + insertedSlice.size,
-          //   newTr.doc,
-          //   newTr,
-          //   oldState.schema,
-          //   insertAttrs,
-          //   userData
-          // )
           newTr.setSelection(
             new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
           )

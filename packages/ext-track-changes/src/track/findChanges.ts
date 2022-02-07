@@ -59,6 +59,9 @@ export function findChanges(state: EditorState) {
   return new ChangeSet(changes)
 }
 
+/**
+ * @deprecated
+ */
 export function updateChanges(
   updatedChangeIds: string[],
   oldChanges: ChangeSet,

@@ -20,8 +20,11 @@ import {
   trackCommands,
   TrackedChange,
 } from '@manuscripts/ext-track-changes'
-import { useEditorContext, usePluginState } from '@manuscripts/quarterback-editor'
-import React from 'react'
+import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
+import {
+  EditorViewProvider,
+} from '@manuscripts/quarterback-editor'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 
 import { ChangeList } from './ChangeList'
@@ -29,13 +32,14 @@ import { ChangesControls } from './ChangesControls'
 import { SnapshotsList } from './SnapshotsList'
 
 interface Props {
-  disableYjs?: boolean
+  yjsState?: YjsExtensionState
+  yjsStore?: YjsExtension['store']
+  viewProvider?: EditorViewProvider
+  trackChangesState: TrackChangesState | null
 }
 
-export function RightPanel(props: Props) {
-  const { disableYjs } = props
-  const { viewProvider } = useEditorContext()
-  const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey)
+export const RightPanel = memo((props: Props) => {
+  const { yjsState, yjsStore, viewProvider, trackChangesState } = props
   const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
 
   function handleAcceptChange(id: string) {
@@ -53,8 +57,13 @@ export function RightPanel(props: Props) {
 
   return (
     <RightSide>
-      <ChangesControls className="changes-controls" disableYjs={disableYjs} />
-      <SnapshotsList disableYjs={disableYjs} />
+      <ChangesControls
+        className="changes-controls"
+        yjsStore={yjsStore}
+        viewProvider={viewProvider}
+        trackChangesState={trackChangesState}
+      />
+      <SnapshotsList yjsState={yjsState} yjsStore={yjsStore} />
       <ChangeList
         changes={changeSet?.pending || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.pending)}
@@ -105,7 +114,7 @@ export function RightPanel(props: Props) {
       />
     </RightSide>
   )
-}
+})
 
 const RightSide = styled.div``
 const Buttons = styled.div`

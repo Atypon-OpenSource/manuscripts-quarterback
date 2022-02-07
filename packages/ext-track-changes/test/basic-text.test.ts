@@ -146,6 +146,7 @@ describe('track changes', () => {
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[0])
     // Should contain one duplicate id
     expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(true)
+    expect(tester.trackState()?.changeSet.hasIncompleteAttrs).toEqual(true)
     expect(uuidv4Mock.mock.calls.length).toBe(1)
 
     // TODO should join with the inconsistent inserted text?
@@ -154,6 +155,7 @@ describe('track changes', () => {
     await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[1])
     expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
+    expect(tester.trackState()?.changeSet.hasIncompleteAttrs).toEqual(false)
     expect(uuidv4Mock.mock.calls.length).toBe(5)
   })
 })

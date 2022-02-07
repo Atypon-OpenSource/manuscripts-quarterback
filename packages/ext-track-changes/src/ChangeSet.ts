@@ -16,8 +16,6 @@
 import {
   CHANGE_OPERATION,
   CHANGE_STATUS,
-  IncompleteNodeChange,
-  IncompleteTextChange,
   NodeChange,
   PartialTrackedChange,
   TextChange,
@@ -34,7 +32,7 @@ export class ChangeSet {
   }
 
   get changes(): TrackedChange[] {
-    return this._changes.filter((c) => !ChangeSet.isValidTrackedAttrs(c.attrs)) as TrackedChange[]
+    return this._changes.filter((c) => ChangeSet.isValidTrackedAttrs(c.attrs)) as TrackedChange[]
   }
 
   get changeTree() {

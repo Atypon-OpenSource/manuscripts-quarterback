@@ -26,12 +26,7 @@ export type YjsOptions = {
   document: {
     id: string
   }
-  user: {
-    id: string
-    clientID: number
-    name: string
-    color: string
-  }
+  user: YjsUser
   initial?: {
     doc: Doc
     provider: WebsocketProvider
@@ -44,10 +39,7 @@ export interface YjsExtensionState {
   snapshots: YjsSnapshot[]
   selectedSnapshot: YjsSnapshot | null
   currentUser: YjsUser
-  users: YjsUser[]
-}
-export interface YjsState {
-  status: YjsStatus
+  usersMap: Map<number, YjsUser>
 }
 export enum YjsStatus {
   enabled = 'enabled',

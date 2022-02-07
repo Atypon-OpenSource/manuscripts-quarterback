@@ -28,9 +28,10 @@ import { EditorContext as EditorProviders, useEditorContext } from './context'
 import { useSSRLayoutEffect } from './react'
 import { EditorProps } from './typings/editor'
 
-export function PMEditor(props: EditorProps) {
-  const { className = '', ...editorProps } = props
-  const editorDOMRef = useRef(null)
+export const useEditor = (
+  editorProps: EditorProps,
+  editorDOMRef: React.RefObject<HTMLElement>
+) => {
   const editorViewRef = useRef<EditorView | null>(null)
   const ctx = useEditorContext()
 
@@ -57,7 +58,6 @@ export function PMEditor(props: EditorProps) {
         dispatchTransaction(tr: Transaction) {
           const oldEditorState = this.state
           const newState = oldEditorState.apply(tr)
-          this.updateState(newState)
           ctx.viewProvider.updateState(newState)
           ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
           props.onEdit && props.onEdit(newState)
@@ -95,7 +95,6 @@ export function PMEditor(props: EditorProps) {
         dispatchTransaction(tr: Transaction) {
           const oldEditorState = this.state
           const { state: newState, transactions } = oldEditorState.applyTransaction(tr)
-          this.updateState(newState)
           ctx.viewProvider.updateState(newState)
           ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
           props.onEdit && props.onEdit(newState)
@@ -103,6 +102,4 @@ export function PMEditor(props: EditorProps) {
       }
     )
   }
-
-  return <div id="example-editor" ref={editorDOMRef} className={className} />
 }

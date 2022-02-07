@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { generateUser, generateYjsUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import { YJS_WS_URL } from 'config'
-import useEditorOptions from 'hooks/useEditorOptions'
+import useTrackOptions from 'hooks/useTrackOptions'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { stores } from 'stores'
 import styled from 'styled-components'
 import { yDocToProsemirrorJSON } from 'y-prosemirror'
 import { WebsocketProvider } from 'y-websocket'
 import { Doc } from 'yjs'
 
-import { EditorOptions } from '../components/EditorOptions'
+import { TrackOptions } from '../components/TrackOptions'
 import { Guide } from '../components/Guide'
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
 
 export function ManuscriptsPage() {
+  const {
+    authStore: { user: loggedUser, setEditorUser },
+  } = stores
   const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
-  const { options, setOptions } = useEditorOptions(
-    'manuscript-track-options',
-    routeParams.documentId
-  )
+  const { options, setOptions } = useTrackOptions('manuscript-track-options', {
+    documentId: routeParams.documentId,
+  })
   const { documentId } = options
   const [initialData, setInitialData] = useState<{
     yDoc: Doc
@@ -56,12 +60,27 @@ export function ManuscriptsPage() {
     })
   }, [documentId])
 
+  function handleSetUser(type: 'new' | 'logged', cb: (user: YjsUser) => void) {
+    if (type === 'new') {
+      const user = generateUser()
+      setEditorUser(user)
+      cb(user)
+    } else if (type === 'logged' && loggedUser) {
+      const user = generateUser({
+        id: loggedUser.id,
+        name: loggedUser.firstname,
+        clientID: loggedUser.firstname.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0),
+      })
+      cb(user)
+    }
+  }
+
   return (
     <Container>
       <header>
         <h1>Track changes with Yjs</h1>
         <Guide />
-        <EditorOptions options={options} setOptions={setOptions} />
+        <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
       </header>
       {initialData && <ManuscriptsEditor options={options} initialData={initialData} />}
     </Container>

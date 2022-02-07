@@ -18,14 +18,27 @@ import { useEffect, useState } from 'react'
 
 import { useEditorContext } from '$context'
 
-export function usePluginState<T>(pluginKey: PluginKey) {
+let timeout: NodeJS.Timeout | undefined, data: any
+
+export function usePluginState<T>(pluginKey: PluginKey, debounce?: number) {
   const { pluginStateProvider } = useEditorContext()
 
   const [state, setState] = useState<T | null>(pluginStateProvider?.getPluginState(pluginKey))
 
   useEffect(() => {
     const cb = (pluginState: T) => {
-      setState(pluginState)
+      if (debounce === undefined) {
+        setState(pluginState)
+      } else if (timeout) {
+        data = pluginState
+      } else {
+        if (!data) data = pluginState
+        timeout = setTimeout(() => {
+          setState(data)
+          data = undefined
+          timeout = undefined
+        }, debounce)
+      }
     }
     setState(pluginStateProvider?.getPluginState(pluginKey))
     pluginStateProvider?.on(pluginKey, cb)

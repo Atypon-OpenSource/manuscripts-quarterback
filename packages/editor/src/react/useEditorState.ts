@@ -18,12 +18,13 @@ import { useEffect, useState } from 'react'
 
 import { useEditorContext } from '$context'
 
-export function useEditorState(initialState?: EditorState) {
+export function useEditorState() {
   const { viewProvider } = useEditorContext()
 
-  const [state, setState] = useState<EditorState | undefined>(initialState)
+  const [state, setState] = useState<EditorState | undefined>()
 
   useEffect(() => {
+    // TODO debounce this as keeps triggering a _lot_ when typing fast
     const cb = (editorState: EditorState) => {
       setState(editorState)
     }
@@ -32,7 +33,7 @@ export function useEditorState(initialState?: EditorState) {
     return () => {
       viewProvider?.offUpdateState(cb)
     }
-  }, [initialState, viewProvider])
+  }, [viewProvider])
 
   return state
 }

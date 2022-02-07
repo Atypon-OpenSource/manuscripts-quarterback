@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import styled from 'styled-components'
+import { createDefaultProviders, ReactEditorContext } from '@manuscripts/quarterback-editor'
+import React, { useMemo } from 'react'
 
-import { EditorWrapper } from '../components/editor/EditorWrapper'
+import { Editor } from './Editor'
 
-export function FrontPage() {
+export const EditorWrapper: React.FC = () => {
+  const editorProviders = useMemo(() => createDefaultProviders(), [])
   return (
-    <Container>
-      <header>
-        <h1>Track changes with Yjs</h1>
-      </header>
-      <EditorWrapper />
-    </Container>
+    <ReactEditorContext.Provider value={editorProviders}>
+      <Editor />
+    </ReactEditorContext.Provider>
   )
 }
-
-const Container = styled.div``

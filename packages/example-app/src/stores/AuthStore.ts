@@ -22,12 +22,13 @@ import { hydrate, persist } from './persist'
 
 interface Persisted {
   user?: IUser
+  editorUser?: YjsUser
   jwt?: IJwt
 }
 
 export class AuthStore {
   @observable user?: IUser = undefined
-  @observable editorUser: YjsUser = generateUser()
+  @observable editorUser?: YjsUser = undefined
   @observable jwt?: IJwt = undefined
   resetAllStores: () => void
   STORAGE_KEY = 'auth-store'
@@ -37,8 +38,9 @@ export class AuthStore {
     this.resetAllStores = resetFn
     const data = hydrate<Persisted>('session', this.STORAGE_KEY)
     if (data) {
-      const { user, jwt } = data
+      const { user, editorUser, jwt } = data
       this.user = user
+      this.editorUser = editorUser
       this.jwt = jwt
     }
     this.persist()
@@ -47,6 +49,7 @@ export class AuthStore {
   persist = () => {
     persist<Persisted>('session', this.STORAGE_KEY, {
       user: this.user,
+      editorUser: this.editorUser,
       jwt: this.jwt,
     })
   }
@@ -55,9 +58,8 @@ export class AuthStore {
     return this.user && this.user.email
   }
 
-  @action generateGuestUser = () => {
-    this.editorUser = generateUser()
-    return this.editorUser
+  @action setEditorUser = (user: YjsUser) => {
+    this.editorUser = user
   }
 
   @action login = async (params: ILoginParams) => {

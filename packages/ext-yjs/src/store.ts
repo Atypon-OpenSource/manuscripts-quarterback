@@ -35,8 +35,10 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
   const { document, user, initial, ws_url } = opts
   const ydoc = initial?.doc || new Y.Doc()
   ydoc.gc = false
+  // TODO doesnt work, cant reuse the users' clientID
+  // if (user.clientID) ydoc.clientID = user.clientID
   const permanentUserData = new Y.PermanentUserData(ydoc)
-  permanentUserData.setUserMapping(ydoc, ydoc.clientID, user.name)
+  permanentUserData.setUserMapping(ydoc, user.clientID, user.name)
   const provider = initial?.provider || new WebsocketProvider(ws_url, document.id, ydoc)
   const yXmlFragment = ydoc.getXmlFragment('pm-doc')
 
@@ -44,7 +46,14 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
   let selectedSnapshot: YjsSnapshot | null = null
 
   let currentUser: YjsUser = user
-  const usersMap: Map<number, YjsUser> = new Map()
+  let usersMap: Map<number, YjsUser> = new Map()
+
+  let prevState: YjsExtensionState = {
+    snapshots,
+    selectedSnapshot,
+    currentUser,
+    usersMap,
+  }
 
   return {
     ydoc,
@@ -65,12 +74,20 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
     },
 
     getState(): YjsExtensionState {
-      return {
-        snapshots: snapshots,
-        selectedSnapshot: selectedSnapshot,
-        currentUser: currentUser,
-        users: Array.from(usersMap.values()),
+      const newState: YjsExtensionState = {
+        snapshots,
+        selectedSnapshot,
+        currentUser,
+        usersMap,
       }
+      const changed = Object.keys(newState).some((key: string) =>
+        prevState[key as keyof YjsExtensionState] !== newState[key as keyof YjsExtensionState]
+      )
+      if (changed) {
+        prevState = newState
+        return newState
+      }
+      return prevState
     },
 
     setUser(user: YjsUser) {
@@ -153,7 +170,11 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
       this.update()
     },
 
-    updateUsers({ added, updated, removed }: AwarenessChange) {
+    updateUsers(update: AwarenessChange) {
+      const { added, updated, removed } = update
+      if (added.length === 0 && removed.length === 0) {
+        return
+      }
       const states = provider.awareness.getStates() as Map<
         number,
         {
@@ -161,13 +182,14 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
           user: YjsUser
         }
       >
-      added.concat(updated).forEach((clientID) => {
+      added.forEach((clientID) => {
         const state = states.get(clientID)
         if (state) {
           usersMap.set(clientID, state.user)
         }
       })
-      removed.forEach((clientID) => usersMap.delete(clientID))
+      removed.map((clientID) => usersMap.delete(clientID))
+      usersMap = new Map(usersMap)
       this.update()
     },
 
