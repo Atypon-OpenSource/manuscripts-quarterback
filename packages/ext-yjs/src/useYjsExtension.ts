@@ -18,7 +18,9 @@ import { useEffect, useState } from 'react'
 
 import { YjsExtension, yjsExtensionName, YjsExtensionState, YjsStore } from './types'
 
-export function useYjsExtension() {
+let timeout: NodeJS.Timeout | undefined, data: YjsExtensionState | undefined
+
+export function useYjsExtension(debounce?: number) {
   const { extensionProvider } = useEditorContext()
   const [state, setState] = useState<YjsExtensionState>()
   const [store, setStore] = useState<YjsStore>()
@@ -26,17 +28,32 @@ export function useYjsExtension() {
   useEffect(() => {
     const updateStoreCb = (provider: ExtensionProvider) => {
       const yjs = provider?.getExtension(yjsExtensionName) as YjsExtension | undefined
-      yjs && setStore(yjs.store)
+      if (yjs) {
+        setStore(yjs.store)
+        setState(yjs.store.getState())
+      }
     }
     const updateStateCb = (newState: YjsExtensionState) => {
-      setState(newState)
+      if (debounce === undefined) {
+        setState(newState)
+      } else if (timeout) {
+        data = newState
+      } else {
+        if (!data) {
+          data = newState
+        }
+        timeout = setTimeout(() => {
+          setState(data)
+          data = undefined
+          timeout = undefined
+        }, debounce)
+      }
     }
     if (!extensionProvider) {
+      console.warn("useYjsExtension didn't subscribe to extensionProvider!")
       return
     }
     updateStoreCb(extensionProvider)
-    const yjs = extensionProvider.getExtension<YjsExtension>(yjsExtensionName)
-    setState(yjs.store ? yjs.store.getState() : undefined)
     extensionProvider.onExtensionUpdate(yjsExtensionName, updateStateCb)
     extensionProvider.onUpdate(updateStoreCb)
     return () => {
@@ -45,5 +62,5 @@ export function useYjsExtension() {
     }
   }, [extensionProvider])
 
-  return [state, store] as [YjsExtensionState | undefined, YjsStore | undefined]
+  return { yjsState: state, yjsStore: store }
 }

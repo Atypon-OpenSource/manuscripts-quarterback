@@ -21,13 +21,11 @@ import {
   TrackedChange,
 } from '@manuscripts/ext-track-changes'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
-import {
-  EditorViewProvider,
-} from '@manuscripts/quarterback-editor'
+import { EditorViewProvider } from '@manuscripts/quarterback-editor'
 import React, { memo } from 'react'
 import styled from 'styled-components'
 
-import { ChangeList } from './ChangeList'
+import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
 import { SnapshotsList } from './SnapshotsList'
 
@@ -42,14 +40,32 @@ export const RightPanel = memo((props: Props) => {
   const { yjsState, yjsStore, viewProvider, trackChangesState } = props
   const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
 
-  function handleAcceptChange(id: string) {
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, [id]))
+  function handleAcceptChange(c: TrackedChange) {
+    const ids = [c.id]
+    if (c.type === 'node-change') {
+      c.children.forEach((child) => {
+        ids.push(child.id)
+      })
+    }
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
-  function handleRejectChange(id: string) {
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, [id]))
+  function handleRejectChange(c: TrackedChange) {
+    const ids = [c.id]
+    if (c.type === 'node-change') {
+      c.children.forEach((child) => {
+        ids.push(child.id)
+      })
+    }
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
-  function handleResetChange(id: string) {
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, [id]))
+  function handleResetChange(c: TrackedChange) {
+    const ids = [c.id]
+    if (c.type === 'node-change') {
+      c.children.forEach((child) => {
+        ids.push(child.id)
+      })
+    }
+    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function toggleChangesVisibility(status: CHANGE_STATUS) {
     viewProvider?.execCommand(trackCommands.toggleShownStatuses([status]))
@@ -68,48 +84,27 @@ export const RightPanel = memo((props: Props) => {
         changes={changeSet?.pending || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.pending)}
         title="Pending"
-        renderChangeContent={(c: TrackedChange) => (
-          <Buttons>
-            <button onClick={() => handleAcceptChange(c.id)} aria-label="accept-btn">
-              Accept
-            </button>
-            <button onClick={() => handleRejectChange(c.id)} aria-label="reject-btn">
-              Reject
-            </button>
-          </Buttons>
-        )}
+        handleAcceptChange={handleAcceptChange}
+        handleRejectChange={handleRejectChange}
+        handleResetChange={handleResetChange}
         toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.pending)}
       />
       <ChangeList
         changes={changeSet?.accepted || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.accepted)}
         title="Accepted"
-        renderChangeContent={(c: TrackedChange) => (
-          <Buttons>
-            <button onClick={() => handleResetChange(c.id)} aria-label="accept-btn">
-              Reset
-            </button>
-            <button onClick={() => handleRejectChange(c.id)} aria-label="reject-btn">
-              Reject
-            </button>
-          </Buttons>
-        )}
+        handleAcceptChange={handleAcceptChange}
+        handleRejectChange={handleRejectChange}
+        handleResetChange={handleResetChange}
         toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.accepted)}
       />
       <ChangeList
         changes={changeSet?.rejected || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.rejected)}
         title="Rejected"
-        renderChangeContent={(c: TrackedChange) => (
-          <Buttons>
-            <button onClick={() => handleAcceptChange(c.id)} aria-label="accept-btn">
-              Accept
-            </button>
-            <button onClick={() => handleResetChange(c.id)} aria-label="reject-btn">
-              Reset
-            </button>
-          </Buttons>
-        )}
+        handleAcceptChange={handleAcceptChange}
+        handleRejectChange={handleRejectChange}
+        handleResetChange={handleResetChange}
         toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.rejected)}
       />
     </RightSide>
