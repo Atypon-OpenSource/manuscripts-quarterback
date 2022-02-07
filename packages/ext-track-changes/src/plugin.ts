@@ -24,7 +24,7 @@ import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
 import { applyAcceptedRejectedChanges, updateChangeAttrs } from './track/updateChangeAttrs'
 import { CHANGE_STATUS } from './types/change'
-import { TrackChangesPluginOptions, TrackChangesState, TrackChangesStatus } from './types/track'
+import { TrackChangesOptions, TrackChangesState, TrackChangesStatus } from './types/track'
 
 const DEFAULT_USER = {
   id: '0',
@@ -41,7 +41,7 @@ const infiniteLoopCounter = {
 export const trackChangesPlugin = ({
   user = DEFAULT_USER,
   skipTrsWithMetas = [],
-}: TrackChangesPluginOptions) => {
+}: TrackChangesOptions = {}) => {
   let editorView: EditorView | undefined
 
   return new Plugin<TrackChangesState, any>({

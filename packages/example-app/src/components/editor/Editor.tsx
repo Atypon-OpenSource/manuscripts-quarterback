@@ -59,13 +59,11 @@ export const Editor = observer(() => {
         ? []
         : [
             trackChangesExtension({
-              pluginOpts: {
-                user: {
-                  id: options.user.id,
-                  name: options.user.name,
-                },
-                skipTrsWithMetas: [ySyncPluginKey],
+              user: {
+                id: options.user.id,
+                name: options.user.name,
               },
+              skipTrsWithMetas: [ySyncPluginKey],
               debug: options.debug,
             }),
           ]),

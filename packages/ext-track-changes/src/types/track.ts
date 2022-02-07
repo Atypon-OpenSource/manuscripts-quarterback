@@ -21,10 +21,6 @@ import type { TrackedUser } from './user'
 
 export interface TrackChangesOptions {
   debug?: boolean
-  pluginOpts?: TrackChangesPluginOptions
-}
-
-export interface TrackChangesPluginOptions {
   user?: TrackedUser
   skipTrsWithMetas?: (PluginKey | string)[]
 }
