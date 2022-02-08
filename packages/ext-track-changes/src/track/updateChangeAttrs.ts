@@ -18,20 +18,8 @@ import { Transaction } from 'prosemirror-state'
 import { Mapping } from 'prosemirror-transform'
 
 import { ChangeSet } from '../ChangeSet'
-import { logger } from '../logger'
-import {
-  CHANGE_OPERATION,
-  CHANGE_STATUS,
-  PartialTrackedChange,
-  TrackedAttrs,
-  TrackedChange,
-} from '../types/change'
-import {
-  getChangeContent,
-  getNodeTrackedMarks,
-  getPosToInsertMergedContent,
-  updateChangeChildrenAttributes,
-} from './node-utils'
+import { PartialTrackedChange, TrackedAttrs, TrackedChange } from '../types/change'
+import { getNodeTrackedMarks } from './node-utils'
 
 export function updateChangeAttrs(
   tr: Transaction,
@@ -55,58 +43,22 @@ export function updateChangeAttrs(
   return tr
 }
 
-/**
- * Applies the accepted/rejected changes in the current document and sets them untracked
- *
- * @param tr
- * @param schema
- * @param changes
- * @param mapping
- * @returns
- */
-export function applyAcceptedRejectedChanges(
-  tr: Transaction,
-  schema: Schema,
+export function updateChangeChildrenAttributes(
   changes: TrackedChange[],
-  mapping?: Mapping
-): Mapping {
-  const deleteMap = mapping || new Mapping()
-  changes.forEach((change) => {
-    const { status, operation } = change.attrs
-    if (status === CHANGE_STATUS.pending) {
-      return
-    }
-    const from = deleteMap.map(change.from)
-    const node = tr.doc.nodeAt(from)
-    if (!node) {
-      logger(`%c WARNING no node found to update for change`, 'color: #f3f32c', change)
-      return
-    }
-    const noChangeNeeded =
-      (operation === CHANGE_OPERATION.insert && status === CHANGE_STATUS.accepted) ||
-      (operation === CHANGE_OPERATION.delete && status === CHANGE_STATUS.rejected)
-    if (ChangeSet.isTextChange(change) && noChangeNeeded) {
-      tr.removeMark(from, deleteMap.map(change.to), schema.marks.tracked_insert)
-      tr.removeMark(from, deleteMap.map(change.to), schema.marks.tracked_delete)
-    } else if (ChangeSet.isTextChange(change)) {
-      tr.delete(from, deleteMap.map(change.to))
-      deleteMap.appendMap(tr.steps[tr.steps.length - 1].getMap())
-    } else if (ChangeSet.isNodeChange(change) && noChangeNeeded) {
+  tr: Transaction,
+  mapping: Mapping
+) {
+  const nodes: PMNode[] = []
+  changes.forEach((c) => {
+    if (c.type === 'node-change' && ChangeSet.shouldNotDelete(c)) {
+      const from = mapping.map(c.from)
+      const node = tr.doc.nodeAt(from)
+      if (!node) {
+        return
+      }
       const attrs = { ...node.attrs, dataTracked: null }
       tr.setNodeMarkup(from, undefined, attrs, node.marks)
-      updateChangeChildrenAttributes(change.children, tr, deleteMap)
-    } else if (ChangeSet.isNodeChange(change)) {
-      if (change.mergeInsteadOfDelete) {
-        const notDeleted = getChangeContent(change.children, tr.doc, deleteMap)
-        const pos = getPosToInsertMergedContent(from, tr, deleteMap)
-        if (pos !== undefined && notDeleted.length > 0) {
-          tr.insert(pos, notDeleted)
-          deleteMap.appendMap(tr.steps[tr.steps.length - 1].getMap())
-        }
-      }
-      tr.delete(deleteMap.map(change.from), deleteMap.map(change.to))
-      deleteMap.appendMap(tr.steps[tr.steps.length - 1].getMap())
     }
   })
-  return deleteMap
+  return nodes
 }

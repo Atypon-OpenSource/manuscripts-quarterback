@@ -19,10 +19,11 @@ import { EditorView } from 'prosemirror-view'
 import { getAction, setAction, TrackChangesAction } from './actions'
 import { ChangeSet } from './ChangeSet'
 import { logger } from './logger'
+import { applyAcceptedRejectedChanges } from './track/applyChanges'
 import { findChanges } from './track/findChanges'
 import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
-import { applyAcceptedRejectedChanges, updateChangeAttrs } from './track/updateChangeAttrs'
+import { updateChangeAttrs } from './track/updateChangeAttrs'
 import { CHANGE_STATUS } from './types/change'
 import { TrackChangesOptions, TrackChangesState, TrackChangesStatus } from './types/track'
 
@@ -172,14 +173,9 @@ export const trackChangesPlugin = ({
           const mapping = applyAcceptedRejectedChanges(
             createdTr,
             oldState.schema,
-            changeSet!.changeTree.filter((c) => c.type === 'node-change')
+            changeSet!.nodeChanges
           )
-          applyAcceptedRejectedChanges(
-            createdTr,
-            oldState.schema,
-            changeSet!.changes.filter((c) => c.type === 'text-change'),
-            mapping
-          )
+          applyAcceptedRejectedChanges(createdTr, oldState.schema, changeSet!.textChanges, mapping)
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
         }
       })

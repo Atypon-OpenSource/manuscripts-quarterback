@@ -53,26 +53,6 @@ export function liftNode(pos: number, tr: Transaction) {
   return undefined
 }
 
-export function updateChangeChildrenAttributes(
-  changes: TrackedChange[],
-  tr: Transaction,
-  mapping: Mapping
-) {
-  const nodes: PMNode[] = []
-  changes.forEach((c) => {
-    if (c.type === 'node-change' && ChangeSet.shouldNotDelete(c)) {
-      const from = mapping.map(c.from)
-      const node = tr.doc.nodeAt(from)
-      if (!node) {
-        return
-      }
-      const attrs = { ...node.attrs, dataTracked: null }
-      tr.setNodeMarkup(from, undefined, attrs, node.marks)
-    }
-  })
-  return nodes
-}
-
 export function getChangeContent(changes: TrackedChange[], doc: PMNode, mapping: Mapping) {
   const nodes: PMNode[] = []
   changes.forEach((c) => {

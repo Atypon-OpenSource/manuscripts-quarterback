@@ -73,11 +73,11 @@ export class ChangeSet {
   }
 
   get textChanges() {
-    return this.changeTree.filter((c) => c.type === 'text-change')
+    return this.changes.filter((c) => c.type === 'text-change')
   }
 
   get nodeChanges() {
-    return this.changeTree.filter((c) => c.type === 'node-change')
+    return this.changes.filter((c) => c.type === 'node-change')
   }
 
   get isEmpty() {
@@ -154,7 +154,8 @@ export class ChangeSet {
     const entries = Object.entries(attrs)
     return (
       entries.length === keys.length &&
-      entries.every(([key, val]) => keys.includes(key) && val !== undefined)
+      entries.every(([key, val]) => keys.includes(key) && val !== undefined) &&
+      (attrs.id || '').length > 0 // Changes created with undefined id have '' as placeholder
     )
   }
 

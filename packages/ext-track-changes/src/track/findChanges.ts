@@ -34,7 +34,7 @@ export function findChanges(state: EditorState) {
     const attrs = getNodeTrackedMarks(node, state.schema)
     if (attrs) {
       const id = attrs?.id || ''
-      if (node.isInline) {
+      if (node.isText) {
         changes.push({
           id,
           type: 'text-change',
