@@ -51,19 +51,19 @@ describe('track changes', () => {
     uuidv4Mock.mockClear()
   })
 
-  test.skip('should update marks/attributes status correctly', async () => {
+  test('should update marks/attributes status correctly', async () => {
     const tester = setupEditor({
       doc: docs.defaultDocs[0],
     })
       .insertNode(defaultSchema.nodes.paragraph.createAndFill(), 0)
       .moveCursor('start')
-      .insertText('inserted text')
+      .insertText('before image')
       .insertNode(
         defaultSchema.nodes.image.createAndFill({
           src: 'https://i.imgur.com/lFAxY.png',
           title: 'Image',
         }),
-        1 + 13
+        1 + 'before image'.length
       )
       .insertText('after image')
       .insertNode(defaultSchema.nodes.blockquote.createAndFill(), 0)
@@ -90,11 +90,15 @@ describe('track changes', () => {
         trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids)(state, dispatch)
         return true
       })
-    // .cmd(trackCommands.applyAndRemoveChanges())
 
-    await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
+    expect(tester.toJSON()).toEqual(docs.insertAccept[0])
+    expect(uuidv4Mock.mock.calls.length).toBe(18)
+    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
 
-    expect(tester.toJSON()).toEqual(docs.basicNodeDelete)
-    expect(uuidv4Mock.mock.calls.length).toBe(9)
+    tester.cmd(trackCommands.applyAndRemoveChanges())
+
+    expect(tester.toJSON()).toEqual(docs.insertAccept[1])
+    expect(uuidv4Mock.mock.calls.length).toBe(18)
+    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
   })
 })

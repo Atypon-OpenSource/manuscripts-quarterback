@@ -111,7 +111,7 @@ export function getNodeTrackedMarks(
   node: PMNode | undefined | null,
   schema: Schema
 ): Partial<TrackedAttrs> | undefined {
-  return !node ? undefined : node.isInline ? getTrackedMarks(node, schema) : node.attrs.dataTracked
+  return !node ? undefined : node.isText ? getTrackedMarks(node, schema) : node.attrs.dataTracked
 }
 
 interface ComparedAttrs {

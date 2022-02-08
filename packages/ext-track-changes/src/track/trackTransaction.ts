@@ -65,9 +65,9 @@ function recurseContent(
   userColors: UserData,
   schema: Schema
 ) {
-  if (node.isInline) {
+  if (node.isText) {
     return markInlineNodeChange(node, insertAttrs, userColors, schema)
-  } else if (node.isBlock) {
+  } else if (node.isBlock || node.isInline) {
     const updatedChildren: PMNode[] = []
     node.content.forEach((child) => {
       updatedChildren.push(recurseContent(child, insertAttrs, userColors, schema))
@@ -100,6 +100,16 @@ function setFragmentAsInserted(
   return updatedInserted.length === 0 ? inserted : Fragment.fromArray(updatedInserted)
 }
 
+/**
+ * Merges tracked marks between text nodes at a position
+ *
+ * Will merge any nodes that have tracked attributes so should work for inline or block nodes also.
+ * Merging is done based on the userID, operation type and status.
+ * @param pos
+ * @param doc
+ * @param newTr
+ * @param schema
+ */
 function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, schema: Schema) {
   const resolved = doc.resolve(pos)
   const { nodeAfter, nodeBefore } = resolved
@@ -202,6 +212,13 @@ export function applyAndMergeMarks(
   })
 }
 
+/**
+ * Either deletes a block node (if it was already inserted) or sets its status attribute to 'deleted'
+ * @param node
+ * @param pos
+ * @param newTr
+ * @param deleteAttrs
+ */
 function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: DeleteAttrs) {
   const dataTracked: TrackedAttrs | undefined = node.attrs.dataTracked
   const wasInsertedBySameUser =
@@ -377,7 +394,7 @@ export function deleteAndMergeSplitBlockNodes(
     const step = newTr.steps[newTr.steps.length - 1]
     if (nodeEnd > offsetFrom) {
       // Delete touches this node
-      if (node.isInline) {
+      if (node.isText) {
         deleteInlineIfInserted(
           node,
           offsetPos,

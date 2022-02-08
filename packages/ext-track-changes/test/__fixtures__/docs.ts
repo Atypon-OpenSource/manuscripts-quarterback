@@ -20,13 +20,15 @@ import basicTextInconsistent from './basic-text-inconsistent-track.json'
 import basicTextInsert from './basic-text-ins.json'
 import basicTextJoin from './basic-text-join.json'
 import defaultDocs from './default-docs.json'
+import insertAccept from './insert-accept.json'
 
 export default {
-  defaultDocs,
   basicNodeDelete,
   basicNodeInsert,
   basicTextDelete,
   basicTextInconsistent,
   basicTextInsert,
   basicTextJoin,
+  defaultDocs,
+  insertAccept,
 }
