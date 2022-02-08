@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@manuscripts/ext-track-changes": "workspace:*",
+    "@manuscripts/quarterback-schema": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
     "lib0": "^0.2.42",
     "prosemirror-commands": "^1.1.11",

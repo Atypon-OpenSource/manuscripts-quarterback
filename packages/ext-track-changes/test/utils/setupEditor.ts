@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { QuarterBackSchema, schema as defaultSchema } from '@manuscripts/quarterback-schema'
 import { exampleSetup } from 'prosemirror-example-setup'
 import { Schema } from 'prosemirror-model'
 import { EditorState, Plugin } from 'prosemirror-state'
@@ -21,7 +22,6 @@ import { EditorView } from 'prosemirror-view'
 import { DEFAULT_USER } from '../__fixtures__/users'
 import { trackChangesPlugin } from '../../src'
 import { enableDebug } from '../../src/logger'
-import { QuarterBackSchema, schema as defaultSchema } from '../schema'
 import { ProsemirrorTestChain } from './PMTestChain'
 
 enableDebug(false)

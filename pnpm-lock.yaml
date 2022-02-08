@@ -220,6 +220,7 @@ importers:
   packages/editor:
     specifiers:
       '@manuscripts/ext-track-changes': workspace:*
+      '@manuscripts/quarterback-schema': workspace:*
       '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-alias': ^3.1.8
       '@rollup/plugin-commonjs': ^20.0.0
@@ -269,6 +270,7 @@ importers:
       yjs: ^13.5.27
     dependencies:
       '@manuscripts/ext-track-changes': link:../ext-track-changes
+      '@manuscripts/quarterback-schema': link:../schema
       '@manuscripts/quarterback-shared': link:../shared
       lib0: 0.2.42
       prosemirror-commands: 1.1.12
@@ -428,6 +430,7 @@ importers:
   packages/ext-track-changes:
     specifiers:
       '@manuscripts/manuscript-editor': workspace:*
+      '@manuscripts/quarterback-schema': workspace:*
       '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-commonjs': ^20.0.0
       '@types/debug': ^4.1.7
@@ -456,6 +459,7 @@ importers:
       debug: 4.3.3
     devDependencies:
       '@manuscripts/manuscript-editor': link:../manuscript-editor
+      '@manuscripts/quarterback-schema': link:../schema
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.59.0
       '@types/debug': 4.1.7
       '@types/prosemirror-commands': 1.0.4
@@ -894,6 +898,29 @@ importers:
       prosemirror-view: 1.22.0
       rimraf: 2.7.1
       typescript: 3.9.10
+
+  packages/schema:
+    specifiers:
+      '@manuscripts/ext-track-changes': workspace:*
+      '@manuscripts/quarterback-shared': workspace:*
+      '@rollup/plugin-commonjs': ^20.0.0
+      '@types/prosemirror-model': ^1.13.2
+      prosemirror-model: ^1.15.0
+      prosemirror-schema-list: ^1.1.4
+      rollup: ^2.58.3
+      rollup-plugin-typescript2: ^0.30.0
+      typescript: ^4.4.4
+    dependencies:
+      '@manuscripts/ext-track-changes': link:../ext-track-changes
+      '@manuscripts/quarterback-shared': link:../shared
+      prosemirror-model: 1.15.0
+    devDependencies:
+      '@rollup/plugin-commonjs': 20.0.0_rollup@2.59.0
+      '@types/prosemirror-model': 1.13.2
+      prosemirror-schema-list: 1.1.6
+      rollup: 2.59.0
+      rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
+      typescript: 4.4.4
 
   packages/shared:
     specifiers:
@@ -13639,7 +13666,7 @@ packages:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
     dependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.9
       jsonfile: 4.0.0
       universalify: 0.1.2
 

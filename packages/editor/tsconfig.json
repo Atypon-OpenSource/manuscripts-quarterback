@@ -14,8 +14,6 @@
       "$extensions/*": ["src/extensions/*"],
       "$react": ["src/react"],
       "$react/*": ["src/react/*"],
-      "$schema": ["src/schema"],
-      "$schema/*": ["src/schema/*"],
       "$typings": ["src/typings"],
       "$typings/*": ["src/typings/*"]
     }

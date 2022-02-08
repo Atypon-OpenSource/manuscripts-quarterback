@@ -41,9 +41,9 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // :: NodeSpec A plain paragraph textblock. Represented in the DOM
     // as a `<p>` element.
     paragraph: {
-      attrs: { dataTracked: { default: null } },
       content: 'inline*',
       group: 'block',
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'p' }],
       toDOM() {
         return ['p', 0]
@@ -52,10 +52,10 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
 
     // :: NodeSpec A blockquote (`<blockquote>`) wrapping one or more blocks.
     blockquote: {
-      attrs: { dataTracked: { default: null } },
       content: 'block+',
       group: 'block',
       defining: true,
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'blockquote' }],
       toDOM() {
         return ['blockquote', 0]
@@ -65,6 +65,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // :: NodeSpec A horizontal rule (`<hr>`).
     horizontal_rule: {
       group: 'block',
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'hr' }],
       toDOM() {
         return ['hr']
@@ -75,10 +76,10 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // should hold the number 1 to 6. Parsed and serialized as `<h1>` to
     // `<h6>` elements.
     heading: {
-      attrs: { level: { default: 1 } },
       content: 'inline*',
       group: 'block',
       defining: true,
+      attrs: { level: { default: 1 }, dataTracked: { default: null } },
       parseDOM: [
         { tag: 'h1', attrs: { level: 1 } },
         { tag: 'h2', attrs: { level: 2 } },
@@ -101,6 +102,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       group: 'block',
       code: true,
       defining: true,
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'pre', preserveWhitespace: 'full' }],
       toDOM() {
         return ['pre', ['code', 0]]
@@ -117,13 +119,14 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // string.
     image: {
       inline: true,
+      group: 'inline',
+      draggable: true,
       attrs: {
         src: {},
         alt: { default: null },
         title: { default: null },
+        dataTracked: { default: null },
       },
-      group: 'inline',
-      draggable: true,
       parseDOM: [
         {
           tag: 'img[src]',
@@ -148,14 +151,26 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       inline: true,
       group: 'inline',
       selectable: false,
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'br' }],
       toDOM() {
         return ['br']
       },
     },
-    ordered_list: add(orderedList, { content: 'list_item+', group: 'block' }),
-    bullet_list: add(bulletList, { content: 'list_item+', group: 'block' }),
-    list_item: add(listItem, { content: 'paragraph block*' }),
+    ordered_list: add(orderedList, {
+      content: 'list_item+',
+      group: 'block',
+      attrs: { dataTracked: { default: null } },
+    }),
+    bullet_list: add(bulletList, {
+      content: 'list_item+',
+      group: 'block',
+      attrs: { dataTracked: { default: null } },
+    }),
+    list_item: add(listItem, {
+      content: 'paragraph block*',
+      attrs: { dataTracked: { default: null } },
+    }),
   },
   marks: {
     // :: MarkSpec A link. Has `href` and `title` attributes. `title`
@@ -165,6 +180,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       attrs: {
         href: {},
         title: { default: null },
+        dataTracked: { default: null },
       },
       inclusive: false,
       parseDOM: [
@@ -188,6 +204,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // :: MarkSpec An emphasis mark. Rendered as an `<em>` element.
     // Has parse rules that also match `<i>` and `font-style: italic`.
     italic: {
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'i' }, { tag: 'em' }, { style: 'font-style=italic' }],
       toDOM() {
         return ['em', 0]
@@ -197,6 +214,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // :: MarkSpec A strong mark. Rendered as `<strong>`, parse rules
     // also match `<b>` and `font-weight: bold`.
     bold: {
+      attrs: { dataTracked: { default: null } },
       parseDOM: [
         { tag: 'strong' },
         // This works around a Google Docs misbehavior where
@@ -224,6 +242,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
 
     // :: MarkSpec Code font mark. Represented as a `<code>` element.
     code: {
+      attrs: { dataTracked: { default: null } },
       parseDOM: [{ tag: 'code' }],
       toDOM() {
         return ['code', 0]
@@ -231,6 +250,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     },
 
     strikethrough: {
+      attrs: { dataTracked: { default: null } },
       parseDOM: [
         { tag: 's' },
         { tag: 'strike' },
@@ -311,20 +331,6 @@ const calcYChangeStyle = (ychange: any) => {
     case null:
       return ''
   }
-}
-
-const calcYchangeDomAttrs = (
-  attrs: { [key: string]: any },
-  domAttrs: { [key: string]: any } = {}
-) => {
-  domAttrs = Object.assign({}, domAttrs)
-  if (attrs.ychange !== null) {
-    domAttrs.ychange_user = attrs.ychange.user
-    domAttrs.ychange_type = attrs.ychange.type
-    domAttrs.ychange_color = attrs.ychange.color.light
-    domAttrs.style = calcYChangeStyle(attrs.ychange)
-  }
-  return domAttrs
 }
 
 const hoverWrapper = (ychange: any, els: any[]) =>

@@ -30,6 +30,5 @@ export const commands = { baseCommands }
 export * from './context'
 export * from './react'
 export * from './extensions/base'
-export * from './schema'
 export * from './typings'
 export { useEditor } from './useEditor'

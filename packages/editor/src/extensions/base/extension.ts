@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/quarterback-schema'
 import type { EditorProviders } from '$context'
-import { schema } from '$schema'
 import type { Extension } from '$typings/extension'
 
 import { activeNodesMarksPlugin } from './activeNodesMarksPlugin'

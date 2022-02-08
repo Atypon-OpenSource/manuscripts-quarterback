@@ -22,16 +22,13 @@ import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import React, { useRef } from 'react'
 
-import { schema } from '$schema'
+import { schema } from '@manuscripts/quarterback-schema'
 
 import { EditorContext as EditorProviders, useEditorContext } from './context'
 import { useSSRLayoutEffect } from './react'
 import { EditorProps } from './typings/editor'
 
-export const useEditor = (
-  editorProps: EditorProps,
-  editorDOMRef: React.RefObject<HTMLElement>
-) => {
+export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObject<HTMLElement>) => {
   const editorViewRef = useRef<EditorView | null>(null)
   const ctx = useEditorContext()
 

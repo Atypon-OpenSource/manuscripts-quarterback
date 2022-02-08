@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { QuarterBackSchema, schema as defaultSchema } from '@manuscripts/quarterback-schema'
 import { promises as fs } from 'fs'
 
 import {
@@ -25,7 +26,6 @@ import {
 } from '../src'
 import docs from './__fixtures__/docs'
 import { SECOND_USER } from './__fixtures__/users'
-import { QuarterBackSchema, schema as defaultSchema } from './schema'
 import { setupEditor } from './utils/setupEditor'
 
 let counter = 0
