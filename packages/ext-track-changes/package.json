@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@manuscripts/manuscript-editor": "workspace:*",
+    "@manuscripts/quarterback-schema": "workspace:*",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@types/debug": "^4.1.7",
     "@types/prosemirror-commands": "^1.0.4",
