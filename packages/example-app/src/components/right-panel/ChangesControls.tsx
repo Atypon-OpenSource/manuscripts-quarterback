@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  CHANGE_STATUS,
-  trackChangesPluginKey,
-  TrackChangesState,
-  trackCommands,
-} from '@manuscripts/ext-track-changes'
+import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/ext-track-changes'
 import { YjsExtension } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/quarterback-editor'
+import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'
 
 interface IProps {
   className?: string
   yjsStore?: YjsExtension['store']
-  viewProvider?: EditorViewProvider
+  viewProvider: EditorViewProvider | MViewProvider
   trackChangesState: TrackChangesState | null
 }
 
@@ -38,17 +34,17 @@ export function ChangesControls(props: IProps) {
     if (!trackChangesState) return
     const { changeSet } = trackChangesState
     const ids = changeSet.flatten(changeSet.pending)
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
   function handleRejectPending() {
     if (!trackChangesState) return
     const { changeSet } = trackChangesState
     const ids = changeSet.flatten(changeSet.pending)
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
   function handleReset() {
     const ids = trackChangesState?.changeSet.changes.map((c) => c.id) || []
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function handleSnapshot() {
     yjsStore?.createSnapshot()

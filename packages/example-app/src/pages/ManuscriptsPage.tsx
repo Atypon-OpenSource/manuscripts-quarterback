@@ -27,6 +27,7 @@ import { Doc } from 'yjs'
 import { TrackOptions } from '../components/TrackOptions'
 import { Guide } from '../components/Guide'
 import { ManuscriptsEditor } from '../components/manuscripts-editor/ManuscriptsEditor'
+import { ManuscriptsEditorContext } from '../components/manuscripts-editor/ManuscriptsEditorContext'
 
 export function ManuscriptsPage() {
   const {
@@ -82,7 +83,11 @@ export function ManuscriptsPage() {
         <Guide />
         <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
       </header>
-      {initialData && <ManuscriptsEditor options={options} initialData={initialData} />}
+      {initialData && (
+        <ManuscriptsEditorContext>
+          <ManuscriptsEditor options={options} initialData={initialData} />
+        </ManuscriptsEditorContext>
+      )}
     </Container>
   )
 }

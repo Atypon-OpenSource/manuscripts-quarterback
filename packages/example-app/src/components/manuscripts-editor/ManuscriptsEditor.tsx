@@ -17,12 +17,14 @@ import '@manuscripts/manuscript-editor/styles/Editor.css'
 import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
-import { trackChangesExtension, trackChangesPluginKey, TrackChangesState } from '@manuscripts/ext-track-changes'
+import {
+  trackChangesExtension,
+  trackChangesPluginKey,
+  TrackChangesState,
+} from '@manuscripts/ext-track-changes'
 import { yjsExtension, useYjsExtension } from '@manuscripts/ext-yjs'
 import {
-  createDefaultProviders,
   // styles,
-  ReactEditorContext,
   usePluginState,
   UseEditorProps,
   useEditorContext,
@@ -61,8 +63,7 @@ interface Props {
 export const ManuscriptsEditor = observer((props: Props) => {
   const { className = '', options, initialData } = props
   const editorDOMRef = useRef(null)
-  const providers = useMemo(() => createDefaultProviders(), [])
-  const ctx = useEditorContext()
+  const providers = useEditorContext()
   const { yjsState, yjsStore } = useYjsExtension(100)
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
   const extensions = useMemo(
@@ -108,7 +109,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
   )
   useEditorV2(editorProps, editorDOMRef)
   return (
-    <ReactEditorContext.Provider value={providers}>
+    <>
       <Toolbar />
       <ViewGrid>
         <LeftSide>
@@ -116,14 +117,16 @@ export const ManuscriptsEditor = observer((props: Props) => {
           <hr />
           <div id="editor" ref={editorDOMRef} className={`${className}`} />
         </LeftSide>
-        <RightPanel
-          yjsState={yjsState}
-          yjsStore={yjsStore}
-          viewProvider={ctx.viewProvider}
-          trackChangesState={trackChangesState}
-        />
+        {providers.viewProvider && (
+          <RightPanel
+            yjsState={yjsState}
+            yjsStore={yjsStore}
+            viewProvider={providers.viewProvider}
+            trackChangesState={trackChangesState}
+          />
+        )}
       </ViewGrid>
-    </ReactEditorContext.Provider>
+    </>
   )
 })
 

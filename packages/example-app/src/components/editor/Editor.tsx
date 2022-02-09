@@ -49,7 +49,7 @@ export const Editor = observer(() => {
   const { options, setOptions } = useTrackOptions('editor-track-options', {
     documentId: 'abc123',
   })
-  const ctx = useEditorContext()
+  const { viewProvider } = useEditorContext()
   const { yjsState, yjsStore } = useYjsExtension(100)
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
   const extensions = useMemo(
@@ -113,12 +113,14 @@ export const Editor = observer(() => {
             <Toolbar />
             <div className="pm-editor" ref={editorDOMRef} />
           </LeftSide>
-          <RightPanel
-            yjsState={yjsState}
-            yjsStore={yjsStore}
-            viewProvider={ctx.viewProvider}
-            trackChangesState={trackChangesState}
-          />
+          {viewProvider && (
+            <RightPanel
+              yjsState={yjsState}
+              yjsStore={yjsStore}
+              viewProvider={viewProvider}
+              trackChangesState={trackChangesState}
+            />
+          )}
         </ViewGrid>
       </div>
     </>

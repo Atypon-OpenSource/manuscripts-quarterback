@@ -26,7 +26,7 @@ export const UsersList = memo((props: IProps) => {
   const { className, yjsState } = props
   // TODO yjs keeps creating same users with different clientIDs as I cant reuse them
   const users = Array.from(yjsState?.usersMap.values() || []).reduce((acc, cur) => {
-    if (!acc.find(u => u.id === cur.id)) {
+    if (!acc.find((u) => u.id === cur.id)) {
       acc.push(cur)
     }
     return acc

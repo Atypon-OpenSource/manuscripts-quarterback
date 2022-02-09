@@ -22,6 +22,7 @@ import {
 } from '@manuscripts/ext-track-changes'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/quarterback-editor'
+import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React, { memo } from 'react'
 import styled from 'styled-components'
 
@@ -32,7 +33,7 @@ import { SnapshotsList } from './SnapshotsList'
 interface Props {
   yjsState?: YjsExtensionState
   yjsStore?: YjsExtension['store']
-  viewProvider?: EditorViewProvider
+  viewProvider: EditorViewProvider | MViewProvider
   trackChangesState: TrackChangesState | null
 }
 
@@ -47,7 +48,7 @@ export const RightPanel = memo((props: Props) => {
         ids.push(child.id)
       })
     }
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
   function handleRejectChange(c: TrackedChange) {
     const ids = [c.id]
@@ -56,7 +57,7 @@ export const RightPanel = memo((props: Props) => {
         ids.push(child.id)
       })
     }
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
   function handleResetChange(c: TrackedChange) {
     const ids = [c.id]
@@ -65,10 +66,10 @@ export const RightPanel = memo((props: Props) => {
         ids.push(child.id)
       })
     }
-    viewProvider?.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
+    viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function toggleChangesVisibility(status: CHANGE_STATUS) {
-    viewProvider?.execCommand(trackCommands.toggleShownStatuses([status]))
+    viewProvider.execCommand(trackCommands.toggleShownStatuses([status]))
   }
 
   return (
@@ -111,11 +112,6 @@ export const RightPanel = memo((props: Props) => {
   )
 })
 
+RightPanel.displayName = 'RightPanel'
+
 const RightSide = styled.div``
-const Buttons = styled.div`
-  display: flex;
-  margin: 0.25rem 0;
-  button + button {
-    margin-left: 0.5rem;
-  }
-`

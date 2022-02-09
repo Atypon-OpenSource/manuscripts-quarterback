@@ -43,7 +43,7 @@ function useTrackOptions(storageKey: string, initial?: Partial<TrackOptions>) {
         color: '#ff0000',
       },
       documentId: 'abc123',
-      ...initial
+      ...initial,
     }
   })
 
