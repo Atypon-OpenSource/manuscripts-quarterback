@@ -34,6 +34,7 @@
     "@types/prosemirror-transform": "^1.1.4",
     "@types/prosemirror-view": "^1.19.1",
     "jest": "^27.5.0",
+    "jest-environment-jsdom": "27.4.6",
     "jsdom": "^16.4.0",
     "prosemirror-commands": "^1.1.11",
     "prosemirror-example-setup": "^1.1.2",

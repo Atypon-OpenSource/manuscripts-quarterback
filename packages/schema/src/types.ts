@@ -28,6 +28,12 @@ export type Nodes =
   | 'ordered_list'
   | 'bullet_list'
   | 'list_item'
+  | 'table'
+  | 'table_body'
+  | 'table_colgroup'
+  | 'table_row'
+  | 'table_cell'
+  | 'table_col'
 
 export type Marks =
   | 'bold'

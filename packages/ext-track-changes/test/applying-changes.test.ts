@@ -80,6 +80,7 @@ describe('track changes', () => {
       .insertNode(defaultSchema.nodes.ordered_list.createAndFill(), 0)
       .moveCursor('start')
       .insertText('ordered list text')
+      .insertNode(defaultSchema.nodes.table.createAndFill(), 0)
       .cmd((state, dispatch) => {
         const trackChangesState = trackChangesPluginKey.getState(state)
         if (!trackChangesState) {
@@ -92,13 +93,14 @@ describe('track changes', () => {
       })
 
     expect(tester.toJSON()).toEqual(docs.insertAccept[0])
-    expect(uuidv4Mock.mock.calls.length).toBe(18)
+    expect(uuidv4Mock.mock.calls.length).toBe(26)
     expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
 
     tester.cmd(trackCommands.applyAndRemoveChanges())
 
+    await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.insertAccept[1])
-    expect(uuidv4Mock.mock.calls.length).toBe(18)
+    expect(uuidv4Mock.mock.calls.length).toBe(26)
     expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
   })
 })

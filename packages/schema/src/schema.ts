@@ -30,6 +30,20 @@ function add(obj: Record<string, any>, props: Record<string, any>) {
   return copy
 }
 
+const getCellAttrs = (p: Node | string) => {
+  const dom = p as HTMLTableCellElement
+
+  const celltype = dom.tagName.toLowerCase()
+  const colspan = Number(dom.getAttribute('colspan') || 1)
+
+  return {
+    celltype,
+    colspan,
+    rowspan: Number(dom.getAttribute('rowspan') || 1),
+    placeholder: dom.getAttribute('data-placeholder-text') || '',
+  }
+}
+
 // From https://github.com/ProseMirror/prosemirror-schema-basic/blob/master/src/schema-basic.js
 export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
   nodes: {
@@ -171,6 +185,123 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       content: 'paragraph block*',
       attrs: { dataTracked: { default: null } },
     }),
+
+    table: {
+      content: 'table_colgroup? table_body',
+      tableRole: 'table',
+      isolating: true,
+      group: 'block',
+      selectable: false,
+      attrs: { dataTracked: { default: null } },
+      parseDOM: [
+        {
+          tag: 'table',
+        },
+      ],
+      toDOM: () => {
+        return ['table', 0]
+      },
+    },
+
+    table_body: {
+      content: 'table_row{3,}',
+      group: 'block',
+      tableRole: 'tbody',
+      parseDOM: [
+        {
+          tag: 'tbody',
+        },
+      ],
+      toDOM() {
+        return ['tbody', 0]
+      },
+    },
+
+    table_colgroup: {
+      content: 'table_col+',
+      group: 'block',
+      tableRole: 'colgroup',
+      attrs: { dataTracked: { default: null } },
+      parseDOM: [
+        {
+          tag: 'colgroup',
+        },
+      ],
+      toDOM() {
+        return ['colgroup', 0]
+      },
+    },
+
+    table_row: {
+      content: 'table_cell+',
+      tableRole: 'row',
+      attrs: { dataTracked: { default: null } },
+      parseDOM: [
+        {
+          tag: 'tr',
+          priority: 80,
+        },
+      ],
+      toDOM: () => {
+        return ['tr', 0]
+      },
+    },
+
+    table_cell: {
+      content: 'inline*',
+      attrs: {
+        dataTracked: { default: null },
+        celltype: { default: 'td' },
+        colspan: { default: 1 },
+        rowspan: { default: 1 },
+      },
+      tableRole: 'cell',
+      isolating: true,
+      parseDOM: [
+        { tag: 'td', getAttrs: getCellAttrs },
+        { tag: 'th', getAttrs: getCellAttrs },
+      ],
+      toDOM: (node) => {
+        const tableCellNode = node
+        const attrs: { [attr: string]: string } = {}
+        const tag = tableCellNode.attrs.celltype
+        if (tableCellNode.attrs.colspan && tableCellNode.attrs.colspan !== 1) {
+          attrs.colspan = String(tableCellNode.attrs.colspan)
+        }
+        if (tableCellNode.attrs.rowspan && tableCellNode.attrs.rowspan !== 1) {
+          attrs.rowspan = String(tableCellNode.attrs.rowspan)
+        }
+        return [tag, attrs, 0]
+      },
+    },
+
+    table_col: {
+      attrs: {
+        dataTracked: { default: null },
+        width: { default: '' },
+      },
+      group: 'block',
+      tableRole: 'col',
+      parseDOM: [
+        {
+          tag: 'col',
+          getAttrs: (p) => {
+            const dom = p as HTMLTableColElement
+            return {
+              width: dom.getAttribute('width'),
+            }
+          },
+        },
+      ],
+      toDOM: (node) => {
+        const tableColNode = node
+        const attrs: { [key: string]: string } = {}
+        if (tableColNode.attrs.width) {
+          attrs['width'] = tableColNode.attrs.width
+        }
+        return ['col', attrs]
+      },
+    },
   },
   marks: {
     // :: MarkSpec A link. Has `href` and `title` attributes. `title`

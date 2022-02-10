@@ -4,6 +4,119 @@
       "type": "doc",
       "content": [
         {
+          "type": "table",
+          "attrs": {
+            "dataTracked": {
+              "id": "MOCK-ID-25",
+              "userID": "1-mike",
+              "userName": "Mike",
+              "time": 1577836800000,
+              "status": "accepted",
+              "operation": "insert"
+            }
+          },
+          "content": [
+            {
+              "type": "table_body",
+              "content": [
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-19",
+                      "userID": "1-mike",
+                      "userName": "Mike",
+                      "time": 1577836800000,
+                      "status": "accepted",
+                      "operation": "insert"
+                    }
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": {
+                          "id": "MOCK-ID-18",
+                          "userID": "1-mike",
+                          "userName": "Mike",
+                          "time": 1577836800000,
+                          "status": "accepted",
+                          "operation": "insert"
+                        },
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-21",
+                      "userID": "1-mike",
+                      "userName": "Mike",
+                      "time": 1577836800000,
+                      "status": "accepted",
+                      "operation": "insert"
+                    }
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": {
+                          "id": "MOCK-ID-20",
+                          "userID": "1-mike",
+                          "userName": "Mike",
+                          "time": 1577836800000,
+                          "status": "accepted",
+                          "operation": "insert"
+                        },
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-23",
+                      "userID": "1-mike",
+                      "userName": "Mike",
+                      "time": 1577836800000,
+                      "status": "accepted",
+                      "operation": "insert"
+                    }
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": {
+                          "id": "MOCK-ID-22",
+                          "userID": "1-mike",
+                          "userName": "Mike",
+                          "time": 1577836800000,
+                          "status": "accepted",
+                          "operation": "insert"
+                        },
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "type": "ordered_list",
           "attrs": {
             "dataTracked": {
@@ -295,14 +408,78 @@
     },
     "selection": {
       "type": "text",
-      "anchor": 20,
-      "head": 20
+      "anchor": 19,
+      "head": 19
     }
   },
   {
     "doc": {
       "type": "doc",
       "content": [
+        {
+          "type": "table",
+          "attrs": {
+            "dataTracked": null
+          },
+          "content": [
+            {
+              "type": "table_body",
+              "content": [
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": null
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": null,
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": null
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": null,
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table_row",
+                  "attrs": {
+                    "dataTracked": null
+                  },
+                  "content": [
+                    {
+                      "type": "table_cell",
+                      "attrs": {
+                        "dataTracked": null,
+                        "celltype": "td",
+                        "colspan": 1,
+                        "rowspan": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           "type": "ordered_list",
           "attrs": {
@@ -431,8 +608,8 @@
     },
     "selection": {
       "type": "text",
-      "anchor": 20,
-      "head": 20
+      "anchor": 19,
+      "head": 19
     }
   }
 ]
