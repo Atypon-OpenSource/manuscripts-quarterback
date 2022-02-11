@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Fragment, Node as PMNode, Schema, Slice } from 'prosemirror-model'
-import { EditorState, TextSelection, Transaction } from 'prosemirror-state'
+import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state'
 import {
   AddMarkStep,
   Mapping,
@@ -526,6 +526,7 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
+  const wasNodeSelection = tr.selection instanceof NodeSelection
   let iters = 0
   logger('ORIGINAL transaction', tr)
   tr.steps.forEach((step) => {
@@ -546,6 +547,7 @@ export function trackTransaction(
       step.getMap().forEach((fromA: number, toA: number, fromB: number, toB: number) => {
         logger(`changed ranges: ${fromA} ${toA} ${fromB} ${toB}`)
         const { slice } = step as ExposedReplaceStep
+        // Invert the transaction step to prevent it from actually deleting or inserting anything
         const newStep = step.invert(oldState.doc)
         const stepResult = newTr.maybeStep(newStep)
         if (stepResult.failed) {
@@ -593,13 +595,17 @@ export function trackTransaction(
           logger('new steps after applying insert', [...newTr.steps])
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
-          newTr.setSelection(
-            new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
-          )
+          if (!wasNodeSelection) {
+            newTr.setSelection(
+              new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
+            )
+          }
         } else {
           // Incase only deletion was applied, check whether tracked marks around deleted content can be merged
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
-          newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
+          if (!wasNodeSelection) {
+            newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
+          }
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
         const { meta } = tr as Transaction & {
@@ -615,6 +621,14 @@ export function trackTransaction(
       // } else if (step instanceof ReplaceAroundStep) {
     }
   })
+  // This is kinda hacky solution at the moment to maintain NodeSelections over transactions
+  // These are required by at least cross-references that need it to activate the selector pop-up
+  if (wasNodeSelection) {
+    const mappedPos = newTr.mapping.map(tr.selection.from)
+    const resPos = newTr.doc.resolve(mappedPos)
+    const nodePos = mappedPos - (resPos.nodeBefore?.nodeSize || 0)
+    newTr.setSelection(new NodeSelection(newTr.doc.resolve(nodePos)))
+  }
   logger('NEW transaction', newTr)
   return newTr
 }
