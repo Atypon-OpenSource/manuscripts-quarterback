@@ -30,8 +30,11 @@ import {
 import { uuidv4 } from '@manuscripts/quarterback-shared'
 // import { RxAttachment } from '@manuscripts/rxdb'
 import { createBrowserHistory } from 'history'
+import React from 'react'
 import ReactDOM from 'react-dom'
+import { ThemeProvider } from 'styled-components'
 
+import { theme } from '../../theme/theme'
 import emptyEditorDocJson from './empty-editor-doc.json'
 
 type TestData = {
@@ -97,7 +100,12 @@ const defaultViewerProps: ViewerProps = {
   projectID: 'test-project-id',
   getCurrentUser: () => TEST_DATA.USER,
   history: createBrowserHistory(),
-  renderReactComponent: ReactDOM.render,
+  renderReactComponent(
+    child: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
+    container: HTMLElement
+  ) {
+    ReactDOM.render(<ThemeProvider theme={theme}>{child}</ThemeProvider>, container)
+  },
   unmountReactComponent: ReactDOM.unmountComponentAtNode,
   components: {},
 }
