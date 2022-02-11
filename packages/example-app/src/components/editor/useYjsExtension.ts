@@ -15,15 +15,15 @@
  */
 import { YjsExtension, yjsExtensionName, YjsExtensionState, YjsStore } from '@manuscripts/ext-yjs'
 import { ExtensionProvider, useEditorContext } from '@manuscripts/quarterback-editor'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as Y from 'yjs'
-
-let timeout: NodeJS.Timeout | undefined, data: YjsExtensionState | undefined
 
 export function useYjsExtension(debounce?: number) {
   const { extensionProvider } = useEditorContext()
   const [state, setState] = useState<YjsExtensionState>()
   const [store, setStore] = useState<YjsStore>()
+  const timeout = useRef<NodeJS.Timeout | undefined>()
+  const data = useRef<YjsExtensionState | undefined>()
 
   useEffect(() => {
     const updateStoreCb = (provider: ExtensionProvider) => {
@@ -36,14 +36,14 @@ export function useYjsExtension(debounce?: number) {
     const updateStateCb = (newState: YjsExtensionState) => {
       if (debounce === undefined) {
         setState(newState)
-      } else if (timeout) {
-        data = newState
+      } else if (timeout.current) {
+        data.current = newState
       } else {
-        if (!data) data = newState
-        timeout = setTimeout(() => {
-          setState(data)
-          data = undefined
-          timeout = undefined
+        if (!data.current) data.current = newState
+        timeout.current = setTimeout(() => {
+          setState(data.current)
+          data.current = undefined
+          timeout.current = undefined
         }, debounce)
       }
     }
