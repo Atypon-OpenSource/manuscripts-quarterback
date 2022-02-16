@@ -25,15 +25,15 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
-    "@types/prosemirror-model": "^1.13.2",
-    "prosemirror-model": "^1.15.0",
+    "@types/prosemirror-model": "^1.16.1",
+    "prosemirror-model": "^1.16.1",
     "prosemirror-schema-list": "^1.1.4",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "prosemirror-model": "^1.15.0",
+    "prosemirror-model": "^1.16.1",
     "@manuscripts/quarterback-shared": "workspace:*",
     "@manuscripts/ext-track-changes": "workspace:*"
   }
