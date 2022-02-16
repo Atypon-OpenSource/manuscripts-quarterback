@@ -30,20 +30,27 @@ import { getNodeTrackedMarks } from './node-utils'
  */
 export function findChanges(state: EditorState) {
   const changes: PartialTrackedChange[] = []
+  // Store the last iterated change to join adjacent text changes
+  let currentChange: PartialTrackedChange | null = null
   state.doc.descendants((node, pos) => {
     const attrs = getNodeTrackedMarks(node, state.schema)
     if (attrs) {
       const id = attrs?.id || ''
-      if (node.isText) {
-        changes.push({
+      // Join adjacent text changes that have been broken up due to different marks
+      if (currentChange?.type === 'text-change' && currentChange.id === id && node.isText) {
+        currentChange.to = pos + node.nodeSize
+      } else if (node.isText) {
+        currentChange && changes.push(currentChange)
+        currentChange = {
           id,
           type: 'text-change',
           from: pos,
           to: pos + node.nodeSize,
           attrs,
-        })
+        }
       } else {
-        changes.push({
+        currentChange && changes.push(currentChange)
+        currentChange = {
           id,
           type: 'node-change',
           from: pos,
@@ -52,10 +59,14 @@ export function findChanges(state: EditorState) {
           mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
           children: [],
           attrs,
-        })
+        }
       }
+    } else if (currentChange) {
+      changes.push(currentChange)
+      currentChange = null
     }
   })
+  currentChange && changes.push(currentChange)
   return new ChangeSet(changes)
 }
 

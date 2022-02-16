@@ -48,7 +48,6 @@ export function updateChangeChildrenAttributes(
   tr: Transaction,
   mapping: Mapping
 ) {
-  const nodes: PMNode[] = []
   changes.forEach((c) => {
     if (c.type === 'node-change' && ChangeSet.shouldNotDelete(c)) {
       const from = mapping.map(c.from)
@@ -60,5 +59,4 @@ export function updateChangeChildrenAttributes(
       tr.setNodeMarkup(from, undefined, attrs, node.marks)
     }
   })
-  return nodes
 }

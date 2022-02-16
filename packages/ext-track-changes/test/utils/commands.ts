@@ -26,6 +26,15 @@ export const insertText =
     return true
   }
 
+export const addMark =
+  (text: string, pos?: number): Command =>
+  (state, dispatch) => {
+    const tr = state.tr
+    tr.insertText(text, pos)
+    dispatch && dispatch(tr)
+    return true
+  }
+
 export const deleteBetween =
   (start?: number, end?: number): Command =>
   (state, dispatch) => {

@@ -338,6 +338,12 @@
               "type": "text",
               "marks": [
                 {
+                  "type": "bold",
+                  "attrs": {
+                    "dataTracked": null
+                  }
+                },
+                {
                   "type": "tracked_insert",
                   "attrs": {
                     "dataTracked": {
@@ -352,7 +358,27 @@
                   }
                 }
               ],
-              "text": "before image"
+              "text": "before"
+            },
+            {
+              "type": "text",
+              "marks": [
+                {
+                  "type": "tracked_insert",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-1",
+                      "userID": "1-mike",
+                      "userName": "Mike",
+                      "time": 1577836800000,
+                      "status": "accepted",
+                      "operation": "insert"
+                    },
+                    "pending_bg": "greenyellow"
+                  }
+                }
+              ],
+              "text": " image"
             },
             {
               "type": "image",
@@ -575,7 +601,19 @@
           "content": [
             {
               "type": "text",
-              "text": "before image"
+              "marks": [
+                {
+                  "type": "bold",
+                  "attrs": {
+                    "dataTracked": null
+                  }
+                }
+              ],
+              "text": "before"
+            },
+            {
+              "type": "text",
+              "text": " image"
             },
             {
               "type": "image",

@@ -15,7 +15,7 @@
  */
 import { Command } from 'prosemirror-commands'
 import { exampleSetup } from 'prosemirror-example-setup'
-import { Node as PMNode, Schema } from 'prosemirror-model'
+import { Mark, Node as PMNode, Schema } from 'prosemirror-model'
 import { Plugin, TextSelection } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
@@ -62,6 +62,17 @@ export class ProsemirrorTestChain<S extends Schema> {
 
   insertText(text: string) {
     this.cmd(cmds.insertText(text))
+    return this
+  }
+
+  insertMark(mark: Mark, start?: number, end?: number) {
+    this.cmd((state, dispatch) => {
+      const tr = state.tr
+      const { from, to } = state.selection
+      tr.addMark(start ?? from, end ?? to, mark)
+      dispatch && dispatch(tr)
+      return true
+    })
     return this
   }
 

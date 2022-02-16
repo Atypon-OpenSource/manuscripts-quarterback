@@ -58,6 +58,7 @@ describe('track changes', () => {
       .insertNode(defaultSchema.nodes.paragraph.createAndFill(), 0)
       .moveCursor('start')
       .insertText('before image')
+      .insertMark(defaultSchema.marks.bold.create(), 1, 1 + 'before'.length)
       .insertNode(
         defaultSchema.nodes.image.createAndFill({
           src: 'https://i.imgur.com/lFAxY.png',
@@ -98,7 +99,7 @@ describe('track changes', () => {
 
     tester.cmd(trackCommands.applyAndRemoveChanges())
 
-    await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
+    // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.insertAccept[1])
     expect(uuidv4Mock.mock.calls.length).toBe(26)
     expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)

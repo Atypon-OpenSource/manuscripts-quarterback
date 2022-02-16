@@ -102,7 +102,11 @@ export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema)
     }
   })
   if (marksTrackedData.length > 1) {
-    throw Error('Inline node with more than 1 of tracked marks' + marksTrackedData)
+    logger(
+      `%c WARNING Inline node with more than 1 of tracked marks`,
+      'color: #f3f32c',
+      marksTrackedData
+    )
   }
   return marksTrackedData[0] || undefined
 }
