@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 import { EditorState } from 'prosemirror-state'
+import { Node as PMNode } from 'prosemirror-model'
 
 import { ChangeSet } from '../ChangeSet'
 import { PartialTrackedChange } from '../types/change'
-import { getNodeTrackedMarks } from './node-utils'
+import { getNodeTrackedMarks, equalMarks } from './node-utils'
 
 /**
  * Finds all changes (basically text marks or node attributes) from document
@@ -31,42 +32,55 @@ import { getNodeTrackedMarks } from './node-utils'
 export function findChanges(state: EditorState) {
   const changes: PartialTrackedChange[] = []
   // Store the last iterated change to join adjacent text changes
-  let currentChange: PartialTrackedChange | null = null
+  let current: { change: PartialTrackedChange; node: PMNode } | undefined
   state.doc.descendants((node, pos) => {
     const attrs = getNodeTrackedMarks(node, state.schema)
     if (attrs) {
       const id = attrs?.id || ''
       // Join adjacent text changes that have been broken up due to different marks
-      if (currentChange?.type === 'text-change' && currentChange.id === id && node.isText) {
-        currentChange.to = pos + node.nodeSize
+      // Note the !equalMarks to leave changes separate incase the marks are equal to let fixInconsistentChanges to fix them
+      if (
+        current &&
+        current.change.id === id &&
+        current.node.isText &&
+        node.isText &&
+        !equalMarks(node, current.node)
+      ) {
+        current.change.to = pos + node.nodeSize
       } else if (node.isText) {
-        currentChange && changes.push(currentChange)
-        currentChange = {
-          id,
-          type: 'text-change',
-          from: pos,
-          to: pos + node.nodeSize,
-          attrs,
+        current && changes.push(current.change)
+        current = {
+          change: {
+            id,
+            type: 'text-change',
+            from: pos,
+            to: pos + node.nodeSize,
+            attrs,
+          },
+          node,
         }
       } else {
-        currentChange && changes.push(currentChange)
-        currentChange = {
-          id,
-          type: 'node-change',
-          from: pos,
-          to: pos + node.nodeSize,
-          nodeType: node.type.name,
-          mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
-          children: [],
-          attrs,
+        current && changes.push(current.change)
+        current = {
+          change: {
+            id,
+            type: 'node-change',
+            from: pos,
+            to: pos + node.nodeSize,
+            nodeType: node.type.name,
+            mergeInsteadOfDelete: node.type.name === 'paragraph' || node.type.name === 'blockquote',
+            children: [],
+            attrs,
+          },
+          node,
         }
       }
-    } else if (currentChange) {
-      changes.push(currentChange)
-      currentChange = null
+    } else if (current) {
+      changes.push(current.change)
+      current = undefined
     }
   })
-  currentChange && changes.push(currentChange)
+  current && changes.push(current.change)
   return new ChangeSet(changes)
 }
 

@@ -89,11 +89,31 @@
               "type": "text",
               "marks": [
                 {
+                  "type": "tracked_delete",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-0",
+                      "operation": "delete",
+                      "userID": "1-mike",
+                      "userName": "Mike",
+                      "status": "pending",
+                      "time": 1577836800000
+                    },
+                    "pending_bg": "#ffa4a4"
+                  }
+                }
+              ],
+              "text": "ab"
+            },
+            {
+              "type": "text",
+              "marks": [
+                {
                   "type": "tracked_insert",
                   "attrs": {
                     "dataTracked": {
                       "operation": "insert",
-                      "id": "MOCK-ID-2",
+                      "id": "MOCK-ID-1",
                       "userID": "1-mike",
                       "userName": "Mike",
                       "status": "pending",
@@ -103,7 +123,7 @@
                   }
                 }
               ],
-              "text": "abc"
+              "text": "c"
             },
             {
               "type": "text",
@@ -112,7 +132,7 @@
                   "type": "tracked_insert",
                   "attrs": {
                     "dataTracked": {
-                      "id": "MOCK-ID-0",
+                      "id": "MOCK-ID-2",
                       "userID": "1-mike",
                       "userName": "Mike",
                       "time": 1577836800000,
@@ -123,7 +143,7 @@
                   }
                 }
               ],
-              "text": "d"
+              "text": "de"
             },
             {
               "type": "text",
@@ -135,8 +155,8 @@
     },
     "selection": {
       "type": "text",
-      "anchor": 5,
-      "head": 5
+      "anchor": 1,
+      "head": 1
     }
   }
 ]

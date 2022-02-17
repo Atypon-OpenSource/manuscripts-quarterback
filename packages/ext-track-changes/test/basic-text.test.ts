@@ -118,20 +118,22 @@ describe('track changes', () => {
       .insertText('abcd')
       .cmd((state, dispatch) => {
         const tr = state.tr
-        tr.removeMark(1, 2)
+        const pos = 1
+        const oldMarkAttrs = state.doc.resolve(pos + 1).marks()[0].attrs
+        tr.removeMark(pos, pos + 1)
         tr.addMark(
-          2,
-          3,
+          pos + 1,
+          pos + 2,
           state.schema.marks.tracked_delete.create({
             dataTracked: {
-              id: 'MOCK-ID-0',
+              id: oldMarkAttrs.dataTracked.id,
             },
             pending_bg: 'red',
           })
         )
         tr.addMark(
-          3,
-          4,
+          pos + 2,
+          pos + 3,
           state.schema.marks.tracked_insert.create({
             dataTracked: {},
             pending_bg: 'yellow',
@@ -149,13 +151,13 @@ describe('track changes', () => {
     expect(tester.trackState()?.changeSet.hasIncompleteAttrs).toEqual(true)
     expect(uuidv4Mock.mock.calls.length).toBe(1)
 
-    // TODO should join with the inconsistent inserted text?
-    tester.insertText('e').moveCursor(-4).backspace()
+    // TODO should not need moveCursor(0)
+    tester.moveCursor(0).insertText('e').moveCursor(-4).backspace()
 
-    await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
+    // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
     expect(tester.toJSON()).toEqual(docs.basicTextInconsistent[1])
     expect(tester.trackState()?.changeSet.hasDuplicateIds).toEqual(false)
     expect(tester.trackState()?.changeSet.hasIncompleteAttrs).toEqual(false)
-    expect(uuidv4Mock.mock.calls.length).toBe(5)
+    expect(uuidv4Mock.mock.calls.length).toBe(4)
   })
 })

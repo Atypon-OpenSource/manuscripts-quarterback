@@ -127,8 +127,10 @@ function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, schema:
   if (!shouldMergeTrackedAttributes(leftAttrs.dataTracked, rightAttrs.dataTracked)) {
     return
   }
-  const newAttrs = { ...leftAttrs }
-  newAttrs.time = Math.max(leftAttrs.time || 0, rightAttrs.time || 0) || Date.now()
+  const newAttrs = {
+    ...leftAttrs,
+    time: Math.max(leftAttrs.time || 0, rightAttrs.time || 0) || Date.now(),
+  }
   const fromStartOfMark = pos - nodeBefore.nodeSize
   const toEndOfMark = pos + nodeAfter.nodeSize
   newTr.addMark(fromStartOfMark, toEndOfMark, leftMark.type.create(newAttrs))

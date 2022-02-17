@@ -118,6 +118,13 @@ export function getNodeTrackedMarks(
   return !node ? undefined : node.isText ? getTrackedMarks(node, schema) : node.attrs.dataTracked
 }
 
+export function equalMarks(n1: PMNode, n2: PMNode) {
+  return (
+    n1.marks.length === n2.marks.length &&
+    n1.marks.every((mark) => n1.marks.find((m) => m.type === mark.type))
+  )
+}
+
 interface ComparedAttrs {
   userID: string
   operation: CHANGE_OPERATION
