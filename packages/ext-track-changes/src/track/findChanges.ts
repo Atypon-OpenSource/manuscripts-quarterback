@@ -47,6 +47,8 @@ export function findChanges(state: EditorState) {
         !equalMarks(node, current.node)
       ) {
         current.change.to = pos + node.nodeSize
+        // Important to update the node as the text changes might contain multiple parts where some marks equal each other
+        current.node = node
       } else if (node.isText) {
         current && changes.push(current.change)
         current = {

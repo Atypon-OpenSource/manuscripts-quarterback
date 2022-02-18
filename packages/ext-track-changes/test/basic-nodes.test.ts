@@ -61,23 +61,30 @@ describe('track changes', () => {
     expect(uuidv4Mock.mock.calls.length).toBe(1)
   })
 
-  test.skip('should prevent deletion of paragraphs unless already inserted', async () => {
+  test('should prevent deletion of paragraphs unless already inserted', async () => {
     const tester = setupEditor({
       doc: docs.defaultDocs[1],
     })
-      .insertNode(defaultSchema.nodes.paragraph.createAndFill(), 13)
+      .insertNode(defaultSchema.nodes.paragraph.create(), 0)
+      .moveCursor('start')
       .insertText('inserted text')
-      .selectText(44)
-      .backspace(12)
-      .backspace(1)
-      .backspace(1)
-      .backspace(1)
-    // .delete(0, 44)
 
+    expect(tester.toJSON()).toEqual(docs.basicNodeDelete[0])
+    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
+
+    tester.cmd((state, dispatch) => {
+      const tr = state.tr
+      tr.delete(0, state.doc.nodeSize - 2)
+      dispatch && dispatch(tr)
+      return true
+    })
     // await fs.writeFile('test.json', JSON.stringify(tester.toJSON()))
-
-    expect(tester.toJSON()).toEqual(docs.basicNodeDelete)
-    expect(uuidv4Mock.mock.calls.length).toBe(9)
+    // Contains paragraph insert since the default doc must have at least one child paragraph,
+    // thus PM tries to automatically fill it when it's destroyed. However, in our case that's
+    // not ideal but it's not fixed for now, since deleting the whole doc at once can't be done by user.
+    expect(tester.toJSON()).toEqual(docs.basicNodeDelete[1])
+    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
+    expect(uuidv4Mock.mock.calls.length).toBe(10)
   })
 
   test.skip('should track node attribute updates', async () => {

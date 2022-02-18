@@ -225,12 +225,8 @@ function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: 
   const dataTracked: TrackedAttrs | undefined = node.attrs.dataTracked
   const wasInsertedBySameUser =
     dataTracked?.operation === CHANGE_OPERATION.insert && dataTracked.userID === deleteAttrs.userID
-  const resPos = newTr.doc.resolve(pos)
-  // Check node hasn't already been deleted by previous deleteNode eg blockquote deleting its children paragraphs
-  if (resPos.nodeAfter !== node) {
-    return
-  }
   if (wasInsertedBySameUser) {
+    const resPos = newTr.doc.resolve(pos)
     const canMergeToNodeAbove =
       (resPos.parent !== newTr.doc || resPos.nodeBefore) && node.firstChild?.isText
     // TODO ensure this works and blocks at the start of doc cant be deleted (as they wont merge to node above)
@@ -397,12 +393,13 @@ export function deleteAndMergeSplitBlockNodes(
   const insertEndDepth = startDoc.resolve(to).depth
   logger('deleteAndMergeSplitBlockNodes: updatedSliceNodes', updatedSliceNodes)
   startDoc.nodesBetween(from, to, (node, pos) => {
-    const offsetPos = deleteMap.map(pos, 1)
+    const { pos: offsetPos, deleted: nodeWasDeleted } = deleteMap.mapResult(pos, 1)
     const offsetFrom = deleteMap.map(from, -1)
     const offsetTo = deleteMap.map(to, 1)
     const nodeEnd = offsetPos + node.nodeSize
     const step = newTr.steps[newTr.steps.length - 1]
-    if (nodeEnd > offsetFrom) {
+    // Check node hasn't already been deleted by previous deleteNode eg blockquote deleting its children paragraphs
+    if (nodeEnd > offsetFrom && !nodeWasDeleted) {
       // Delete touches this node
       if (node.isText) {
         deleteInlineIfInserted(
@@ -482,7 +479,7 @@ export function deleteAndMergeSplitBlockNodes(
             deleteNode(node, offsetPos, newTr, deleteAttrs)
           }
         }
-      } else {
+      } else if (!nodeWasDeleted) {
         deleteNode(node, offsetPos, newTr, deleteAttrs)
       }
     }
