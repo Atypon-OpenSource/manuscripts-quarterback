@@ -86,7 +86,7 @@ export function getPosToInsertMergedContent(pos: number, tr: Transaction, mappin
   return undefined
 }
 
-export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema) {
+export function getInlineNodeTrackedMarkData(node: PMNode | undefined | null, schema: Schema) {
   if (!node || !node.isInline) {
     return undefined
   }
@@ -111,11 +111,15 @@ export function getTrackedMarks(node: PMNode | undefined | null, schema: Schema)
   return marksTrackedData[0] || undefined
 }
 
-export function getNodeTrackedMarks(
+export function getNodeTrackedData(
   node: PMNode | undefined | null,
   schema: Schema
 ): Partial<TrackedAttrs> | undefined {
-  return !node ? undefined : node.isText ? getTrackedMarks(node, schema) : node.attrs.dataTracked
+  return !node
+    ? undefined
+    : node.isText
+    ? getInlineNodeTrackedMarkData(node, schema)
+    : node.attrs.dataTracked
 }
 
 export function equalMarks(n1: PMNode, n2: PMNode) {
@@ -123,26 +127,6 @@ export function equalMarks(n1: PMNode, n2: PMNode) {
     n1.marks.length === n2.marks.length &&
     n1.marks.every((mark) => n1.marks.find((m) => m.type === mark.type))
   )
-}
-
-interface ComparedAttrs {
-  userID: string
-  operation: CHANGE_OPERATION
-  status: CHANGE_STATUS
-}
-/**
- * @deprecated
- */
-export function shouldMergeMarks(
-  node: PMNode | undefined | null,
-  attrs: ComparedAttrs,
-  schema: Schema
-) {
-  const nodeAttrs = getNodeTrackedMarks(node, schema)
-  const sameStatus = nodeAttrs?.status === attrs.status
-  const sameOperation = nodeAttrs?.operation === attrs.operation
-  const sameUser = nodeAttrs?.userID === attrs.userID
-  return sameStatus && sameOperation && sameUser ? nodeAttrs : null
 }
 
 export function shouldMergeTrackedAttributes(
@@ -162,4 +146,13 @@ export function shouldMergeTrackedAttributes(
     left.operation === right.operation &&
     left.userID === right.userID
   )
+}
+
+export function getMergeableMarkTrackedAttrs(
+  node: PMNode | undefined | null,
+  attrs: Partial<TrackedAttrs>,
+  schema: Schema
+) {
+  const nodeAttrs = getInlineNodeTrackedMarkData(node, schema)
+  return nodeAttrs && shouldMergeTrackedAttributes(nodeAttrs, attrs) ? nodeAttrs : null
 }

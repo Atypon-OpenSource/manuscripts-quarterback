@@ -31,7 +31,7 @@ import { ExposedFragment, ExposedReplaceStep, ExposedSlice } from '../types/pm'
 import { DeleteAttrs, InsertAttrs, UserData } from '../types/track'
 import {
   addTrackIdIfDoesntExist,
-  shouldMergeMarks,
+  getMergeableMarkTrackedAttrs,
   shouldMergeTrackedAttributes,
 } from './node-utils'
 
@@ -177,11 +177,11 @@ export function applyAndMergeMarks(
       const lastInlineNode = pos + node.nodeSize >= to
       if (firstInlineNode) {
         leftNode = doc.resolve(Math.max(pos, from)).nodeBefore
-        leftMarks = shouldMergeMarks(leftNode, addedAttrs, schema)
+        leftMarks = getMergeableMarkTrackedAttrs(leftNode, addedAttrs, schema)
       }
       if (lastInlineNode) {
         rightNode = doc.resolve(Math.min(pos + node.nodeSize, to)).nodeAfter
-        rightMarks = shouldMergeMarks(rightNode, addedAttrs, schema)
+        rightMarks = getMergeableMarkTrackedAttrs(rightNode, addedAttrs, schema)
       }
       const fromStartOfMark = from - (leftNode && leftMarks ? leftNode.nodeSize : 0)
       const toEndOfMark = to + (rightNode && rightMarks ? rightNode.nodeSize : 0)
@@ -225,11 +225,19 @@ function deleteNode(node: PMNode, pos: number, newTr: Transaction, deleteAttrs: 
   const dataTracked: TrackedAttrs | undefined = node.attrs.dataTracked
   const wasInsertedBySameUser =
     dataTracked?.operation === CHANGE_OPERATION.insert && dataTracked.userID === deleteAttrs.userID
+  const resPos = newTr.doc.resolve(pos)
+  // Check node hasn't already been deleted by previous deleteNode eg blockquote deleting its children paragraphs
+  if (resPos.nodeAfter !== node) {
+    return
+  }
   if (wasInsertedBySameUser) {
-    const resPos = newTr.doc.resolve(pos)
+    const canMergeToNodeAbove =
+      (resPos.parent !== newTr.doc || resPos.nodeBefore) && node.firstChild?.isText
     // TODO ensure this works and blocks at the start of doc cant be deleted (as they wont merge to node above)
-    if (resPos.parent !== newTr.doc || resPos.nodeBefore) {
+    if (canMergeToNodeAbove) {
       newTr.replaceWith(pos - 1, pos + 1, Fragment.empty)
+    } else {
+      newTr.delete(pos, pos + node.nodeSize)
     }
   } else {
     const attrs = {
@@ -260,9 +268,9 @@ function deleteInlineIfInserted(
     newTr.replaceWith(start, end, Fragment.empty)
   } else {
     const leftNode = newTr.doc.resolve(start).nodeBefore
-    const leftMarks = shouldMergeMarks(leftNode, deleteAttrs, schema)
+    const leftMarks = getMergeableMarkTrackedAttrs(leftNode, deleteAttrs, schema)
     const rightNode = newTr.doc.resolve(end).nodeAfter
-    const rightMarks = shouldMergeMarks(rightNode, deleteAttrs, schema)
+    const rightMarks = getMergeableMarkTrackedAttrs(rightNode, deleteAttrs, schema)
     const fromStartOfMark = start - (leftNode && leftMarks ? leftNode.nodeSize : 0)
     const toEndOfMark = end + (rightNode && rightMarks ? rightNode.nodeSize : 0)
     const dataTracked = addTrackIdIfDoesntExist({
@@ -387,7 +395,7 @@ export function deleteAndMergeSplitBlockNodes(
     splitSliceIntoMergedParts(insertSlice)
   const insertStartDepth = startDoc.resolve(from).depth
   const insertEndDepth = startDoc.resolve(to).depth
-  logger('deleteAndMergeSplitBlockNodes: firstMergedNode', firstMergedNode)
+  logger('deleteAndMergeSplitBlockNodes: updatedSliceNodes', updatedSliceNodes)
   startDoc.nodesBetween(from, to, (node, pos) => {
     const offsetPos = deleteMap.map(pos, 1)
     const offsetFrom = deleteMap.map(from, -1)
@@ -575,6 +583,7 @@ export function trackTransaction(
         logger('TR: new steps after applying delete', [...newTr.steps])
         const toAWithOffset = mergedInsertPos ?? deleteMap.map(toA)
         if (newSliceContent.size > 0) {
+          logger('newSliceContent', newSliceContent)
           // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any partial slices,
           // the new slice should contain only complete nodes therefore the depths should be equal
           const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart

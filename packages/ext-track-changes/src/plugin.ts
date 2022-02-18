@@ -142,6 +142,7 @@ export const trackChangesPlugin = ({
       const { currentUser, insertColor, deleteColor, changeSet } = pluginState
       let createdTr = newState.tr,
         docChanged = false
+      logger('TRS', trs)
       trs.forEach((tr) => {
         const userData = {
           userID: currentUser.id,
@@ -156,6 +157,7 @@ export const trackChangesPlugin = ({
           (wasAppended && getAction(wasAppended, TrackChangesAction.skipTrack))
         if (tr.docChanged && !skipMetaUsed && !skipTrackUsed && !tr.getMeta('history$')) {
           createdTr = trackTransaction(tr, oldState, createdTr, userData)
+          createdTr.setMeta('origin', trackChangesPluginKey)
           infiniteLoopCounter.iters += 1
         }
         docChanged = docChanged || tr.docChanged
@@ -192,6 +194,7 @@ export const trackChangesPlugin = ({
         setAction(createdTr, TrackChangesAction.refreshChanges, true)
       }
       return createdTr
+      // return createdTr.steps.length > 0 ? createdTr : null
     },
   })
 }

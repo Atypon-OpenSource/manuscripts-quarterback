@@ -19,7 +19,7 @@ import { Mapping } from 'prosemirror-transform'
 
 import { ChangeSet } from '../ChangeSet'
 import { PartialTrackedChange, TrackedAttrs, TrackedChange } from '../types/change'
-import { getNodeTrackedMarks } from './node-utils'
+import { getNodeTrackedData } from './node-utils'
 
 export function updateChangeAttrs(
   tr: Transaction,
@@ -31,7 +31,7 @@ export function updateChangeAttrs(
   if (!node) {
     throw Error('No node at the from of change' + change)
   }
-  const dataTracked = { ...getNodeTrackedMarks(node, schema), ...trackedAttrs }
+  const dataTracked = { ...getNodeTrackedData(node, schema), ...trackedAttrs }
   const oldMark = node.marks.find(
     (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
   )

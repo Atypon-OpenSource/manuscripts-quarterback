@@ -18,7 +18,7 @@ import { Node as PMNode } from 'prosemirror-model'
 
 import { ChangeSet } from '../ChangeSet'
 import { PartialTrackedChange } from '../types/change'
-import { getNodeTrackedMarks, equalMarks } from './node-utils'
+import { getNodeTrackedData, equalMarks } from './node-utils'
 
 /**
  * Finds all changes (basically text marks or node attributes) from document
@@ -34,7 +34,7 @@ export function findChanges(state: EditorState) {
   // Store the last iterated change to join adjacent text changes
   let current: { change: PartialTrackedChange; node: PMNode } | undefined
   state.doc.descendants((node, pos) => {
-    const attrs = getNodeTrackedMarks(node, state.schema)
+    const attrs = getNodeTrackedData(node, state.schema)
     if (attrs) {
       const id = attrs?.id || ''
       // Join adjacent text changes that have been broken up due to different marks
@@ -102,7 +102,7 @@ export function updateChanges(
     if (!node) {
       throw Error('No node at the from of change' + current)
     }
-    const attrs = getNodeTrackedMarks(node, state.schema)
+    const attrs = getNodeTrackedData(node, state.schema)
     if (attrs) {
       newChanges.push({ ...current, attrs })
     }
