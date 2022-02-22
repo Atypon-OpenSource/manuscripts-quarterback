@@ -13,7 +13,7 @@ NOTE: it is a good idea to run `git submodule update --remote` once in a while i
 Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
 1. Install all dependencies: `pnpm i -r`
-3. Start the database: `docker-compose up -d postgres`
+3. Start the databases: `docker-compose up -d postgres redis`
 4. Copy the environment variables: `cp ./packages/api/.example-env ./packages/api/.env && cp ./packages/collab/.example-env ./packages/collab/.env && cp ./packages/db/.example-env ./packages/db/.env && cp ./packages/example-app/.example-env ./packages/example-app/.env`
 5. Migrate the database: `pnpm run migrate --filter @manuscripts/quarterback-db`
 6. And seed it with test data: `pnpm run seed --filter @manuscripts/quarterback-db`
