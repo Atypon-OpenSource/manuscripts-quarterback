@@ -13,14 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDoc } from '@manuscripts/quarterback-db'
+import { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
 
-export { PmDoc } from '@manuscripts/quarterback-db'
+export { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
+
+export type ListDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'>
 
 // GET /docs
-export interface IGetDocumentsResponse {
-  docs: PmDoc[]
+export interface IListDocumentsResponse {
+  docs: ListDocument[]
 }
+
+//GET /doc/:documentId
+export type IGetDocumentResponse = PmDoc
 
 // GET /doc/:documentId/open
 export type IOpenDocumentResponse = Uint8Array
+
+// POST /doc
+export interface ICreateDocRequest {
+  name: string
+  doc: Record<string, any>
+}
+export type ISaveDocResponse = PmDoc
+
+export type SnapshotLabel = Pick<DocSnapshot, 'id' | 'createdAt'>
+
+// GET /doc/:documentId/snapshot/labels
+export interface IGetSnapshotLabelsResponse {
+  labels: SnapshotLabel[]
+}
+
+// GET /snapshot/:snapshotId
+export type IGetSnapshotResponse = PmDocSnapshot
+
+// POST /snapshot
+export interface ISaveSnapshotRequest {
+  docId: string
+  snapshot: Record<string, any>
+}
+export interface ISaveSnapshotResponse {
+  snapshot: PmDocSnapshot
+}

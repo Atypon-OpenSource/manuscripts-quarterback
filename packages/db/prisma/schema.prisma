@@ -17,25 +17,42 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  firstname String   @db.VarChar(255)
-  lastname  String   @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  role      UserRole @default(USER)
+  id        String          @id @default(uuid())
+  email     String          @unique
+  firstname String          @db.VarChar(255)
+  lastname  String          @db.VarChar(255)
+  password  String          @db.VarChar(255)
+  role      UserRole        @default(USER)
   docs      PmDoc[]
+  snapshots PmDocSnapshot[]
 
   @@map("quarterback_user")
 }
 
 model PmDoc {
-  id        String   @id @default(uuid())
-  name      String   @db.VarChar(500)
+  id        String          @id @default(uuid())
+  name      String          @db.VarChar(500)
   doc       Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation("PmDocToUser", fields: [user_id], references: [id])
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  user      User            @relation("PmDocToUser", fields: [user_id], references: [id])
   user_id   String
+  snapshots PmDocSnapshot[]
 
   @@map("pm_doc")
+  PmDocSnapshot PmDocSnapshot[] @relation("PmDocSnapshotToPmDoc")
+}
+
+model PmDocSnapshot {
+  id        String   @id @default(uuid())
+  snapshot  Json
+  createdAt DateTime @default(now())
+  doc       PmDoc    @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id])
+  doc_id    String
+
+  @@map("pm_doc_snapshot")
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  PmDoc   PmDoc?  @relation(fields: [pmDocId], references: [id])
+  pmDocId String?
 }

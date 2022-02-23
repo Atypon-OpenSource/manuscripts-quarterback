@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 import { schema } from '@manuscripts/manuscript-transform'
-import { Event, PmDoc } from '@manuscripts/quarterback-shared'
+import {
+  Event,
+  PmDoc,
+  ListDocument,
+  SnapshotLabel,
+  ICreateDocRequest,
+} from '@manuscripts/quarterback-shared'
 import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
 import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
 import { CustomError, log, prisma } from '$common'
 import { createRedisClient } from '$common/redis'
+import { PmDocSnapshot } from '@manuscripts/quarterback-db'
 
 const pub = createRedisClient()
 
@@ -42,13 +49,39 @@ const yjsService = {
 }
 
 export const docService = {
-  async getDocuments(userId: string): Promise<Event<PmDoc[]>> {
+  async listDocuments(userId: string): Promise<Event<ListDocument[]>> {
     const found = await prisma.pmDoc.findMany({
       where: {
         user_id: userId,
       },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
     })
     return { ok: true, data: found }
+  },
+  async getDocument(id: string): Promise<Event<PmDoc>> {
+    const found = await prisma.pmDoc.findUnique({
+      where: {
+        id,
+      },
+    })
+    if (!found) {
+      return { ok: false, error: 'Document not found', status: 404 }
+    }
+    return { ok: true, data: found }
+  },
+  async createDocument(payload: ICreateDocRequest, userId: string): Promise<Event<PmDoc>> {
+    const saved = await prisma.pmDoc.create({
+      data: {
+        name: payload.name,
+        doc: payload.doc,
+        user_id: userId,
+      },
+    })
+    return { ok: true, data: saved }
   },
   async openDocument(docId: string, userId: string): Promise<Event<Uint8Array>> {
     let yDoc = await yjsService.getYDocFromRedis(docId)
@@ -94,5 +127,40 @@ export const docService = {
     }
     const buffer = encodeStateAsUpdate(yDoc)
     return { ok: true, data: buffer }
+  },
+  async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {
+    const found = await prisma.pmDocSnapshot.findMany({
+      where: {
+        doc_id: docId,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+      },
+    })
+    return { ok: true, data: found }
+  },
+  async getSnapshot(snapId: string): Promise<Event<PmDocSnapshot>> {
+    const found = await prisma.pmDocSnapshot.findUnique({
+      where: {
+        id: snapId,
+      },
+    })
+    if (!found) {
+      return { ok: false, error: 'Snapshot not found', status: 404 }
+    }
+    return { ok: true, data: found }
+  },
+  async saveSnapshot(
+    docId: string,
+    snapshot: Record<string, any>
+  ): Promise<Event<PmDocSnapshot>> {
+    const saved = await prisma.pmDocSnapshot.create({
+      data: {
+        snapshot,
+        doc_id: docId,
+      },
+    })
+    return { ok: true, data: saved }
   },
 }

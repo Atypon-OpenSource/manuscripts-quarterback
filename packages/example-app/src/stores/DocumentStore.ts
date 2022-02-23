@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDoc } from '@manuscripts/quarterback-shared'
-import { getDocuments } from 'api/document'
+import { ListDocument, PmDoc } from '@manuscripts/quarterback-shared'
+import * as docApi from 'api/document'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { AuthStore } from './AuthStore'
@@ -26,7 +26,7 @@ interface IProps {
 }
 
 export class DocumentStore {
-  @observable documentsMap: Map<string, PmDoc> = new Map()
+  @observable documentList: ListDocument[] = []
   @observable currentDocument: PmDoc | null = null
   STORAGE_KEY = 'document-store'
 
@@ -55,35 +55,52 @@ export class DocumentStore {
     }
   }
 
-  @computed get documents(): PmDoc[] {
-    return Array.from(this.documentsMap.entries()).map(([_id, doc]) => doc)
-  }
-
-  @action getDocuments = async () => {
-    const resp = await getDocuments()
+  @action listDocuments = async () => {
+    const resp = await docApi.listDocuments()
     if (!resp.ok) {
       console.error(resp.error)
       return
     }
     runInAction(() => {
-      const currentDocsIds = Array.from(this.documentsMap.entries()).map(([id, _doc]) => id)
-      resp.data.docs.forEach((d) => {
-        const idx = currentDocsIds.indexOf(d.id)
-        if (idx === -1) {
-          this.documentsMap.set(d.id, d)
-        }
-        currentDocsIds.splice(idx, 1)
-      })
+      this.documentList = resp.data.docs
     })
+    return resp
+  }
+
+  @action fetchDocument = async (documentId: string) => {
+    const resp = await docApi.getDocument(documentId)
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    runInAction(() => {
+      this.currentDocument = resp.data
+    })
+    return resp
+  }
+
+  @action openDocument = async (id: string) => {}
+
+  @action createDocument = async (name: string) => {
+    const doc = {}
+    const resp = await docApi.createDocument({ name, doc })
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    runInAction(() => {
+      this.currentDocument = resp.data
+    })
+    return resp
   }
 
   @action setCurrentDocument = (id: string) => {
-    this.currentDocument = this.documentsMap.get(id) ?? null
+    // this.currentDocument = this.documentsMap.get(id) ?? null
     // this.editorStore.setCurrentDoc(this.currentDocument?.doc)
   }
 
   @action reset = () => {
-    this.documentsMap = new Map()
+    // this.documentsMap = new Map()
     this.currentDocument = null
   }
 }

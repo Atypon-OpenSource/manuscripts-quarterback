@@ -39,6 +39,12 @@ export const NavBar = observer((props: IProps) => {
           <Link to="/manuscripts/doc1" exact activeClassName="current">
             Manuscripts
           </Link>
+          <Link to="/manuscripts-no-yjs/noyjs1" exact activeClassName="current">
+            Manuscripts no Yjs
+          </Link>
+          <Link to="/docs" exact activeClassName="current">
+            Documents
+          </Link>
           {user && (
             <Link to="/account" exact activeClassName="current">
               {user.firstname}

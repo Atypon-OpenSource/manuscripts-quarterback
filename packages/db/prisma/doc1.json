@@ -1,20 +1,14 @@
 {
-  "type": "doc",
+  "type": "manuscript",
   "content": [
     {
-      "type": "paragraph"
-    },
-    {
-      "type": "paragraph",
+      "type": "section",
       "content": [
         {
-          "type": "text",
-          "marks": [
-            {
-              "type": "bold"
-            }
-          ],
-          "text": "hello I'm an example ProseMirror document"
+          "type": "section_title"
+        },
+        {
+          "type": "paragraph"
         }
       ]
     }

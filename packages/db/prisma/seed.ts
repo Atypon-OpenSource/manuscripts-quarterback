@@ -37,7 +37,7 @@ const DEFAULT_USERS = [
 
 const DEFAULT_DOCS = [
   {
-    name: 'Example 1',
+    name: 'Example doc 1',
     doc: doc1,
   },
 ]

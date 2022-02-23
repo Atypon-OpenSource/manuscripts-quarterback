@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 import {
-  IListDocumentsResponse,
-  IGetDocumentResponse,
-  IOpenDocumentResponse,
-  ICreateDocRequest,
-  ISaveDocResponse,
+  IGetSnapshotLabelsResponse,
+  IGetSnapshotResponse,
+  ISaveSnapshotRequest,
+  ISaveSnapshotResponse,
 } from '@manuscripts/quarterback-shared'
 
 import { get, post } from './methods'
 
-export const listDocuments = () => get<IListDocumentsResponse>('docs', 'Listing documents failed')
+export const listSnapshotLabels = (docId: string) =>
+  get<IGetSnapshotLabelsResponse>(`doc/${docId}/snapshot/labels`, 'Fetching snapshots failed')
 
-export const getDocument = (id: string) =>
-  get<IGetDocumentResponse>(`doc/${id}`, 'Fetching document failed')
+export const getSnapshot = (snapshotId: string) =>
+  get<IGetSnapshotResponse>(`snapshot/${snapshotId}`, 'Fetching a snapshot failed')
 
-export const openDocument = (documentId: string) =>
-  get<IOpenDocumentResponse>(`doc/${documentId}/open`, 'Opening document failed', {
-    Accept: 'application/octet-stream',
-  })
-
-export const createDocument = (payload: ICreateDocRequest) =>
-  post<ISaveDocResponse>('doc', payload, 'Creating document failed')
+export const saveSnapshot = (payload: ISaveSnapshotRequest) =>
+  post<ISaveSnapshotResponse>('snapshot', payload, 'Saving snapshot failed')

@@ -20,7 +20,9 @@ import { WrappedRoute } from './components/WrappedRoute'
 import { AccountPage } from './pages/AccountPage'
 import { FrontPage } from './pages/FrontPage'
 import LoginPage from './pages/LoginPage'
+import { DocumentListPage } from './pages/DocumentListPage'
 import { ManuscriptsPage } from './pages/ManuscriptsPage'
+import { ManuscriptsNoYjsPage } from './pages/ManuscriptsNoYjsPage'
 
 export const Routes = () => (
   <BrowserRouter>
@@ -28,7 +30,9 @@ export const Routes = () => (
       <WrappedRoute exact path="/" component={FrontPage} />
       <WrappedRoute exact path="/login" component={LoginPage} />
       <WrappedRoute exact path="/account" component={AccountPage} />
+      <WrappedRoute exact path="/docs" component={DocumentListPage} />
       <WrappedRoute exact path="/manuscripts/:documentId" component={ManuscriptsPage} />
+      <WrappedRoute exact path="/manuscripts-no-yjs/:documentId" component={ManuscriptsNoYjsPage} />
       <Redirect to="/" />
     </Switch>
   </BrowserRouter>
