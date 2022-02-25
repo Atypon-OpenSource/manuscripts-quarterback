@@ -144,12 +144,12 @@ export const listSnapshotLabels = async (
 }
 
 export const getSnapshot = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string; snapshotId: string }>,
+  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
   res: Response<IGetSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
-    const { documentId, snapshotId } = req.params
+    const { snapshotId } = req.params
     const result = await docService.getSnapshot(snapshotId)
     if (result.ok) {
       res.json(result.data)

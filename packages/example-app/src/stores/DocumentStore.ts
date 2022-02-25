@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ListDocument, PmDocSnapshot, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
+import {
+  Event,
+  ISaveSnapshotResponse,
+  ListDocument,
+  PmDocSnapshot,
+  PmDocWithSnapshots,
+} from '@manuscripts/quarterback-shared'
 import * as docApi from 'api/document'
 import * as snapApi from 'api/snapshot'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
@@ -137,38 +143,41 @@ export class DocumentStore {
 
   @action saveSnapshot = async (snapshot: Record<string, any>) => {
     const docId = this.currentDocument?.id
+    let resp: Event<ISaveSnapshotResponse>
     if (!docId) {
-      console.error('No current document')
-      return { ok: false, error: 'No current document' }
+      resp = { ok: false, error: 'No current document', status: 400 }
+    } else {
+      resp = await snapApi.saveSnapshot({ docId, snapshot })
     }
-    const resp = await snapApi.saveSnapshot({ docId, snapshot })
     if (!resp.ok) {
       console.error(resp.error)
-      return resp
-    }
-    runInAction(() => {
+    } else {
       const {
         data: { snapshot },
       } = resp
-      this.snapshotsMap.set(snapshot.id, snapshot)
-      this.snapshotLabels.push({ id: snapshot.id, createdAt: snapshot.createdAt })
-    })
+      runInAction(() => {
+        this.snapshotsMap.set(snapshot.id, snapshot)
+        this.snapshotLabels.push({ id: snapshot.id, createdAt: snapshot.createdAt })
+      })
+    }
+    return resp
   }
 
   @action deleteSnapshot = async (snapId: string) => {
     const resp = await snapApi.deleteSnapshot(snapId)
     if (!resp.ok) {
       console.error(resp.error)
-      return resp
+    } else {
+      runInAction(() => {
+        this.snapshotsMap.delete(snapId)
+        if (this.currentDocument) {
+          this.currentDocument.snapshots = this.currentDocument.snapshots.filter(
+            (s) => s.id !== snapId
+          )
+        }
+      })
     }
-    runInAction(() => {
-      this.snapshotsMap.delete(snapId)
-      if (this.currentDocument) {
-        this.currentDocument.snapshots = this.currentDocument.snapshots.filter(
-          (s) => s.id !== snapId
-        )
-      }
-    })
+    return resp
   }
 
   @action reset = () => {

@@ -75,9 +75,10 @@ export const RightPanel = memo((props: Props) => {
   function toggleChangesVisibility(status: CHANGE_STATUS) {
     viewProvider.execCommand(trackCommands.toggleShownStatuses([status]))
   }
-  function handleCreateSnapshot() {
+  async function handleCreateSnapshot() {
     if (yjsDisabled) {
-      documentStore.saveSnapshot(viewProvider.docToJSON())
+      const saved = await documentStore.saveSnapshot(viewProvider.docToJSON())
+      saved.ok && viewProvider.execCommand(trackCommands.applyAndRemoveChanges())
     } else {
       yjsStore?.createSnapshot()
     }
