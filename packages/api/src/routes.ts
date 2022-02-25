@@ -26,11 +26,13 @@ router.post('/login', authCtrl.login)
 
 router.get('/docs', authenticate, docCtrl.listDocuments)
 router.get('/doc/:documentId', authenticate, docCtrl.getDocument)
-// router.post('/doc', authenticate, docCtrl.saveDocument)
+router.post('/doc', authenticate, docCtrl.createDocument)
+router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.get('/doc/:documentId/open', authenticate, docCtrl.openDocument)
 
-// router.get(`/doc/${:documentId}/snapshot/labels`, authenticate, docCtrl.listSnapshotLabels)
-// router.get(`/snapshot/${:snapshotId}`, authenticate, docCtrl.getSnapshot)
-// router.post('/snapshot', authenticate, docCtrl.saveSnapshot)
+router.get('/doc/:documentId/snapshot/labels', authenticate, docCtrl.listSnapshotLabels)
+router.get('/snapshot/:snapshotId', authenticate, docCtrl.getSnapshot)
+router.delete('/snapshot/:snapshotId', authenticate, docCtrl.deleteSnapshot)
+router.post('/snapshot', authenticate, docCtrl.saveSnapshot)
 
 export default router

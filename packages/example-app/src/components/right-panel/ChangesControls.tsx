@@ -22,13 +22,13 @@ import styled from 'styled-components'
 
 interface IProps {
   className?: string
-  yjsStore?: YjsExtension['store']
   viewProvider: EditorViewProvider | MViewProvider
   trackChangesState: TrackChangesState | null
+  createSnapshot(): void
 }
 
 export function ChangesControls(props: IProps) {
-  const { className, yjsStore, viewProvider, trackChangesState } = props
+  const { className, viewProvider, trackChangesState, createSnapshot } = props
 
   function handleAcceptPending() {
     if (!trackChangesState) return
@@ -47,7 +47,7 @@ export function ChangesControls(props: IProps) {
     viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
   function handleSnapshot() {
-    yjsStore?.createSnapshot()
+    createSnapshot()
   }
   return (
     <Container className={className}>

@@ -20,6 +20,9 @@ import {
   ListDocument,
   SnapshotLabel,
   ICreateDocRequest,
+  PmDocWithSnapshots,
+  ISaveSnapshotRequest,
+  IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
 import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
@@ -62,10 +65,18 @@ export const docService = {
     })
     return { ok: true, data: found }
   },
-  async getDocument(id: string): Promise<Event<PmDoc>> {
+  async getDocument(id: string): Promise<Event<PmDocWithSnapshots>> {
     const found = await prisma.pmDoc.findUnique({
       where: {
         id,
+      },
+      include: {
+        snapshots: {
+          select: {
+            id: true,
+            createdAt: true,
+          },
+        },
       },
     })
     if (!found) {
@@ -73,13 +84,22 @@ export const docService = {
     }
     return { ok: true, data: found }
   },
-  async createDocument(payload: ICreateDocRequest, userId: string): Promise<Event<PmDoc>> {
+  async createDocument(payload: ICreateDocRequest, userId: string): Promise<Event<PmDocWithSnapshots>> {
     const saved = await prisma.pmDoc.create({
       data: {
         name: payload.name,
         doc: payload.doc,
         user_id: userId,
       },
+    })
+    return { ok: true, data: { ...saved, snapshots: [] } }
+  },
+  async updateDocument(docId: string, payload: IUpdateDocRequest): Promise<Event<PmDoc>> {
+    const saved = await prisma.pmDoc.update({
+      data: payload,
+      where: {
+        id: docId
+      }
     })
     return { ok: true, data: saved }
   },
@@ -151,14 +171,22 @@ export const docService = {
     }
     return { ok: true, data: found }
   },
-  async saveSnapshot(
-    docId: string,
-    snapshot: Record<string, any>
-  ): Promise<Event<PmDocSnapshot>> {
+  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Event<PmDocSnapshot>> {
+    const { docId, snapshot } = payload
     const saved = await prisma.pmDocSnapshot.create({
       data: {
         snapshot,
         doc_id: docId,
+      },
+    })
+    return { ok: true, data: saved }
+  },
+  async deleteSnapshot(
+    snapshotId: string
+  ): Promise<Event<PmDocSnapshot>> {
+    const saved = await prisma.pmDocSnapshot.delete({
+      where: {
+        id: snapshotId,
       },
     })
     return { ok: true, data: saved }

@@ -57,12 +57,24 @@ export class EditorViewProvider {
     return true
   }
 
+  docToJSON() {
+    return this.view.state.doc.toJSON()
+  }
+
   stateToJSON() {
     const state = this.view.state.toJSON()
     return { ...state, plugins: [] } as unknown as JSONEditorState
   }
 
-  hydrateStateFromJSON(rawValue: Object) {
+  hydrateDocFromJSON(doc: Record<string, any>) {
+    const state = EditorState.create({
+      doc: this.view.state.schema.nodeFromJSON(doc),
+      plugins: this.view.state.plugins,
+    })
+    this.updateState(state, true)
+  }
+
+  hydrateStateFromJSON(rawValue: { doc: Record<string, any>, selection: Record<string, any> }) {
     const state = EditorState.fromJSON(
       {
         schema: this.view.state.schema,
@@ -70,15 +82,13 @@ export class EditorViewProvider {
       },
       rawValue
     )
-
-    this.view.updateState(state)
-    // Fire an empty transaction to trigger PluginStateProvider to update
-    this.view.dispatch(this.view.state.tr)
+    this.updateState(state, true)
   }
 
   updateState(newState: EditorState, replaced = false) {
     this.view.updateState(newState)
     this._state = newState
+    // Fire an empty transaction to trigger PluginStateProvider to update
     replaced && this.view.dispatch(this.view.state.tr)
     this._observable.emit('updateState', newState)
     return newState

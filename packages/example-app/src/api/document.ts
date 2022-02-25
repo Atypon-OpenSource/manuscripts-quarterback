@@ -18,10 +18,11 @@ import {
   IGetDocumentResponse,
   IOpenDocumentResponse,
   ICreateDocRequest,
-  ISaveDocResponse,
+  ICreateDocResponse,
+  IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 
-import { get, post } from './methods'
+import { get, post, put } from './methods'
 
 export const listDocuments = () => get<IListDocumentsResponse>('docs', 'Listing documents failed')
 
@@ -34,4 +35,7 @@ export const openDocument = (documentId: string) =>
   })
 
 export const createDocument = (payload: ICreateDocRequest) =>
-  post<ISaveDocResponse>('doc', payload, 'Creating document failed')
+  post<ICreateDocResponse>('doc', payload, 'Creating document failed')
+
+export const updateDocument = (id: string, payload: IUpdateDocRequest) =>
+  put<boolean>(`doc/${id}`, payload, 'Updating document failed')

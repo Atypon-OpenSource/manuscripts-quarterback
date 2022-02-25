@@ -24,13 +24,16 @@ import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/quarterback-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React, { memo } from 'react'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
 import { SnapshotsList } from './SnapshotsList'
+import { YjsSnapshotsList } from './YjsSnapshotsList'
 
 interface Props {
+  yjsDisabled?: boolean
   yjsState?: YjsExtensionState
   yjsStore?: YjsExtension['store']
   viewProvider: EditorViewProvider | MViewProvider
@@ -38,8 +41,9 @@ interface Props {
 }
 
 export const RightPanel = memo((props: Props) => {
-  const { yjsState, yjsStore, viewProvider, trackChangesState } = props
+  const { yjsDisabled, yjsState, yjsStore, viewProvider, trackChangesState } = props
   const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
+  const { documentStore } = stores
 
   function handleAcceptChange(c: TrackedChange) {
     const ids = [c.id]
@@ -71,16 +75,27 @@ export const RightPanel = memo((props: Props) => {
   function toggleChangesVisibility(status: CHANGE_STATUS) {
     viewProvider.execCommand(trackCommands.toggleShownStatuses([status]))
   }
+  function handleCreateSnapshot() {
+    if (yjsDisabled) {
+      documentStore.saveSnapshot(viewProvider.docToJSON())
+    } else {
+      yjsStore?.createSnapshot()
+    }
+  }
 
   return (
     <RightSide>
       <ChangesControls
         className="changes-controls"
-        yjsStore={yjsStore}
         viewProvider={viewProvider}
         trackChangesState={trackChangesState}
+        createSnapshot={handleCreateSnapshot}
       />
-      <SnapshotsList yjsState={yjsState} yjsStore={yjsStore} />
+      {yjsDisabled ? (
+        <SnapshotsList viewProvider={viewProvider} />
+      ) : (
+        <YjsSnapshotsList yjsState={yjsState} yjsStore={yjsStore} />
+      )}
       <ChangeList
         changes={changeSet?.pending || []}
         isVisible={shownChangeStatuses.includes(CHANGE_STATUS.pending)}

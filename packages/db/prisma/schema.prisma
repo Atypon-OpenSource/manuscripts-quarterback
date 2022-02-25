@@ -17,14 +17,13 @@ enum UserRole {
 }
 
 model User {
-  id        String          @id @default(uuid())
-  email     String          @unique
-  firstname String          @db.VarChar(255)
-  lastname  String          @db.VarChar(255)
-  password  String          @db.VarChar(255)
-  role      UserRole        @default(USER)
-  docs      PmDoc[]
-  snapshots PmDocSnapshot[]
+  id        String   @id @default(uuid())
+  email     String   @unique
+  firstname String   @db.VarChar(255)
+  lastname  String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      UserRole @default(USER)
+  docs      PmDoc[]  @relation("PmDocToUser")
 
   @@map("quarterback_user")
 }
@@ -37,10 +36,9 @@ model PmDoc {
   updatedAt DateTime        @updatedAt
   user      User            @relation("PmDocToUser", fields: [user_id], references: [id])
   user_id   String
-  snapshots PmDocSnapshot[]
+  snapshots PmDocSnapshot[] @relation("PmDocSnapshotToPmDoc")
 
   @@map("pm_doc")
-  PmDocSnapshot PmDocSnapshot[] @relation("PmDocSnapshotToPmDoc")
 }
 
 model PmDocSnapshot {
@@ -51,8 +49,4 @@ model PmDocSnapshot {
   doc_id    String
 
   @@map("pm_doc_snapshot")
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
-  PmDoc   PmDoc?  @relation(fields: [pmDocId], references: [id])
-  pmDocId String?
 }

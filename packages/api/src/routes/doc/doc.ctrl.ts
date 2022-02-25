@@ -15,10 +15,15 @@
  */
 import {
   IListDocumentsResponse,
+  ICreateDocRequest,
+  ICreateDocResponse,
   IGetDocumentResponse,
   IGetSnapshotLabelsResponse,
   IGetSnapshotResponse,
   ISaveSnapshotResponse,
+  ISaveSnapshotRequest,
+  PmDoc,
+  IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -57,6 +62,41 @@ export const getDocument = async (
     const result = await docService.getDocument(documentId)
     if (result.ok) {
       res.json(result.data)
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const createDocument = async (
+  req: IAuthRequest<ICreateDocRequest>,
+  res: Response<ICreateDocResponse>,
+  next: NextFunction
+) => {
+  try {
+    const result = await docService.createDocument(req.body, res.locals.user.id)
+    if (result.ok) {
+      res.json(result.data)
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const updateDocument = async (
+  req: IAuthRequest<IUpdateDocRequest, { documentId: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const result = await docService.updateDocument(documentId, req.body)
+    if (result.ok) {
+      res.sendStatus(200)
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -122,16 +162,32 @@ export const getSnapshot = async (
 }
 
 export const saveSnapshot = async (
-  req: IAuthRequest<{ snapshot: Record<string, any> }>,
+  req: IAuthRequest<ISaveSnapshotRequest>,
   res: Response<ISaveSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
-    const { documentId } = req.params
-    const { snapshot } = req.body
-    const result = await docService.saveSnapshot(documentId, snapshot)
+    const result = await docService.saveSnapshot(req.body)
     if (result.ok) {
       res.json({ snapshot: result.data })
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteSnapshot = async (
+  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
+  res: Response<ISaveSnapshotResponse>,
+  next: NextFunction
+) => {
+  try {
+    const { snapshotId } = req.params
+    const result = await docService.deleteSnapshot(snapshotId)
+    if (result.ok) {
+      res.sendStatus(200)
     } else {
       next(new CustomError(result.error, result.status))
     }

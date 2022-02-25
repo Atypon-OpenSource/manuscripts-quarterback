@@ -96,6 +96,13 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
           <hr />
           <div id="editor" ref={editorDOMRef} className={`${className}`} />
         </LeftSide>
+        {providers.viewProvider && (
+          <RightPanel
+            yjsDisabled={true}
+            viewProvider={providers.viewProvider}
+            trackChangesState={trackChangesState}
+          />
+        )}
       </ViewGrid>
     </>
   )

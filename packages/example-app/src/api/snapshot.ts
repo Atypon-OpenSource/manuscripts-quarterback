@@ -20,7 +20,7 @@ import {
   ISaveSnapshotResponse,
 } from '@manuscripts/quarterback-shared'
 
-import { get, post } from './methods'
+import { get, post, del } from './methods'
 
 export const listSnapshotLabels = (docId: string) =>
   get<IGetSnapshotLabelsResponse>(`doc/${docId}/snapshot/labels`, 'Fetching snapshots failed')
@@ -30,3 +30,6 @@ export const getSnapshot = (snapshotId: string) =>
 
 export const saveSnapshot = (payload: ISaveSnapshotRequest) =>
   post<ISaveSnapshotResponse>('snapshot', payload, 'Saving snapshot failed')
+
+export const deleteSnapshot = (snapId: string) =>
+  del<boolean>(`snapshot/${snapId}`, 'Deleting snapshot failed')

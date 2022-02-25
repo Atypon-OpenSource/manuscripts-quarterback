@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ListDocument, PmDoc } from '@manuscripts/quarterback-shared'
+import { ListDocument, PmDocSnapshot, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
 import * as docApi from 'api/document'
+import * as snapApi from 'api/snapshot'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { AuthStore } from './AuthStore'
@@ -27,7 +28,9 @@ interface IProps {
 
 export class DocumentStore {
   @observable documentList: ListDocument[] = []
-  @observable currentDocument: PmDoc | null = null
+  @observable currentDocument: PmDocWithSnapshots | null = null
+  @observable snapshotsMap: Map<string, PmDocSnapshot> = new Map()
+  @observable inspectedSnapshot: PmDocSnapshot | null = null
   STORAGE_KEY = 'document-store'
 
   authStore: AuthStore
@@ -53,6 +56,10 @@ export class DocumentStore {
       //   })
       // })
     }
+  }
+
+  @computed get snapshotLabels() {
+    return this.currentDocument?.snapshots || []
   }
 
   @action listDocuments = async () => {
@@ -94,9 +101,74 @@ export class DocumentStore {
     return resp
   }
 
-  @action setCurrentDocument = (id: string) => {
-    // this.currentDocument = this.documentsMap.get(id) ?? null
-    // this.editorStore.setCurrentDoc(this.currentDocument?.doc)
+  @action updateCurrentDocument = async (doc: Record<string, any>) => {
+    if (!this.currentDocument) {
+      return { ok: false, error: 'No current document' }
+    }
+    this.currentDocument.doc = doc
+    const resp = await docApi.updateDocument(this.currentDocument.id, { doc })
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    return resp
+  }
+
+  @action inspectSnapshot = async (id: string) => {
+    this.inspectedSnapshot = this.snapshotsMap.get(id) ?? null
+    if (this.inspectedSnapshot) {
+      return { ok: true, data: this.inspectedSnapshot }
+    }
+    const resp = await snapApi.getSnapshot(id)
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    runInAction(() => {
+      this.snapshotsMap.set(id, resp.data)
+      this.inspectedSnapshot = resp.data
+    })
+    return resp
+  }
+
+  @action resumeEditing = () => {
+    this.inspectedSnapshot = null
+  }
+
+  @action saveSnapshot = async (snapshot: Record<string, any>) => {
+    const docId = this.currentDocument?.id
+    if (!docId) {
+      console.error('No current document')
+      return { ok: false, error: 'No current document' }
+    }
+    const resp = await snapApi.saveSnapshot({ docId, snapshot })
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    runInAction(() => {
+      const {
+        data: { snapshot },
+      } = resp
+      this.snapshotsMap.set(snapshot.id, snapshot)
+      this.snapshotLabels.push({ id: snapshot.id, createdAt: snapshot.createdAt })
+    })
+  }
+
+  @action deleteSnapshot = async (snapId: string) => {
+    const resp = await snapApi.deleteSnapshot(snapId)
+    if (!resp.ok) {
+      console.error(resp.error)
+      return resp
+    }
+    runInAction(() => {
+      this.snapshotsMap.delete(snapId)
+      if (this.currentDocument) {
+        this.currentDocument.snapshots = this.currentDocument.snapshots.filter(
+          (s) => s.id !== snapId
+        )
+      }
+    })
   }
 
   @action reset = () => {

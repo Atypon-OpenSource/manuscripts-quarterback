@@ -13,47 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackChangesStatus, trackCommands } from '@manuscripts/ext-track-changes'
-import { SnapshotLabel } from '@manuscripts/quarterback-shared'
-import { EditorViewProvider } from '@manuscripts/quarterback-editor'
-import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
-import { observer } from 'mobx-react'
-import React, { useState } from 'react'
+import { YjsExtension, YjsExtensionState, YjsSnapshot } from '@manuscripts/ext-yjs'
+import React, { useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
-import { stores } from 'stores'
 import styled from 'styled-components'
 
 interface IProps {
   className?: string
-  viewProvider: EditorViewProvider | MViewProvider
+  yjsState?: YjsExtensionState
+  yjsStore?: YjsExtension['store']
 }
 
-export const SnapshotsList = observer((props: IProps) => {
-  const { className, viewProvider } = props
-  const { documentStore } = stores
-  const { snapshotLabels, inspectedSnapshot } = documentStore
+export function YjsSnapshotsList(props: IProps) {
+  const { className, yjsState, yjsStore } = props
   const [isVisible, setIsVisible] = useState(true)
+  const snapshots = useMemo(() => yjsState?.snapshots || [], [yjsState])
+  const selectedSnapshot = useMemo(() => yjsState?.selectedSnapshot, [yjsState])
 
-  async function handleInspectSnapshot(snap: SnapshotLabel) {
-    if (!documentStore.inspectedSnapshot) {
-      await documentStore.updateCurrentDocument(viewProvider.docToJSON())
-    }
-    const resp = await documentStore.inspectSnapshot(snap.id)
-    if (resp.ok) {
-      viewProvider.hydrateDocFromJSON(resp.data.snapshot as any)
-      viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.viewSnapshots))
-    }
+  function handleInspectSnapshot(snap: YjsSnapshot) {
+    yjsStore?.inspectSnapshot(snap)
   }
   function handleResumeEditing() {
-    documentStore.resumeEditing()
-    const { currentDocument } = documentStore
-    if (currentDocument?.doc) {
-      viewProvider.hydrateDocFromJSON(currentDocument.doc as any)
-    }
-    viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.enabled))
+    yjsStore?.resumeEditing()
   }
-  function handleDeleteSnapshot(snap: SnapshotLabel) {
-    documentStore.deleteSnapshot(snap.id)
+  function handleDeleteSnapshot(snap: YjsSnapshot) {
+    yjsStore?.deleteSnapshot(snap)
   }
   return (
     <>
@@ -63,14 +47,14 @@ export const SnapshotsList = observer((props: IProps) => {
           <Title>Snapshots</Title>
         </button>
         <button
-          className={`inspect-btn ${inspectedSnapshot ? '' : 'hidden'}`}
+          className={`inspect-btn ${selectedSnapshot ? '' : 'hidden'}`}
           onClick={() => handleResumeEditing()}
         >
           Stop inspecting
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {snapshotLabels.map((snap: SnapshotLabel, i: number) => (
+        {snapshots.map((snap: YjsSnapshot, i: number) => (
           <SnapListItem key={`${snap.id}`}>
             <TitleWrapper>
               <h4>Snapshot {i + 1}</h4>
@@ -79,13 +63,13 @@ export const SnapshotsList = observer((props: IProps) => {
                 <button onClick={() => handleDeleteSnapshot(snap)}>Delete</button>
               </Buttons>
             </TitleWrapper>
-            <small>{new Date(snap.createdAt).toLocaleString()}</small>
+            <small>{new Date(snap.date).toLocaleString()}</small>
           </SnapListItem>
         ))}
       </List>
     </>
   )
-})
+}
 
 const Header = styled.div`
   align-items: center;
