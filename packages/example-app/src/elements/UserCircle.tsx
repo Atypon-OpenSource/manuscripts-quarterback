@@ -13,7 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './auth'
-export * from './comment'
-export * from './doc'
-export * from './utils'
+import React from 'react'
+import styled from 'styled-components'
+
+export const UserCircle = styled.div<{ color: string; currentUser?: boolean }>`
+  align-items: center;
+  background: ${({ color }) => color};
+  border: ${({ currentUser }) => currentUser && '2px solid #1d0a16'};
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  width: 2rem;
+  height: 2rem;
+  user-select: none;
+`

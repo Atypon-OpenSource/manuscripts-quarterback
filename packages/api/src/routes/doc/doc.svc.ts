@@ -84,7 +84,10 @@ export const docService = {
     }
     return { ok: true, data: found }
   },
-  async createDocument(payload: ICreateDocRequest, userId: string): Promise<Event<PmDocWithSnapshots>> {
+  async createDocument(
+    payload: ICreateDocRequest,
+    userId: string
+  ): Promise<Event<PmDocWithSnapshots>> {
     const saved = await prisma.pmDoc.create({
       data: {
         name: payload.name,
@@ -98,8 +101,8 @@ export const docService = {
     const saved = await prisma.pmDoc.update({
       data: payload,
       where: {
-        id: docId
-      }
+        id: docId,
+      },
     })
     return { ok: true, data: saved }
   },
@@ -181,9 +184,7 @@ export const docService = {
     })
     return { ok: true, data: saved }
   },
-  async deleteSnapshot(
-    snapshotId: string
-  ): Promise<Event<PmDocSnapshot>> {
+  async deleteSnapshot(snapshotId: string): Promise<Event<PmDocSnapshot>> {
     const saved = await prisma.pmDocSnapshot.delete({
       where: {
         id: snapshotId,

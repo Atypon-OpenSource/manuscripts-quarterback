@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 import { generateUser, YjsUser } from '@manuscripts/ext-yjs'
-import { IJwt, ILoginParams, IUser } from '@manuscripts/quarterback-shared'
+import { Jwt, ILoginParams, UserWithColor } from '@manuscripts/quarterback-shared'
 import { action, computed, makeObservable, observable } from 'mobx'
+import randomColor from 'randomcolor'
 
 import * as authApi from '../api/auth'
 import { hydrate, persist } from './persist'
 
 interface Persisted {
-  user?: IUser
+  user?: UserWithColor
   editorUser?: YjsUser
-  jwt?: IJwt
+  jwt?: Jwt
 }
 
 export class AuthStore {
-  @observable user?: IUser = undefined
+  @observable user?: UserWithColor = undefined
   @observable editorUser?: YjsUser = undefined
-  @observable jwt?: IJwt = undefined
+  @observable jwt?: Jwt = undefined
   resetAllStores: () => void
   STORAGE_KEY = 'auth-store'
 
@@ -65,7 +66,12 @@ export class AuthStore {
   @action login = async (params: ILoginParams) => {
     const res = await authApi.login(params)
     if (res.ok) {
-      this.user = res.data.user
+      this.user = {
+        ...res.data.user,
+        color: randomColor({
+          luminosity: 'dark',
+        }),
+      }
       this.jwt = res.data.jwt
       this.persist()
       return true

@@ -26,7 +26,7 @@ import { ManuscriptsNoYjsEditor } from '../components/manuscripts-editor/Manuscr
 import { ManuscriptsEditorContext } from '../components/manuscripts-editor/ManuscriptsEditorContext'
 
 export function ManuscriptsNoYjsPage() {
-  const { documentStore } = stores
+  const { documentFlows } = stores
   const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
   const { options, setOptions } = useTrackOptions('manuscript-no-yjs-track-options', {
@@ -36,7 +36,7 @@ export function ManuscriptsNoYjsPage() {
   const [initialData, setInitialData] = useState<PmDoc>()
 
   useEffect(async () => {
-    const resp = await documentStore.fetchDocument(documentId)
+    const resp = await documentFlows.getDoc(documentId)
     if (resp.ok) {
       setInitialData(resp.data)
     }

@@ -13,35 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { Event, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'
 
-import { DocumentFlows } from './DocumentFlows'
+interface IProps {
+  authStore: AuthStore
+  commentStore: CommentStore
+  documentStore: DocumentStore
+}
 
-export class Stores {
+export class DocumentFlows {
+
   authStore: AuthStore
   commentStore: CommentStore
   documentStore: DocumentStore
 
-  documentFlows: DocumentFlows
-
-  constructor() {
-    this.authStore = new AuthStore(this.reset)
-    this.documentStore = new DocumentStore({
-      authStore: this.authStore,
-    })
-    this.commentStore = new CommentStore()
-    this.documentFlows = new DocumentFlows({
-      authStore: this.authStore,
-      commentStore: this.commentStore,
-      documentStore: this.documentStore,
-    })
+  constructor(props: IProps) {
+    this.authStore = props.authStore
+    this.commentStore = props.commentStore
+    this.documentStore = props.documentStore
   }
 
-  reset = () => {
-    this.authStore.reset()
-    this.commentStore.reset()
-    this.documentStore.reset()
+  getDoc = async (documentId: string): Promise<Event<PmDocWithSnapshots>> => {
+    const { user } = this.authStore
+    if (!user) {
+      return { ok: false, error: 'Not logged in', status: 400 }
+    }
+    const resp = await Promise.all([
+      this.documentStore.fetchDocument(documentId),
+      this.commentStore.listComments(documentId, user)
+    ])
+    return resp[0]
   }
 }

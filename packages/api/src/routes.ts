@@ -18,6 +18,7 @@ import { Router } from 'express'
 import { authenticate, validateBody } from '$middlewares'
 
 import * as authCtrl from './routes/auth/auth.ctrl'
+import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
 
 const router = Router()
@@ -34,5 +35,10 @@ router.get('/doc/:documentId/snapshot/labels', authenticate, docCtrl.listSnapsho
 router.get('/snapshot/:snapshotId', authenticate, docCtrl.getSnapshot)
 router.delete('/snapshot/:snapshotId', authenticate, docCtrl.deleteSnapshot)
 router.post('/snapshot', authenticate, docCtrl.saveSnapshot)
+
+router.get('/doc/:documentId/comments', authenticate, commentCtrl.listComments)
+router.post('/comment', authenticate, commentCtrl.createComment)
+router.put('/comment/:commentId', authenticate, commentCtrl.updateComment)
+router.delete('/comment/:commentId', authenticate, commentCtrl.deleteComment)
 
 export default router

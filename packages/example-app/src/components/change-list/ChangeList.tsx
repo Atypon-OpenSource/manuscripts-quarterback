@@ -19,6 +19,7 @@ import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import styled from 'styled-components'
 
 import { ChildrenChangeList } from './ChildrenChangeList'
+import { Comments } from '../comments/Comments'
 
 interface IProps {
   className?: string
@@ -60,33 +61,36 @@ export function ChangeList(props: IProps) {
       <List className={`${className || ''} ${isVisible ? '' : 'hidden'}`}>
         {changes.map((c: TrackedChange, i: number) => (
           <ListItem key={`${c.id}-${i}`} data-test="change-item">
-            <Body status={c.attrs.status}>
-              <TitleWrapper>
-                <h4>{changeTitle(c)}</h4>
-                <Buttons>
-                  {c.attrs.status !== CHANGE_STATUS.accepted && (
-                    <button onClick={() => handleAcceptChange(c)} aria-label="accept-btn">
-                      Accept
-                    </button>
-                  )}
-                  {c.attrs.status !== CHANGE_STATUS.rejected && (
-                    <button onClick={() => handleRejectChange(c)} aria-label="reject-btn">
-                      Reject
-                    </button>
-                  )}
-                  {c.attrs.status !== CHANGE_STATUS.pending && (
-                    <button onClick={() => handleResetChange(c)} aria-label="reset-btn">
-                      Reset
-                    </button>
-                  )}
-                </Buttons>
-              </TitleWrapper>
-              <Ranges>
-                <span className="msg">from: {c.from}</span>
-                <span className="msg">to: {c.to}</span>
-                {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
-              </Ranges>
-            </Body>
+            <TopChange>
+              <ChangeBody status={c.attrs.status}>
+                <TitleWrapper>
+                  <h4>{changeTitle(c)}</h4>
+                  <Buttons>
+                    {c.attrs.status !== CHANGE_STATUS.accepted && (
+                      <button onClick={() => handleAcceptChange(c)} aria-label="accept-btn">
+                        Accept
+                      </button>
+                    )}
+                    {c.attrs.status !== CHANGE_STATUS.rejected && (
+                      <button onClick={() => handleRejectChange(c)} aria-label="reject-btn">
+                        Reject
+                      </button>
+                    )}
+                    {c.attrs.status !== CHANGE_STATUS.pending && (
+                      <button onClick={() => handleResetChange(c)} aria-label="reset-btn">
+                        Reset
+                      </button>
+                    )}
+                  </Buttons>
+                </TitleWrapper>
+                <Ranges>
+                  <span className="msg">from: {c.from}</span>
+                  <span className="msg">to: {c.to}</span>
+                  {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
+                </Ranges>
+              </ChangeBody>
+              <Comments change={c} />
+            </TopChange>
             {ChangeSet.isNodeChange(c) && c.children.length > 0 && (
               <ChildrenChangeList
                 parent={c}
@@ -147,7 +151,8 @@ const markerBg = (status: CHANGE_STATUS) => {
       return '#ffabab'
   }
 }
-const Body = styled.div<{ status: CHANGE_STATUS }>`
+const TopChange = styled.div``
+const ChangeBody = styled.div<{ status: CHANGE_STATUS }>`
   background: ${({ status }) => markerBg(status)};
   border-radius: 2px;
   padding: 0.25rem;

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { User } from '@manuscripts/quarterback-db'
+import type { User as DBUser } from '@manuscripts/quarterback-db'
 
 export { UserRole } from '../src/auth'
 
-export type IUser = Omit<User, 'password'>
+export type User = Omit<DBUser, 'password'>
+export type UserWithColor = User & { color: string }
 
 // POST login
 export interface ILoginParams {
@@ -25,10 +26,10 @@ export interface ILoginParams {
   password: string
 }
 export interface ILoginResponse {
-  user: IUser
-  jwt: IJwt
+  user: User
+  jwt: Jwt
 }
-export type IJwt = {
+export type Jwt = {
   expires: number
   token: string
 }

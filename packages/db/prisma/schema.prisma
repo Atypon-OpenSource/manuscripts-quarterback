@@ -17,13 +17,14 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  firstname String   @db.VarChar(255)
-  lastname  String   @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  role      UserRole @default(USER)
-  docs      PmDoc[]  @relation("PmDocToUser")
+  id        String    @id @default(uuid())
+  email     String    @unique
+  firstname String    @db.VarChar(255)
+  lastname  String    @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  role      UserRole  @default(USER)
+  docs      PmDoc[]   @relation("PmDocToUser")
+  comments  Comment[] @relation("CommentToUser")
 
   @@map("quarterback_user")
 }
@@ -37,16 +38,34 @@ model PmDoc {
   user      User            @relation("PmDocToUser", fields: [user_id], references: [id])
   user_id   String
   snapshots PmDocSnapshot[] @relation("PmDocSnapshotToPmDoc")
+  comments  Comment[]       @relation("CommentToPmDoc")
 
   @@map("pm_doc")
 }
 
 model PmDocSnapshot {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
+  name      String    @default("") @db.VarChar(500)
   snapshot  Json
-  createdAt DateTime @default(now())
-  doc       PmDoc    @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id])
+  createdAt DateTime  @default(now())
+  doc       PmDoc     @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id])
   doc_id    String
+  comments  Comment[] @relation("CommentToPmDocSnapshot")
 
   @@map("pm_doc_snapshot")
+}
+
+model Comment {
+  id          String         @id @default(uuid())
+  body        String
+  createdAt   DateTime       @default(now())
+  change_id   String
+  user        User           @relation("CommentToUser", fields: [user_id], references: [id])
+  user_id     String
+  doc         PmDoc          @relation("CommentToPmDoc", fields: [doc_id], references: [id])
+  doc_id      String
+  snapshot    PmDocSnapshot? @relation("CommentToPmDocSnapshot", fields: [snapshot_id], references: [id])
+  snapshot_id String?
+
+  @@map("comment")
 }
