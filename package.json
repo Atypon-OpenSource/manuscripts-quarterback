@@ -18,7 +18,7 @@
     "api": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-api' 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run dev --filter @manuscripts/quarterback-collab'",
     "collab": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-collab' 'pnpm run dev --filter @manuscripts/quarterback-collab'",
     "utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/quarterback-schema' 'pnpm run watch --filter @manuscripts/quarterback-editor' 'pnpm run watch --filter @manuscripts/ext-track-changes' 'pnpm run watch --filter @manuscripts/ext-yjs'",
-    "client": "concurrently --kill-others 'pnpm run dev --filter @manuscripts/quarterback-example-app'",
+    "client": "pnpm run dev --filter @manuscripts/quarterback-example-app",
     "start": "concurrently --kill-others 'pnpm api' 'pnpm utils' 'pnpm client'",
     "e2e": "pnpm run test --filter @manuscripts/quarterback-e2e",
     "e2e:open": "pnpm run start --filter @manuscripts/quarterback-e2e",
