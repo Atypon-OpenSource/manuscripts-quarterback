@@ -37,6 +37,19 @@ export class CommentStore {
     return Array.from(this.commentsMap.values())
   }
 
+  @computed get changeComments() {
+    const changeMap = new Map<string, CommentWithUserColor[]>()
+    Array.from(this.commentsMap.values()).forEach((c) => {
+      const prev = changeMap.get(c.change_id)
+      if (prev) {
+        changeMap.set(c.change_id, [...prev, c])
+      } else {
+        changeMap.set(c.change_id, [c])
+      }
+    })
+    return changeMap
+  }
+
   @action listComments = async (docId: string, user: UserWithColor) => {
     const resp = await commentApi.listComments(docId)
     if (!resp.ok) {

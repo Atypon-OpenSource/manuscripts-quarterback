@@ -15,6 +15,7 @@
  */
 import { PmDoc } from '@manuscripts/quarterback-shared'
 import useTrackOptions from 'hooks/useTrackOptions'
+import debounce from 'lodash.debounce'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { stores } from 'stores'
@@ -24,9 +25,13 @@ import { TrackOptions } from '../components/TrackOptions'
 import { Guide } from '../components/Guide'
 import { ManuscriptsNoYjsEditor } from '../components/manuscripts-editor/ManuscriptsNoYjsEditor'
 import { ManuscriptsEditorContext } from '../components/manuscripts-editor/ManuscriptsEditorContext'
+import { EditorState } from 'prosemirror-state'
 
 export function ManuscriptsNoYjsPage() {
-  const { documentFlows } = stores
+  const {
+    documentFlows,
+    documentStore: { updateCurrentDocument },
+  } = stores
   const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
   const { options, setOptions } = useTrackOptions('manuscript-no-yjs-track-options', {
@@ -42,6 +47,10 @@ export function ManuscriptsNoYjsPage() {
     }
   }, [documentId])
 
+  const handleEdit = debounce(
+    (state: EditorState) => updateCurrentDocument(state.doc.toJSON()),
+    500
+  )
   function handleSetUser(type: 'new' | 'logged', cb: (user: any) => void) {
     if (type === 'new') {
       // const user = generateUser()
@@ -66,7 +75,7 @@ export function ManuscriptsNoYjsPage() {
       </header>
       {initialData && (
         <ManuscriptsEditorContext>
-          <ManuscriptsNoYjsEditor options={options} initialData={initialData} />
+          <ManuscriptsNoYjsEditor options={options} initialData={initialData} onEdit={handleEdit} />
         </ManuscriptsEditorContext>
       )}
     </Container>

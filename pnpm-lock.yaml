@@ -335,6 +335,7 @@ importers:
       '@testing-library/cypress': ^8.0.1
       '@types/history': ^4.7.8
       '@types/live-server': ^1.2.1
+      '@types/lodash.debounce': ^4.0.6
       '@types/node': 16.7.12
       '@types/prosemirror-state': ^1.2.7
       '@types/prosemirror-view': ^1.23.1
@@ -412,6 +413,7 @@ importers:
       '@testing-library/cypress': 8.0.1
       '@types/history': 4.7.9
       '@types/live-server': 1.2.1
+      '@types/lodash.debounce': 4.0.6
       '@types/node': 16.7.12
       '@types/prosemirror-state': 1.2.8
       '@types/prosemirror-view': 1.23.1
@@ -6534,6 +6536,12 @@ packages:
 
   /@types/lodash-es/4.17.5:
     resolution: {integrity: sha512-SHBoI8/0aoMQWAgUHMQ599VM6ZiSKg8sh/0cFqqlQQMyY9uEplc0ULU5yQNzcvdR4ZKa0ey8+vFmahuRbOCT1A==}
+    dependencies:
+      '@types/lodash': 4.14.176
+    dev: true
+
+  /@types/lodash.debounce/4.0.6:
+    resolution: {integrity: sha512-4WTmnnhCfDvvuLMaF3KV4Qfki93KebocUF45msxhYyjMttZDQYzHkO639ohhk8+oco2cluAFL3t5+Jn4mleylQ==}
     dependencies:
       '@types/lodash': 4.14.176
     dev: true

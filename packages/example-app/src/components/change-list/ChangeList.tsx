@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 import { CHANGE_STATUS, ChangeSet, TrackedChange } from '@manuscripts/ext-track-changes'
+import { observer } from 'mobx-react'
 import React from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
+import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { ChildrenChangeList } from './ChildrenChangeList'
@@ -32,7 +34,7 @@ interface IProps {
   toggleVisibility: () => void
 }
 
-export function ChangeList(props: IProps) {
+export const ChangeList = observer((props: IProps) => {
   const {
     className,
     changes,
@@ -43,6 +45,9 @@ export function ChangeList(props: IProps) {
     handleResetChange,
     toggleVisibility,
   } = props
+  const {
+    commentStore: { changeComments },
+  } = stores
 
   function changeTitle(c: TrackedChange) {
     if (ChangeSet.isTextChange(c)) {
@@ -89,7 +94,7 @@ export function ChangeList(props: IProps) {
                   {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
                 </Ranges>
               </ChangeBody>
-              <Comments change={c} />
+              <Comments change={c} comments={changeComments.get(c.id) || []} />
             </TopChange>
             {ChangeSet.isNodeChange(c) && c.children.length > 0 && (
               <ChildrenChangeList
@@ -105,7 +110,7 @@ export function ChangeList(props: IProps) {
       </List>
     </>
   )
-}
+})
 
 const Header = styled.button`
   align-items: center;

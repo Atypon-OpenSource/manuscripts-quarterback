@@ -18,7 +18,6 @@ import { CommentWithUserColor } from '@manuscripts/quarterback-shared'
 import { observer } from 'mobx-react'
 import React, { useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiMessageCircle } from 'react-icons/fi'
-import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { NewCommentForm } from './NewCommentForm'
@@ -27,12 +26,11 @@ import { UserCircle } from 'elements/UserCircle'
 interface IProps {
   className?: string
   change: TrackedChange
+  comments: CommentWithUserColor[]
 }
 
 export const Comments = observer((props: IProps) => {
-  const { className, change } = props
-  const { commentStore } = stores
-  const { comments } = commentStore
+  const { className, change, comments } = props
   const [isVisible, setIsVisible] = useState(false)
   return (
     <>

@@ -32,6 +32,7 @@ import {
 } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
+import { EditorState } from 'prosemirror-state'
 import React, { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -50,10 +51,11 @@ interface Props {
   className?: string
   options: TrackOptions
   initialData: PmDoc
+  onEdit?: (state: EditorState) => void
 }
 
 export const ManuscriptsNoYjsEditor = observer((props: Props) => {
-  const { className = '', options, initialData } = props
+  const { className = '', options, initialData, onEdit } = props
   const editorDOMRef = useRef(null)
   const providers = useEditorContext()
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
@@ -79,6 +81,7 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
       initialDoc: initialData.doc as any, // TODO lol
       extensions,
       manuscriptsProps: defaultEditorProps,
+      onEdit,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
         window.commands = ctx.extensionProvider.commands
