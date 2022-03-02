@@ -15,8 +15,8 @@
  */
 import { CHANGE_STATUS, ChangeSet, TrackedChange } from '@manuscripts/ext-track-changes'
 import { observer } from 'mobx-react'
-import React from 'react'
-import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
+import React, { useCallback } from 'react'
+import { FiChevronDown, FiChevronRight, FiMessageCircle } from 'react-icons/fi'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
@@ -46,8 +46,9 @@ export const ChangeList = observer((props: IProps) => {
     toggleVisibility,
   } = props
   const {
-    commentStore: { changeComments },
+    commentStore: { changeComments, openCommentLists, toggleCommentListOpen },
   } = stores
+  const getComments = useCallback((id: string) => changeComments.get(id) || [], [changeComments])
 
   function changeTitle(c: TrackedChange) {
     if (ChangeSet.isTextChange(c)) {
@@ -58,7 +59,7 @@ export const ChangeList = observer((props: IProps) => {
     return 'Unknown change!'
   }
   return (
-    <>
+    <Wrapper>
       <Header onClick={() => toggleVisibility()}>
         <span>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</span>
         <h2>{title}</h2>
@@ -68,7 +69,7 @@ export const ChangeList = observer((props: IProps) => {
           <ListItem key={`${c.id}-${i}`} data-test="change-item">
             <TopChange>
               <ChangeBody status={c.attrs.status}>
-                <TitleWrapper>
+                <ChangeTop>
                   <h4>{changeTitle(c)}</h4>
                   <Buttons>
                     {c.attrs.status !== CHANGE_STATUS.accepted && (
@@ -87,14 +88,19 @@ export const ChangeList = observer((props: IProps) => {
                       </button>
                     )}
                   </Buttons>
-                </TitleWrapper>
-                <Ranges>
-                  <span className="msg">from: {c.from}</span>
-                  <span className="msg">to: {c.to}</span>
-                  {/* <span className="msg">{JSON.stringify(c.attrs)}</span> */}
-                </Ranges>
+                </ChangeTop>
+                <ChangeBottom>
+                  <Ranges>
+                    <span className="msg">from: {c.from}</span>
+                    <span className="msg">to: {c.to}</span>
+                  </Ranges>
+                  <CommentButton onClick={() => toggleCommentListOpen(c.id)}>
+                    <span>{getComments(c.id).length}</span>
+                    <FiMessageCircle size={16} />
+                  </CommentButton>
+                </ChangeBottom>
               </ChangeBody>
-              <Comments change={c} comments={changeComments.get(c.id) || []} />
+              <Comments change={c} />
             </TopChange>
             {ChangeSet.isNodeChange(c) && c.children.length > 0 && (
               <ChildrenChangeList
@@ -108,10 +114,11 @@ export const ChangeList = observer((props: IProps) => {
           </ListItem>
         ))}
       </List>
-    </>
+    </Wrapper>
   )
 })
 
+const Wrapper = styled.div``
 const Header = styled.button`
   align-items: center;
   background: transparent;
@@ -145,7 +152,11 @@ const List = styled.ul<{ indent?: boolean }>`
     visibility: hidden;
   }
 `
-const ListItem = styled.li``
+const ListItem = styled.li`
+  border-radius: 4px;
+  box-shadow: #00000029 0 3px 6px, #0000003b 0 3px 6px;
+  padding: 0.5rem;
+`
 const markerBg = (status: CHANGE_STATUS) => {
   switch (status) {
     case CHANGE_STATUS.pending:
@@ -162,7 +173,7 @@ const ChangeBody = styled.div<{ status: CHANGE_STATUS }>`
   border-radius: 2px;
   padding: 0.25rem;
 `
-const TitleWrapper = styled.div`
+const ChangeTop = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -178,10 +189,23 @@ const Buttons = styled.div`
     margin-left: 0.5rem;
   }
 `
-const Ranges = styled.div`
+const ChangeBottom = styled.div`
   align-items: center;
   display: flex;
-  & > .msg {
+  justify-content: space-between;
+`
+const Ranges = styled.div`
+  .msg {
     margin-right: 1rem;
+  }
+`
+const CommentButton = styled.button`
+  align-items: end;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0 0.25rem;
+  svg {
+    margin: 0 0 2px 2px;
   }
 `

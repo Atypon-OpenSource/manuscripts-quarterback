@@ -81,13 +81,18 @@ export const NewCommentForm = observer((props: IProps) => {
         </UserCircle>
       </CommentAuthor>
       <ReplyBody onSubmit={handleSubmit}>
-        <Input placeholder="Reply..." value={body} onChange={(e) => setBody(e.target.value)} />
+        <Input
+          placeholder="Reply..."
+          value={body}
+          required
+          onChange={(e) => setBody(e.target.value)}
+        />
         <ErrorMsg>{error}</ErrorMsg>
         <ReplyButtons>
           <SendButton type="submit" disabled={loading}>
             Send
           </SendButton>
-          <SendButton disabled={loading} onClick={handleCancel}>
+          <SendButton type="button" disabled={loading} onClick={handleCancel}>
             Cancel
           </SendButton>
         </ReplyButtons>
@@ -108,12 +113,13 @@ const ReplyBody = styled.form`
   align-items: end;
   display: flex;
   flex-direction: column;
-  margin-right: 0.25rem;
+  margin: 0 0.25rem 0 0;
   width: 100%;
 `
 const Input = styled.textarea`
   background: transparent;
   border: 0;
+  height: 4rem;
   outline: none;
   padding: 8px 1rem 8px 0;
   width: 100%;

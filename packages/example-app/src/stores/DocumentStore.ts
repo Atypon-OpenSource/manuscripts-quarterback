@@ -64,12 +64,12 @@ export class DocumentStore {
     const resp = await docApi.getDocument(documentId)
     if (!resp.ok) {
       console.error(resp.error)
-      return resp
+    } else {
+      runInAction(() => {
+        const { data: doc } = resp
+        this.currentDocument = doc
+      })
     }
-    runInAction(() => {
-      const { data: doc } = resp
-      this.currentDocument = doc
-    })
     return resp
   }
 
@@ -103,6 +103,8 @@ export class DocumentStore {
   @action updateCurrentDocument = async (doc: Record<string, any>) => {
     if (!this.currentDocument) {
       return { ok: false, error: 'No current document' }
+    } else if (this.inspectedSnapshot) {
+      return { ok: false, error: "Inspecting a snapshot, can't replace currentDocument with doc" }
     }
     this.currentDocument.doc = doc
     const resp = await docApi.updateDocument(this.currentDocument.id, { doc })

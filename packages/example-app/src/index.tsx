@@ -15,6 +15,7 @@
  */
 import './index.css'
 
+import { Provider } from 'mobx-react'
 import * as React from 'react'
 import { render } from 'react-dom'
 import { ThemeProvider } from 'styled-components'
@@ -22,12 +23,15 @@ import { ThemeProvider } from 'styled-components'
 import { Routes } from './routes'
 import { confMobx } from './stores/mobxConf'
 import { theme } from './theme/theme'
+import { stores } from './stores'
 
 confMobx()
 
 render(
-  <ThemeProvider theme={theme}>
-    <Routes />
-  </ThemeProvider>,
+  <Provider {...stores}>
+    <ThemeProvider theme={theme}>
+      <Routes />
+    </ThemeProvider>
+  </Provider>,
   document.getElementById('root')
 )

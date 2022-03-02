@@ -27,6 +27,7 @@ import randomColor from 'randomcolor'
 export class CommentStore {
   @observable commentsMap: Map<string, CommentWithUserColor> = new Map()
   @observable userColorsMap: Map<string, string> = new Map()
+  @observable openCommentLists: Set<string> = new Set()
   STORAGE_KEY = 'comment-store'
 
   constructor() {
@@ -48,6 +49,14 @@ export class CommentStore {
       }
     })
     return changeMap
+  }
+
+  @action toggleCommentListOpen = (id: string) => {
+    if (this.openCommentLists.has(id)) {
+      this.openCommentLists.delete(id)
+    } else {
+      this.openCommentLists = this.openCommentLists.add(id)
+    }
   }
 
   @action listComments = async (docId: string, user: UserWithColor) => {

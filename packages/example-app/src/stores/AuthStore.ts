@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { generateUser, YjsUser } from '@manuscripts/ext-yjs'
-import { Jwt, ILoginParams, UserWithColor } from '@manuscripts/quarterback-shared'
+import { Jwt, ILoginParams, UserWithColor, UserRole } from '@manuscripts/quarterback-shared'
 import { action, computed, makeObservable, observable } from 'mobx'
 import randomColor from 'randomcolor'
 
@@ -57,6 +57,10 @@ export class AuthStore {
 
   @computed get isLoggedIn() {
     return this.user && this.user.email
+  }
+
+  @computed get isAdmin() {
+    return this.user?.role === UserRole.ADMIN
   }
 
   @action setEditorUser = (user: YjsUser) => {
