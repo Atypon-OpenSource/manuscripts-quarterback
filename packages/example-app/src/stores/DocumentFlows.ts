@@ -26,7 +26,6 @@ interface IProps {
 }
 
 export class DocumentFlows {
-
   authStore: AuthStore
   commentStore: CommentStore
   documentStore: DocumentStore
@@ -44,7 +43,7 @@ export class DocumentFlows {
     }
     const resp = await Promise.all([
       this.documentStore.fetchDocument(documentId),
-      this.commentStore.listComments(documentId, user)
+      this.commentStore.listComments(documentId, user),
     ])
     return resp[0]
   }

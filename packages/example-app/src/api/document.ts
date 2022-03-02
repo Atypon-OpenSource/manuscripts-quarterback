@@ -22,7 +22,7 @@ import {
   IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 
-import { get, post, put } from './methods'
+import { del, get, post, put } from './methods'
 
 export const listDocuments = () => get<IListDocumentsResponse>('docs', 'Listing documents failed')
 
@@ -39,3 +39,6 @@ export const createDocument = (payload: ICreateDocRequest) =>
 
 export const updateDocument = (id: string, payload: IUpdateDocRequest) =>
   put<boolean>(`doc/${id}`, payload, 'Updating document failed')
+
+export const deleteDocument = (docId: string) =>
+  del<boolean>(`doc/${docId}`, 'Deleting document failed')

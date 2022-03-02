@@ -17,7 +17,7 @@ import { schema } from '@manuscripts/manuscript-transform'
 import {
   Event,
   PmDoc,
-  ListDocument,
+  ListedDocument,
   SnapshotLabel,
   ICreateDocRequest,
   PmDocWithSnapshots,
@@ -52,15 +52,18 @@ const yjsService = {
 }
 
 export const docService = {
-  async listDocuments(userId: string): Promise<Event<ListDocument[]>> {
+  async listDocuments(): Promise<Event<ListedDocument[]>> {
     const found = await prisma.pmDoc.findMany({
-      where: {
-        user_id: userId,
-      },
       select: {
         id: true,
         name: true,
         createdAt: true,
+        user: {
+          select: {
+            id: true,
+            firstname: true
+          }
+        }
       },
     })
     return { ok: true, data: found }
@@ -88,10 +91,11 @@ export const docService = {
     payload: ICreateDocRequest,
     userId: string
   ): Promise<Event<PmDocWithSnapshots>> {
+    const doc = schema.nodes.manuscript.createAndFill()?.toJSON() || {}
     const saved = await prisma.pmDoc.create({
       data: {
         name: payload.name,
-        doc: payload.doc,
+        doc,
         user_id: userId,
       },
     })
@@ -105,6 +109,14 @@ export const docService = {
       },
     })
     return { ok: true, data: saved }
+  },
+  async deleteDocument(docId: string): Promise<Event<PmDoc>> {
+    const deleted = await prisma.pmDoc.delete({
+      where: {
+        id: docId,
+      },
+    })
+    return { ok: true, data: deleted }
   },
   async openDocument(docId: string, userId: string): Promise<Event<Uint8Array>> {
     let yDoc = await yjsService.getYDocFromRedis(docId)

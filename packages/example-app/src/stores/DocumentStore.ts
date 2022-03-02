@@ -16,7 +16,7 @@
 import {
   Event,
   ISaveSnapshotResponse,
-  ListDocument,
+  ListedDocument,
   PmDocSnapshot,
   PmDocWithSnapshots,
 } from '@manuscripts/quarterback-shared'
@@ -28,40 +28,20 @@ import { AuthStore } from './AuthStore'
 
 interface IProps {
   authStore: AuthStore
-  // editorStore: EditorStore
-  // toastStore: ToastStore
 }
 
 export class DocumentStore {
-  @observable documentList: ListDocument[] = []
+  @observable documentList: ListedDocument[] = []
   @observable currentDocument: PmDocWithSnapshots | null = null
   @observable snapshotsMap: Map<string, PmDocSnapshot> = new Map()
   @observable inspectedSnapshot: PmDocSnapshot | null = null
   STORAGE_KEY = 'document-store'
 
   authStore: AuthStore
-  // editorStore: EditorStore
-  // toastStore: ToastStore
 
   constructor(props: IProps) {
     makeObservable(this)
     this.authStore = props.authStore
-    // this.editorStore = props.editorStore
-    // this.toastStore = props.toastStore
-
-    if (typeof window === 'undefined') {
-      return
-    }
-    const existing = localStorage.getItem(this.STORAGE_KEY)
-    if (existing && existing !== null && existing.length > 0) {
-      // const parsed: [string, IDBDocument][] = JSON.parse(existing)
-      // parsed.forEach(mapValue => {
-      //   this.documentsMap.set(mapValue[0], {
-      //     id: mapValue[0],
-      //     doc: parseDoc(mapValue[1]),
-      //   })
-      // })
-    }
   }
 
   @computed get snapshotLabels() {
@@ -72,11 +52,11 @@ export class DocumentStore {
     const resp = await docApi.listDocuments()
     if (!resp.ok) {
       console.error(resp.error)
-      return
+    } else {
+      runInAction(() => {
+        this.documentList = resp.data.docs
+      })
     }
-    runInAction(() => {
-      this.documentList = resp.data.docs
-    })
     return resp
   }
 
@@ -87,7 +67,8 @@ export class DocumentStore {
       return resp
     }
     runInAction(() => {
-      this.currentDocument = resp.data
+      const { data: doc } = resp
+      this.currentDocument = doc
     })
     return resp
   }
@@ -95,15 +76,27 @@ export class DocumentStore {
   @action openDocument = async (id: string) => {}
 
   @action createDocument = async (name: string) => {
-    const doc = {}
-    const resp = await docApi.createDocument({ name, doc })
+    const resp = await docApi.createDocument({ name })
     if (!resp.ok) {
       console.error(resp.error)
-      return resp
+    } else {
+      runInAction(() => {
+        const { data: doc } = resp
+        this.currentDocument = doc
+        this.documentList = [
+          ...this.documentList,
+          {
+            id: doc.id,
+            name: doc.name,
+            createdAt: doc.createdAt,
+            user: {
+              id: doc.user_id,
+              firstname: this.authStore.user?.firstname || '',
+            },
+          },
+        ]
+      })
     }
-    runInAction(() => {
-      this.currentDocument = resp.data
-    })
     return resp
   }
 
@@ -116,6 +109,18 @@ export class DocumentStore {
     if (!resp.ok) {
       console.error(resp.error)
       return resp
+    }
+    return resp
+  }
+
+  @action deleteDocument = async (docId: string) => {
+    const resp = await docApi.deleteDocument(docId)
+    if (!resp.ok) {
+      console.error(resp.error)
+    } else {
+      runInAction(() => {
+        this.documentList = this.documentList.filter((d) => d.id !== docId)
+      })
     }
     return resp
   }

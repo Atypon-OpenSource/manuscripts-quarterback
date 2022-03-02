@@ -31,9 +31,7 @@ interface IProps {
 
 export const Comments = observer((props: IProps) => {
   const { className, change } = props
-  const {
-    commentStore,
-  } = stores
+  const { commentStore } = stores
   const { comments } = commentStore
   const [isVisible, setIsVisible] = useState(false)
   return (

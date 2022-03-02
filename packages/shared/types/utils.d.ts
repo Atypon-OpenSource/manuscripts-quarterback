@@ -23,6 +23,19 @@ export interface ErrorEvent {
   error: string
   status: number
 }
+export type OkEvt<T> = {
+  e: 'ok'
+  data: T
+}
+export type ErrorEvt = {
+  e: 'error'
+  error: string
+  code?: number
+}
+export type FinallyEvt = {
+  e: 'finally'
+}
+export type Evt<T> = OkEvt<T> | ErrorEvt | FinallyEvt
 
 export { uuidv4 } from '../src/utils'
 export { CustomError } from '../src/utils'

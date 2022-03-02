@@ -39,7 +39,7 @@ export const listDocuments = async (
   next: NextFunction
 ) => {
   try {
-    const result = await docService.listDocuments(res.locals.user.id)
+    const result = await docService.listDocuments()
     if (result.ok) {
       res.json({
         docs: result.data,
@@ -95,6 +95,24 @@ export const updateDocument = async (
   try {
     const { documentId } = req.params
     const result = await docService.updateDocument(documentId, req.body)
+    if (result.ok) {
+      res.sendStatus(200)
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteDocument = async (
+  req: IAuthRequest<Record<string, never>, { documentId: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const result = await docService.deleteDocument(documentId)
     if (result.ok) {
       res.sendStatus(200)
     } else {

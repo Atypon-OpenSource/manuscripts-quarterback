@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ListDocument } from '@manuscripts/quarterback-shared'
+import { ListedDocument } from '@manuscripts/quarterback-shared'
 import { observer } from 'mobx-react'
 import React, { useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
@@ -28,14 +28,28 @@ interface IProps {
 export const DocumentList = observer((props: IProps) => {
   const { documentStore } = stores
   const { className } = props
-  const { documentList } = documentStore
+  const { documentList, deleteDocument } = documentStore
   const [isVisible, setIsVisible] = useState(true)
+  const documentsWithTitles = useMemo(() => {
+    const users = new Set()
+    return [...documentList]
+      .sort((a, b) => {
+        if (a.user.id === b.user.id) return 0
+        else if (a.user.id > b.user.id) return 1
+        else return -1
+      })
+      .map((d) => {
+        let userTitle
+        if (!users.has(d.user.id)) {
+          userTitle = d.user.firstname
+          users.add(d.user.id)
+        }
+        return { ...d, userTitle }
+      })
+  }, [documentList])
 
-  function handleCreateDoc(doc: ListDocument) {
-    // documentStore.inspectSnapshot(doc.id)
-  }
-  function handleDeleteDoc(doc: ListDocument) {
-    // documentStore.deleteDocument()
+  function handleDeleteDoc(doc: ListedDocument) {
+    deleteDocument(doc.id)
   }
   return (
     <>
@@ -46,8 +60,9 @@ export const DocumentList = observer((props: IProps) => {
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {documentList.map((doc: ListDocument, i: number) => (
+        {documentsWithTitles.map((doc: ListedDocument & { userTitle?: string }, i: number) => (
           <SnapListItem key={`${doc.id}`}>
+            {doc.userTitle && <h3>{doc.userTitle}</h3>}
             <TitleWrapper>
               <h4>
                 <Link to={`/manuscripts-no-yjs/${doc.id}`}>{doc.name}</Link>
@@ -96,7 +111,7 @@ const List = styled.ul`
   flex-direction: column;
   list-style: none;
   margin: 0;
-  max-height: 300px;
+  max-height: 1200px;
   overflow-y: scroll;
   padding: 0;
   &.hidden {

@@ -17,7 +17,12 @@ import { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
 
 export { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
 
-export type ListDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'>
+export type ListedDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'> & {
+  user: {
+    id: string
+    firstname: string
+  }
+}
 export type SnapshotLabel = Pick<DocSnapshot, 'id' | 'createdAt'>
 export type PmDocWithSnapshots = PmDoc & {
   snapshots: SnapshotLabel[]
@@ -25,7 +30,7 @@ export type PmDocWithSnapshots = PmDoc & {
 
 // GET /docs
 export interface IListDocumentsResponse {
-  docs: ListDocument[]
+  docs: ListedDocument[]
 }
 
 //GET /doc/:documentId
@@ -37,7 +42,6 @@ export type IOpenDocumentResponse = Uint8Array
 // POST /doc
 export interface ICreateDocRequest {
   name: string
-  doc: Record<string, any>
 }
 export type ICreateDocResponse = PmDocWithSnapshots
 

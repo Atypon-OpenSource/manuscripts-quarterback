@@ -13,22 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Evt, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
 import React, { useEffect } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
-import { DocumentForm } from 'components/document-list-page/DocumentForm'
+import {
+  NewDocumentForm,
+  NewDocumentFormValues,
+} from 'components/document-list-page/NewDocumentForm'
 import { DocumentList } from 'components/document-list-page/DocumentList'
 
 export function DocumentListPage() {
   const { documentStore } = stores
 
-  useEffect(async () => {
-    await documentStore.listDocuments()
+  useEffect(() => {
+    documentStore.listDocuments()
   }, [])
 
-  function handleSubmit({ name }: { name: string }) {
-    documentStore.createDocument(name)
+  async function* handleSubmit(
+    values: NewDocumentFormValues
+  ): AsyncGenerator<Evt<PmDocWithSnapshots>, void, unknown> {
+    const { name } = values
+    try {
+      const resp = await documentStore.createDocument(name)
+      if (resp.ok) {
+        yield { e: 'ok', data: resp.data }
+      } else {
+        yield { e: 'error', error: resp.error }
+      }
+    } catch (err: any) {
+      yield { e: 'error', error: err.toString() }
+    } finally {
+      yield { e: 'finally' }
+    }
   }
 
   return (
@@ -36,7 +54,10 @@ export function DocumentListPage() {
       <header>
         <h1>Documents in the database</h1>
       </header>
-      <DocumentForm onSubmit={handleSubmit} />
+      <fieldset>
+        <legend>New document</legend>
+        <NewDocumentForm onSubmit={handleSubmit} />
+      </fieldset>
       <DocumentList />
     </Container>
   )
