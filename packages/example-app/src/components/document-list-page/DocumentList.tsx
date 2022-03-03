@@ -13,28 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ListedDocument } from '@manuscripts/quarterback-shared'
+import { Evt, ListedDocument } from '@manuscripts/quarterback-shared'
 import { observer } from 'mobx-react'
-import React, { useMemo, useState } from 'react'
-import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
+import React, { useCallback, useMemo, useState } from 'react'
+import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { stores } from 'stores'
 import styled from 'styled-components'
+
+import { EditDocumentForm, UpdateDocumentFormValues } from './EditDocumentForm'
 
 interface IProps {
   className?: string
 }
 
 export const DocumentList = observer((props: IProps) => {
-  const { documentStore } = stores
   const { className } = props
-  const { documentList, deleteDocument } = documentStore
+  const {
+    authStore: { isAdmin, user },
+    documentStore,
+  } = stores
+  const userId = user?.id
+  const { documentList, updateDocument, deleteDocument } = documentStore
   const [isVisible, setIsVisible] = useState(true)
+  const [editedDocId, setEditedDocId] = useState<string | undefined>()
   const documentsWithTitles = useMemo(() => {
     const users = new Set()
     return [...documentList]
       .sort((a, b) => {
-        if (a.user.id === b.user.id) return 0
+        if (a.user.id === b.user.id) return a.createdAt > b.createdAt ? -1 : 1
         else if (a.user.id > b.user.id) return 1
         else return -1
       })
@@ -47,9 +54,40 @@ export const DocumentList = observer((props: IProps) => {
         return { ...d, userTitle }
       })
   }, [documentList])
+  const isEditable = useCallback(
+    (c: ListedDocument) => isAdmin || c.user.id === userId,
+    [userId, isAdmin]
+  )
 
-  function handleDeleteDoc(doc: ListedDocument) {
+  function handleEdit(doc: ListedDocument) {
+    if (editedDocId === doc.id) {
+      setEditedDocId(undefined)
+    } else {
+      setEditedDocId(doc.id)
+    }
+  }
+  function handleDelete(doc: ListedDocument) {
     deleteDocument(doc.id)
+  }
+  async function* handleEditSubmit(
+    values: UpdateDocumentFormValues
+  ): AsyncGenerator<Evt<boolean>, void, unknown> {
+    if (!editedDocId) {
+      yield { e: 'error', error: 'No edited doc' }
+      return
+    }
+    try {
+      const resp = await updateDocument(editedDocId, values)
+      if (resp.ok) {
+        yield { e: 'ok', data: resp.data }
+      } else {
+        yield { e: 'error', error: resp.error }
+      }
+    } catch (err: any) {
+      yield { e: 'error', error: err.toString() }
+    } finally {
+      yield { e: 'finally' }
+    }
   }
   return (
     <>
@@ -65,11 +103,26 @@ export const DocumentList = observer((props: IProps) => {
             {doc.userTitle && <h3>{doc.userTitle}</h3>}
             <TitleWrapper>
               <h4>
-                <Link to={`/manuscripts-no-yjs/${doc.id}`}>{doc.name}</Link>
+                {editedDocId === doc.id ? (
+                  <EditDocumentForm
+                    doc={doc}
+                    onSubmit={handleEditSubmit}
+                    onCancel={() => setEditedDocId(undefined)}
+                  />
+                ) : (
+                  <Link to={`/manuscripts-no-yjs/${doc.id}`}>{doc.name}</Link>
+                )}
               </h4>
-              <Buttons>
-                <button onClick={() => handleDeleteDoc(doc)}>Delete</button>
-              </Buttons>
+              {isEditable(doc) && (
+                <IconButtons>
+                  <Button onClick={() => handleEdit(doc)}>
+                    <FiEdit3 size={16} />
+                  </Button>
+                  <Button onClick={() => handleDelete(doc)}>
+                    <FiTrash size={16} />
+                  </Button>
+                </IconButtons>
+              )}
             </TitleWrapper>
             <small>Created: {new Date(doc.createdAt).toLocaleString()}</small>
           </SnapListItem>
@@ -135,10 +188,20 @@ const TitleWrapper = styled.div`
     margin-right: 1rem;
   }
 `
-const Buttons = styled.div`
+const IconButtons = styled.div`
   display: flex;
   margin: 0.25rem 0;
   button + button {
     margin-left: 0.5rem;
+  }
+`
+const Button = styled.button`
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  &:hover {
+    opacity: 0.7;
   }
 `

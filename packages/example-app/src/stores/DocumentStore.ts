@@ -16,6 +16,7 @@
 import {
   Event,
   ISaveSnapshotResponse,
+  IUpdateDocRequest,
   ListedDocument,
   PmDocSnapshot,
   PmDocWithSnapshots,
@@ -54,7 +55,7 @@ export class DocumentStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.documentList = resp.data.docs
+        this.documentList = resp.data.docs.map(d => ({ ...d, createdAt: new Date(d.createdAt) }))
       })
     }
     return resp
@@ -111,6 +112,18 @@ export class DocumentStore {
     if (!resp.ok) {
       console.error(resp.error)
       return resp
+    }
+    return resp
+  }
+
+  @action updateDocument = async (docId: string, values: IUpdateDocRequest) => {
+    const resp = await docApi.updateDocument(docId, values)
+    if (!resp.ok) {
+      console.error(resp.error)
+    } else {
+      runInAction(() => {
+        this.documentList = this.documentList.map((d) => (d.id === docId ? { ...d, ...values } : d))
+      })
     }
     return resp
   }
