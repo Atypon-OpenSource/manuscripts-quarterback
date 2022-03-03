@@ -17,6 +17,7 @@ import {
   Event,
   ISaveSnapshotResponse,
   IUpdateDocRequest,
+  IUpdateSnapshotRequest,
   ListedDocument,
   PmDocSnapshot,
   PmDocWithSnapshots,
@@ -55,7 +56,7 @@ export class DocumentStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.documentList = resp.data.docs.map(d => ({ ...d, createdAt: new Date(d.createdAt) }))
+        this.documentList = resp.data.docs.map((d) => ({ ...d, createdAt: new Date(d.createdAt) }))
       })
     }
     return resp
@@ -69,6 +70,9 @@ export class DocumentStore {
       runInAction(() => {
         const { data: doc } = resp
         this.currentDocument = doc
+        this.currentDocument.snapshots = doc.snapshots
+          .map((s) => ({ ...s, createdAt: new Date(s.createdAt) }))
+          .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
       })
     }
     return resp
@@ -161,13 +165,17 @@ export class DocumentStore {
     this.inspectedSnapshot = null
   }
 
-  @action saveSnapshot = async (snapshot: Record<string, any>) => {
+  @action saveSnapshot = async (docJson: Record<string, any>) => {
     const docId = this.currentDocument?.id
     let resp: Event<ISaveSnapshotResponse>
     if (!docId) {
       resp = { ok: false, error: 'No current document', status: 400 }
     } else {
-      resp = await snapApi.saveSnapshot({ docId, snapshot })
+      resp = await snapApi.saveSnapshot({
+        docId,
+        snapshot: docJson,
+        name: new Date().toLocaleString('sv'),
+      })
     }
     if (!resp.ok) {
       console.error(resp.error)
@@ -177,7 +185,31 @@ export class DocumentStore {
       } = resp
       runInAction(() => {
         this.snapshotsMap.set(snapshot.id, snapshot)
-        this.snapshotLabels.push({ id: snapshot.id, createdAt: snapshot.createdAt })
+        this.snapshotLabels.push({
+          id: snapshot.id,
+          createdAt: snapshot.createdAt,
+          name: snapshot.name,
+        })
+      })
+    }
+    return resp
+  }
+
+  @action updateSnapshot = async (snapId: string, values: IUpdateSnapshotRequest) => {
+    const resp = await snapApi.updateSnapshot(snapId, values)
+    if (!resp.ok) {
+      console.error(resp.error)
+    } else {
+      runInAction(() => {
+        const oldSnap = this.snapshotsMap.get(snapId)
+        if (oldSnap) {
+          this.snapshotsMap.set(snapId, { ...oldSnap, ...values })
+        }
+        if (this.currentDocument) {
+          this.currentDocument.snapshots = this.currentDocument.snapshots.map((s) =>
+            s.id === snapId ? { ...s, ...values } : s
+          )
+        }
       })
     }
     return resp

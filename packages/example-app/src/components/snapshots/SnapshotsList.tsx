@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 import { TrackChangesStatus, trackCommands } from '@manuscripts/ext-track-changes'
-import { SnapshotLabel } from '@manuscripts/quarterback-shared'
+import { Evt, SnapshotLabel } from '@manuscripts/quarterback-shared'
 import { EditorViewProvider } from '@manuscripts/quarterback-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
-import React, { useState } from 'react'
-import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
+import React, { useCallback, useState } from 'react'
+import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
 import { stores } from 'stores'
 import styled from 'styled-components'
+
+import { EditSnapshotForm, UpdateSnapshotFormValues } from './EditSnapshotForm'
 
 interface IProps {
   className?: string
@@ -33,10 +35,18 @@ export const SnapshotsList = observer((props: IProps) => {
   const { documentStore } = stores
   const { snapshotLabels, inspectedSnapshot } = documentStore
   const [isVisible, setIsVisible] = useState(true)
+  const [editedSnapId, setEditedSnapId] = useState<string | undefined>()
+  const isBeingInspected = useCallback(
+    (snap: SnapshotLabel) => inspectedSnapshot?.id === snap.id,
+    [inspectedSnapshot]
+  )
 
   async function handleInspectSnapshot(snap: SnapshotLabel) {
-    if (!documentStore.inspectedSnapshot) {
+    if (!inspectedSnapshot) {
       await documentStore.updateCurrentDocument(viewProvider.docToJSON())
+    } else if (isBeingInspected(snap)) {
+      handleResumeEditing()
+      return
     }
     const resp = await documentStore.inspectSnapshot(snap.id)
     if (resp.ok) {
@@ -52,8 +62,35 @@ export const SnapshotsList = observer((props: IProps) => {
     }
     viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.enabled))
   }
+  function handleEditSnapshot(doc: SnapshotLabel) {
+    if (editedSnapId === doc.id) {
+      setEditedSnapId(undefined)
+    } else {
+      setEditedSnapId(doc.id)
+    }
+  }
   function handleDeleteSnapshot(snap: SnapshotLabel) {
     documentStore.deleteSnapshot(snap.id)
+  }
+  async function* handleEditSubmit(
+    values: UpdateSnapshotFormValues
+  ): AsyncGenerator<Evt<boolean>, void, unknown> {
+    if (!editedSnapId) {
+      yield { e: 'error', error: 'No edited doc' }
+      return
+    }
+    try {
+      const resp = await documentStore.updateSnapshot(editedSnapId, values)
+      if (resp.ok) {
+        yield { e: 'ok', data: resp.data }
+      } else {
+        yield { e: 'error', error: resp.error }
+      }
+    } catch (err: any) {
+      yield { e: 'error', error: err.toString() }
+    } finally {
+      yield { e: 'finally' }
+    }
   }
   return (
     <>
@@ -70,14 +107,29 @@ export const SnapshotsList = observer((props: IProps) => {
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {snapshotLabels.map((snap: SnapshotLabel, i: number) => (
+        {snapshotLabels.map((snap: SnapshotLabel) => (
           <SnapListItem key={`${snap.id}`}>
             <TitleWrapper>
-              <h4>Snapshot {i + 1}</h4>
-              <Buttons>
-                <button onClick={() => handleInspectSnapshot(snap)}>Inspect</button>
-                <button onClick={() => handleDeleteSnapshot(snap)}>Delete</button>
-              </Buttons>
+              {editedSnapId === snap.id ? (
+                <EditSnapshotForm
+                  snapshot={snap}
+                  onSubmit={handleEditSubmit}
+                  onCancel={() => setEditedSnapId(undefined)}
+                />
+              ) : (
+                <h4>{snap.name}</h4>
+              )}
+              <IconButtons>
+                <Button onClick={() => handleInspectSnapshot(snap)}>
+                  {isBeingInspected(snap) ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                </Button>
+                <Button onClick={() => handleEditSnapshot(snap)}>
+                  <FiEdit3 size={16} />
+                </Button>
+                <Button onClick={() => handleDeleteSnapshot(snap)}>
+                  <FiTrash size={16} />
+                </Button>
+              </IconButtons>
             </TitleWrapper>
             <small>{new Date(snap.createdAt).toLocaleString()}</small>
           </SnapListItem>
@@ -148,5 +200,22 @@ const Buttons = styled.div`
   margin: 0.25rem 0;
   button + button {
     margin-left: 0.5rem;
+  }
+`
+const IconButtons = styled.div`
+  display: flex;
+  margin: 0.25rem 0;
+  button + button {
+    margin-left: 0.5rem;
+  }
+`
+const Button = styled.button`
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  &:hover {
+    opacity: 0.7;
   }
 `

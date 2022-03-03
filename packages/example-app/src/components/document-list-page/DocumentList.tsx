@@ -102,17 +102,17 @@ export const DocumentList = observer((props: IProps) => {
           <SnapListItem key={`${doc.id}`}>
             {doc.userTitle && <h3>{doc.userTitle}</h3>}
             <TitleWrapper>
-              <h4>
-                {editedDocId === doc.id ? (
-                  <EditDocumentForm
-                    doc={doc}
-                    onSubmit={handleEditSubmit}
-                    onCancel={() => setEditedDocId(undefined)}
-                  />
-                ) : (
+              {editedDocId === doc.id ? (
+                <EditDocumentForm
+                  doc={doc}
+                  onSubmit={handleEditSubmit}
+                  onCancel={() => setEditedDocId(undefined)}
+                />
+              ) : (
+                <h4>
                   <Link to={`/manuscripts-no-yjs/${doc.id}`}>{doc.name}</Link>
-                )}
-              </h4>
+                </h4>
+              )}
               {isEditable(doc) && (
                 <IconButtons>
                   <Button onClick={() => handleEdit(doc)}>

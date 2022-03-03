@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Evt, ListedDocument } from '@manuscripts/quarterback-shared'
+import { Evt, SnapshotLabel } from '@manuscripts/quarterback-shared'
 import { observer } from 'mobx-react'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-export interface UpdateDocumentFormValues {
+export interface UpdateSnapshotFormValues {
   name: string
 }
 interface IProps {
   className?: string
-  doc: ListedDocument
-  onSubmit(formValues: UpdateDocumentFormValues): AsyncGenerator<Evt<boolean>, void, unknown>
-  onCancel(docId: string): void
+  snapshot: SnapshotLabel
+  onSubmit(formValues: UpdateSnapshotFormValues): AsyncGenerator<Evt<boolean>, void, unknown>
+  onCancel(snapshotId: string): void
 }
 
-export const EditDocumentForm = observer((props: IProps) => {
-  const { className = '', doc, onSubmit, onCancel } = props
+export const EditSnapshotForm = observer((props: IProps) => {
+  const { className = '', snapshot, onSubmit, onCancel } = props
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [editedName, setEditedName] = useState(doc.name)
+  const [editedName, setEditedName] = useState(snapshot.name)
 
   async function handleSubmit(evt: React.FormEvent) {
     evt.preventDefault()
@@ -44,7 +44,7 @@ export const EditDocumentForm = observer((props: IProps) => {
       switch (evt.e) {
         case 'ok':
           setError('')
-          onCancel(doc.id)
+          onCancel(snapshot.id)
           break
         case 'error':
           setError(evt.error)
@@ -56,7 +56,7 @@ export const EditDocumentForm = observer((props: IProps) => {
     }
   }
   function handleEditCancel() {
-    onCancel(doc.id)
+    onCancel(snapshot.id)
   }
   return (
     <EditForm className={className} onSubmit={handleSubmit}>
@@ -76,7 +76,7 @@ const EditForm = styled.form`
   margin: 0;
   input {
     margin: 0 0.5rem 0 0;
-    width: 25rem;
+    width: 10rem;
   }
   button {
     cursor: pointer;

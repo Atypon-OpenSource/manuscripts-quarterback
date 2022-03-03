@@ -23,7 +23,7 @@ export type ListedDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'> & {
     firstname: string
   }
 }
-export type SnapshotLabel = Pick<DocSnapshot, 'id' | 'createdAt'>
+export type SnapshotLabel = Pick<PmDocSnapshot, 'id' | 'name' | 'createdAt'>
 export type PmDocWithSnapshots = PmDoc & {
   snapshots: SnapshotLabel[]
 }
@@ -62,8 +62,14 @@ export type IGetSnapshotResponse = PmDocSnapshot
 // POST /snapshot
 export interface ISaveSnapshotRequest {
   docId: string
+  name: string
   snapshot: Record<string, any>
 }
 export interface ISaveSnapshotResponse {
   snapshot: PmDocSnapshot
+}
+
+// PUT /snapshot/:snapshotId
+export type IUpdateSnapshotRequest = {
+  name?: string
 }

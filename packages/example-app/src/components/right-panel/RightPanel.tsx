@@ -29,7 +29,7 @@ import styled from 'styled-components'
 
 import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
-import { SnapshotsList } from './SnapshotsList'
+import { SnapshotsList } from '../snapshots/SnapshotsList'
 import { YjsSnapshotsList } from './YjsSnapshotsList'
 
 interface Props {

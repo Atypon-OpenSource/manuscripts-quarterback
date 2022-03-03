@@ -20,6 +20,7 @@ import { authenticate, validateBody } from '$middlewares'
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
+import * as snapCtrl from './routes/snapshot/snap.ctrl'
 
 const router = Router()
 
@@ -32,10 +33,11 @@ router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 router.get('/doc/:documentId/open', authenticate, docCtrl.openDocument)
 
-router.get('/doc/:documentId/snapshot/labels', authenticate, docCtrl.listSnapshotLabels)
-router.get('/snapshot/:snapshotId', authenticate, docCtrl.getSnapshot)
-router.delete('/snapshot/:snapshotId', authenticate, docCtrl.deleteSnapshot)
-router.post('/snapshot', authenticate, docCtrl.saveSnapshot)
+router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
+router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
+router.put('/snapshot/:snapshotId', authenticate, snapCtrl.updateSnapshot)
+router.delete('/snapshot/:snapshotId', authenticate, snapCtrl.deleteSnapshot)
+router.post('/snapshot', authenticate, snapCtrl.saveSnapshot)
 
 router.get('/doc/:documentId/comments', authenticate, commentCtrl.listComments)
 router.post('/comment', authenticate, commentCtrl.createComment)

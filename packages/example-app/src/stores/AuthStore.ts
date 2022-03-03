@@ -67,6 +67,13 @@ export class AuthStore {
     this.editorUser = user
   }
 
+  @action setUserColor = (color: string) => {
+    if (this.user) {
+      this.user.color = color
+      this.persist()
+    }
+  }
+
   @action login = async (params: ILoginParams) => {
     const res = await authApi.login(params)
     if (res.ok) {

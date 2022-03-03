@@ -36,14 +36,15 @@ function useTrackOptions(storageKey: string, initial?: Partial<TrackOptions>) {
     return {
       disableTrack: false,
       debug: true,
+      documentId: 'abc123',
+      ...initial,
       user: {
         id: '1-mike',
         name: 'Mike',
         clientID: 1,
         color: '#ff0000',
+        ...initial?.user,
       },
-      documentId: 'abc123',
-      ...initial,
     }
   })
 

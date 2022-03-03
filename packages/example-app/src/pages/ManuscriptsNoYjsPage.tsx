@@ -29,6 +29,7 @@ import { EditorState } from 'prosemirror-state'
 
 export function ManuscriptsNoYjsPage() {
   const {
+    authStore: { user, setUserColor },
     documentFlows,
     documentStore: { updateCurrentDocument },
   } = stores
@@ -36,6 +37,14 @@ export function ManuscriptsNoYjsPage() {
   const routeParams = useParams<{ documentId: string }>()
   const { options, setOptions } = useTrackOptions('manuscript-no-yjs-track-options', {
     documentId: routeParams.documentId,
+    ...(user && {
+      user: {
+        id: user.id,
+        color: user.color,
+        name: user.firstname,
+        clientID: 1,
+      },
+    }),
   })
   const { documentId } = options
   const [initialData, setInitialData] = useState<PmDoc>()
@@ -46,32 +55,23 @@ export function ManuscriptsNoYjsPage() {
       setInitialData(resp.data)
     }
   }, [documentId])
+  useEffect(() => {
+    if (user?.color !== options.user.color) {
+      setUserColor(options.user.color)
+    }
+  }, [options])
 
   const handleEdit = debounce(
     (state: EditorState) => updateCurrentDocument(state.doc.toJSON()),
     500
   )
-  function handleSetUser(type: 'new' | 'logged', cb: (user: any) => void) {
-    if (type === 'new') {
-      // const user = generateUser()
-      // setEditorUser(user)
-      // cb(user)
-    } else if (type === 'logged') {
-      // const user = generateUser({
-      //   id: loggedUser.id,
-      //   name: loggedUser.firstname,
-      //   clientID: loggedUser.firstname.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0),
-      // })
-      // cb(user)
-    }
-  }
 
   return (
     <Container>
       <header>
         <h1>Track changes without Yjs</h1>
         <Guide />
-        <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
+        <TrackOptions options={options} setOptions={setOptions} />
       </header>
       {initialData && (
         <ManuscriptsEditorContext>

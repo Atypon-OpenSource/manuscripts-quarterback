@@ -18,10 +18,8 @@ import {
   Event,
   PmDoc,
   ListedDocument,
-  SnapshotLabel,
   ICreateDocRequest,
   PmDocWithSnapshots,
-  ISaveSnapshotRequest,
   IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
@@ -29,7 +27,6 @@ import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 
 import { CustomError, log, prisma } from '$common'
 import { createRedisClient } from '$common/redis'
-import { PmDocSnapshot } from '@manuscripts/quarterback-db'
 
 const pub = createRedisClient()
 
@@ -61,9 +58,9 @@ export const docService = {
         user: {
           select: {
             id: true,
-            firstname: true
-          }
-        }
+            firstname: true,
+          },
+        },
       },
     })
     return { ok: true, data: found }
@@ -77,6 +74,7 @@ export const docService = {
         snapshots: {
           select: {
             id: true,
+            name: true,
             createdAt: true,
           },
         },
@@ -162,46 +160,5 @@ export const docService = {
     }
     const buffer = encodeStateAsUpdate(yDoc)
     return { ok: true, data: buffer }
-  },
-  async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {
-    const found = await prisma.pmDocSnapshot.findMany({
-      where: {
-        doc_id: docId,
-      },
-      select: {
-        id: true,
-        createdAt: true,
-      },
-    })
-    return { ok: true, data: found }
-  },
-  async getSnapshot(snapId: string): Promise<Event<PmDocSnapshot>> {
-    const found = await prisma.pmDocSnapshot.findUnique({
-      where: {
-        id: snapId,
-      },
-    })
-    if (!found) {
-      return { ok: false, error: 'Snapshot not found', status: 404 }
-    }
-    return { ok: true, data: found }
-  },
-  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Event<PmDocSnapshot>> {
-    const { docId, snapshot } = payload
-    const saved = await prisma.pmDocSnapshot.create({
-      data: {
-        snapshot,
-        doc_id: docId,
-      },
-    })
-    return { ok: true, data: saved }
-  },
-  async deleteSnapshot(snapshotId: string): Promise<Event<PmDocSnapshot>> {
-    const saved = await prisma.pmDocSnapshot.delete({
-      where: {
-        id: snapshotId,
-      },
-    })
-    return { ok: true, data: saved }
   },
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import {
-  IListDocumentsResponse,
-  ICreateDocRequest,
-  ICreateDocResponse,
-  IGetDocumentResponse,
+  IGetSnapshotLabelsResponse,
+  IGetSnapshotResponse,
+  ISaveSnapshotResponse,
+  ISaveSnapshotRequest,
   IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
@@ -26,19 +26,18 @@ import Joi from 'joi'
 import { CustomError } from '$common'
 import { IAuthRequest, IRequest } from '$typings/request'
 
-import { docService } from './doc.svc'
+import { snapService } from './snap.svc'
 
-export const listDocuments = async (
-  req: IAuthRequest,
-  res: Response<IListDocumentsResponse>,
+export const listSnapshotLabels = async (
+  req: IAuthRequest<Record<string, never>, { documentId: string }>,
+  res: Response<IGetSnapshotLabelsResponse>,
   next: NextFunction
 ) => {
   try {
-    const result = await docService.listDocuments()
+    const { documentId } = req.params
+    const result = await snapService.listSnapshotLabels(documentId)
     if (result.ok) {
-      res.json({
-        docs: result.data,
-      })
+      res.json({ labels: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -47,14 +46,14 @@ export const listDocuments = async (
   }
 }
 
-export const getDocument = async (
-  req: IAuthRequest,
-  res: Response<IGetDocumentResponse>,
+export const getSnapshot = async (
+  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
+  res: Response<IGetSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
-    const { documentId } = req.params
-    const result = await docService.getDocument(documentId)
+    const { snapshotId } = req.params
+    const result = await snapService.getSnapshot(snapshotId)
     if (result.ok) {
       res.json(result.data)
     } else {
@@ -65,15 +64,15 @@ export const getDocument = async (
   }
 }
 
-export const createDocument = async (
-  req: IAuthRequest<ICreateDocRequest>,
-  res: Response<ICreateDocResponse>,
+export const saveSnapshot = async (
+  req: IAuthRequest<ISaveSnapshotRequest>,
+  res: Response<ISaveSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
-    const result = await docService.createDocument(req.body, res.locals.user.id)
+    const result = await snapService.saveSnapshot(req.body)
     if (result.ok) {
-      res.json(result.data)
+      res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -82,14 +81,14 @@ export const createDocument = async (
   }
 }
 
-export const updateDocument = async (
-  req: IAuthRequest<IUpdateDocRequest, { documentId: string }>,
+export const updateSnapshot = async (
+  req: IAuthRequest<IUpdateDocRequest, { snapshotId: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { documentId } = req.params
-    const result = await docService.updateDocument(documentId, req.body)
+    const { snapshotId } = req.params
+    const result = await snapService.updateSnapshot(snapshotId, req.body)
     if (result.ok) {
       res.sendStatus(200)
     } else {
@@ -100,36 +99,16 @@ export const updateDocument = async (
   }
 }
 
-export const deleteDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
+export const deleteSnapshot = async (
+  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
+  res: Response<ISaveSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
-    const { documentId } = req.params
-    const result = await docService.deleteDocument(documentId)
+    const { snapshotId } = req.params
+    const result = await snapService.deleteSnapshot(snapshotId)
     if (result.ok) {
       res.sendStatus(200)
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const openDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { documentId } = req.params
-    const result = await docService.openDocument(documentId, res.locals.user.id)
-    if (result.ok) {
-      res.setHeader('Content-Type', 'application/octet-stream')
-      res.write(result.data, 'binary')
-      res.end(null, 'binary')
     } else {
       next(new CustomError(result.error, result.status))
     }

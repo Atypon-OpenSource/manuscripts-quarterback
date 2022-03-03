@@ -26,7 +26,7 @@ export interface TrackOptions {
 
 interface Props {
   options: TrackOptions
-  setUser: (type: 'new' | 'logged', cb: (user: YjsUser) => void) => void
+  setUser?: (type: 'new' | 'logged', cb: (user: YjsUser) => void) => void
   setOptions: React.Dispatch<React.SetStateAction<TrackOptions>>
 }
 
@@ -77,7 +77,7 @@ export function TrackOptions(props: Props) {
     )
   }
   function handleNewUser() {
-    setUser('new', (user) => {
+    setUser!('new', (user) => {
       setUserId(user.id)
       setUserName(user.name)
       setUserClientID(user.clientID)
@@ -86,7 +86,7 @@ export function TrackOptions(props: Props) {
     })
   }
   function handleUseLoggedUser() {
-    setUser('logged', (user) => {
+    setUser!('logged', (user) => {
       setUserId(user.id)
       setUserName(user.name)
       setUserClientID(user.clientID)
@@ -133,8 +133,12 @@ export function TrackOptions(props: Props) {
           </Field>
         </Field>
         <Field className="row">
-          <Button onClick={handleNewUser}>Generate user</Button>
-          <Button onClick={handleUseLoggedUser}>Use logged user</Button>
+          <Button disabled={!setUser} onClick={handleNewUser}>
+            Generate user
+          </Button>
+          <Button disabled={!setUser} onClick={handleUseLoggedUser}>
+            Use logged user
+          </Button>
         </Field>
         <Field>
           <label htmlFor="documentId">Document id</label>
