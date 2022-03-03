@@ -48,7 +48,7 @@ model PmDocSnapshot {
   name      String    @default("") @db.VarChar(500)
   snapshot  Json
   createdAt DateTime  @default(now())
-  doc       PmDoc     @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id])
+  doc       PmDoc     @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
   doc_id    String
   comments  Comment[] @relation("CommentToPmDocSnapshot")
 
@@ -62,9 +62,9 @@ model Comment {
   change_id   String
   user        User           @relation("CommentToUser", fields: [user_id], references: [id])
   user_id     String
-  doc         PmDoc          @relation("CommentToPmDoc", fields: [doc_id], references: [id])
+  doc         PmDoc          @relation("CommentToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
   doc_id      String
-  snapshot    PmDocSnapshot? @relation("CommentToPmDocSnapshot", fields: [snapshot_id], references: [id])
+  snapshot    PmDocSnapshot? @relation("CommentToPmDocSnapshot", fields: [snapshot_id], references: [id], onDelete: Cascade)
   snapshot_id String?
 
   @@map("comment")

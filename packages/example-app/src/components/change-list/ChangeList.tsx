@@ -46,7 +46,7 @@ export const ChangeList = observer((props: IProps) => {
     toggleVisibility,
   } = props
   const {
-    commentStore: { changeComments, openCommentLists, toggleCommentListOpen },
+    commentStore: { changeComments, toggleCommentListOpen },
   } = stores
   const getComments = useCallback((id: string) => changeComments.get(id) || [], [changeComments])
 
@@ -152,11 +152,7 @@ const List = styled.ul<{ indent?: boolean }>`
     visibility: hidden;
   }
 `
-const ListItem = styled.li`
-  border-radius: 4px;
-  box-shadow: #00000029 0 3px 6px, #0000003b 0 3px 6px;
-  padding: 0.5rem;
-`
+const ListItem = styled.li``
 const markerBg = (status: CHANGE_STATUS) => {
   switch (status) {
     case CHANGE_STATUS.pending:

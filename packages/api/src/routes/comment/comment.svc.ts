@@ -55,6 +55,7 @@ export const commentService = {
     })
     return { ok: true, data: saved }
   },
+  // TODO check permissions
   async updateComment(commentId: string, payload: IUpdateCommentRequest): Promise<Event<Comment>> {
     const saved = await prisma.comment.update({
       data: payload,
@@ -64,6 +65,7 @@ export const commentService = {
     })
     return { ok: true, data: saved }
   },
+  // TODO check permissions
   async deleteComment(commentId: string): Promise<Event<Comment>> {
     const saved = await prisma.comment.delete({
       where: {

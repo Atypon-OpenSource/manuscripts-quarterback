@@ -1,3 +1,6 @@
+-- DropForeignKey
+ALTER TABLE "pm_doc_snapshot" DROP CONSTRAINT "pm_doc_snapshot_doc_id_fkey";
+
 -- AlterTable
 ALTER TABLE "pm_doc_snapshot" ADD COLUMN     "name" VARCHAR(500) NOT NULL DEFAULT E'';
 
@@ -15,10 +18,13 @@ CREATE TABLE "comment" (
 );
 
 -- AddForeignKey
+ALTER TABLE "pm_doc_snapshot" ADD CONSTRAINT "pm_doc_snapshot_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "pm_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "comment" ADD CONSTRAINT "comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "quarterback_user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comment" ADD CONSTRAINT "comment_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "pm_doc"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comment" ADD CONSTRAINT "comment_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "pm_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comment" ADD CONSTRAINT "comment_snapshot_id_fkey" FOREIGN KEY ("snapshot_id") REFERENCES "pm_doc_snapshot"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "comment" ADD CONSTRAINT "comment_snapshot_id_fkey" FOREIGN KEY ("snapshot_id") REFERENCES "pm_doc_snapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/ext-track-changes'
-import { YjsExtension } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/quarterback-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React from 'react'

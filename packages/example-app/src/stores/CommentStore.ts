@@ -73,7 +73,7 @@ export class CommentStore {
               color = randomColor({
                 luminosity: 'dark',
               })
-              this.userColorsMap.set(c.id, color)
+              this.userColorsMap.set(c.user_id, color)
             }
             const comment: CommentWithUserColor = {
               ...c,
