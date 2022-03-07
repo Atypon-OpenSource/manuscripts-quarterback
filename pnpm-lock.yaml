@@ -350,6 +350,7 @@ importers:
       mobx-react: ^7.2.1
       prop-types: ^15.7.2
       prosemirror-dev-toolkit: ^0.0.8
+      prosemirror-history: ^1.2.0
       prosemirror-state: ^1.3.4
       prosemirror-view: ^1.23.6
       randomcolor: ^0.6.2
@@ -385,6 +386,7 @@ importers:
       mobx: 6.3.6
       mobx-react: 7.2.1_5cbc179485cce5c6733ddc74a83c553b
       prop-types: 15.7.2
+      prosemirror-history: 1.2.0
       prosemirror-state: 1.3.4
       prosemirror-view: 1.23.6
       randomcolor: 0.6.2
@@ -8641,7 +8643,7 @@ packages:
       '@babel/helper-module-imports': 7.16.0
       babel-plugin-syntax-jsx: 6.18.0
       lodash: 4.17.21
-      styled-components: 5.3.3_60f3b602325395587bfce1ce81a371e8
+      styled-components: 5.3.3_react-dom@17.0.2+react@17.0.2
 
   /babel-plugin-syntax-jsx/6.18.0:
     resolution: {integrity: sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=}

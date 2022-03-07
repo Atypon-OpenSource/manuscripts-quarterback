@@ -32,6 +32,7 @@ import {
 } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
+import { history } from 'prosemirror-history'
 import { EditorState } from 'prosemirror-state'
 import React, { useMemo, useRef } from 'react'
 import styled from 'styled-components'
@@ -80,7 +81,10 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
       ctx: providers,
       initialDoc: initialData.doc as any, // TODO lol
       extensions,
-      manuscriptsProps: defaultEditorProps,
+      manuscriptsProps: {
+        ...defaultEditorProps,
+        plugins: [history()]
+      },
       onEdit,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
