@@ -16,7 +16,7 @@
 import pkg from 'jsonwebtoken'
 const { sign, verify } = pkg
 
-import { Event, IUser } from '@manuscripts/quarterback-shared'
+import { Event, User } from '@manuscripts/quarterback-shared'
 
 import { IJwtPayload } from '$typings/auth'
 
@@ -29,7 +29,7 @@ const EXPIRATION_IN_MILLIS = 86400000 * 14 // 2 weeks
 
 // TODO use exp intead of custom expires property
 export const jwtService = {
-  createSessionToken(user: IUser, expires: number) {
+  createSessionToken(user: User, expires: number) {
     const payload = {
       expires,
       user,

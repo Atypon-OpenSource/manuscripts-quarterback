@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { IUser } from '@manuscripts/quarterback-shared'
+import type { User } from '@manuscripts/quarterback-shared'
 import type { Request } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 
@@ -31,7 +31,7 @@ export type IAuthRequest<
   B,
   Record<string, never>,
   {
-    user: IUser
+    user: User
   }
 >
 

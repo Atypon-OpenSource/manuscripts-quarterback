@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IUser } from '@manuscripts/quarterback-shared'
+import { User } from '@manuscripts/quarterback-shared'
 
 export interface IJwtPayload {
   expires: number
-  user: IUser
+  user: User
 }
