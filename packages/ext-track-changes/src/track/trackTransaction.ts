@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Fragment, Node as PMNode, Schema, Slice } from 'prosemirror-model'
-import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state'
+import { EditorState, Selection, NodeSelection, TextSelection, Transaction } from 'prosemirror-state'
 import {
   AddMarkStep,
   Mapping,
@@ -498,6 +498,8 @@ export function deleteAndMergeSplitBlockNodes(
   }
 }
 
+const getSelectionStaticCreate = (sel: Selection) => Object.getPrototypeOf(sel).constructor.create
+
 /**
  * Applies and immediately inverts transactions to wrap their contents/operations with track data instead
  *
@@ -533,7 +535,9 @@ export function trackTransaction(
     ...defaultAttrs,
     operation: CHANGE_OPERATION.delete,
   }
-  const wasNodeSelection = tr.selection instanceof NodeSelection
+  // Must use constructor.name instead of instanceof as aliasing prosemirror-state is a lot more
+  // difficult than prosemirror-transform
+  const wasNodeSelection = tr.selection.constructor.name === 'NodeSelection'
   let iters = 0
   logger('ORIGINAL transaction', tr)
   tr.steps.forEach((step) => {
@@ -605,14 +609,14 @@ export function trackTransaction(
           mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
           if (!wasNodeSelection) {
             newTr.setSelection(
-              new TextSelection(newTr.doc.resolve(toAWithOffset + insertedSlice.size))
+              getSelectionStaticCreate(tr.selection)(newTr.doc, toAWithOffset + insertedSlice.size)
             )
           }
         } else {
           // Incase only deletion was applied, check whether tracked marks around deleted content can be merged
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           if (!wasNodeSelection) {
-            newTr.setSelection(new TextSelection(newTr.doc.resolve(fromA)))
+            newTr.setSelection(getSelectionStaticCreate(tr.selection)(newTr.doc, fromA))
           }
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
@@ -635,7 +639,7 @@ export function trackTransaction(
     const mappedPos = newTr.mapping.map(tr.selection.from)
     const resPos = newTr.doc.resolve(mappedPos)
     const nodePos = mappedPos - (resPos.nodeBefore?.nodeSize || 0)
-    newTr.setSelection(new NodeSelection(newTr.doc.resolve(nodePos)))
+    newTr.setSelection(getSelectionStaticCreate(tr.selection)(newTr.doc, nodePos))
   }
   logger('NEW transaction', newTr)
   return newTr
