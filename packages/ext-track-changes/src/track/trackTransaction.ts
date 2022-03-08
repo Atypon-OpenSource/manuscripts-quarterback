@@ -498,7 +498,8 @@ export function deleteAndMergeSplitBlockNodes(
   }
 }
 
-const getSelectionStaticCreate = (sel: Selection) => Object.getPrototypeOf(sel).constructor.create
+const getSelectionStaticCreate = (sel: Selection, doc: PMNode, from: number) =>
+  Object.getPrototypeOf(sel).constructor.create(doc, from)
 
 /**
  * Applies and immediately inverts transactions to wrap their contents/operations with track data instead
@@ -609,14 +610,14 @@ export function trackTransaction(
           mergeTrackedMarks(toAWithOffset + insertedSlice.size, newTr.doc, newTr, oldState.schema)
           if (!wasNodeSelection) {
             newTr.setSelection(
-              getSelectionStaticCreate(tr.selection)(newTr.doc, toAWithOffset + insertedSlice.size)
+              getSelectionStaticCreate(tr.selection, newTr.doc, toAWithOffset + insertedSlice.size)
             )
           }
         } else {
           // Incase only deletion was applied, check whether tracked marks around deleted content can be merged
           mergeTrackedMarks(toAWithOffset, newTr.doc, newTr, oldState.schema)
           if (!wasNodeSelection) {
-            newTr.setSelection(getSelectionStaticCreate(tr.selection)(newTr.doc, fromA))
+            newTr.setSelection(getSelectionStaticCreate(tr.selection, newTr.doc, fromA))
           }
         }
         // Here somewhere do a check if adjacent insert & delete cancel each other out (matching their content char by char, not diffing)
@@ -639,7 +640,7 @@ export function trackTransaction(
     const mappedPos = newTr.mapping.map(tr.selection.from)
     const resPos = newTr.doc.resolve(mappedPos)
     const nodePos = mappedPos - (resPos.nodeBefore?.nodeSize || 0)
-    newTr.setSelection(getSelectionStaticCreate(tr.selection)(newTr.doc, nodePos))
+    newTr.setSelection(getSelectionStaticCreate(tr.selection, newTr.doc, nodePos))
   }
   logger('NEW transaction', newTr)
   return newTr
