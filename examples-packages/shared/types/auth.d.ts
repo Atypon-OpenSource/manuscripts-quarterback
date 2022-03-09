@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { User as DBUser } from '@manuscripts/quarterback-db'
+import type { User as DBUser } from '@manuscripts/examples-track-db'
 
 export { UserRole } from '../src/auth'
 

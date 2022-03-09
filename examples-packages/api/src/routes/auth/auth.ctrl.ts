@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ILoginParams, ISignUpParams } from '@manuscripts/quarterback-shared'
+import { ILoginParams, ISignUpParams } from '@manuscripts/examples-track-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 

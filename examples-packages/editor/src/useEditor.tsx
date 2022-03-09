@@ -22,7 +22,7 @@ import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import React, { useRef } from 'react'
 
-import { schema } from '@manuscripts/quarterback-schema'
+import { schema } from '@manuscripts/examples-track-schema'
 
 import { EditorContext as EditorProviders, useEditorContext } from './context'
 import { useSSRLayoutEffect } from './react'

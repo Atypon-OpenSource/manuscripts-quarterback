@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { TrackChangesStatus, trackCommands } from '@manuscripts/ext-track-changes'
-import { Evt, SnapshotLabel } from '@manuscripts/quarterback-shared'
-import { EditorViewProvider } from '@manuscripts/quarterback-editor'
+import { Evt, SnapshotLabel } from '@manuscripts/examples-track-shared'
+import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'

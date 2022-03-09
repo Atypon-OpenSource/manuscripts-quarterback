@@ -18,10 +18,10 @@ import {
   SnapshotLabel,
   ISaveSnapshotRequest,
   IUpdateSnapshotRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 
 import { CustomError, log, prisma } from '$common'
-import { PmDocSnapshot } from '@manuscripts/quarterback-db'
+import { PmDocSnapshot } from '@manuscripts/examples-track-db'
 
 export const snapService = {
   async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {

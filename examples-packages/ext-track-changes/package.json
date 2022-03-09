@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "type": "module",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@manuscripts/manuscript-editor": "workspace:*",
-    "@manuscripts/quarterback-schema": "workspace:*",
+    "@manuscripts/examples-track-schema": "workspace:*",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@types/debug": "^4.1.7",
     "@types/prosemirror-commands": "^1.0.4",
@@ -57,7 +57,7 @@
     "prosemirror-view": "^1.23.6"
   },
   "dependencies": {
-    "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/examples-track-shared": "workspace:*",
     "debug": "^4.3.3"
   }
 }

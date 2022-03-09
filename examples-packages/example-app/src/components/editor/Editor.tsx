@@ -25,7 +25,7 @@ import {
   useEditor,
   useEditorContext,
   usePluginState,
-} from '@manuscripts/quarterback-editor'
+} from '@manuscripts/examples-track-editor'
 import { YJS_WS_URL } from 'config'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'

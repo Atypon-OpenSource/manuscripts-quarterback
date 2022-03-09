@@ -1,5 +1,5 @@
 {
-  "name": "@manuscripts/quarterback-example-app",
+  "name": "@manuscripts/examples-track-example-app",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
@@ -18,8 +18,8 @@
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
-    "@manuscripts/quarterback-editor": "workspace:*",
-    "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/examples-track-editor": "workspace:*",
+    "@manuscripts/examples-track-shared": "workspace:*",
     "@manuscripts/style-guide": "workspace:*",
     "@popperjs/core": "^2.10.2",
     "history": "^4.10.1",

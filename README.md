@@ -1,4 +1,4 @@
-# [manuscripts-quarterback](https://gitlab.com/mpapp-public/manuscripts-quarterback)
+# [manuscripts-quarterback](https://github.com/Atypon-OpenSource/manuscripts-quarterback)
 
 ## How to install
 
@@ -15,8 +15,8 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 1. Install all dependencies: `pnpm i -r`
 3. Start the databases: `docker-compose up -d postgres redis`
 4. Copy the environment variables: `cp ./packages/api/.example-env ./packages/api/.env && cp ./packages/collab/.example-env ./packages/collab/.env && cp ./packages/db/.example-env ./packages/db/.env && cp ./packages/example-app/.example-env ./packages/example-app/.env`
-5. Migrate the database: `pnpm run migrate --filter @manuscripts/quarterback-db`
-6. And seed it with test data: `pnpm run seed --filter @manuscripts/quarterback-db`
+5. Migrate the database: `pnpm run migrate --filter @manuscripts/examples-track-db`
+6. And seed it with test data: `pnpm run seed --filter @manuscripts/examples-track-db`
 7. Build the external manuscripts packages: `pnpm build`
 8. Start the app in http://localhost:4600: `pnpm start`. Or you can also start them as groups: `pnpm utils` `pnpm api` `pnpm client`
 
@@ -26,7 +26,7 @@ Also, if you were to remove a package inside `packages` the node_modules in the 
 
 ## Commands
 
-You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/quarterback-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
+You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/examples-track-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
 
 ## Test users
 

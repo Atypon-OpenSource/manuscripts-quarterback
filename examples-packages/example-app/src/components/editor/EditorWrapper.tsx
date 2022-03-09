@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createDefaultProviders, ReactEditorContext } from '@manuscripts/quarterback-editor'
+import { createDefaultProviders, ReactEditorContext } from '@manuscripts/examples-track-editor'
 import React, { useMemo } from 'react'
 
 import { Editor } from './Editor'

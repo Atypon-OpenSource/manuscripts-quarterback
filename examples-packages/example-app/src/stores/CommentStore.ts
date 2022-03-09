@@ -19,7 +19,7 @@ import {
   ICreateCommentResponse,
   IUpdateCommentRequest,
   UserWithColor,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 import * as commentApi from 'api/comment'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import randomColor from 'randomcolor'

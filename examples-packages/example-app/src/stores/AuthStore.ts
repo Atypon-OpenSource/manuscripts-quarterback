@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { generateUser, YjsUser } from '@manuscripts/ext-yjs'
-import { Jwt, ILoginParams, UserWithColor, UserRole } from '@manuscripts/quarterback-shared'
+import { Jwt, ILoginParams, UserWithColor, UserRole } from '@manuscripts/examples-track-shared'
 import { action, computed, makeObservable, observable } from 'mobx'
 import randomColor from 'randomcolor'
 

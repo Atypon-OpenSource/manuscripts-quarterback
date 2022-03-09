@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
+import { PmDoc, PmDocSnapshot } from '@manuscripts/examples-track-db'
 
-export { PmDoc, PmDocSnapshot } from '@manuscripts/quarterback-db'
+export { PmDoc, PmDocSnapshot } from '@manuscripts/examples-track-db'
 
 export type ListedDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'> & {
   user: {

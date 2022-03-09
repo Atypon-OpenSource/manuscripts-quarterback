@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ILoginParams, ISignUpParams, User } from '@manuscripts/quarterback-shared'
+import { ILoginParams, ISignUpParams, User } from '@manuscripts/examples-track-shared'
 import { compare, hash } from 'bcrypt'
 
 import { CustomError, prisma } from '$common'

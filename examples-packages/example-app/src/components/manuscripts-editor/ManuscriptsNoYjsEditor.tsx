@@ -22,7 +22,7 @@ import {
   trackChangesPluginKey,
   TrackChangesState,
 } from '@manuscripts/ext-track-changes'
-import { PmDoc } from '@manuscripts/quarterback-shared'
+import { PmDoc } from '@manuscripts/examples-track-shared'
 import {
   // styles,
   usePluginState,

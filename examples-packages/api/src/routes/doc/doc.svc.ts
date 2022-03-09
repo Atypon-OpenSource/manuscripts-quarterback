@@ -21,7 +21,7 @@ import {
   ICreateDocRequest,
   PmDocWithSnapshots,
   IUpdateDocRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 import { prosemirrorToYDoc, yDocToProsemirrorJSON } from 'y-prosemirror'
 import { applyUpdate, Doc, encodeStateAsUpdate } from 'yjs'
 

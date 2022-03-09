@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Evt, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
+import { Evt, PmDocWithSnapshots } from '@manuscripts/examples-track-shared'
 import React, { useEffect } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'

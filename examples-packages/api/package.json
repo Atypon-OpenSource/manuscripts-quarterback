@@ -1,9 +1,9 @@
 {
-  "name": "@manuscripts/quarterback-api",
+  "name": "@manuscripts/examples-track-api",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@manuscripts/manuscript-transform": "workspace:*",
-    "@manuscripts/quarterback-db": "workspace:*",
-    "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/examples-track-db": "workspace:*",
+    "@manuscripts/examples-track-shared": "workspace:*",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "~4.17.1",

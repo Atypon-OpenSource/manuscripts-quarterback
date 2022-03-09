@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@manuscripts/quarterback-db': workspace:*
+  '@manuscripts/examples-track-db': workspace:*
   eslint: ^7.32.0
   prettier: ^2.4.1
   rimraf: ^3.0.2
@@ -10,7 +10,7 @@ specifiers:
   typescript: ^4.4.4
 
 devDependencies:
-  '@manuscripts/quarterback-db': link:../db
+  '@manuscripts/examples-track-db': link:../db
   eslint: 7.32.0
   prettier: 2.4.1
   rimraf: 3.0.2

@@ -20,7 +20,7 @@ import {
   ICreateDocRequest,
   ICreateDocResponse,
   IUpdateDocRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 
 import { del, get, post, put } from './methods'
 

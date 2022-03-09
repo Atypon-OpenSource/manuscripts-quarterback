@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { uuidv4 } from '@manuscripts/quarterback-shared'
+import { uuidv4 } from '@manuscripts/examples-track-shared'
 import { IncomingMessage, Server as HTTPServer } from 'http'
 import WebSocket, { WebSocketServer } from 'ws'
 import { Awareness, removeAwarenessStates } from 'y-protocols/awareness'

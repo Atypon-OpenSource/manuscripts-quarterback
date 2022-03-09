@@ -20,7 +20,7 @@ import {
   commands,
   useEditorContext,
   usePluginState,
-} from '@manuscripts/quarterback-editor'
+} from '@manuscripts/examples-track-editor'
 import React from 'react'
 import { FiAtSign, FiBold, FiEye, FiFileMinus, FiFilePlus, FiItalic } from 'react-icons/fi'
 import { GrBlockQuote } from 'react-icons/gr'

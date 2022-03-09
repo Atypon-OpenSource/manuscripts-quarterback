@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/ext-track-changes'
-import { EditorViewProvider } from '@manuscripts/quarterback-editor'
+import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React from 'react'
 import styled from 'styled-components'

@@ -1,9 +1,9 @@
 {
-  "name": "@manuscripts/quarterback-shared",
+  "name": "@manuscripts/examples-track-shared",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "type": "module",
@@ -25,7 +25,7 @@
     "watch": "rollup -cw"
   },
   "devDependencies": {
-    "@manuscripts/quarterback-db": "workspace:*",
+    "@manuscripts/examples-track-db": "workspace:*",
     "rimraf": "^3.0.2",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",

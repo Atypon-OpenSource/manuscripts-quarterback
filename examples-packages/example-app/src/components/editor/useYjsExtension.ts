@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { YjsExtension, yjsExtensionName, YjsExtensionState, YjsStore } from '@manuscripts/ext-yjs'
-import { ExtensionProvider, useEditorContext } from '@manuscripts/quarterback-editor'
+import { ExtensionProvider, useEditorContext } from '@manuscripts/examples-track-editor'
 import { useEffect, useRef, useState } from 'react'
 import * as Y from 'yjs'
 

@@ -21,7 +21,7 @@ import {
   ListedDocument,
   PmDocSnapshot,
   PmDocWithSnapshots,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 import * as docApi from 'api/document'
 import * as snapApi from 'api/snapshot'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'

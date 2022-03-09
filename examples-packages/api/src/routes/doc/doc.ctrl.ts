@@ -19,7 +19,7 @@ import {
   ICreateDocResponse,
   IGetDocumentResponse,
   IUpdateDocRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 

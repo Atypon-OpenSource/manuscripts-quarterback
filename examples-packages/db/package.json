@@ -1,9 +1,9 @@
 {
-  "name": "@manuscripts/quarterback-db",
+  "name": "@manuscripts/examples-track-db",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "generated/index.js",
   "types": "generated/index.d.ts",
   "files": [

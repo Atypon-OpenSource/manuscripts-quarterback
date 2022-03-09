@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarterBackSchema } from '@manuscripts/quarterback-schema'
-import { Observable } from '@manuscripts/quarterback-shared'
+import { QuarterBackSchema } from '@manuscripts/examples-track-schema'
+import { Observable } from '@manuscripts/examples-track-shared'
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 

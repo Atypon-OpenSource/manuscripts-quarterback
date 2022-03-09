@@ -18,10 +18,10 @@ import {
   Event,
   ICreateCommentRequest,
   IUpdateCommentRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/examples-track-shared'
 
 import { CustomError, log, prisma } from '$common'
-import { Comment } from '@manuscripts/quarterback-db'
+import { Comment } from '@manuscripts/examples-track-db'
 
 export const commentService = {
   async listComments(docId: string): Promise<Event<ListedComment[]>> {

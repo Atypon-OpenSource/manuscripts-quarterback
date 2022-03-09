@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PrismaClient } from '@manuscripts/quarterback-db'
+import { PrismaClient } from '@manuscripts/examples-track-db'
 
 export const prisma = new PrismaClient()

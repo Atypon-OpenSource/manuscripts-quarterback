@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { QuarterBackSchema, schema as defaultSchema } from '@manuscripts/quarterback-schema'
+import { QuarterBackSchema, schema as defaultSchema } from '@manuscripts/examples-track-schema'
 import { promises as fs } from 'fs'
 
 import {
@@ -33,8 +33,8 @@ let counter = 0
 // eslint-disable-next-line
 var uuidv4Mock: jest.Mock
 
-jest.mock('@manuscripts/quarterback-shared', () => {
-  const mockOriginal = jest.requireActual('@manuscripts/quarterback-shared')
+jest.mock('@manuscripts/examples-track-shared', () => {
+  const mockOriginal = jest.requireActual('@manuscripts/examples-track-shared')
   uuidv4Mock = jest.fn(() => `MOCK-ID-${counter++}`)
   return {
     __esModule: true,

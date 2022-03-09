@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Event, PmDocWithSnapshots } from '@manuscripts/quarterback-shared'
+import { Event, PmDocWithSnapshots } from '@manuscripts/examples-track-shared'
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'

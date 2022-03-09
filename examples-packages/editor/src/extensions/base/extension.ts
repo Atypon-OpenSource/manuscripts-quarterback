@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/quarterback-schema'
+import { schema } from '@manuscripts/examples-track-schema'
 import type { EditorProviders } from '$context'
 import type { Extension } from '$typings/extension'
 

@@ -1,9 +1,9 @@
 {
-  "name": "@manuscripts/quarterback-schema",
+  "name": "@manuscripts/examples-track-schema",
   "version": "0.0.1",
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
-  "homepage": "https://gitlab.com/mpapp-public/manuscripts-quarterback",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "type": "module",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "prosemirror-model": "^1.16.1",
-    "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/examples-track-shared": "workspace:*",
     "@manuscripts/ext-track-changes": "workspace:*"
   }
 }

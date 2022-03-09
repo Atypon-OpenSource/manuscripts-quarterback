@@ -1,1 +1,1 @@
-# @manuscripts/quarterback-schema
+# @manuscripts/examples-track-schema

@@ -21,7 +21,7 @@ import {
   TrackedChange,
 } from '@manuscripts/ext-track-changes'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
-import { EditorViewProvider } from '@manuscripts/quarterback-editor'
+import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React, { memo } from 'react'
 import { stores } from 'stores'

@@ -27,7 +27,7 @@ import {
   Model,
   UserProfile,
 } from '@manuscripts/manuscripts-json-schema'
-import { uuidv4 } from '@manuscripts/quarterback-shared'
+import { uuidv4 } from '@manuscripts/examples-track-shared'
 // import { RxAttachment } from '@manuscripts/rxdb'
 import { createBrowserHistory } from 'history'
 import React from 'react'
