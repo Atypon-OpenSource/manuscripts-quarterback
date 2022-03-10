@@ -38,7 +38,7 @@ packages/example-app/esbuild/index*.css*
 packages/example-app/meta.json
 
 # Prisma
-packages/db/generated
+*/db/generated
 .prisma
 
 # Postgres

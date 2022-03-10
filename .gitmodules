@@ -1,14 +1,14 @@
-[submodule "packages/style-guide"]
-	path = packages/style-guide
+[submodule "examples-packages/style-guide"]
+	path = examples-packages/style-guide
 	url = https://github.com/Atypon-OpenSource/manuscripts-style-guide.git
 	branch = quarterback-integration
 
-[submodule "packages/manuscript-editor"]
-	path = packages/manuscript-editor
+[submodule "examples-packages/manuscript-editor"]
+	path = examples-packages/manuscript-editor
 	url = https://gitlab.com/mpapp-public/manuscripts-manuscript-editor.git
 	branch = quarterback-integration
 
-[submodule "packages/manuscript-transform"]
-	path = packages/manuscript-transform
+[submodule "examples-packages/manuscript-transform"]
+	path = examples-packages/manuscript-transform
 	url = https://gitlab.com/mpapp-public/manuscripts-manuscript-transform.git
 	branch = quarterback-integration
