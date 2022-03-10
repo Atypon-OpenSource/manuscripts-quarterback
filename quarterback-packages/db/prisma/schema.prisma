@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated"
+}
+
+model ManuscriptDoc {
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  manuscript_model_id String
+  user_model_id       String
+  project_model_id    String
+  snapshots           ManuscriptSnapshot[] @relation("ManuscriptSnapshotToManuscriptDoc")
+  comments            ManuscriptComment[]  @relation("ManuscriptCommentToManuscriptDoc")
+
+  @@map("manuscript_doc")
+}
+
+model ManuscriptSnapshot {
+  id            String              @id @default(uuid())
+  name          String              @default("") @db.VarChar(500)
+  snapshot      Json
+  createdAt     DateTime            @default(now())
+  manuscript    ManuscriptDoc       @relation("ManuscriptSnapshotToManuscriptDoc", fields: [manuscript_id], references: [id], onDelete: Cascade)
+  manuscript_id String
+  comments      ManuscriptComment[] @relation("ManuscriptCommentToManuscriptSnapshot")
+
+  @@map("manuscript_doc_snapshot")
+}
+
+model ManuscriptComment {
+  id            String              @id @default(uuid())
+  body          String
+  createdAt     DateTime            @default(now())
+  change_id     String
+  user_model_id String
+  doc           ManuscriptDoc       @relation("ManuscriptCommentToManuscriptDoc", fields: [doc_id], references: [id], onDelete: Cascade)
+  doc_id        String
+  snapshot      ManuscriptSnapshot? @relation("ManuscriptCommentToManuscriptSnapshot", fields: [snapshot_id], references: [id], onDelete: Cascade)
+  snapshot_id   String?
+
+  @@map("manuscript_comment")
+}

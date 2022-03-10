@@ -32,11 +32,6 @@ yarn-error.log*
 
 .eslintcache
 
-# Esbuild
-packages/example-app/esbuild/index*.js*
-packages/example-app/esbuild/index*.css*
-packages/example-app/meta.json
-
 # Prisma
 */db/generated
 .prisma

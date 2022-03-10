@@ -1,0 +1,32 @@
+{
+  "name": "@manuscripts/quarterback-db",
+  "version": "0.0.1",
+  "author": "Atypon Systems LLC",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
+  "main": "generated/index.js",
+  "types": "generated/index.d.ts",
+  "files": [
+    "generated/*"
+  ],
+  "scripts": {
+    "init": "pnpm run migrate && pnpm run api-hack",
+    "api-hack": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma",
+    "format": "prisma format",
+    "generate": "prisma generate && pnpm run api-hack",
+    "prod:init": "prisma generate && prisma migrate deploy && pnpm run api-hack",
+    "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "migrate": "prisma migrate dev && pnpm run api-hack",
+    "delete": "prisma migrate reset",
+    "reset": "prisma migrate reset && pnpm run api-hack"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "prisma": "3.1.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@prisma/client": "3.1.1"
+  }
+}

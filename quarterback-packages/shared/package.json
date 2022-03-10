@@ -1,0 +1,34 @@
+{
+  "name": "@manuscripts/quarterback-shared",
+  "version": "0.0.1",
+  "author": "Atypon Systems LLC",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "type": "module",
+  "types": "types/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./dist/index.es.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
+    "lint": "eslint --cache --ext .js,.ts, ./src ./types",
+    "lint:fix": "eslint --fix --ext .js,.ts, ./src ./types",
+    "watch": "rollup -cw"
+  },
+  "devDependencies": {
+    "@manuscripts/quarterback-db": "workspace:*",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.58.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.4"
+  }
+}
