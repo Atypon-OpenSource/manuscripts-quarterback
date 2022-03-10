@@ -1,5 +1,5 @@
 NODE_ENV=local
 PORT=5600
 LOG_LEVEL=debug
-DATABASE_URL=postgresql://pg-user:pg-password@localhost:5402/local_quarterback_db?schema=public
+DATABASE_URL=postgresql://pg-user:pg-password@localhost:5402/local_example_db?schema=public
 REDIS_URL=redis://localhost:5380/0

@@ -19,7 +19,7 @@ import { log } from './common/logger'
 import { YjsServer } from './yjs/YjsServer'
 
 const server = app.listen(config.PORT, () => {
-  log.info(`Collab server started at port: ${config.PORT}`)
+  log.info(`@manuscripts/examples-track-collab started at port: ${config.PORT}`)
 })
 
 const yjsServer = new YjsServer()

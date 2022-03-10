@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { User as DBUser } from '@manuscripts/quarterback-db'
-
-export { UserRole } from '../src/auth'
-
-export type User = Omit<DBUser, 'password'>
+export type User = {
+  id: string
+  name: string
+}
 export type UserWithColor = User & { color: string }
 
-// POST login
-export interface ILoginParams {
-  email: string
-  password: string
+// POST authenticate
+export interface IAuthenticateParams {
+  token: string
 }
-export interface ILoginResponse {
+export interface IAuthenticateResponse {
   user: User
   jwt: Jwt
 }
 export type Jwt = {
   expires: number
   token: string
-}
-
-// POST sign-up
-export interface ISignUpParams {
-  email: string
-  password: string
-  firstname: string
-  lastname: string
 }

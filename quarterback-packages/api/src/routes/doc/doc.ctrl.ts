@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 import {
-  IListDocumentsResponse,
   ICreateDocRequest,
   ICreateDocResponse,
-  IGetDocumentResponse,
-  IUpdateDocRequest,
 } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -27,43 +24,6 @@ import { CustomError } from '$common'
 import { IAuthRequest, IRequest } from '$typings/request'
 
 import { docService } from './doc.svc'
-
-export const listDocuments = async (
-  req: IAuthRequest,
-  res: Response<IListDocumentsResponse>,
-  next: NextFunction
-) => {
-  try {
-    const result = await docService.listDocuments()
-    if (result.ok) {
-      res.json({
-        docs: result.data,
-      })
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const getDocument = async (
-  req: IAuthRequest,
-  res: Response<IGetDocumentResponse>,
-  next: NextFunction
-) => {
-  try {
-    const { documentId } = req.params
-    const result = await docService.getDocument(documentId)
-    if (result.ok) {
-      res.json(result.data)
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
 
 export const createDocument = async (
   req: IAuthRequest<ICreateDocRequest>,
@@ -82,24 +42,6 @@ export const createDocument = async (
   }
 }
 
-export const updateDocument = async (
-  req: IAuthRequest<IUpdateDocRequest, { documentId: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { documentId } = req.params
-    const result = await docService.updateDocument(documentId, req.body)
-    if (result.ok) {
-      res.sendStatus(200)
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
-
 export const deleteDocument = async (
   req: IAuthRequest<Record<string, never>, { documentId: string }>,
   res: Response,
@@ -110,26 +52,6 @@ export const deleteDocument = async (
     const result = await docService.deleteDocument(documentId)
     if (result.ok) {
       res.sendStatus(200)
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const openDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { documentId } = req.params
-    const result = await docService.openDocument(documentId, res.locals.user.id)
-    if (result.ok) {
-      res.setHeader('Content-Type', 'application/octet-stream')
-      res.write(result.data, 'binary')
-      res.end(null, 'binary')
     } else {
       next(new CustomError(result.error, result.status))
     }

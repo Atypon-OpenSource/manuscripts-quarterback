@@ -21,11 +21,11 @@ import {
 } from '@manuscripts/quarterback-shared'
 
 import { CustomError, log, prisma } from '$common'
-import { Comment } from '@manuscripts/quarterback-db'
+import { ManuscriptComment } from '@manuscripts/quarterback-db'
 
 export const commentService = {
   async listComments(docId: string): Promise<Event<ListedComment[]>> {
-    const found = await prisma.comment.findMany({
+    const found = await prisma.manuscriptComment.findMany({
       where: {
         doc_id: docId,
       },
@@ -34,30 +34,25 @@ export const commentService = {
         body: true,
         createdAt: true,
         change_id: true,
-        user_id: true,
+        user_model_id: true,
         doc_id: true,
         snapshot_id: true,
-        user: {
-          select: {
-            firstname: true,
-          },
-        },
       },
     })
     return { ok: true, data: found }
   },
-  async createComment(payload: ICreateCommentRequest, userId: string): Promise<Event<Comment>> {
-    const saved = await prisma.comment.create({
+  async createComment(payload: ICreateCommentRequest, userId: string): Promise<Event<ManuscriptComment>> {
+    const saved = await prisma.manuscriptComment.create({
       data: {
         ...payload,
-        user_id: userId,
+        user_model_id: userId,
       },
     })
     return { ok: true, data: saved }
   },
   // TODO check permissions
-  async updateComment(commentId: string, payload: IUpdateCommentRequest): Promise<Event<Comment>> {
-    const saved = await prisma.comment.update({
+  async updateComment(commentId: string, payload: IUpdateCommentRequest): Promise<Event<ManuscriptComment>> {
+    const saved = await prisma.manuscriptComment.update({
       data: payload,
       where: {
         id: commentId,
@@ -66,8 +61,8 @@ export const commentService = {
     return { ok: true, data: saved }
   },
   // TODO check permissions
-  async deleteComment(commentId: string): Promise<Event<Comment>> {
-    const saved = await prisma.comment.delete({
+  async deleteComment(commentId: string): Promise<Event<ManuscriptComment>> {
+    const saved = await prisma.manuscriptComment.delete({
       where: {
         id: commentId,
       },

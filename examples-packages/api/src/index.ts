@@ -18,7 +18,7 @@ import { config } from './common/config'
 import { log } from './common/logger'
 
 app.listen(config.PORT, () => {
-  log.info(`API server started at port: ${config.PORT}`)
+  log.info(`@manuscripts/examples-track-api started at port: ${config.PORT}`)
 })
 
 process.on('exit', () => {

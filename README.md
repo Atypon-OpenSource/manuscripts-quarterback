@@ -1,6 +1,8 @@
 # [manuscripts-quarterback](https://github.com/Atypon-OpenSource/manuscripts-quarterback)
 
-## How to install
+Quarterback is a service to manage tracking of changes and their related metadata for Manuscripts app. It also includes a prototype implementation for collaboration using Yjs.
+
+## How to install for local development
 
 First you should check you have Node.js v16 installed: `node -v`. If not, I recommend using [nvm](https://github.com/nvm-sh/nvm) to install 16 version. This is needed for the ES modules and other new features.
 
@@ -12,17 +14,28 @@ NOTE: it is a good idea to run `git submodule update --remote` once in a while i
 
 Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
+### Examples packages
+
+`examples-packages` contain a prototype setup with Manuscript editor that closely follows the track changes implementation in `@manuscripts/manuscript-frontend`. It also includes an example Yjs server that uses Redis persistence.
+
 1. Install all dependencies: `pnpm i -r`
-3. Start the databases: `docker-compose up -d postgres redis`
-4. Copy the environment variables: `cp ./packages/api/.example-env ./packages/api/.env && cp ./packages/collab/.example-env ./packages/collab/.env && cp ./packages/db/.example-env ./packages/db/.env && cp ./packages/example-app/.example-env ./packages/example-app/.env`
+2. Start the databases: `docker-compose up -d postgres redis`
+3. Initialize example database: `./scripts.sh db:init-ex`
+4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/example-app/.example-env ./examples-packages/example-app/.env`
 5. Migrate the database: `pnpm run migrate --filter @manuscripts/examples-track-db`
 6. And seed it with test data: `pnpm run seed --filter @manuscripts/examples-track-db`
 7. Build the external manuscripts packages: `pnpm build`
-8. Start the app in http://localhost:4600: `pnpm start`. Or you can also start them as groups: `pnpm utils` `pnpm api` `pnpm client`
-
-NOTE: The `pnpm start` command will fail the first couple of times due to the fact the packages are not built in the correct order. Meaning some packages are missing when you execute `watch` in some other package eg `quarterback-editor`.
+8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` and `pnpm ex:client`.
 
 Also, if you were to remove a package inside `packages` the node_modules in the other packages that import it must be deleted (even after you do `pnpm i`). The symlinks are not always removed properly it seems.
+
+### Quarterback packages
+
+`quarterback-packages` includes the deployed packages that are used in Manuscripts app.
+
+1. Copy the environment variables: `cp ./quarterback-packages/api/.example-env ./quarterback-packages/api/.env && cp ./quarterback-packages/db/.example-env ./quarterback-packages/db/.env`
+2. Migrate the database: `pnpm run migrate --filter @manuscripts/quarterback-db`
+3. Bundle the libraries and start the Quarterback API at http://localhost:5500 with: `pnpm start`
 
 ## Commands
 
@@ -30,6 +43,7 @@ You should run commands to individual packages with eg: `pnpm run watch --filter
 
 ## Test users
 
+```
 admin
 email: quarterback+ADMIN@atypon.com
 pass: asdfasdf
@@ -37,18 +51,19 @@ pass: asdfasdf
 user
 email: quarterback+USER@atypon.com
 pass: asdfasdf
+```
 
 ## Tests
 
-There are some example Cypress tests in `e2e` package. If you have the example-app running, you can execute them with `pnpm e2e`. Or open the Cypress GUI with `pnpm e2e:open`. 
+There are some example Cypress tests in `e2e` package. If you have the example-app running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`. 
 
 ## Working with Git submodules
 
-You can add a submodule with eg: `git submodule add -b quarterback-integration git@gitlab.com:mpapp-public/manuscripts-library.git packages/library`
+You can add a submodule with eg: `git submodule add -b quarterback-integration git@gitlab.com:mpapp-public/manuscripts-library.git examples-packages/library`
 
-After which you should also add the package to the source control: `git add packages/library`
+After which you should also add the package to the source control: `git add examples-packages/library`
 
-Any time you update a submodule and push to its `quarterback-integration` branch, you must then also execute `git add packages/<module>` here to update the tracked commit.
+Any time you update a submodule and push to its `quarterback-integration` branch, you must then also execute `git add examples-packages/<module>` here to update the tracked commit.
 
 ## Publishing new versions
 

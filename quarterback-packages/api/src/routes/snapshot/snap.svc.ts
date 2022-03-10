@@ -21,13 +21,13 @@ import {
 } from '@manuscripts/quarterback-shared'
 
 import { CustomError, log, prisma } from '$common'
-import { PmDocSnapshot } from '@manuscripts/quarterback-db'
+import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
 export const snapService = {
-  async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {
-    const found = await prisma.pmDocSnapshot.findMany({
+  async listSnapshotLabels(manuscriptId: string): Promise<Event<SnapshotLabel[]>> {
+    const found = await prisma.manuscriptSnapshot.findMany({
       where: {
-        doc_id: docId,
+        manuscript_id: manuscriptId,
       },
       select: {
         id: true,
@@ -37,8 +37,8 @@ export const snapService = {
     })
     return { ok: true, data: found }
   },
-  async getSnapshot(snapId: string): Promise<Event<PmDocSnapshot>> {
-    const found = await prisma.pmDocSnapshot.findUnique({
+  async getSnapshot(snapId: string): Promise<Event<ManuscriptSnapshot>> {
+    const found = await prisma.manuscriptSnapshot.findUnique({
       where: {
         id: snapId,
       },
@@ -48,12 +48,12 @@ export const snapService = {
     }
     return { ok: true, data: found }
   },
-  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Event<PmDocSnapshot>> {
+  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Event<ManuscriptSnapshot>> {
     const { docId, snapshot, name } = payload
-    const saved = await prisma.pmDocSnapshot.create({
+    const saved = await prisma.manuscriptSnapshot.create({
       data: {
         snapshot,
-        doc_id: docId,
+        manuscript_id: docId,
         name,
       },
     })
@@ -62,8 +62,8 @@ export const snapService = {
   async updateSnapshot(
     snapId: string,
     payload: IUpdateSnapshotRequest
-  ): Promise<Event<PmDocSnapshot>> {
-    const saved = await prisma.pmDocSnapshot.update({
+  ): Promise<Event<ManuscriptSnapshot>> {
+    const saved = await prisma.manuscriptSnapshot.update({
       data: payload,
       where: {
         id: snapId,
@@ -71,8 +71,8 @@ export const snapService = {
     })
     return { ok: true, data: saved }
   },
-  async deleteSnapshot(snapshotId: string): Promise<Event<PmDocSnapshot>> {
-    const saved = await prisma.pmDocSnapshot.delete({
+  async deleteSnapshot(snapshotId: string): Promise<Event<ManuscriptSnapshot>> {
+    const saved = await prisma.manuscriptSnapshot.delete({
       where: {
         id: snapshotId,
       },

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ILoginParams, ISignUpParams } from '@manuscripts/quarterback-shared'
+import { IAuthenticateParams } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
@@ -22,16 +22,15 @@ import { IRequest } from '$typings/request'
 
 import { authService } from './auth.svc'
 
-export const LOGIN_SCHEMA = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(8).max(255).required(),
+export const AUTHENTICATE_SCHEMA = Joi.object({
+  token: Joi.string().min(8).max(255).required(),
 })
 
-export const login = async (req: IRequest<ILoginParams>, res: Response, next: NextFunction) => {
+export const authenticate = async (req: IRequest<IAuthenticateParams>, res: Response, next: NextFunction) => {
   try {
-    const user = await authService.loginUser(req.body)
+    const user = await authService.authenticateUser(req.body)
     if (!user) {
-      throw new CustomError('Login failed', 401)
+      throw new CustomError('Authentication failed', 401)
     }
     const expires = jwtService.createSessionExpiration()
     res.json({

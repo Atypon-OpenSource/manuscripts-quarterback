@@ -18,7 +18,7 @@ import {
   IGetSnapshotResponse,
   ISaveSnapshotResponse,
   ISaveSnapshotRequest,
-  IUpdateDocRequest,
+  IUpdateSnapshotRequest
 } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -82,7 +82,7 @@ export const saveSnapshot = async (
 }
 
 export const updateSnapshot = async (
-  req: IAuthRequest<IUpdateDocRequest, { snapshotId: string }>,
+  req: IAuthRequest<IUpdateSnapshotRequest, { snapshotId: string }>,
   res: Response,
   next: NextFunction
 ) => {

@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ManuscriptDoc, ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
-export { ManuscriptDoc, ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+export { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
 export type SnapshotLabel = Pick<ManuscriptSnapshot, 'id' | 'name' | 'createdAt'>
-export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
-  snapshots: SnapshotLabel[]
+
+// GET /doc/:documentId/snapshot/labels
+export interface IGetSnapshotLabelsResponse {
+  labels: SnapshotLabel[]
 }
 
-// POST /doc
-export interface ICreateDocRequest {
-  manuscript_model_id: string
-  project_model_id: string
+// GET /snapshot/:snapshotId
+export type IGetSnapshotResponse = ManuscriptSnapshot
+
+// POST /snapshot
+export interface ISaveSnapshotRequest {
+  docId: string
+  name: string
+  snapshot: Record<string, any>
 }
-export type ICreateDocResponse = ManuscriptDocWithSnapshots
+export interface ISaveSnapshotResponse {
+  snapshot: ManuscriptSnapshot
+}
+
+// PUT /snapshot/:snapshotId
+export type IUpdateSnapshotRequest = {
+  name?: string
+}

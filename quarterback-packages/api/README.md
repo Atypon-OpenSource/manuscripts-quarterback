@@ -1,1 +1,1 @@
-# Quarterback API
+# @manuscripts/quarterback-api

@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ILoginParams, ISignUpParams, User } from '@manuscripts/quarterback-shared'
-import { compare, hash } from 'bcrypt'
+import { IAuthenticateParams, User } from '@manuscripts/quarterback-shared'
 
 import { CustomError, prisma } from '$common'
 
 export const authService = {
-  loginUser: async ({ email, password }: ILoginParams): Promise<User> => {
-    const user = await prisma.user.findFirst({ where: { email } })
-    if (!user) {
-      throw new CustomError('No User Found', 401)
+  authenticateUser: async ({ token }: IAuthenticateParams): Promise<User> => {
+    return {
+      id: '1',
+      name: 'Mike'
     }
-
-    const isValid = await compare(password, user.password)
-    if (!isValid) {
-      throw new CustomError('Wrong Password', 401)
-    }
-
-    // @ts-ignore
-    delete user.password
-    return user
   },
 }

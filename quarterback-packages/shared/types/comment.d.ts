@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Comment } from '@manuscripts/quarterback-db'
+import { ManuscriptComment } from '@manuscripts/quarterback-db'
 
-export { Comment } from '@manuscripts/quarterback-db'
+export { ManuscriptComment } from '@manuscripts/quarterback-db'
 
-export type CommentWithUserColor = Comment & {
+export type CommentWithUserColor = ManuscriptComment & {
   user: {
     firstname: string
     color: string
   }
 }
-export type ListedComment = Comment & {
-  user: {
-    firstname: string
-  }
-}
+export type ListedComment = ManuscriptComment
+
 // GET /doc/:documentId/comments
 export interface  IListCommentsResponse {
   comments: ListedComment[]
@@ -40,7 +37,7 @@ export interface ICreateCommentRequest {
   doc_id: string
   snapshot_id: string | null
 }
-export type ICreateCommentResponse = Comment
+export type ICreateCommentResponse = ManuscriptComment
 
 // PUT /comment/:commentId
 export type IUpdateCommentRequest = {
