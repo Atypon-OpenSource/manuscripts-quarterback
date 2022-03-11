@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: setup caching
         uses: actions/cache@v2
@@ -46,7 +47,7 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
 
       - name: publish versions
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           publish: pnpm ci:publish
         env:

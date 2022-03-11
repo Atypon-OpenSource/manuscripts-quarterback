@@ -27,7 +27,7 @@
     "cs:version": "changeset version",
     "cs:publish": "changeset publish",
     "ci:version": "changeset version && pnpm i --lockfile-only",
-    "ci:publish": "pnpm publish -r --no-git-checks --tag=next"
+    "ci:publish": "pnpm publish --filter ./quarterback-packages --no-git-checks --tag=next"
   },
   "engines": {
     "node": ">=16",

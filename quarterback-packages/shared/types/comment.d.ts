@@ -26,7 +26,7 @@ export type CommentWithUserColor = ManuscriptComment & {
 export type ListedComment = ManuscriptComment
 
 // GET /doc/:documentId/comments
-export interface  IListCommentsResponse {
+export interface IListCommentsResponse {
   comments: ListedComment[]
 }
 

@@ -17,7 +17,9 @@ jobs:
       - name: checkout code repository
         uses: actions/checkout@v2
         with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
+          submodules: recursive
 
       - name: setup caching
         uses: actions/cache@v2
@@ -39,7 +41,7 @@ jobs:
 
       # TODO change logic here to combine multiple PRs
       - name: create versions
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           version: pnpm ci:version
           commit: 'chore(changeset): version update'
