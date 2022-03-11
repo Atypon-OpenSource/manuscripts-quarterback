@@ -14,7 +14,7 @@
   "scripts": {
     "format": "pnpm run format -r",
     "lint:fix": "eslint --ignore-path .gitignore --fix --ext .js,.cjs,.ts,.tsx .",
-    "build": "pnpm run build --filter @manuscripts/manuscript-transform 2>/dev/null || true && pnpm run build --filter @manuscripts/style-guide 2>/dev/null || true && pnpm run build --filter @manuscripts/manuscript-editor 2>/dev/null",
+    "build": "(pnpm run build --filter @manuscripts/manuscript-transform 2>/dev/null || true) && (pnpm run build --filter @manuscripts/style-guide 2>/dev/null || true) && (pnpm run build --filter @manuscripts/manuscript-editor 2>/dev/null || true)",
     "ex:api": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-api' 'pnpm run dev --filter @manuscripts/examples-track-api' 'pnpm run watch --filter @manuscripts/examples-track-collab' 'pnpm run dev --filter @manuscripts/examples-track-collab'",
     "ex:collab": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-collab' 'pnpm run dev --filter @manuscripts/examples-track-collab'",
     "ex:utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-shared' 'pnpm run watch --filter @manuscripts/examples-track-schema' 'pnpm run watch --filter @manuscripts/examples-track-editor' 'pnpm run watch --filter @manuscripts/ext-track-changes' 'pnpm run watch --filter @manuscripts/ext-yjs'",
