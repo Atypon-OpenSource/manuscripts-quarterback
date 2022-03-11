@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ManuscriptDoc, ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+import { ManuscriptDoc } from '@manuscripts/quarterback-db'
+import { SnapshotLabel } from './snapshot'
 
-export { ManuscriptDoc, ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+export { ManuscriptDoc } from '@manuscripts/quarterback-db'
 
-export type SnapshotLabel = Pick<ManuscriptSnapshot, 'id' | 'name' | 'createdAt'>
 export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
   snapshots: SnapshotLabel[]
 }

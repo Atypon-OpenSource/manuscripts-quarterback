@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  api:
+    build:
+      context: .
+      dockerfile: quarterback-packages/api/Dockerfile
+    ports:
+      - 7500:7500
+    environment:
+      NODE_ENV: production
+      PORT: 7500
+      LOG_LEVEL: info
+      JWT_SECRET: verylongrandomstring
+      DATABASE_URL: postgresql://pg-user:pg-password@host.docker.internal:5402/local_quarterback_db?schema=public
+    restart: always
   postgres:
     image: postgres:13.4-alpine
     ports:
