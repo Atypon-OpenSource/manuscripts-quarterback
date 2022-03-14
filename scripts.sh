@@ -29,6 +29,6 @@ EOSQL
     pnpm run dev --filter @manuscripts/examples-track-api --filter @manuscripts/examples-track-collab
     ;;
   *)
-    echo $"Usage: $0 db:connect|utils|api:watch|api:dev"
+    echo $"Usage: $0 db:connect|db:init-ex|utils|api:watch|api:dev"
     exit 1
 esac

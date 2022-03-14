@@ -26,6 +26,7 @@ const router = Router()
 
 router.post('/authenticate', authCtrl.authenticate)
 
+router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 

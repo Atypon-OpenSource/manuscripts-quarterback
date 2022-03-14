@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+  IGetDocumentResponse,
   ICreateDocRequest,
   ICreateDocResponse,
 } from '@manuscripts/quarterback-shared'
@@ -25,13 +26,35 @@ import { IAuthRequest, IRequest } from '$typings/request'
 
 import { docService } from './doc.svc'
 
+export const findDocument = async (
+  req: IAuthRequest,
+  res: Response<IGetDocumentResponse>,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const result = await docService.findDocument(documentId)
+    if (result.ok) {
+      res.json(result.data)
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const createDocument = async (
   req: IAuthRequest<ICreateDocRequest>,
   res: Response<ICreateDocResponse>,
   next: NextFunction
 ) => {
   try {
-    const result = await docService.createDocument(req.body, res.locals.user.id)
+    const userId = res.locals.user._id
+    if (!userId) {
+      return next(new CustomError('Missing user._id from res.locals', 401))
+    }
+    const result = await docService.createDocument(req.body, userId)
     if (result.ok) {
       res.json(result.data)
     } else {

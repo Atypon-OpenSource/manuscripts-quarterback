@@ -22,6 +22,9 @@ export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
   snapshots: SnapshotLabel[]
 }
 
+//GET /doc/:documentId
+export type IGetDocumentResponse = ManuscriptDocWithSnapshots
+
 // POST /doc
 export interface ICreateDocRequest {
   manuscript_model_id: string

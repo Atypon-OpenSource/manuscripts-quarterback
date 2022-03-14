@@ -18,10 +18,8 @@ import { IAuthenticateParams, User } from '@manuscripts/quarterback-shared'
 import { CustomError, prisma } from '$common'
 
 export const authService = {
-  authenticateUser: async ({ token }: IAuthenticateParams): Promise<User> => {
-    return {
-      id: '1',
-      name: 'Mike'
-    }
+  authenticateUser: async (params: IAuthenticateParams): Promise<User> => {
+    const { user, token } = params
+    return user
   },
 }

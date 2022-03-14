@@ -26,9 +26,13 @@
   },
   "devDependencies": {
     "@manuscripts/quarterback-db": "workspace:*",
+    "@manuscripts/manuscript-transform": "workspace:*",
     "rimraf": "^3.0.2",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "@manuscripts/manuscript-transform": "*"
   }
 }

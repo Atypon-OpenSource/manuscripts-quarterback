@@ -23,12 +23,33 @@ import {
 import { CustomError, log, prisma } from '$common'
 
 export const docService = {
+  async findDocument(id: string): Promise<Event<ManuscriptDocWithSnapshots>> {
+    const found = await prisma.manuscriptDoc.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        snapshots: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true,
+          },
+        },
+      },
+    })
+    if (!found) {
+      return { ok: false, error: 'Document not found', status: 404 }
+    }
+    return { ok: true, data: found }
+  },
   async createDocument(
     payload: ICreateDocRequest,
     userId: string
   ): Promise<Event<ManuscriptDocWithSnapshots>> {
     const saved = await prisma.manuscriptDoc.create({
       data: {
+        id: payload.manuscript_model_id,
         manuscript_model_id: payload.manuscript_model_id,
         user_model_id: userId,
         project_model_id: payload.project_model_id,
