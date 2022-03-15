@@ -62,6 +62,7 @@ export const NewCommentForm = observer((props: IProps) => {
       .then((resp) => {
         if (resp.ok) {
           setBody('')
+          setError('')
         } else {
           setError(resp.error)
         }

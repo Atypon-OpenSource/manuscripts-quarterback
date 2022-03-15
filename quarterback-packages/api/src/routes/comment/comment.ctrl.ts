@@ -53,7 +53,11 @@ export const createComment = async (
   next: NextFunction
 ) => {
   try {
-    const result = await commentService.createComment(req.body, res.locals.user.id)
+    const userId = res.locals.user._id
+    if (!userId) {
+      return next(new CustomError('Missing user._id from res.locals', 401))
+    }
+    const result = await commentService.createComment(req.body, userId)
     if (result.ok) {
       res.json(result.data)
     } else {

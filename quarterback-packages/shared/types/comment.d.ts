@@ -19,7 +19,7 @@ export { ManuscriptComment } from '@manuscripts/quarterback-db'
 
 export type CommentWithUserColor = ManuscriptComment & {
   user: {
-    firstname: string
+    name: string
     color: string
   }
 }
