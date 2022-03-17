@@ -26,7 +26,11 @@ export const AUTHENTICATE_SCHEMA = Joi.object({
   token: Joi.string().min(8).max(255).required(),
 })
 
-export const authenticate = async (req: IRequest<IAuthenticateParams>, res: Response, next: NextFunction) => {
+export const authenticate = async (
+  req: IRequest<IAuthenticateParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await authService.authenticateUser(req.body)
     if (!user) {

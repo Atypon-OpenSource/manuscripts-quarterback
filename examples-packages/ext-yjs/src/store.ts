@@ -80,8 +80,9 @@ export const createYjsStore = (ctx: EditorProviders, opts: YjsOptions) => {
         currentUser,
         usersMap,
       }
-      const changed = Object.keys(newState).some((key: string) =>
-        prevState[key as keyof YjsExtensionState] !== newState[key as keyof YjsExtensionState]
+      const changed = Object.keys(newState).some(
+        (key: string) =>
+          prevState[key as keyof YjsExtensionState] !== newState[key as keyof YjsExtensionState]
       )
       if (changed) {
         prevState = newState

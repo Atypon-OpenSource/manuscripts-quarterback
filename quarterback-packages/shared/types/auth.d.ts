@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type {
-  UserProfileWithAvatar,
-} from '@manuscripts/manuscript-transform'
+import type { UserProfileWithAvatar } from '@manuscripts/manuscript-transform'
 
 export type User = {
   id: string

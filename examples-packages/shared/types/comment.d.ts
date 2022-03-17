@@ -29,7 +29,7 @@ export type ListedComment = Comment & {
   }
 }
 // GET /doc/:documentId/comments
-export interface  IListCommentsResponse {
+export interface IListCommentsResponse {
   comments: ListedComment[]
 }
 

@@ -41,7 +41,10 @@ export const commentService = {
     })
     return { ok: true, data: found }
   },
-  async createComment(payload: ICreateCommentRequest, userId: string): Promise<Event<ManuscriptComment>> {
+  async createComment(
+    payload: ICreateCommentRequest,
+    userId: string
+  ): Promise<Event<ManuscriptComment>> {
     const saved = await prisma.manuscriptComment.create({
       data: {
         ...payload,
@@ -51,7 +54,10 @@ export const commentService = {
     return { ok: true, data: saved }
   },
   // TODO check permissions
-  async updateComment(commentId: string, payload: IUpdateCommentRequest): Promise<Event<ManuscriptComment>> {
+  async updateComment(
+    commentId: string,
+    payload: IUpdateCommentRequest
+  ): Promise<Event<ManuscriptComment>> {
     const saved = await prisma.manuscriptComment.update({
       data: payload,
       where: {

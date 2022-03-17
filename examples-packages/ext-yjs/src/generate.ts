@@ -33,8 +33,10 @@ export function generateUser(old: Partial<YjsUser> = {}): YjsUser {
       uniqueNamesGenerator({
         dictionaries: [names],
       }),
-    color: old.color || randomColor({
-      luminosity: 'dark',
-    }),
+    color:
+      old.color ||
+      randomColor({
+        luminosity: 'dark',
+      }),
   }
 }

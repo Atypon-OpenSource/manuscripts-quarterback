@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import { TrackedChange } from '@manuscripts/track-changes-plugin'
-import { CommentWithUserColor, Event, IUpdateCommentRequest } from '@manuscripts/examples-track-shared'
+import {
+  CommentWithUserColor,
+  Event,
+  IUpdateCommentRequest,
+} from '@manuscripts/examples-track-shared'
 import { inject, observer } from 'mobx-react'
 import React, { useState, useCallback } from 'react'
 import { FiEdit3, FiTrash } from 'react-icons/fi'

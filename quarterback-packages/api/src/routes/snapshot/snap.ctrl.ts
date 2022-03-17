@@ -18,7 +18,7 @@ import {
   IGetSnapshotResponse,
   ISaveSnapshotResponse,
   ISaveSnapshotRequest,
-  IUpdateSnapshotRequest
+  IUpdateSnapshotRequest,
 } from '@manuscripts/quarterback-shared'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'

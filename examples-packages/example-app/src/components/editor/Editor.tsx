@@ -60,15 +60,15 @@ export const Editor = observer(() => {
       ...(options.disableTrack
         ? []
         : [
-          trackChangesExtension({
-            user: {
-              id: options.user.id,
-              name: options.user.name,
-            },
-            skipTrsWithMetas: [ySyncPluginKey],
-            debug: options.debug,
-          }),
-        ]),
+            trackChangesExtension({
+              user: {
+                id: options.user.id,
+                name: options.user.name,
+              },
+              skipTrsWithMetas: [ySyncPluginKey],
+              debug: options.debug,
+            }),
+          ]),
       yjsExtension({
         document: {
           id: options.documentId,

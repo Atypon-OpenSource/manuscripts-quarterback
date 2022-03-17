@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_STATUS, ChangeSet, NodeChange, TrackedChange } from '@manuscripts/track-changes-plugin'
+import {
+  CHANGE_STATUS,
+  ChangeSet,
+  NodeChange,
+  TrackedChange,
+} from '@manuscripts/track-changes-plugin'
 import React from 'react'
 import { BsQuestion } from 'react-icons/bs'
 import { FiCheck, FiX } from 'react-icons/fi'
