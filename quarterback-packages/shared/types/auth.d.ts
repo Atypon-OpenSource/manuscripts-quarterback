@@ -21,7 +21,7 @@ export type User = {
 }
 export type UserWithColor = User & { color: string }
 
-// POST authenticate
+// POST /authenticate
 export interface IAuthenticateParams {
   user: UserProfileWithAvatar
   token: string

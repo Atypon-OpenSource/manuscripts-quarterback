@@ -16,4 +16,5 @@
 export * from './auth'
 export * from './comment'
 export * from './doc'
+export * from './snapshot'
 export * from './utils'

@@ -36,7 +36,3 @@ export type FinallyEvt = {
   e: 'finally'
 }
 export type Evt<T> = OkEvt<T> | ErrorEvt | FinallyEvt
-
-export { uuidv4 } from '../src/utils'
-export { CustomError } from '../src/utils'
-export { Observable } from '../src/Observable'
