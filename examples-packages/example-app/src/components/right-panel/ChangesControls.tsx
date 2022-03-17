@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/ext-track-changes'
+import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/track-changes-plugin'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React from 'react'

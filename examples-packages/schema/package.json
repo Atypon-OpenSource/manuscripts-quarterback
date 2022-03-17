@@ -35,6 +35,6 @@
   "dependencies": {
     "prosemirror-model": "^1.16.1",
     "@manuscripts/examples-track-shared": "workspace:*",
-    "@manuscripts/ext-track-changes": "workspace:*"
+    "@manuscripts/track-changes-plugin": "workspace:*"
   }
 }

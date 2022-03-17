@@ -17,7 +17,7 @@ import {
   setAction,
   TrackChangesAction,
   trackChangesPluginKey,
-} from '@manuscripts/ext-track-changes'
+} from '@manuscripts/track-changes-plugin'
 
 const TEST_TEXT = 'asdf qwer'
 const TEST_USER = {

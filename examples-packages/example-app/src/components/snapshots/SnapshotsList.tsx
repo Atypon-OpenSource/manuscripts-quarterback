@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackChangesStatus, trackCommands } from '@manuscripts/ext-track-changes'
+import { TrackChangesStatus, trackCommands } from '@manuscripts/track-changes-plugin'
 import { Evt, SnapshotLabel } from '@manuscripts/examples-track-shared'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'

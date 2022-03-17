@@ -18,10 +18,9 @@ import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
 import {
-  trackChangesExtension,
   trackChangesPluginKey,
   TrackChangesState,
-} from '@manuscripts/ext-track-changes'
+} from '@manuscripts/track-changes-plugin'
 import { PmDoc } from '@manuscripts/examples-track-shared'
 import {
   // styles,
@@ -38,6 +37,7 @@ import React, { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { TrackOptions } from '../TrackOptions'
+import { trackChangesExtension } from '../../trackExtension'
 
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'

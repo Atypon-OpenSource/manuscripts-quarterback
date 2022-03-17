@@ -15,10 +15,14 @@
  */
 import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 
-import * as commands from './commands'
-import { enableDebug } from './logger'
-import { trackChangesPlugin } from './plugin'
-import type { TrackChangesOptions } from './types/track'
+import {
+  enableDebug,
+  trackCommands,
+  trackChangesPlugin,
+  trackChangesPluginKey,
+  TrackChangesState,
+  TrackChangesOptions,
+} from '@manuscripts/track-changes-plugin'
 
 export const trackChangesExtensionName = 'track-changes' as const
 
@@ -26,7 +30,7 @@ export const trackChangesExtension = (opts?: TrackChangesOptions) => (ctx: Edito
   enableDebug(!!opts?.debug)
   return {
     name: trackChangesExtensionName,
-    commands,
+    commands: trackCommands,
     keymaps: [],
     plugins: [trackChangesPlugin(opts)],
     store: undefined,

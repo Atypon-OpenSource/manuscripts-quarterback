@@ -54,7 +54,7 @@
     "react-dom": ">=17.0.0"
   },
   "dependencies": {
-    "@manuscripts/ext-track-changes": "workspace:*",
+    "@manuscripts/track-changes-plugin": "workspace:*",
     "@manuscripts/examples-track-schema": "workspace:*",
     "@manuscripts/examples-track-shared": "workspace:*",
     "lib0": "^0.2.42",

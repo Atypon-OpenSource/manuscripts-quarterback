@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { setAction, TrackChangesAction } from '@manuscripts/ext-track-changes'
+import { setAction, TrackChangesAction } from '@manuscripts/track-changes-plugin'
 
 Cypress.Commands.add('resetDoc', () => {
   return cy.window().then(async (window) => {

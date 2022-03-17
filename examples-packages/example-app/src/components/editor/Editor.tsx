@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 import {
-  trackChangesExtension,
+  trackCommands,
+  trackChangesPlugin,
   trackChangesPluginKey,
   TrackChangesState,
-} from '@manuscripts/ext-track-changes'
+} from '@manuscripts/track-changes-plugin'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
@@ -35,6 +36,7 @@ import styled from 'styled-components'
 import { ySyncPluginKey } from 'y-prosemirror'
 
 import useTrackOptions from '../../hooks/useTrackOptions'
+import { trackChangesExtension } from '../../trackExtension'
 import { TrackOptions } from '../TrackOptions'
 import { RightPanel } from '../right-panel/RightPanel'
 import { Toolbar } from './Toolbar'
@@ -58,15 +60,15 @@ export const Editor = observer(() => {
       ...(options.disableTrack
         ? []
         : [
-            trackChangesExtension({
-              user: {
-                id: options.user.id,
-                name: options.user.name,
-              },
-              skipTrsWithMetas: [ySyncPluginKey],
-              debug: options.debug,
-            }),
-          ]),
+          trackChangesExtension({
+            user: {
+              id: options.user.id,
+              name: options.user.name,
+            },
+            skipTrsWithMetas: [ySyncPluginKey],
+            debug: options.debug,
+          }),
+        ]),
       yjsExtension({
         document: {
           id: options.documentId,

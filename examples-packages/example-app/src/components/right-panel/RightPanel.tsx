@@ -19,7 +19,7 @@ import {
   TrackChangesState,
   trackCommands,
   TrackedChange,
-} from '@manuscripts/ext-track-changes'
+} from '@manuscripts/track-changes-plugin'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'

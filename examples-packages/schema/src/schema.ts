@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackedAttrs } from '@manuscripts/ext-track-changes'
+import { TrackedAttrs } from '@manuscripts/track-changes-plugin'
 import { Schema } from 'prosemirror-model'
 import { bulletList, listItem, orderedList } from 'prosemirror-schema-list'
 

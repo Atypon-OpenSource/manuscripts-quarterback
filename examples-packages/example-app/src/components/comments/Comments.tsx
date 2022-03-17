@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackedChange } from '@manuscripts/ext-track-changes'
+import { TrackedChange } from '@manuscripts/track-changes-plugin'
 import { CommentWithUserColor, Event, IUpdateCommentRequest } from '@manuscripts/examples-track-shared'
 import { inject, observer } from 'mobx-react'
 import React, { useState, useCallback } from 'react'

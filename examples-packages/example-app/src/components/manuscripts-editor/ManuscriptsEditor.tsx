@@ -18,10 +18,9 @@ import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
 import {
-  trackChangesExtension,
   trackChangesPluginKey,
   TrackChangesState,
-} from '@manuscripts/ext-track-changes'
+} from '@manuscripts/track-changes-plugin'
 import { yjsExtension, useYjsExtension } from '@manuscripts/ext-yjs'
 import {
   // styles,
@@ -40,6 +39,7 @@ import type { WebsocketProvider } from 'y-websocket'
 import type { Doc } from 'yjs'
 
 import { TrackOptions } from '../TrackOptions'
+import { trackChangesExtension } from '../../trackExtension'
 
 // import '@manuscripts/style-guide/styles/tip.css'
 // import 'prosemirror-gapcursor/style/gapcursor.css'

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { trackCommands } from '@manuscripts/ext-track-changes'
+import { trackCommands } from '@manuscripts/track-changes-plugin'
 import {
   activeNodesMarksPluginKey,
   ActiveNodesMarksState,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackedChange } from '@manuscripts/ext-track-changes'
+import { TrackedChange } from '@manuscripts/track-changes-plugin'
 import { observer } from 'mobx-react'
 import React, { useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiMessageCircle } from 'react-icons/fi'

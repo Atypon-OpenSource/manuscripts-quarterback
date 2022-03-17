@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
   "dependencies": {
-    "@manuscripts/ext-track-changes": "workspace:*",
+    "@manuscripts/track-changes-plugin": "workspace:*",
     "@manuscripts/ext-yjs": "workspace:*",
     "@manuscripts/manuscript-editor": "workspace:*",
     "@manuscripts/manuscript-transform": "workspace:*",
