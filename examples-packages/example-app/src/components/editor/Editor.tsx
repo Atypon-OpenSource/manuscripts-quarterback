@@ -43,6 +43,8 @@ import { Toolbar } from './Toolbar'
 import { UsersList } from './UsersList'
 import { useYjsExtension } from './useYjsExtension'
 
+import '@manuscripts/track-changes-plugin/src/styles.css'
+
 export const Editor = observer(() => {
   const {
     authStore: { user: loggedUser, setEditorUser },
