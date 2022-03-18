@@ -1123,8 +1123,6 @@ importers:
   quarterback-packages/track-changes-plugin:
     specifiers:
       '@manuscripts/examples-track-schema': workspace:*
-      '@manuscripts/manuscript-editor': workspace:*
-      '@manuscripts/quarterback-shared': workspace:*
       '@rollup/plugin-commonjs': ^20.0.0
       '@types/debug': ^4.1.7
       '@types/jest': ^27.4.1
@@ -1150,11 +1148,9 @@ importers:
       ts-jest: ^27.1.3
       typescript: ^4.4.4
     dependencies:
-      '@manuscripts/quarterback-shared': link:../shared
       debug: 4.3.3
     devDependencies:
       '@manuscripts/examples-track-schema': link:../../examples-packages/schema
-      '@manuscripts/manuscript-editor': link:../../examples-packages/manuscript-editor
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.59.0
       '@types/debug': 4.1.7
       '@types/jest': 27.4.1
