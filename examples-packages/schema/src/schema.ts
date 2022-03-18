@@ -395,16 +395,13 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       excludes: 'tracked_insert tracked_delete',
       attrs: {
         dataTracked: { default: null },
-        pending_bg: { default: 'greenyellow' },
       },
       parseDOM: [{ tag: 'ins' }],
       toDOM: (el) => {
         const dataTracked: TrackedAttrs | undefined = el.attrs.dataTracked
         const { status = 'pending' } = dataTracked || {}
-        const { pending_bg } = el.attrs
         const attrs = {
           class: `inserted ${status}`,
-          style: status === 'pending' ? `background: ${pending_bg};` : undefined,
         }
         return ['ins', attrs]
       },
@@ -414,16 +411,13 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       excludes: 'tracked_insert tracked_delete',
       attrs: {
         dataTracked: { default: null },
-        pending_bg: { default: '#ffa4a4' },
       },
       parseDOM: [{ tag: 'del' }],
       toDOM: (el) => {
         const dataTracked: TrackedAttrs | undefined = el.attrs.dataTracked
         const { status = 'pending' } = dataTracked || {}
-        const { pending_bg } = el.attrs
         const attrs = {
           class: `deleted ${status}`,
-          style: status === 'pending' ? `background: ${pending_bg};` : undefined,
         }
         return ['del', attrs]
       },

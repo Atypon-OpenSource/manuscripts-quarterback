@@ -78,7 +78,6 @@ describe('Track changes', () => {
         6,
         view.state.schema.marks.tracked_insert.create({
           dataTracked: {},
-          pending_bg: 'yellow',
         })
       )
       setAction(tr, TrackChangesAction.skipTrack, true)
@@ -93,9 +92,7 @@ describe('Track changes', () => {
       const attrs = node.marks[0]?.attrs
       expect(attrs?.dataTracked?.id).to.have.lengthOf(36)
       expect(attrs?.dataTracked?.userID).to.equal(TEST_USER.id)
-      expect(attrs?.dataTracked?.userName).to.equal(TEST_USER.name)
-      expect(attrs?.dataTracked?.time).to.be.within(Date.now() - 1000 * 60, Date.now() + 1000 * 60)
-      expect(attrs?.pending_bg).to.have.equal('yellow')
+      expect(attrs?.dataTracked?.createdAt).to.be.within(Date.now() - 1000 * 60, Date.now() + 1000 * 60)
     })
     cy.get('ins.pending').should('have.text', 'asdf')
     cy.get('del.pending').should('have.length', 0)
