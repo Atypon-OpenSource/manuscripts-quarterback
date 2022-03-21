@@ -40,15 +40,15 @@ export const NewCommentForm = observer((props: IProps) => {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
     const docId = documentStore.currentDocument?.id
     if (!docId) {
-      setError('No current document')
+      setError('Failed to fetch document from API')
       return
     } else if (!user) {
       setError('Not logged in')
       return
     }
+    setLoading(true)
     commentStore
       .createComment(
         {
