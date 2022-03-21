@@ -15,7 +15,6 @@
  */
 import {
   CHANGE_STATUS,
-  trackChangesPluginKey,
   TrackChangesState,
   trackCommands,
   TrackedChange,
@@ -23,7 +22,7 @@ import {
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
@@ -42,8 +41,11 @@ interface Props {
 
 export const RightPanel = memo((props: Props) => {
   const { yjsDisabled, yjsState, yjsStore, viewProvider, trackChangesState } = props
-  const { changeSet, shownChangeStatuses = [] } = trackChangesState || {}
+  const { changeSet } = trackChangesState || {}
   const { documentStore } = stores
+  const [showPending, setShowPending] = useState(true)
+  const [showAccepted, setShowAccepted] = useState(true)
+  const [showRejected, setShowRejected] = useState(true)
 
   function handleAcceptChange(c: TrackedChange) {
     const ids = [c.id]
@@ -72,9 +74,6 @@ export const RightPanel = memo((props: Props) => {
     }
     viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.pending, ids))
   }
-  function toggleChangesVisibility(status: CHANGE_STATUS) {
-    viewProvider.execCommand(trackCommands.toggleShownStatuses([status]))
-  }
   async function handleCreateSnapshot() {
     if (yjsDisabled) {
       const saved = await documentStore.saveSnapshot(viewProvider.docToJSON())
@@ -99,30 +98,30 @@ export const RightPanel = memo((props: Props) => {
       )}
       <ChangeList
         changes={changeSet?.pending || []}
-        isVisible={shownChangeStatuses.includes(CHANGE_STATUS.pending)}
+        isVisible={showPending}
         title="Pending"
         handleAcceptChange={handleAcceptChange}
         handleRejectChange={handleRejectChange}
         handleResetChange={handleResetChange}
-        toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.pending)}
+        toggleVisibility={() => setShowPending((v) => !v)}
       />
       <ChangeList
         changes={changeSet?.accepted || []}
-        isVisible={shownChangeStatuses.includes(CHANGE_STATUS.accepted)}
+        isVisible={showAccepted}
         title="Accepted"
         handleAcceptChange={handleAcceptChange}
         handleRejectChange={handleRejectChange}
         handleResetChange={handleResetChange}
-        toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.accepted)}
+        toggleVisibility={() => setShowAccepted((v) => !v)}
       />
       <ChangeList
         changes={changeSet?.rejected || []}
-        isVisible={shownChangeStatuses.includes(CHANGE_STATUS.rejected)}
+        isVisible={showRejected}
         title="Rejected"
         handleAcceptChange={handleAcceptChange}
         handleRejectChange={handleRejectChange}
         handleResetChange={handleResetChange}
-        toggleVisibility={() => toggleChangesVisibility(CHANGE_STATUS.rejected)}
+        toggleVisibility={() => setShowRejected((v) => !v)}
       />
     </RightSide>
   )
