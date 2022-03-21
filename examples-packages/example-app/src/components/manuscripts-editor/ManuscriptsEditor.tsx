@@ -69,10 +69,7 @@ export const ManuscriptsEditor = observer((props: Props) => {
         ? []
         : [
             trackChangesExtension({
-              user: {
-                id: options.user.id,
-                name: options.user.name,
-              },
+              userID: options.user.id,
               skipTrsWithMetas: [ySyncPluginKey],
               debug: options.debug,
             }),

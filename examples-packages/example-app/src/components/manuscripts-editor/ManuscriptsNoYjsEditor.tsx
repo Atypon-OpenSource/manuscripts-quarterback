@@ -63,10 +63,7 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
         ? []
         : [
             trackChangesExtension({
-              user: {
-                id: options.user.id,
-                name: options.user.name,
-              },
+              userID: options.user.id,
               debug: options.debug,
             }),
           ]),
