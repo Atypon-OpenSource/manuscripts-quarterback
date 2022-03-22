@@ -105,7 +105,7 @@ export function Toolbar(props: IProps) {
       case 'toggle-blockquote':
         return
       case 'update-attribute':
-        viewProvider?.execCommand(trackCommands.addTrackedAttributesToBlockNode())
+        viewProvider?.execCommand(trackCommands.setParagraphTestAttribute())
         return
       case 'toggle-split-view':
         return
