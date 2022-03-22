@@ -113,10 +113,10 @@ export function Toolbar(props: IProps) {
         viewProvider?.execCommand(trackCommands.setTrackingStatus())
         return
       case 'set-inserted':
-        viewProvider?.execCommand(trackCommands.setInserted())
+        // viewProvider?.execCommand(trackCommands.setInserted())
         return
       case 'set-deleted':
-        viewProvider?.execCommand(trackCommands.setDeleted())
+        // viewProvider?.execCommand(trackCommands.setDeleted())
         return
     }
   }
