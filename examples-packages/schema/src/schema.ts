@@ -112,7 +112,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
     // `<code>` element inside of it.
     code_block: {
       content: 'text*',
-      marks: '',
+      marks: 'tracked_insert tracked_delete',
       group: 'block',
       code: true,
       defining: true,
