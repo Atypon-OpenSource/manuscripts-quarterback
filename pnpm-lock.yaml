@@ -1146,6 +1146,7 @@ importers:
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
       ts-jest: ^27.1.3
+      tslib: ^2.3.1
       typescript: ^4.4.4
     dependencies:
       debug: 4.3.3
@@ -1173,6 +1174,7 @@ importers:
       rollup: 2.59.0
       rollup-plugin-typescript2: 0.30.0_rollup@2.59.0+typescript@4.4.4
       ts-jest: 27.1.3_12a0424dba75bb3a2259de9bfbc595d5
+      tslib: 2.3.1
       typescript: 4.4.4
 
 packages:
