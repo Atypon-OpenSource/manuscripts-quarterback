@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/track-changes-plugin'
+import { ChangeSet, CHANGE_STATUS, TrackChangesState, trackCommands } from '@manuscripts/track-changes-plugin'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import React from 'react'
@@ -32,13 +32,13 @@ export function ChangesControls(props: IProps) {
   function handleAcceptPending() {
     if (!trackChangesState) return
     const { changeSet } = trackChangesState
-    const ids = changeSet.flatten(changeSet.pending)
+    const ids = ChangeSet.flattenTreeToIds(changeSet.pending)
     viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.accepted, ids))
   }
   function handleRejectPending() {
     if (!trackChangesState) return
     const { changeSet } = trackChangesState
-    const ids = changeSet.flatten(changeSet.pending)
+    const ids = ChangeSet.flattenTreeToIds(changeSet.pending)
     viewProvider.execCommand(trackCommands.setChangeStatuses(CHANGE_STATUS.rejected, ids))
   }
   function handleReset() {
