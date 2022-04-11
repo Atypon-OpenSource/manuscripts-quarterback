@@ -21,6 +21,7 @@
     "ex:client": "pnpm run dev --filter @manuscripts/examples-track-example-app",
     "ex:start": "concurrently --kill-others 'pnpm ex:api' 'pnpm ex:utils' 'pnpm ex:client'",
     "start": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/track-changes-plugin' 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-api'",
+    "track": "pnpm run watch --filter @manuscripts/track-changes-plugin",
     "ex:e2e": "pnpm run test --filter @manuscripts/examples-track-e2e",
     "ex:e2e:open": "pnpm run start --filter @manuscripts/examples-track-e2e",
     "cs": "changeset",
