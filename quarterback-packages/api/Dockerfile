@@ -35,4 +35,5 @@ COPY ./quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
 
 EXPOSE ${PORT}
 
+# CHANGE FOR TESTING THE PR
 CMD ["node", "./quarterback-packages/api/dist/index.js"]
