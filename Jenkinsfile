@@ -6,9 +6,9 @@ node {
     REFSPEC="+refs/pull/*:refs/remotes/origin/pr/*"
     stage("Checkout") {
         if (params != null && params.ghprbPullId == null) {
-            echo 'Checking out from master'
-            // master needs to be substituted with the release branch.
-            REFSPEC="+refs/heads/master:refs/remotes/origin/master"
+            echo 'Checking out from main'
+            // main needs to be substituted with the release branch.
+            REFSPEC="+refs/heads/main:refs/remotes/origin/main"
         }
         VARS = checkout(scm:[$class: 'GitSCM', branches: [[name: "${sha1}"]],
             doGenerateSubmoduleConfigurations: false,
