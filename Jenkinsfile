@@ -51,7 +51,7 @@ node {
         }
     }
 
-    if (VARS.GIT_BRANCH == "origin/master") {
+    if (VARS.GIT_BRANCH == "origin/main") {
         stage("Publish") {
             withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
                 sh ("pnpm ci:publish")
