@@ -39,7 +39,7 @@ node {
 
     stage("Build docker image") {
         docker.withServer('unix:///var/run/docker-ci.sock') {
-            app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/Dockerfile ")
+            app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/Dockerfile .")
         }
     }
 
