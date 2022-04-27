@@ -1,5 +1,8 @@
 
 node {
+    def imageTagBadge = addEmbeddableBadgeConfiguration(id: "dockerImage", subject: "image")
+    def versionIdBadge = addEmbeddableBadgeConfiguration(id: "versionId", subject: "version")
+    REGISTRY="docker-reg.atypon.com"
     REFSPEC="+refs/pull/*:refs/remotes/origin/pr/*"
     stage("Checkout") {
         if (params != null && params.ghprbPullId == null) {
@@ -17,6 +20,8 @@ node {
                 url: 'git@github.com:Atypon-OpenSource/manuscripts-quarterback.git']
             ]]
         )
+        DOCKER_IMAGE="man/quarterback"
+        IMG_TAG=sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
 
     stage("Install dependencies") {
@@ -29,6 +34,20 @@ node {
     stage("Build") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
             sh (script: "pnpm build")
+        }
+    }
+
+    stage("Build docker image") {
+        docker.withServer('unix:///var/run/docker-ci.sock') {
+            app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/Dockerfile ")
+        }
+    }
+
+    stage("Push to registry") {
+        echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
+        docker.withRegistry("https://${REGISTRY}") {
+            app.push();
+            app.push('latest');
         }
     }
 
