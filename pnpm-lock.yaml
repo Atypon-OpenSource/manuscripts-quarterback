@@ -738,7 +738,7 @@ importers:
       '@manuscripts/eslint-config': ^0.2.2
       '@manuscripts/examples': ^0.0.8
       '@manuscripts/library': ^0.6.2
-      '@manuscripts/manuscripts-json-schema': ^1.49.5
+      '@manuscripts/manuscripts-json-schema': ^1.49.11
       '@manuscripts/publish': ^0.2.2
       '@types/debug': ^4.1.4
       '@types/fs-extra': ^9.0.1
@@ -783,7 +783,7 @@ importers:
     dependencies:
       '@manuscripts/data': 0.1.5
       '@manuscripts/library': 0.6.2
-      '@manuscripts/manuscripts-json-schema': 1.49.5
+      '@manuscripts/manuscripts-json-schema': 1.49.12
       debug: 4.3.3
       mathjax-full: 3.2.0
       mime: 2.6.0
@@ -890,7 +890,7 @@ importers:
       '@manuscripts/eslint-config': ^0.4.2
       '@manuscripts/examples': ^0.0.7
       '@manuscripts/manuscript-transform': workspace:*
-      '@manuscripts/manuscripts-json-schema': ^1.46.2
+      '@manuscripts/manuscripts-json-schema': ^1.49.11
       '@manuscripts/publish': ^0.2.2
       '@reach/tabs': ^0.11.2
       '@storybook/addon-actions': ^5.3.14
@@ -987,7 +987,7 @@ importers:
       '@manuscripts/data': 0.1.5
       '@manuscripts/examples': 0.0.7
       '@manuscripts/manuscript-transform': link:../manuscript-transform
-      '@manuscripts/manuscripts-json-schema': 1.49.5
+      '@manuscripts/manuscripts-json-schema': 1.49.12
       '@manuscripts/publish': 0.2.2
       '@storybook/addon-actions': 5.3.21_807204cade61b13bbc25cadf166ce8cb
       '@storybook/addons': 5.3.21_react-dom@16.14.0
@@ -4751,7 +4751,7 @@ packages:
     resolution: {integrity: sha512-WTtBEccdR5+BSKe87Ze6bHk4Hkolz2BpHyVbvli6qC+E/ar6T4oBZGFzWOFawZsGyKviBwnvnjpPLlOE5U6b3g==}
     dependencies:
       '@manuscripts/data': 0.1.5
-      '@manuscripts/manuscripts-json-schema': 1.49.5
+      '@manuscripts/manuscripts-json-schema': 1.49.12
       debug: 4.3.3
       lodash.pickby: 4.6.0
       mathjax-full: 3.2.0
@@ -4761,6 +4761,13 @@ packages:
       w3c-xmlserializer: 2.0.0
     transitivePeerDependencies:
       - supports-color
+
+  /@manuscripts/manuscripts-json-schema/1.49.12:
+    resolution: {integrity: sha512-ZHb+VunM/884YNZuXFi4EgalKT8aLFK9v+AwgGQhtoVk4Q/LThYV8TqOrevtCbNk/cydWNynDeTpEB3QxWXZzQ==}
+    dependencies:
+      ajv: 6.12.6
+      deepmerge: 3.3.0
+      js-beautify: 1.14.0
 
   /@manuscripts/manuscripts-json-schema/1.49.3:
     resolution: {integrity: sha512-tZgwGQqHzGXaR7uYeJxKu2yS2QE7qbwNvEdwEH7Ng27wjzz783VxSkL1dm5/9hMkDUmUeQn14RPcX4qz8Vw2Cg==}
@@ -4776,6 +4783,7 @@ packages:
       ajv: 6.12.6
       deepmerge: 3.3.0
       js-beautify: 1.14.0
+    dev: false
 
   /@manuscripts/plugin-persist/0.1.2:
     resolution: {integrity: sha512-hQkwrDAEgICxYC0V5twuqyUDZ3Sro/KjN3G5rrrgDOKS4BNUUU3VbQ748jAv59NoLZJOp6pJN3SeQvWIgiVh3Q==}
