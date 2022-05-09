@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 export * from './auth'
+export * from './doc'
+export * from './review'
 export * from './utils'
 export { Observable } from './Observable'

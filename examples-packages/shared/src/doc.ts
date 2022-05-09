@@ -1,0 +1,6 @@
+export enum DocStatus {
+  EDITABLE = 'EDITABLE',
+  WAITING_REVIEW = 'WAITING_REVIEW',
+  IN_REVIEW = 'IN_REVIEW',
+  READ_ONLY = 'READ_ONLY'
+}

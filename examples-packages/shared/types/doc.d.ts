@@ -17,6 +17,7 @@ import { PmDoc } from '@manuscripts/examples-track-db'
 import { SnapshotLabel } from './snapshot'
 
 export { PmDoc } from '@manuscripts/examples-track-db'
+export { DocStatus } from '../src/doc'
 
 export type ListedDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'> & {
   user: {

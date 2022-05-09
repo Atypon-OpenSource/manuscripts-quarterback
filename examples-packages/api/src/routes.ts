@@ -20,6 +20,7 @@ import { authenticate, validateBody } from '$middlewares'
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
+import * as reviewCtrl from './routes/review/review.ctrl'
 import * as snapCtrl from './routes/snapshot/snap.ctrl'
 
 const router = Router()
@@ -43,5 +44,10 @@ router.get('/doc/:documentId/comments', authenticate, commentCtrl.listComments)
 router.post('/comment', authenticate, commentCtrl.createComment)
 router.put('/comment/:commentId', authenticate, commentCtrl.updateComment)
 router.delete('/comment/:commentId', authenticate, commentCtrl.deleteComment)
+
+router.get('/doc/:documentId/reviews', authenticate, reviewCtrl.listReviewLabels)
+router.post('/review', authenticate, reviewCtrl.createReview)
+router.post('/review/:reviewId/finish', authenticate, reviewCtrl.finishReview)
+router.delete('/review/:reviewId', authenticate, reviewCtrl.deleteReview)
 
 export default router

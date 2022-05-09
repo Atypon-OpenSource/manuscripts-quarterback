@@ -20,17 +20,17 @@ import {
   IGetDocumentResponse,
   IUpdateDocRequest,
 } from '@manuscripts/examples-track-shared'
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction } from 'express'
 import Joi from 'joi'
 
 import { CustomError } from '$common'
-import { IAuthRequest, IRequest } from '$typings/request'
+import { AuthRequest, AuthResponse } from '$typings/request'
 
 import { docService } from './doc.svc'
 
 export const listDocuments = async (
-  req: IAuthRequest,
-  res: Response<IListDocumentsResponse>,
+  req: AuthRequest,
+  res: AuthResponse<IListDocumentsResponse>,
   next: NextFunction
 ) => {
   try {
@@ -48,8 +48,8 @@ export const listDocuments = async (
 }
 
 export const getDocument = async (
-  req: IAuthRequest,
-  res: Response<IGetDocumentResponse>,
+  req: AuthRequest,
+  res: AuthResponse<IGetDocumentResponse>,
   next: NextFunction
 ) => {
   try {
@@ -66,8 +66,8 @@ export const getDocument = async (
 }
 
 export const createDocument = async (
-  req: IAuthRequest<ICreateDocRequest>,
-  res: Response<ICreateDocResponse>,
+  req: AuthRequest<ICreateDocRequest>,
+  res: AuthResponse<ICreateDocResponse>,
   next: NextFunction
 ) => {
   try {
@@ -83,8 +83,8 @@ export const createDocument = async (
 }
 
 export const updateDocument = async (
-  req: IAuthRequest<IUpdateDocRequest, { documentId: string }>,
-  res: Response,
+  req: AuthRequest<IUpdateDocRequest, { documentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
@@ -101,8 +101,8 @@ export const updateDocument = async (
 }
 
 export const deleteDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
+  req: AuthRequest<Record<string, never>, { documentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
@@ -119,8 +119,8 @@ export const deleteDocument = async (
 }
 
 export const openDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
+  req: AuthRequest<Record<string, never>, { documentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {

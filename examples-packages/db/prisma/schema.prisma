@@ -24,33 +24,45 @@ model User {
   password  String    @db.VarChar(255)
   role      UserRole  @default(USER)
   docs      PmDoc[]   @relation("PmDocToUser")
+  reviews   Review[]  @relation("ReviewToUser")
   comments  Comment[] @relation("CommentToUser")
 
   @@map("quarterback_user")
+}
+
+enum DocStatus {
+  EDITABLE
+  WAITING_REVIEW
+  IN_REVIEW
+  READ_ONLY
 }
 
 model PmDoc {
   id        String          @id @default(uuid())
   name      String          @db.VarChar(500)
   doc       Json
+  status    DocStatus       @default(EDITABLE)
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   user      User            @relation("PmDocToUser", fields: [user_id], references: [id])
   user_id   String
   snapshots PmDocSnapshot[] @relation("PmDocSnapshotToPmDoc")
+  reviews   Review[]        @relation("ReviewToPmDoc")
   comments  Comment[]       @relation("CommentToPmDoc")
 
   @@map("pm_doc")
 }
 
 model PmDocSnapshot {
-  id        String    @id @default(uuid())
-  name      String    @default("") @db.VarChar(500)
-  snapshot  Json
-  createdAt DateTime  @default(now())
-  doc       PmDoc     @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
-  doc_id    String
-  comments  Comment[] @relation("CommentToPmDocSnapshot")
+  id                 String    @id @default(uuid())
+  name               String    @default("") @db.VarChar(500)
+  snapshot           Json
+  createdAt          DateTime  @default(now())
+  doc                PmDoc     @relation("PmDocSnapshotToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
+  doc_id             String
+  before_snap_review Review?   @relation("beforeSnapshot")
+  after_snap_review  Review?   @relation("afterSnapshot")
+  comments           Comment[] @relation("CommentToPmDocSnapshot")
 
   @@map("pm_doc_snapshot")
 }
@@ -68,4 +80,27 @@ model Comment {
   snapshot_id String?
 
   @@map("comment")
+}
+
+enum ReviewStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Review {
+  id                 String         @id @default(uuid())
+  name               String         @default("") @db.VarChar(500)
+  status             ReviewStatus   @default(IN_PROGRESS)
+  createdAt          DateTime       @default(now())
+  user               User           @relation("ReviewToUser", fields: [user_id], references: [id])
+  user_id            String
+  changes            String[]
+  doc                PmDoc          @relation("ReviewToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
+  doc_id             String
+  before_snapshot    PmDocSnapshot  @relation("beforeSnapshot", fields: [before_snapshot_id], references: [id])
+  before_snapshot_id String
+  after_snapshot     PmDocSnapshot? @relation("afterSnapshot", fields: [after_snapshot_id], references: [id])
+  after_snapshot_id  String?
+
+  @@map("review")
 }

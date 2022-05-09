@@ -18,22 +18,26 @@ import { Event, PmDocWithSnapshots } from '@manuscripts/examples-track-shared'
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'
+import { ReviewStore } from './ReviewStore'
 
 interface IProps {
   authStore: AuthStore
   commentStore: CommentStore
   documentStore: DocumentStore
+  reviewStore: ReviewStore
 }
 
 export class DocumentFlows {
   authStore: AuthStore
   commentStore: CommentStore
   documentStore: DocumentStore
+  reviewStore: ReviewStore
 
   constructor(props: IProps) {
     this.authStore = props.authStore
     this.commentStore = props.commentStore
     this.documentStore = props.documentStore
+    this.reviewStore = props.reviewStore
   }
 
   getDoc = async (documentId: string): Promise<Event<PmDocWithSnapshots>> => {
@@ -44,6 +48,7 @@ export class DocumentFlows {
     const resp = await Promise.all([
       this.documentStore.fetchDocument(documentId),
       this.commentStore.listComments(documentId, user),
+      this.reviewStore.listReviews(documentId)
     ])
     return resp[0]
   }

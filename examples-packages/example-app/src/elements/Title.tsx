@@ -13,9 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './auth'
-export * from './comment'
-export * from './doc'
-export * from './review'
-export * from './snapshot'
-export * from './utils'
+import React from 'react'
+import styled, { css } from 'styled-components'
+
+export const titleStyles = css`
+  font-family: Arial;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  margin: 0;
+  text-transform: uppercase;
+`

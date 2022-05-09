@@ -16,6 +16,7 @@
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'
+import { ReviewStore } from './ReviewStore'
 
 import { DocumentFlows } from './DocumentFlows'
 
@@ -23,6 +24,7 @@ export class Stores {
   authStore: AuthStore
   commentStore: CommentStore
   documentStore: DocumentStore
+  reviewStore: ReviewStore
 
   documentFlows: DocumentFlows
 
@@ -32,10 +34,12 @@ export class Stores {
       authStore: this.authStore,
     })
     this.commentStore = new CommentStore()
+    this.reviewStore = new ReviewStore()
     this.documentFlows = new DocumentFlows({
       authStore: this.authStore,
       commentStore: this.commentStore,
       documentStore: this.documentStore,
+      reviewStore: this.reviewStore,
     })
   }
 
@@ -43,5 +47,6 @@ export class Stores {
     this.authStore.reset()
     this.commentStore.reset()
     this.documentStore.reset()
+    this.reviewStore.reset()
   }
 }

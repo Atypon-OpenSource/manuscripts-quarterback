@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import {
-  IGetSnapshotLabelsResponse,
-  IGetSnapshotResponse,
-  ISaveSnapshotResponse,
-  ISaveSnapshotRequest,
-  IUpdateDocRequest,
+  IGetReviewLabelsResponse,
+  IGetReviewResponse,
+  ICreateReviewResponse,
+  ICreateReviewRequest,
 } from '@manuscripts/examples-track-shared'
 import { NextFunction } from 'express'
 import Joi from 'joi'
@@ -26,16 +25,16 @@ import Joi from 'joi'
 import { CustomError } from '$common'
 import { AuthRequest, AuthResponse } from '$typings/request'
 
-import { snapService } from './snap.svc'
+import { reviewService } from './review.svc'
 
-export const listSnapshotLabels = async (
+export const listReviewLabels = async (
   req: AuthRequest<Record<string, never>, { documentId: string }>,
-  res: AuthResponse<IGetSnapshotLabelsResponse>,
+  res: AuthResponse<IGetReviewLabelsResponse>,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
-    const result = await snapService.listSnapshotLabels(documentId)
+    const result = await reviewService.listReviewLabels(documentId)
     if (result.ok) {
       res.json({ labels: result.data })
     } else {
@@ -46,14 +45,14 @@ export const listSnapshotLabels = async (
   }
 }
 
-export const getSnapshot = async (
-  req: AuthRequest<Record<string, never>, { snapshotId: string }>,
-  res: AuthResponse<IGetSnapshotResponse>,
+export const getReview = async (
+  req: AuthRequest<Record<string, never>, { reviewId: string }>,
+  res: AuthResponse<IGetReviewResponse>,
   next: NextFunction
 ) => {
   try {
-    const { snapshotId } = req.params
-    const result = await snapService.getSnapshot(snapshotId)
+    const { reviewId } = req.params
+    const result = await reviewService.getReview(reviewId)
     if (result.ok) {
       res.json(result.data)
     } else {
@@ -64,15 +63,17 @@ export const getSnapshot = async (
   }
 }
 
-export const saveSnapshot = async (
-  req: AuthRequest<ISaveSnapshotRequest>,
-  res: AuthResponse<ISaveSnapshotResponse>,
+export const createReview = async (
+  req: AuthRequest<ICreateReviewRequest>,
+  res: AuthResponse<ICreateReviewResponse>,
   next: NextFunction
 ) => {
   try {
-    const result = await snapService.saveSnapshot(req.body)
+    const userId = res.locals.user.id
+    console.log(res.locals)
+    const result = await reviewService.createReview(req.body, userId)
     if (result.ok) {
-      res.json({ snapshot: result.data })
+      res.json({ review: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -81,14 +82,14 @@ export const saveSnapshot = async (
   }
 }
 
-export const updateSnapshot = async (
-  req: AuthRequest<IUpdateDocRequest, { snapshotId: string }>,
+export const finishReview = async (
+  req: AuthRequest<{}, { reviewId: string }>,
   res: AuthResponse,
   next: NextFunction
 ) => {
   try {
-    const { snapshotId } = req.params
-    const result = await snapService.updateSnapshot(snapshotId, req.body)
+    const { reviewId } = req.params
+    const result = await reviewService.finishReview(reviewId)
     if (result.ok) {
       res.sendStatus(200)
     } else {
@@ -99,14 +100,14 @@ export const updateSnapshot = async (
   }
 }
 
-export const deleteSnapshot = async (
-  req: AuthRequest<Record<string, never>, { snapshotId: string }>,
-  res: AuthResponse<ISaveSnapshotResponse>,
+export const deleteReview = async (
+  req: AuthRequest<Record<string, never>, { reviewId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
-    const { snapshotId } = req.params
-    const result = await snapService.deleteSnapshot(snapshotId)
+    const { reviewId } = req.params
+    const result = await reviewService.deleteReview(reviewId)
     if (result.ok) {
       res.sendStatus(200)
     } else {
