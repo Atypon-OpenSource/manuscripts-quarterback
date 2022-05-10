@@ -15,5 +15,5 @@ jobs:
         with:
           url: "https://acjenkins.atypon.com"
           user: "ci"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
           job: "manuscripts/manuscripts-quarterback-publish"
