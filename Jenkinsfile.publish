@@ -1,0 +1,38 @@
+node {
+    stage("checkout") {
+        VARS = checkout(scm:[$class: 'GitSCM', branches: [[name: "${sha1}"]],
+            doGenerateSubmoduleConfigurations: false,
+            submoduleCfg: [],
+            userRemoteConfigs: [
+                [credentialsId: '336d4fc3-f420-4a3e-b96c-0d0f36ad12be',
+                name: 'origin',
+                url: 'git@github.com:Atypon-OpenSource/manuscripts-quarterback.git']
+            ]]
+        )
+        echo "${VARS}"
+    }
+
+    stage("Build & test") {
+        nodejs(nodeJSInstallationName: 'node_16_14_2') {
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-db")
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-shared")
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-api")
+            sh (script: "pnpm run test --filter @manuscripts/quarterback-api")
+            sh (script: "pnpm run test --filter @manuscripts/track-changes-plugin")
+        }
+    }
+
+    stage("Build docker image") {
+        docker.withServer('unix:///var/run/docker-ci.sock') {
+            app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
+        }
+    }
+
+    // when we have a change in the package.json version field of api db or shared ?
+    stage("Publish") {
+        withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
+            sh ("pnpm ci:publish")
+        }
+    }
+}
+
