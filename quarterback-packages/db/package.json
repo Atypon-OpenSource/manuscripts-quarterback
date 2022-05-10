@@ -10,12 +10,13 @@
     "generated/*"
   ],
   "scripts": {
-    "init": "pnpm run migrate && pnpm run api-hack",
-    "api-hack": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma",
-    "format": "prisma format",
-    "generate": "prisma generate && pnpm run api-hack",
     "prod:init": "prisma generate && prisma migrate deploy && pnpm run api-hack",
     "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "init": "pnpm run migrate && pnpm run api-hack",
+    "api-hack": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma",
+    "build": "prisma generate && pnpm run api-hack",
+    "format": "prisma format",
+    "generate": "prisma generate && pnpm run api-hack",
     "migrate": "prisma migrate dev && pnpm run api-hack",
     "delete": "prisma migrate reset",
     "reset": "prisma migrate reset && pnpm run api-hack"

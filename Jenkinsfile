@@ -27,13 +27,17 @@ node {
     stage("Install dependencies") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
             sh (script: "npm install pnpm@latest -g")
-            sh (script: "pnpm install --frozen-lockfile ", returnStdout: true)
+            sh (script: "pnpm i --frozen-lockfile --filter ./quarterback-packages", returnStdout: true)
         }
     }
 
-    stage("Build") {
+    stage("Build & test") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
-            sh (script: "pnpm build")
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-db")
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-shared")
+            sh (script: "pnpm run build --filter @manuscripts/quarterback-api")
+            sh (script: "pnpm run test --filter @manuscripts/quarterback-api")
+            sh (script: "pnpm run test --filter @manuscripts/track-changes-plugin")
         }
     }
 
