@@ -75,6 +75,7 @@ export class ReviewStore {
         this.reviewsMap.set(resp.data.review.id, {
           ...resp.data.review,
         })
+        this.currentReview = resp.data.review
       })
     }
     return resp

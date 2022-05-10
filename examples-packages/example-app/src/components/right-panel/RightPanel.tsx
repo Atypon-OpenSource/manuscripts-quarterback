@@ -28,6 +28,7 @@ import styled from 'styled-components'
 
 import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
+import DocControls from 'components/doc-controls/DocControls'
 import ReviewControls from '../review-controls/ReviewControls'
 import ReviewList from 'components/review-controls/ReviewList'
 import { SnapshotsList } from '../snapshots/SnapshotsList'
@@ -87,16 +88,17 @@ export const RightPanel = memo((props: Props) => {
 
   return (
     <RightSide>
+      <DocControls />
       <ChangesControls
         className="changes-controls"
         viewProvider={viewProvider}
         trackChangesState={trackChangesState}
         createSnapshot={handleCreateSnapshot}
       />
-      <ReviewList/>
       <ReviewControls
 
       />
+      <ReviewList/>
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />
       ) : (
@@ -136,6 +138,9 @@ export const RightPanel = memo((props: Props) => {
 RightPanel.displayName = 'RightPanel'
 
 const RightSide = styled.div`
+  & > ${DocControls} {
+    margin: 0 0 1rem 0;
+  }
   & > ${ReviewControls} {
     margin: 1rem 0 0.5rem 0;
   }

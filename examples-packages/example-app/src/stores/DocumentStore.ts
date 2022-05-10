@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+  DocStatus,
   Event,
   ISaveSnapshotResponse,
   IUpdateDocRequest,
@@ -44,6 +45,13 @@ export class DocumentStore {
   constructor(props: IProps) {
     makeObservable(this)
     this.authStore = props.authStore
+  }
+
+  @computed get editingDisabled() {
+    if (this.authStore.isAdmin) {
+      return false
+    }
+    return this.currentDocument?.status !== DocStatus.EDITABLE
   }
 
   @computed get snapshotLabels() {
@@ -127,6 +135,9 @@ export class DocumentStore {
     } else {
       runInAction(() => {
         this.documentList = this.documentList.map((d) => (d.id === docId ? { ...d, ...values } : d))
+        if (this.currentDocument?.id === docId) {
+          this.currentDocument = { ...this.currentDocument, ...values }
+        }
       })
     }
     return resp

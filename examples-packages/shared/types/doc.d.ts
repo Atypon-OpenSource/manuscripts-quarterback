@@ -15,6 +15,7 @@
  */
 import { PmDoc } from '@manuscripts/examples-track-db'
 import { SnapshotLabel } from './snapshot'
+import { DocStatus } from '../src/doc'
 
 export { PmDoc } from '@manuscripts/examples-track-db'
 export { DocStatus } from '../src/doc'
@@ -50,4 +51,5 @@ export type ICreateDocResponse = PmDocWithSnapshots
 export type IUpdateDocRequest = {
   name?: string
   doc?: Record<string, any>
+  status?: DocStatus
 }
