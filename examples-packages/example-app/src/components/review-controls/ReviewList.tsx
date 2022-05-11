@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Evt, ReviewLabel } from '@manuscripts/examples-track-shared'
+import { Review } from '@manuscripts/examples-track-shared'
 import { observer } from 'mobx-react'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'
 import { stores } from 'stores'
 import styled from 'styled-components'
@@ -31,7 +31,7 @@ const ReviewList = observer((props: IProps) => {
     reviewStore,
   } = stores
   const userId = user?.id
-  const { reviewLabels, fetchReview } = reviewStore
+  const { reviews, fetchReview } = reviewStore
   const [isVisible, setIsVisible] = useState(true)
 
   return (
@@ -43,7 +43,7 @@ const ReviewList = observer((props: IProps) => {
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {reviewLabels.map((r: ReviewLabel, i: number) => (
+        {reviews.map((r: Review, i: number) => (
           <SnapListItem key={`${r.id}`}>
             <TitleWrapper>
               <h4>

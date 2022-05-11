@@ -14,29 +14,39 @@
  * limitations under the License.
  */
 import { Review } from '@manuscripts/examples-track-db'
+import { PmDocSnapshot } from './snapshot'
 
 export { Review } from '@manuscripts/examples-track-db'
 export { ReviewStatus } from '../src/review'
-export type ReviewLabel = Pick<Review, 'id' | 'createdAt'>
 
-// GET /doc/:documentId/review/labels
-export interface IGetReviewLabelsResponse {
-  labels: ReviewLabel[]
+// GET /doc/:documentId/reviews
+export interface IGetReviewsResponse {
+  reviews: Review[]
 }
 
 // GET /review/:reviewId
 export type IGetReviewResponse = Review
 
-// POST /review
+// POST /doc/:documentId/review
 export interface ICreateReviewRequest {
   docId: string
-  snapshotId: string
+  name: string
+  snapshot: Record<string, any>
 }
 export interface ICreateReviewResponse {
+  snapshot: PmDocSnapshot
   review: Review
 }
 
-// POST /review/:reviewId/finish
+// POST /doc/:documentId/review/:reviewId/finish
+export interface IFinishReviewRequest {
+  snapshot: Record<string, any>
+}
 export interface IFinishReviewResponse {
-  ok: boolean
+  snapshot: PmDocSnapshot
+}
+
+// DELETE /doc/:documentId/review/:reviewId
+export interface IDeleteReviewResponse {
+  review: Review
 }

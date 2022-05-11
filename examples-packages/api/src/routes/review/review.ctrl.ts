@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 import {
-  IGetReviewLabelsResponse,
+  IGetReviewsResponse,
   IGetReviewResponse,
   ICreateReviewResponse,
   ICreateReviewRequest,
+  IFinishReviewRequest,
+  IFinishReviewResponse,
+  IDeleteReviewResponse,
 } from '@manuscripts/examples-track-shared'
 import { NextFunction } from 'express'
 import Joi from 'joi'
@@ -27,16 +30,16 @@ import { AuthRequest, AuthResponse } from '$typings/request'
 
 import { reviewService } from './review.svc'
 
-export const listReviewLabels = async (
+export const listReviews = async (
   req: AuthRequest<Record<string, never>, { documentId: string }>,
-  res: AuthResponse<IGetReviewLabelsResponse>,
+  res: AuthResponse<IGetReviewsResponse>,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
-    const result = await reviewService.listReviewLabels(documentId)
+    const result = await reviewService.listReviews(documentId)
     if (result.ok) {
-      res.json({ labels: result.data })
+      res.json({ reviews: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -64,16 +67,16 @@ export const getReview = async (
 }
 
 export const createReview = async (
-  req: AuthRequest<ICreateReviewRequest>,
+  req: AuthRequest<ICreateReviewRequest, { documentId: string }>,
   res: AuthResponse<ICreateReviewResponse>,
   next: NextFunction
 ) => {
   try {
+    const { documentId } = req.params
     const userId = res.locals.user.id
-    console.log(res.locals)
-    const result = await reviewService.createReview(req.body, userId)
+    const result = await reviewService.createReview(req.body, documentId, userId)
     if (result.ok) {
-      res.json({ review: result.data })
+      res.json(result.data)
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -83,15 +86,15 @@ export const createReview = async (
 }
 
 export const finishReview = async (
-  req: AuthRequest<{}, { reviewId: string }>,
-  res: AuthResponse,
+  req: AuthRequest<IFinishReviewRequest, { documentId: string, reviewId: string }>,
+  res: AuthResponse<IFinishReviewResponse>,
   next: NextFunction
 ) => {
   try {
-    const { reviewId } = req.params
-    const result = await reviewService.finishReview(reviewId)
+    const { documentId, reviewId } = req.params
+    const result = await reviewService.finishReview(documentId, reviewId, req.body)
     if (result.ok) {
-      res.sendStatus(200)
+      res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }
@@ -101,15 +104,15 @@ export const finishReview = async (
 }
 
 export const deleteReview = async (
-  req: AuthRequest<Record<string, never>, { reviewId: string }>,
-  res: AuthResponse,
+  req: AuthRequest<Record<string, never>, { documentId: string, reviewId: string }>,
+  res: AuthResponse<IDeleteReviewResponse>,
   next: NextFunction
 ) => {
   try {
-    const { reviewId } = req.params
-    const result = await reviewService.deleteReview(reviewId)
+    const { documentId, reviewId } = req.params
+    const result = await reviewService.deleteReview(documentId, reviewId)
     if (result.ok) {
-      res.sendStatus(200)
+      res.json({ review: result.data })
     } else {
       next(new CustomError(result.error, result.status))
     }

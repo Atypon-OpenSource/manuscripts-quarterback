@@ -58,6 +58,12 @@ export class DocumentStore {
     return this.currentDocument?.snapshots || []
   }
 
+  @action setCurrentDocumentStatus = (status: DocStatus) => {
+    if (this.currentDocument) {
+      this.currentDocument.status = status
+    }
+  }
+
   @action listDocuments = async () => {
     const resp = await docApi.listDocuments()
     if (!resp.ok) {
@@ -176,6 +182,34 @@ export class DocumentStore {
     this.inspectedSnapshot = null
   }
 
+  @action addRemoveUpdateSnapshots = (snapId: string, created?: PmDocSnapshot, updated?: Partial<PmDocSnapshot>) => {
+    if (created) {
+      this.snapshotsMap.set(snapId, created)
+      this.snapshotLabels.push({
+        id: created.id,
+        createdAt: created.createdAt,
+        name: created.name,
+      })
+    } else if (updated) {
+      const oldSnap = this.snapshotsMap.get(snapId)
+      if (oldSnap) {
+        this.snapshotsMap.set(snapId, { ...oldSnap, ...updated })
+      }
+      if (this.currentDocument) {
+        this.currentDocument.snapshots = this.currentDocument.snapshots.map((s) =>
+          s.id === snapId ? { ...s, ...updated } : s
+        )
+      }
+    } else {
+      this.snapshotsMap.delete(snapId)
+      if (this.currentDocument) {
+        this.currentDocument.snapshots = this.currentDocument.snapshots.filter(
+          (s) => s.id !== snapId
+        )
+      }
+    }
+  }
+
   @action saveSnapshot = async (docJson: Record<string, any>) => {
     const docId = this.currentDocument?.id
     let resp: Event<ISaveSnapshotResponse>
@@ -194,14 +228,7 @@ export class DocumentStore {
       const {
         data: { snapshot },
       } = resp
-      runInAction(() => {
-        this.snapshotsMap.set(snapshot.id, snapshot)
-        this.snapshotLabels.push({
-          id: snapshot.id,
-          createdAt: snapshot.createdAt,
-          name: snapshot.name,
-        })
-      })
+      this.addRemoveUpdateSnapshots(snapshot.id, snapshot)
     }
     return resp
   }
@@ -211,17 +238,7 @@ export class DocumentStore {
     if (!resp.ok) {
       console.error(resp.error)
     } else {
-      runInAction(() => {
-        const oldSnap = this.snapshotsMap.get(snapId)
-        if (oldSnap) {
-          this.snapshotsMap.set(snapId, { ...oldSnap, ...values })
-        }
-        if (this.currentDocument) {
-          this.currentDocument.snapshots = this.currentDocument.snapshots.map((s) =>
-            s.id === snapId ? { ...s, ...values } : s
-          )
-        }
-      })
+      this.addRemoveUpdateSnapshots(snapId, undefined, values)
     }
     return resp
   }
@@ -231,14 +248,7 @@ export class DocumentStore {
     if (!resp.ok) {
       console.error(resp.error)
     } else {
-      runInAction(() => {
-        this.snapshotsMap.delete(snapId)
-        if (this.currentDocument) {
-          this.currentDocument.snapshots = this.currentDocument.snapshots.filter(
-            (s) => s.id !== snapId
-          )
-        }
-      })
+      this.addRemoveUpdateSnapshots(snapId)
     }
     return resp
   }

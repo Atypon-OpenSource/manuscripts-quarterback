@@ -45,9 +45,10 @@ router.post('/comment', authenticate, commentCtrl.createComment)
 router.put('/comment/:commentId', authenticate, commentCtrl.updateComment)
 router.delete('/comment/:commentId', authenticate, commentCtrl.deleteComment)
 
-router.get('/doc/:documentId/reviews', authenticate, reviewCtrl.listReviewLabels)
-router.post('/review', authenticate, reviewCtrl.createReview)
-router.post('/review/:reviewId/finish', authenticate, reviewCtrl.finishReview)
-router.delete('/review/:reviewId', authenticate, reviewCtrl.deleteReview)
+router.get('/doc/:documentId/reviews', authenticate, reviewCtrl.listReviews)
+router.get('/review/:reviewId', authenticate, reviewCtrl.getReview)
+router.post('/doc/:documentId/review', authenticate, reviewCtrl.createReview)
+router.post('/doc/:documentId/review/:reviewId/finish', authenticate, reviewCtrl.finishReview)
+router.delete('/doc/:documentId/review/:reviewId', authenticate, reviewCtrl.deleteReview)
 
 export default router

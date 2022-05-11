@@ -16,23 +16,21 @@
 import {
   Event,
   Review,
-  ReviewLabel,
   ReviewStatus,
   ICreateReviewRequest,
+  ICreateReviewResponse,
+  DocStatus,
+  PmDocSnapshot,
+  IFinishReviewRequest,
 } from '@manuscripts/examples-track-shared'
 
 import { CustomError, log, prisma } from '$common'
-// import { Review } from '@manuscripts/examples-tra-db'
 
 export const reviewService = {
-  async listReviewLabels(docId: string): Promise<Event<ReviewLabel[]>> {
+  async listReviews(docId: string): Promise<Event<Review[]>> {
     const found = await prisma.review.findMany({
       where: {
         doc_id: docId,
-      },
-      select: {
-        id: true,
-        createdAt: true,
       },
     })
     return { ok: true, data: found }
@@ -48,36 +46,124 @@ export const reviewService = {
     }
     return { ok: true, data: found }
   },
-  async createReview(payload: ICreateReviewRequest, userId: string): Promise<Event<Review>> {
-    const { docId, snapshotId } = payload
-    const saved = await prisma.review.create({
+  async createReview(payload: ICreateReviewRequest, docId: string, userId: string): Promise<Event<ICreateReviewResponse>> {
+    const { snapshot: snapJson, name } = payload
+    const doc = await prisma.pmDoc.findUnique({
+      where: {
+        id: docId,
+      },
+    })
+    if (doc?.status !== DocStatus.WAITING_REVIEW) {
+      return {
+        ok: false,
+        error: `Doc was not in WAITING_REVIEW state but in: ${doc?.status}`,
+        status: 400
+      }
+    }
+    const [_, snapshot] = await prisma.$transaction([
+      prisma.pmDoc.update({
+        data: {
+          status: DocStatus.IN_REVIEW,
+        },
+        where: {
+          id: docId,
+        },
+      }),
+      prisma.pmDocSnapshot.create({
+        data: {
+          snapshot: snapJson,
+          doc_id: docId,
+          name: `Before review`,
+        },
+      })
+    ])
+    const review = await prisma.review.create({
       data: {
         doc_id: docId,
-        before_snapshot_id: snapshotId,
+        before_snapshot_id: snapshot.id,
         user_id: userId,
       },
+    }).catch(async (err) => {
+      await prisma.$transaction([
+        prisma.pmDoc.update({
+          data: {
+            status: DocStatus.WAITING_REVIEW
+          },
+          where: {
+            id: docId,
+          },
+        }),
+        prisma.pmDocSnapshot.delete({
+          where: {
+            id: snapshot.id,
+          },
+        })
+      ])
+      throw err
     })
-    return { ok: true, data: saved }
-  },
-  async finishReview(
-    reviewId: string,
-  ): Promise<Event<Review>> {
-    const saved = await prisma.review.update({
+    return {
+      ok: true,
       data: {
-        status: ReviewStatus.COMPLETED,
-      },
-      where: {
-        id: reviewId,
-      },
-    })
-    return { ok: true, data: saved }
+        snapshot,
+        review,
+      }
+    }
   },
-  async deleteReview(reviewId: string): Promise<Event<Review>> {
-    const saved = await prisma.review.delete({
-      where: {
-        id: reviewId,
-      },
-    })
-    return { ok: true, data: saved }
+  async finishReview(docId: string, reviewId: string, params: IFinishReviewRequest): Promise<Event<PmDocSnapshot>> {
+    const [_d, snapshot, _r] = await prisma.$transaction([
+      prisma.pmDoc.update({
+        data: {
+          status: DocStatus.EDITABLE,
+        },
+        where: {
+          id: docId,
+        },
+      }),
+      prisma.pmDocSnapshot.create({
+        data: {
+          snapshot: params.snapshot,
+          name: `After review`,
+          doc: {
+            connect: {
+              id: docId,
+            }
+          },
+        },
+      }),
+      prisma.review.update({
+        data: {
+          status: ReviewStatus.COMPLETED,
+        },
+        where: {
+          id: reviewId,
+        },
+      })
+    ])
+    return {
+      ok: true,
+      data: snapshot,
+    }
+  },
+  async deleteReview(docId: string, reviewId: string): Promise<Event<Review>> {
+    const [_, review] = await prisma.$transaction([
+      prisma.pmDoc.update({
+        data: {
+          status: DocStatus.EDITABLE,
+        },
+        where: {
+          id: docId,
+        },
+      }),
+      prisma.review.delete({
+        where: {
+          id: reviewId,
+        },
+        include: {
+          before_snapshot: true,
+          after_snapshot: true
+        }
+      })
+    ])
+    return { ok: true, data: review }
   },
 }

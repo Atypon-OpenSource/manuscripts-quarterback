@@ -15,26 +15,22 @@
  */
 import {
   Review,
-  ReviewLabel,
   ReviewStatus,
-  ICreateReviewRequest
+  ICreateReviewRequest,
 } from '@manuscripts/examples-track-shared'
 import * as reviewApi from 'api/review'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 export class ReviewStore {
-  @observable reviewLabels: ReviewLabel[] = []
-  @observable reviewsMap: Map<string, Review> = new Map()
-  @observable currentReview: Review | undefined = undefined
-  @observable openReviewLists: Set<string> = new Set()
+  @observable reviews: Review[] = []
   STORAGE_KEY = 'review-store'
 
   constructor() {
     makeObservable(this)
   }
 
-  @computed get reviews() {
-    return Array.from(this.reviewsMap.values())
+  @computed get currentReview() {
+    return this.reviews.find(r => r.status === ReviewStatus.IN_PROGRESS)
   }
 
   @computed get reviewStatus() {
@@ -42,12 +38,12 @@ export class ReviewStore {
   }
 
   @action listReviews = async (docId: string) => {
-    const resp = await reviewApi.listReviewLabels(docId)
+    const resp = await reviewApi.listReviews(docId)
     if (!resp.ok) {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.reviewLabels = resp.data.labels
+        this.reviews = resp.data.reviews
       })
     }
     return resp
@@ -59,53 +55,54 @@ export class ReviewStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        const { data: review } = resp
-        this.reviewsMap.set(reviewId, review)
+        if (!this.reviews.find(r => r.id === reviewId)) {
+          this.reviews.push(resp.data)
+        }
       })
     }
     return resp
   }
 
-  @action createReview = async (payload: ICreateReviewRequest) => {
-    const resp = await reviewApi.createReview(payload)
+  @action createReview = async (docId: string, payload: ICreateReviewRequest) => {
+    const resp = await reviewApi.createReview(docId, payload)
     if (!resp.ok) {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.reviewsMap.set(resp.data.review.id, {
-          ...resp.data.review,
-        })
-        this.currentReview = resp.data.review
+        const { data: { review } } = resp
+        this.reviews.push(review)
       })
     }
     return resp
   }
 
-  @action finishReview = async (reviewId: string) => {
-    const resp = await reviewApi.finishReview(reviewId)
+  @action finishReview = async (docId: string, reviewId: string, snapshot: Record<string, any>) => {
+    const resp = await reviewApi.finishReview(docId, reviewId, { snapshot })
     if (!resp.ok) {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        const old = this.reviewsMap.get(reviewId)
-        old && this.reviewsMap.set(reviewId, { ...old, status: ReviewStatus.COMPLETED })
+        this.reviews = this.reviews.map((r) =>
+          r.id === reviewId ? { ...r, status: ReviewStatus.COMPLETED } : r
+        )
       })
     }
     return resp
   }
 
-  @action deleteReview = async (reviewId: string) => {
-    const resp = await reviewApi.deleteReview(reviewId)
+  @action deleteReview = async (docId: string, reviewId: string) => {
+    const resp = await reviewApi.deleteReview(docId, reviewId)
     if (!resp.ok) {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.reviewsMap.delete(reviewId)
-        this.reviewLabels = this.reviewLabels.filter((r) => r.id === reviewId)
+        this.reviews = this.reviews.filter((r) => r.id !== reviewId)
       })
     }
     return resp
   }
 
-  @action reset = () => {}
+  @action reset = () => {
+    this.reviews = []
+  }
 }

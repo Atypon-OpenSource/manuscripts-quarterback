@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DocStatus, Evt, ReviewLabel, ReviewStatus } from '@manuscripts/examples-track-shared'
+import { EditorViewProvider } from '@manuscripts/examples-track-editor'
+import { DocStatus, Evt, ReviewStatus } from '@manuscripts/examples-track-shared'
+import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
-import React, { useCallback, useMemo, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'
+import React, { useMemo } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
@@ -24,16 +25,18 @@ import { titleStyles } from 'elements/Title'
 
 interface Props {
   className?: string
+  viewProvider: EditorViewProvider | MViewProvider
 }
 
 const ReviewControls = observer((props: Props) => {
-  const { className = '' } = props
+  const { className = '', viewProvider } = props
   const {
     authStore: { isAdmin, user },
-    documentStore: { currentDocument, inspectedSnapshot, updateDocument },
+    documentFlows: { startReview, submitReview, cancelReview },
+    documentStore: { currentDocument, },
     reviewStore,
   } = stores
-  const { createReview, finishReview, deleteReview, currentReview, reviewStatus } = reviewStore
+  const { currentReview } = reviewStore
   const text = useMemo(() => {
     switch (currentDocument?.status) {
       case DocStatus.EDITABLE:
@@ -41,31 +44,36 @@ const ReviewControls = observer((props: Props) => {
       case DocStatus.WAITING_REVIEW:
         return 'Review requested'
       case DocStatus.IN_REVIEW:
-        return 'In review'
+        return 'Document in review'
       case DocStatus.READ_ONLY:
         return 'Document currently read only'
+      default:
+        return 'No current document chosen'
     }
-  }, [currentDocument])
+  }, [currentDocument?.status])
 
-  async function handleSubmitForReview() {
-  }
   async function handleStartReview() {
-    console.log(currentDocument)
-    console.log(inspectedSnapshot)
-    if (currentDocument && inspectedSnapshot) {
-      const updateResp = await updateDocument(currentDocument.id, { status: DocStatus.IN_REVIEW })
-      if (!updateResp.ok) {
-        return
-      }
-      const resp = await createReview({
+    if (currentDocument) {
+      const resp = await startReview({
         docId: currentDocument.id,
-        snapshotId: inspectedSnapshot.id,
+        name: 'New review',
+        snapshot: viewProvider.docToJSON(),
       })
     }
   }
   async function handleFinishReview() {
     if (currentReview) {
-      const resp = await finishReview(currentReview.id)
+      const resp = await submitReview(currentReview.doc_id, currentReview.id, viewProvider.docToJSON())
+    }
+  }
+  async function handleResetReview() {
+    if (currentReview) {
+      // @TODO reset changes
+    }
+  }
+  async function handleDeleteReview() {
+    if (currentReview) {
+      const resp = await cancelReview(currentReview.doc_id, currentReview.id)
     }
   }
   return (
@@ -73,12 +81,10 @@ const ReviewControls = observer((props: Props) => {
       <Title>Review</Title>
       <p>{text}</p>
       <Buttons>
-        {currentDocument?.status === DocStatus.IN_REVIEW &&
-          <button onClick={handleSubmitForReview}>Submit doc for review</button>}
         {currentDocument?.status === DocStatus.WAITING_REVIEW && <button onClick={handleStartReview}>Start review</button>}
-        {reviewStatus === ReviewStatus.IN_PROGRESS && <button>Cancel review</button>}
-        {reviewStatus === ReviewStatus.IN_PROGRESS && <button onClick={handleFinishReview}>Finish review</button>}
-        {reviewStatus === ReviewStatus.COMPLETED && <button>Delete review</button>}
+        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleFinishReview}>Submit review</button>}
+        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleResetReview}>Reset review</button>}
+        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleDeleteReview}>Delete review</button>}
       </Buttons>
     </Wrapper>
   )
@@ -88,6 +94,9 @@ const Wrapper = styled.div``
 const Title = styled.h3`
   ${titleStyles}
 `
-const Buttons = styled.div``
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 export default styled(ReviewControls)``

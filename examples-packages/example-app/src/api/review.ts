@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 import {
-  IGetReviewLabelsResponse,
+  IGetReviewsResponse,
   IGetReviewResponse,
   ICreateReviewRequest,
   ICreateReviewResponse,
+  IFinishReviewRequest,
+  IFinishReviewResponse,
+  IDeleteReviewResponse,
 } from '@manuscripts/examples-track-shared'
 
 import { get, post, del } from './methods'
 
-export const listReviewLabels = (docId: string) =>
-  get<IGetReviewLabelsResponse>(`doc/${docId}/reviews`, 'Fetching reviews failed')
+export const listReviews = (docId: string) =>
+  get<IGetReviewsResponse>(`doc/${docId}/reviews`, 'Fetching reviews failed')
 
 export const getReview = (reviewId: string) =>
   get<IGetReviewResponse>(`review/${reviewId}`, 'Fetching a review failed')
 
-export const createReview = (payload: ICreateReviewRequest) =>
-  post<ICreateReviewResponse>('review', payload, 'Creating review failed')
+export const createReview = (docId: string, payload: ICreateReviewRequest) =>
+  post<ICreateReviewResponse>(`doc/${docId}/review`, payload, 'Creating review failed')
 
-export const finishReview = (reviewId: string) =>
-  post<boolean>(`review/${reviewId}/finish`, 'Finishing review failed')
+export const finishReview = (docId: string, reviewId: string, payload: IFinishReviewRequest) =>
+  post<IFinishReviewResponse>(`doc/${docId}/review/${reviewId}/finish`, payload, 'Finishing review failed')
 
-export const deleteReview = (reviewId: string) =>
-  del<boolean>(`review/${reviewId}`, 'Deleting review failed')
+export const deleteReview = (docId: string, reviewId: string) =>
+  del<IDeleteReviewResponse>(`doc/${docId}/review/${reviewId}`, 'Deleting review failed')

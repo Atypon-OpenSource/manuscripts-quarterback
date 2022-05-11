@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Event, PmDocWithSnapshots } from '@manuscripts/examples-track-shared'
+import { DocStatus, Event, ICreateReviewRequest, PmDocWithSnapshots } from '@manuscripts/examples-track-shared'
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'
@@ -51,5 +51,34 @@ export class DocumentFlows {
       this.reviewStore.listReviews(documentId)
     ])
     return resp[0]
+  }
+
+  startReview = async (payload: ICreateReviewRequest) => {
+    const resp = await this.reviewStore.createReview(payload.docId, payload)
+    if (resp.ok) {
+      this.documentStore.setCurrentDocumentStatus(DocStatus.IN_REVIEW)
+      this.documentStore.addRemoveUpdateSnapshots(resp.data.snapshot.id, resp.data.snapshot)
+    }
+  }
+
+  submitReview = async (docId: string, reviewId: string, snap: Record<string, any>) => {
+    const resp = await this.reviewStore.finishReview(docId, reviewId, snap)
+    if (resp.ok) {
+      const { data: { snapshot } } = resp
+      this.documentStore.setCurrentDocumentStatus(DocStatus.EDITABLE)
+      this.documentStore.addRemoveUpdateSnapshots(snapshot.id, snapshot)
+    }
+  }
+
+  cancelReview = async (docId: string, reviewId: string) => {
+    const resp = await this.reviewStore.deleteReview(docId, reviewId)
+    if (resp.ok) {
+      const { data: { review } } = resp
+      this.documentStore.setCurrentDocumentStatus(DocStatus.EDITABLE)
+      this.documentStore.addRemoveUpdateSnapshots(review.before_snapshot_id)
+      if (review.after_snapshot_id) {
+        this.documentStore.addRemoveUpdateSnapshots(review.after_snapshot_id)
+      }
+    }
   }
 }
