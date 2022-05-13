@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 import { Review } from '@manuscripts/examples-track-db'
-import { PmDocSnapshot } from './snapshot'
+import { PmDocSnapshot, SnapshotLabel } from './snapshot'
 
 export { Review } from '@manuscripts/examples-track-db'
 export { ReviewStatus } from '../src/review'
+
+export type ReviewWithSnapshots = Review & {
+  before_snapshot: SnapshotLabel
+  after_snapshot?: SnapshotLabel
+}
 
 // GET /doc/:documentId/reviews
 export interface IGetReviewsResponse {

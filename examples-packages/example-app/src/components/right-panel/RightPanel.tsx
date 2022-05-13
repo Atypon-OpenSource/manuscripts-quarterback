@@ -29,6 +29,7 @@ import styled from 'styled-components'
 import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
 import DocControls from 'components/doc-controls/DocControls'
+import HistoryList from 'components/history-list/HistoryList'
 import ReviewControls from '../review-controls/ReviewControls'
 import ReviewList from 'components/review-controls/ReviewList'
 import { SnapshotsList } from '../snapshots/SnapshotsList'
@@ -98,6 +99,7 @@ export const RightPanel = memo((props: Props) => {
         trackChangesState={trackChangesState}
         createSnapshot={handleCreateSnapshot}
       />
+      <HistoryList viewProvider={viewProvider}/>
       <ReviewList/>
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />
