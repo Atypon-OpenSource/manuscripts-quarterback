@@ -191,7 +191,7 @@ export class DocumentStore {
       this.snapshotsMap.set(snapId, created)
       this.snapshotLabels.push({
         id: created.id,
-        createdAt: created.createdAt,
+        createdAt: new Date(created.createdAt),
         name: created.name,
       })
     } else if (updated) {

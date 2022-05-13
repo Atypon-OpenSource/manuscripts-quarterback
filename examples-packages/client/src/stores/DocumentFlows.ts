@@ -50,12 +50,12 @@ export class DocumentFlows {
     if (!user) {
       return { ok: false, error: 'Not logged in', status: 400 }
     }
-    const resp = await Promise.all([
-      this.documentStore.fetchDocument(documentId),
+    const docResp = await this.documentStore.fetchDocument(documentId)
+    await Promise.all([
       this.commentStore.listComments(documentId, user),
       this.reviewStore.listReviews(documentId),
     ])
-    return resp[0]
+    return docResp
   }
 
   startReview = async (payload: ICreateReviewRequest) => {

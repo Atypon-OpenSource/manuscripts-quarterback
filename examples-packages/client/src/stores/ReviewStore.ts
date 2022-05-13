@@ -52,7 +52,10 @@ export class ReviewStore {
     } else {
       runInAction(() => {
         if (!this.reviews.find((r) => r.id === reviewId)) {
-          this.reviews.push(resp.data)
+          this.reviews.push({
+            ...resp.data,
+            createdAt: new Date(resp.data.createdAt),
+          })
         }
       })
     }
@@ -68,7 +71,10 @@ export class ReviewStore {
         const {
           data: { review },
         } = resp
-        this.reviews.push(review)
+        this.reviews.push({
+          ...review,
+          createdAt: new Date(review.createdAt),
+        })
       })
     }
     return resp

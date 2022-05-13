@@ -17,7 +17,11 @@ import '@manuscripts/manuscript-editor/styles/Editor.css'
 import '@manuscripts/manuscript-editor/styles/LeanWorkflow.css'
 import '@manuscripts/manuscript-editor/styles/popper.css'
 
-import { trackChangesPluginKey, TrackChangesState } from '@manuscripts/track-changes-plugin'
+import {
+  trackChangesPluginKey,
+  trackCommands,
+  TrackChangesState,
+} from '@manuscripts/track-changes-plugin'
 import { PmDoc } from '@manuscripts/examples-track-shared'
 import {
   // styles,
@@ -83,6 +87,10 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
         window.commands = ctx.extensionProvider.commands
+        // @ts-ignore
+        window.tcmds = trackCommands
+        // @ts-ignore
+        window.execCmd = ctx.viewProvider.execCommand
       },
     }),
     [extensions]

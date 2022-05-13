@@ -17,13 +17,14 @@ import { TrackChangesStatus, trackCommands } from '@manuscripts/track-changes-pl
 import { Evt, PmDocSnapshot, SnapshotLabel } from '@manuscripts/examples-track-shared'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import React, { useCallback, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
 // import { MdOutlineAssignment, MdSave } from 'react-icons/md'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
+import { Stores } from 'stores'
 import { HistorySnapshot } from 'stores/HistoryStore'
 
 import { EditSnapshotForm, UpdateSnapshotFormValues } from './EditSnapshotForm'
@@ -33,114 +34,120 @@ interface IProps {
   className?: string
   viewProvider: EditorViewProvider | MViewProvider
   snap: HistorySnapshot
+  isVisible: boolean
 }
 
-const SnapshotItem = observer((props: IProps) => {
-  const { className, viewProvider, snap } = props
-  const {
-    documentStore,
-    historyStore: { openHistoryItems, toggleItemOpen }
-  } = stores
-  const { inspectedSnapshot } = documentStore
-  const isVisible = useMemo(() => openHistoryItems.has(snap.id), [openHistoryItems])
-  const [editedSnapId, setEditedSnapId] = useState<string | undefined>()
-  const isBeingInspected = useCallback(
-    (snap: SnapshotLabel) => inspectedSnapshot?.id === snap.id,
-    [inspectedSnapshot]
-  )
+const SnapshotItem = inject((stores: Stores, { snap: { id } }: IProps) => ({
+  isVisible: stores.historyStore.openHistoryItems.has(id),
+}))(
+  observer((props: IProps) => {
+    const { className, viewProvider, isVisible, snap } = props
+    const {
+      documentStore,
+      historyStore: { toggleItemOpen },
+    } = stores
+    const { inspectedSnapshot } = documentStore
+    const [editedSnapId, setEditedSnapId] = useState<string | undefined>()
+    const isBeingInspected = useCallback(
+      (snap: SnapshotLabel) => inspectedSnapshot?.id === snap.id,
+      [inspectedSnapshot]
+    )
 
-  async function handleInspectSnapshot(snap: SnapshotLabel) {
-    if (!inspectedSnapshot) {
-      await documentStore.updateCurrentDocument(viewProvider.docToJSON())
-    } else if (isBeingInspected(snap)) {
-      handleResumeEditing()
-      return
-    }
-    const resp = await documentStore.inspectSnapshot(snap.id)
-    if (resp.ok) {
-      viewProvider.hydrateDocFromJSON(resp.data.snapshot as any)
-      viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.viewSnapshots))
-    }
-  }
-  function handleResumeEditing() {
-    documentStore.resumeEditing()
-    const { currentDocument } = documentStore
-    if (currentDocument?.doc) {
-      viewProvider.hydrateDocFromJSON(currentDocument.doc as any)
-    }
-    viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.enabled))
-  }
-  function handleEditSnapshot(doc: SnapshotLabel) {
-    if (editedSnapId === doc.id) {
-      setEditedSnapId(undefined)
-    } else {
-      setEditedSnapId(doc.id)
-    }
-  }
-  function handleDeleteSnapshot(snap: SnapshotLabel) {
-    documentStore.deleteSnapshot(snap.id)
-  }
-  async function* handleEditSubmit(
-    values: UpdateSnapshotFormValues
-  ): AsyncGenerator<Evt<boolean>, void, unknown> {
-    if (!editedSnapId) {
-      yield { e: 'error', error: 'No edited doc' }
-      return
-    }
-    try {
-      const resp = await documentStore.updateSnapshot(editedSnapId, values)
-      if (resp.ok) {
-        yield { e: 'ok', data: resp.data }
-      } else {
-        yield { e: 'error', error: resp.error }
+    async function handleInspectSnapshot(snap: SnapshotLabel) {
+      if (!inspectedSnapshot) {
+        await documentStore.updateCurrentDocument(viewProvider.docToJSON())
+      } else if (isBeingInspected(snap)) {
+        handleResumeEditing()
+        return
       }
-    } catch (err: any) {
-      yield { e: 'error', error: err.toString() }
-    } finally {
-      yield { e: 'finally' }
+      const resp = await documentStore.inspectSnapshot(snap.id)
+      if (resp.ok) {
+        viewProvider.hydrateDocFromJSON(resp.data.snapshot as any)
+        viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.viewSnapshots))
+      }
     }
-  }
-  return (
-    <Container inspected={isBeingInspected(snap)}>
-      <ItemTypeBtn onClick={() => toggleItemOpen(snap.id)}>
-        <ItemType>Snapshot</ItemType>
-        <Chevron>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</Chevron>
-        {!isVisible && (
-          <Time dateTime={snap.createdAt.toLocaleString()}>
+    function handleResumeEditing() {
+      documentStore.resumeEditing()
+      const { currentDocument } = documentStore
+      if (currentDocument?.doc) {
+        viewProvider.hydrateDocFromJSON(currentDocument.doc as any)
+      }
+      viewProvider.execCommand(trackCommands.setTrackingStatus(TrackChangesStatus.enabled))
+    }
+    function handleEditSnapshot(doc: SnapshotLabel) {
+      if (editedSnapId === doc.id) {
+        setEditedSnapId(undefined)
+      } else {
+        setEditedSnapId(doc.id)
+      }
+    }
+    function handleDeleteSnapshot(snap: SnapshotLabel) {
+      documentStore.deleteSnapshot(snap.id)
+    }
+    async function* handleEditSubmit(
+      values: UpdateSnapshotFormValues
+    ): AsyncGenerator<Evt<boolean>, void, unknown> {
+      if (!editedSnapId) {
+        yield { e: 'error', error: 'No edited doc' }
+        return
+      }
+      try {
+        const resp = await documentStore.updateSnapshot(editedSnapId, values)
+        if (resp.ok) {
+          yield { e: 'ok', data: resp.data }
+        } else {
+          yield { e: 'error', error: resp.error }
+        }
+      } catch (err: any) {
+        yield { e: 'error', error: err.toString() }
+      } finally {
+        yield { e: 'finally' }
+      }
+    }
+    return (
+      <Container inspected={isBeingInspected(snap)}>
+        <ItemTypeBtn onClick={() => toggleItemOpen(snap.id)}>
+          <ItemType>Snapshot</ItemType>
+          <Chevron>
+            {isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}
+          </Chevron>
+          {!isVisible && (
+            <Time dateTime={snap.createdAt.toLocaleString()}>
+              {snap.createdAt.toLocaleString()}
+            </Time>
+          )}
+        </ItemTypeBtn>
+        <div className={isVisible ? '' : 'hidden'}>
+          <TitleWrapper>
+            {editedSnapId === snap.id ? (
+              <EditSnapshotForm
+                snapshot={snap}
+                onSubmit={handleEditSubmit}
+                onCancel={() => setEditedSnapId(undefined)}
+              />
+            ) : (
+              <h4>{snap.name}</h4>
+            )}
+            <IconButtons>
+              <Button onClick={() => handleInspectSnapshot(snap)}>
+                {isBeingInspected(snap) ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+              </Button>
+              <Button onClick={() => handleEditSnapshot(snap)}>
+                <FiEdit3 size={16} />
+              </Button>
+              <Button onClick={() => handleDeleteSnapshot(snap)}>
+                <FiTrash size={16} />
+              </Button>
+            </IconButtons>
+          </TitleWrapper>
+          <Time dateTime={snap.createdAt.toLocaleString()} smallFont>
             {snap.createdAt.toLocaleString()}
           </Time>
-        )}
-      </ItemTypeBtn>
-      <div className={isVisible ? '' : 'hidden'}>
-        <TitleWrapper>
-          {editedSnapId === snap.id ? (
-            <EditSnapshotForm
-              snapshot={snap}
-              onSubmit={handleEditSubmit}
-              onCancel={() => setEditedSnapId(undefined)}
-            />
-          ) : (
-            <h4>{snap.name}</h4>
-          )}
-          <IconButtons>
-            <Button onClick={() => handleInspectSnapshot(snap)}>
-              {isBeingInspected(snap) ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-            </Button>
-            <Button onClick={() => handleEditSnapshot(snap)}>
-              <FiEdit3 size={16} />
-            </Button>
-            <Button onClick={() => handleDeleteSnapshot(snap)}>
-              <FiTrash size={16} />
-            </Button>
-          </IconButtons>
-        </TitleWrapper>
-        <Time dateTime={snap.createdAt.toLocaleString()} smallFont>
-          {snap.createdAt.toLocaleString()}
-        </Time>
-      </div>
-    </Container>
-  )
-})
+        </div>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div<{ inspected: boolean }>`
   background: ${({ inspected }) => (inspected ? '#aaffaa' : '')};

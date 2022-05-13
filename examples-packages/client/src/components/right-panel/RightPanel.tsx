@@ -136,6 +136,7 @@ export const RightPanel = memo((props: Props) => {
 RightPanel.displayName = 'RightPanel'
 
 const RightSide = styled.div`
+  min-width: 220px;
   & > ${DocControls} {
     margin: 0 0 1rem 0;
   }

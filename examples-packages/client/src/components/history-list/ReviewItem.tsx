@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import React, { useCallback, useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
+import { Stores } from 'stores'
 import { HistoryReview } from 'stores/HistoryStore'
 
 import ReviewSnapshots from './ReviewSnapshots'
@@ -26,54 +27,64 @@ import ReviewSnapshots from './ReviewSnapshots'
 interface IProps {
   className?: string
   review: HistoryReview
+  isVisible: boolean
 }
 
-const ReviewItem = observer((props: IProps) => {
-  const { className, review } = props
-  const {
-    documentStore,
-    historyStore: { openHistoryItems, toggleItemOpen }
-  } = stores
-  const isVisible = useMemo(() => openHistoryItems.has(review.id), [openHistoryItems])
+const ReviewItem = inject((stores: Stores, { review: { id } }: IProps) => ({
+  isVisible: stores.historyStore.openHistoryItems.has(id),
+}))(
+  observer((props: IProps) => {
+    const { className, review, isVisible } = props
+    const {
+      documentStore,
+      historyStore: { openHistoryItems, toggleItemOpen },
+    } = stores
 
-  async function handleShowReview(item: HistoryReview) {}
-  function handleEditReview(item: HistoryReview) {}
-  function handleDeleteReview(item: HistoryReview) {}
-  return (
-    <Container>
-      <ItemTypeBtn onClick={() => toggleItemOpen(review.id)}>
-        <ItemType>Review</ItemType>
-        <Chevron>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</Chevron>
-        {!isVisible && (
-          <Time dateTime={review.createdAt.toLocaleString()}>
+    async function handleShowReview(item: HistoryReview) {}
+    function handleEditReview(item: HistoryReview) {}
+    function handleDeleteReview(item: HistoryReview) {}
+    return (
+      <Container>
+        <ItemTypeBtn onClick={() => toggleItemOpen(review.id)}>
+          <ItemType>Review</ItemType>
+          <Chevron>
+            {isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}
+          </Chevron>
+          {!isVisible && (
+            <Time dateTime={review.createdAt.toLocaleString()}>
+              {review.createdAt.toLocaleString()}
+            </Time>
+          )}
+        </ItemTypeBtn>
+        <div className={isVisible ? '' : 'hidden'}>
+          <TitleWrapper>
+            <h4>{review.name || 'Untitled review'}</h4>
+            <IconButtons>
+              <Button onClick={() => handleShowReview(review)}>
+                <FiEye size={16} />
+              </Button>
+              <Button onClick={() => handleEditReview(review)}>
+                <FiEdit3 size={16} />
+              </Button>
+              <Button onClick={() => handleDeleteReview(review)}>
+                <FiTrash size={16} />
+              </Button>
+            </IconButtons>
+          </TitleWrapper>
+          <Time dateTime={review.createdAt.toLocaleString()} smallFont>
             {review.createdAt.toLocaleString()}
           </Time>
-        )}
-      </ItemTypeBtn>
-      <div className={isVisible ? '' : 'hidden'}>
-        <TitleWrapper>
-          <h4>{review.name || 'Untitled review'}</h4>
-          <IconButtons>
-            <Button onClick={() => handleShowReview(review)}>
-              <FiEye size={16} />
-            </Button>
-            <Button onClick={() => handleEditReview(review)}>
-              <FiEdit3 size={16} />
-            </Button>
-            <Button onClick={() => handleDeleteReview(review)}>
-              <FiTrash size={16} />
-            </Button>
-          </IconButtons>
-        </TitleWrapper>
-        <Time dateTime={review.createdAt.toLocaleString()} smallFont>
-          {review.createdAt.toLocaleString()}
-        </Time>
-        { review.before_snapshot && <ReviewSnapshots review={review} snapshot={review.before_snapshot}/> }
-        { review.after_snapshot && <ReviewSnapshots review={review} snapshot={review.after_snapshot}/> }
-      </div>
-    </Container>
-  )
-})
+          {review.before_snapshot && (
+            <ReviewSnapshots review={review} snapshot={review.before_snapshot} />
+          )}
+          {review.after_snapshot && (
+            <ReviewSnapshots review={review} snapshot={review.after_snapshot} />
+          )}
+        </div>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   border-radius: 2px;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Review, ReviewWithSnapshots, SnapshotLabel } from '@manuscripts/examples-track-shared'
-import { action, computed, makeObservable, observable, runInAction } from 'mobx'
+import { action, autorun, computed, makeObservable, observable, reaction } from 'mobx'
 
 import { AuthStore } from './AuthStore'
 import { DocumentStore } from './DocumentStore'
@@ -56,6 +56,13 @@ export class HistoryStore {
     this.authStore = props.authStore
     this.documentStore = props.documentStore
     this.reviewStore = props.reviewStore
+    this.watchHistory()
+  }
+
+  watchHistory = () => {
+    autorun(() => {
+      this.setOpenHistoryItems(this.history)
+    })
   }
 
   @computed get history(): HistoryItem[] {
@@ -82,11 +89,13 @@ export class HistoryStore {
       return rr
     })
     snaps = snaps.filter((s) => !filteredSnaps.includes(s.id))
-    const history = [...joinSnapshotsToReviews, ...snaps].sort((a, b) =>
+    return [...joinSnapshotsToReviews, ...snaps].sort((a, b) =>
       a.createdAt > b.createdAt ? 1 : -1
     )
+  }
+
+  @action setOpenHistoryItems = (history: HistoryItem[]) => {
     this.openHistoryItems = new Set(history.map((h) => h.id))
-    return history
   }
 
   @action toggleItemOpen = (id: string) => {
