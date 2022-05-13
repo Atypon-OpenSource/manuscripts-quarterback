@@ -30,8 +30,7 @@ import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
 import DocControls from 'components/doc-controls/DocControls'
 import HistoryList from 'components/history-list/HistoryList'
-import ReviewControls from '../review-controls/ReviewControls'
-import ReviewList from 'components/review-controls/ReviewList'
+import ReviewControls from './ReviewControls'
 import { SnapshotsList } from '../snapshots/SnapshotsList'
 import { YjsSnapshotsList } from './YjsSnapshotsList'
 
@@ -98,7 +97,6 @@ export const RightPanel = memo((props: Props) => {
         createSnapshot={handleCreateSnapshot}
       />
       <HistoryList viewProvider={viewProvider} />
-      <ReviewList />
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />
       ) : (

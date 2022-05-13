@@ -65,7 +65,8 @@ const ReviewItem = observer((props: IProps) => {
         <Time dateTime={review.createdAt.toLocaleString()} smallFont>
           {new Date(review.createdAt).toLocaleString()}
         </Time>
-        <ReviewSnapshots review={review} />
+        { review.before_snapshot && <ReviewSnapshots review={review} snapshot={review.before_snapshot}/> }
+        { review.after_snapshot && <ReviewSnapshots review={review} snapshot={review.after_snapshot}/> }
       </div>
     </Container>
   )

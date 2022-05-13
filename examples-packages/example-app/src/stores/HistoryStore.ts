@@ -28,7 +28,7 @@ interface IProps {
 
 export type HistoryReview = Review & {
   type: 'review'
-  before_snapshot: SnapshotLabel
+  before_snapshot?: SnapshotLabel
   after_snapshot?: SnapshotLabel
 }
 export type HistorySnapshot = SnapshotLabel & {

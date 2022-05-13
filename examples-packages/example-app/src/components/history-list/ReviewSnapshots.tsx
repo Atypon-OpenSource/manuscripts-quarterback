@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { SnapshotLabel } from '@manuscripts/examples-track-shared'
 import React from 'react'
 import { BsQuestion } from 'react-icons/bs'
 import { FiCheck, FiX } from 'react-icons/fi'
@@ -22,11 +23,11 @@ import { HistoryReview } from 'stores/HistoryStore'
 
 interface Props {
   review: HistoryReview
+  snapshot: SnapshotLabel
 }
 
 function ReviewSnapshots(props: Props) {
-  const { review } = props
-  const snapshot = review.before_snapshot
+  const { review, snapshot } = props
   return (
     <List indent>
       <ListItem>
