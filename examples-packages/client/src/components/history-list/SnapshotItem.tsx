@@ -27,6 +27,7 @@ import styled from 'styled-components'
 import { HistorySnapshot } from 'stores/HistoryStore'
 
 import { EditSnapshotForm, UpdateSnapshotFormValues } from './EditSnapshotForm'
+import { useMemo } from 'react'
 
 interface IProps {
   className?: string
@@ -36,9 +37,12 @@ interface IProps {
 
 const SnapshotItem = observer((props: IProps) => {
   const { className, viewProvider, snap } = props
-  const { documentStore } = stores
+  const {
+    documentStore,
+    historyStore: { openHistoryItems, toggleItemOpen }
+  } = stores
   const { inspectedSnapshot } = documentStore
-  const [isVisible, setIsVisible] = useState(true)
+  const isVisible = useMemo(() => openHistoryItems.has(snap.id), [openHistoryItems])
   const [editedSnapId, setEditedSnapId] = useState<string | undefined>()
   const isBeingInspected = useCallback(
     (snap: SnapshotLabel) => inspectedSnapshot?.id === snap.id,
@@ -98,12 +102,12 @@ const SnapshotItem = observer((props: IProps) => {
   }
   return (
     <Container inspected={isBeingInspected(snap)}>
-      <ItemTypeBtn onClick={() => setIsVisible((v) => !v)}>
+      <ItemTypeBtn onClick={() => toggleItemOpen(snap.id)}>
         <ItemType>Snapshot</ItemType>
         <Chevron>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</Chevron>
         {!isVisible && (
           <Time dateTime={snap.createdAt.toLocaleString()}>
-            {new Date(snap.createdAt).toLocaleString()}
+            {snap.createdAt.toLocaleString()}
           </Time>
         )}
       </ItemTypeBtn>
@@ -131,7 +135,7 @@ const SnapshotItem = observer((props: IProps) => {
           </IconButtons>
         </TitleWrapper>
         <Time dateTime={snap.createdAt.toLocaleString()} smallFont>
-          {new Date(snap.createdAt).toLocaleString()}
+          {snap.createdAt.toLocaleString()}
         </Time>
       </div>
     </Container>

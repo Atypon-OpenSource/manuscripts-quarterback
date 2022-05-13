@@ -39,7 +39,7 @@ export class ReviewStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        this.reviews = resp.data.reviews
+        this.reviews = resp.data.reviews.map((r) => ({ ...r, createdAt: new Date(r.createdAt) }))
       })
     }
     return resp

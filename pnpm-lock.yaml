@@ -320,7 +320,7 @@ importers:
       ttypescript: 1.5.12_typescript@4.4.4
       typescript: 4.4.4
 
-  examples-packages/example-app:
+  examples-packages/client:
     specifiers:
       '@manuscripts/examples-track-editor': workspace:*
       '@manuscripts/examples-track-shared': workspace:*

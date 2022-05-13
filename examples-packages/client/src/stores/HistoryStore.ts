@@ -44,6 +44,7 @@ export function isSnapshot(h: HistoryItem): h is HistorySnapshot {
 }
 
 export class HistoryStore {
+  @observable openHistoryItems: Set<string> = new Set()
   STORAGE_KEY = 'history-store'
 
   authStore: AuthStore
@@ -81,9 +82,19 @@ export class HistoryStore {
       return rr
     })
     snaps = snaps.filter((s) => !filteredSnaps.includes(s.id))
-    return [...joinSnapshotsToReviews, ...snaps].sort((a, b) =>
-      new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
+    const history = [...joinSnapshotsToReviews, ...snaps].sort((a, b) =>
+      a.createdAt > b.createdAt ? 1 : -1
     )
+    this.openHistoryItems = new Set(history.map((h) => h.id))
+    return history
+  }
+
+  @action toggleItemOpen = (id: string) => {
+    if (this.openHistoryItems.has(id)) {
+      this.openHistoryItems.delete(id)
+    } else {
+      this.openHistoryItems = this.openHistoryItems.add(id)
+    }
   }
 
   @action reset = () => {}

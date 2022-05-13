@@ -21,7 +21,7 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 1. Install all dependencies: `pnpm i -r`
 2. Start the databases: `docker-compose up -d postgres redis`
 3. Initialize example database: `./scripts.sh db:init-ex`
-4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/example-app/.example-env ./examples-packages/example-app/.env`
+4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/client/.example-env ./examples-packages/client/.env`
 5. Migrate the database: `pnpm run migrate --filter @manuscripts/examples-track-db`
 6. And seed it with test data: `pnpm run seed --filter @manuscripts/examples-track-db`
 7. Build the external manuscripts packages: `pnpm build`
@@ -55,7 +55,7 @@ pass: asdfasdf
 
 ## Tests
 
-There are some example Cypress tests in `e2e` package. If you have the example-app running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`. 
+There are some example Cypress tests in `e2e` package. If you have the client running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`. 
 
 ## Working with Git submodules
 

@@ -21,7 +21,7 @@
     "ex:api": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-api' 'pnpm run dev --filter @manuscripts/examples-track-api' 'pnpm run watch --filter @manuscripts/examples-track-collab' 'pnpm run dev --filter @manuscripts/examples-track-collab'",
     "ex:collab": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-collab' 'pnpm run dev --filter @manuscripts/examples-track-collab'",
     "ex:utils": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/examples-track-shared' 'pnpm run watch --filter @manuscripts/examples-track-schema' 'pnpm run watch --filter @manuscripts/examples-track-editor' 'pnpm run watch --filter @manuscripts/track-changes-plugin' 'pnpm run watch --filter @manuscripts/ext-yjs'",
-    "ex:client": "pnpm run dev --filter @manuscripts/examples-track-example-app",
+    "ex:client": "pnpm run dev --filter @manuscripts/examples-track-client",
     "ex:start": "concurrently --kill-others 'pnpm ex:api' 'pnpm ex:utils' 'pnpm ex:client'",
     "start": "concurrently --kill-others 'pnpm run watch --filter @manuscripts/quarterback-shared' 'pnpm run watch --filter @manuscripts/track-changes-plugin' 'pnpm run watch --filter @manuscripts/quarterback-api' 'pnpm run dev --filter @manuscripts/quarterback-api'",
     "track": "pnpm run watch --filter @manuscripts/track-changes-plugin",

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { observer } from 'mobx-react'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
 import { stores } from 'stores'
 import styled from 'styled-components'
@@ -30,20 +30,23 @@ interface IProps {
 
 const ReviewItem = observer((props: IProps) => {
   const { className, review } = props
-  const { documentStore } = stores
-  const [isVisible, setIsVisible] = useState(true)
+  const {
+    documentStore,
+    historyStore: { openHistoryItems, toggleItemOpen }
+  } = stores
+  const isVisible = useMemo(() => openHistoryItems.has(review.id), [openHistoryItems])
 
   async function handleShowReview(item: HistoryReview) {}
   function handleEditReview(item: HistoryReview) {}
   function handleDeleteReview(item: HistoryReview) {}
   return (
     <Container>
-      <ItemTypeBtn onClick={() => setIsVisible((v) => !v)}>
+      <ItemTypeBtn onClick={() => toggleItemOpen(review.id)}>
         <ItemType>Review</ItemType>
         <Chevron>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</Chevron>
         {!isVisible && (
           <Time dateTime={review.createdAt.toLocaleString()}>
-            {new Date(review.createdAt).toLocaleString()}
+            {review.createdAt.toLocaleString()}
           </Time>
         )}
       </ItemTypeBtn>
@@ -63,7 +66,7 @@ const ReviewItem = observer((props: IProps) => {
           </IconButtons>
         </TitleWrapper>
         <Time dateTime={review.createdAt.toLocaleString()} smallFont>
-          {new Date(review.createdAt).toLocaleString()}
+          {review.createdAt.toLocaleString()}
         </Time>
         { review.before_snapshot && <ReviewSnapshots review={review} snapshot={review.before_snapshot}/> }
         { review.after_snapshot && <ReviewSnapshots review={review} snapshot={review.after_snapshot}/> }
