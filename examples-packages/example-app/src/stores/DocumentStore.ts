@@ -182,7 +182,11 @@ export class DocumentStore {
     this.inspectedSnapshot = null
   }
 
-  @action addRemoveUpdateSnapshots = (snapId: string, created?: PmDocSnapshot, updated?: Partial<PmDocSnapshot>) => {
+  @action addRemoveUpdateSnapshots = (
+    snapId: string,
+    created?: PmDocSnapshot,
+    updated?: Partial<PmDocSnapshot>
+  ) => {
     if (created) {
       this.snapshotsMap.set(snapId, created)
       this.snapshotLabels.push({

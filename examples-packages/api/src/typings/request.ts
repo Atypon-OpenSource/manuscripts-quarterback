@@ -29,13 +29,7 @@ type AuthLocals = {
 export type AuthRequest<
   B = Record<string, any>,
   P extends ParamsDictionary = Record<string, any>
-> = Request<
-  P,
-  Record<string, never>,
-  B,
-  Record<string, never>,
-  AuthLocals
->
+> = Request<P, Record<string, never>, B, Record<string, never>, AuthLocals>
 
 export type AuthResponse<R = Record<string, never>> = Response<R, AuthLocals>
 

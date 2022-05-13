@@ -33,7 +33,7 @@ const ReviewControls = observer((props: Props) => {
   const {
     authStore: { isAdmin, user },
     documentFlows: { startReview, submitReview, cancelReview },
-    documentStore: { currentDocument, },
+    documentStore: { currentDocument },
     reviewStore,
   } = stores
   const { currentReview } = reviewStore
@@ -63,7 +63,11 @@ const ReviewControls = observer((props: Props) => {
   }
   async function handleFinishReview() {
     if (currentReview) {
-      const resp = await submitReview(currentReview.doc_id, currentReview.id, viewProvider.docToJSON())
+      const resp = await submitReview(
+        currentReview.doc_id,
+        currentReview.id,
+        viewProvider.docToJSON()
+      )
     }
   }
   async function handleResetReview() {
@@ -81,10 +85,18 @@ const ReviewControls = observer((props: Props) => {
       <Title>Review</Title>
       <p>{text}</p>
       <Buttons>
-        {currentDocument?.status === DocStatus.WAITING_REVIEW && <button onClick={handleStartReview}>Start review</button>}
-        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleFinishReview}>Submit review</button>}
-        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleResetReview}>Reset review</button>}
-        {currentDocument?.status === DocStatus.IN_REVIEW && <button onClick={handleDeleteReview}>Delete review</button>}
+        {currentDocument?.status === DocStatus.WAITING_REVIEW && (
+          <button onClick={handleStartReview}>Start review</button>
+        )}
+        {currentDocument?.status === DocStatus.IN_REVIEW && (
+          <button onClick={handleFinishReview}>Submit review</button>
+        )}
+        {currentDocument?.status === DocStatus.IN_REVIEW && (
+          <button onClick={handleResetReview}>Reset review</button>
+        )}
+        {currentDocument?.status === DocStatus.IN_REVIEW && (
+          <button onClick={handleDeleteReview}>Delete review</button>
+        )}
       </Buttons>
     </Wrapper>
   )

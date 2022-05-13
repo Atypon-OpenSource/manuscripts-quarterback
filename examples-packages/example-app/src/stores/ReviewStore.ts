@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Review,
-  ReviewStatus,
-  ICreateReviewRequest,
-} from '@manuscripts/examples-track-shared'
+import { Review, ReviewStatus, ICreateReviewRequest } from '@manuscripts/examples-track-shared'
 import * as reviewApi from 'api/review'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
@@ -30,7 +26,7 @@ export class ReviewStore {
   }
 
   @computed get currentReview() {
-    return this.reviews.find(r => r.status === ReviewStatus.IN_PROGRESS)
+    return this.reviews.find((r) => r.status === ReviewStatus.IN_PROGRESS)
   }
 
   @computed get reviewStatus() {
@@ -55,7 +51,7 @@ export class ReviewStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        if (!this.reviews.find(r => r.id === reviewId)) {
+        if (!this.reviews.find((r) => r.id === reviewId)) {
           this.reviews.push(resp.data)
         }
       })
@@ -69,7 +65,9 @@ export class ReviewStore {
       console.error(resp.error)
     } else {
       runInAction(() => {
-        const { data: { review } } = resp
+        const {
+          data: { review },
+        } = resp
         this.reviews.push(review)
       })
     }

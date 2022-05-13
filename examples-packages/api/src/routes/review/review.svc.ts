@@ -46,7 +46,11 @@ export const reviewService = {
     }
     return { ok: true, data: found }
   },
-  async createReview(payload: ICreateReviewRequest, docId: string, userId: string): Promise<Event<ICreateReviewResponse>> {
+  async createReview(
+    payload: ICreateReviewRequest,
+    docId: string,
+    userId: string
+  ): Promise<Event<ICreateReviewResponse>> {
     const { snapshot: snapJson, name } = payload
     const doc = await prisma.pmDoc.findUnique({
       where: {
@@ -57,7 +61,7 @@ export const reviewService = {
       return {
         ok: false,
         error: `Doc was not in WAITING_REVIEW state but in: ${doc?.status}`,
-        status: 400
+        status: 400,
       }
     }
     const [_, snapshot] = await prisma.$transaction([
@@ -75,41 +79,47 @@ export const reviewService = {
           doc_id: docId,
           name: `Before review`,
         },
-      })
+      }),
     ])
-    const review = await prisma.review.create({
-      data: {
-        doc_id: docId,
-        before_snapshot_id: snapshot.id,
-        user_id: userId,
-      },
-    }).catch(async (err) => {
-      await prisma.$transaction([
-        prisma.pmDoc.update({
-          data: {
-            status: DocStatus.WAITING_REVIEW
-          },
-          where: {
-            id: docId,
-          },
-        }),
-        prisma.pmDocSnapshot.delete({
-          where: {
-            id: snapshot.id,
-          },
-        })
-      ])
-      throw err
-    })
+    const review = await prisma.review
+      .create({
+        data: {
+          doc_id: docId,
+          before_snapshot_id: snapshot.id,
+          user_id: userId,
+        },
+      })
+      .catch(async (err) => {
+        await prisma.$transaction([
+          prisma.pmDoc.update({
+            data: {
+              status: DocStatus.WAITING_REVIEW,
+            },
+            where: {
+              id: docId,
+            },
+          }),
+          prisma.pmDocSnapshot.delete({
+            where: {
+              id: snapshot.id,
+            },
+          }),
+        ])
+        throw err
+      })
     return {
       ok: true,
       data: {
         snapshot,
         review,
-      }
+      },
     }
   },
-  async finishReview(docId: string, reviewId: string, params: IFinishReviewRequest): Promise<Event<PmDocSnapshot>> {
+  async finishReview(
+    docId: string,
+    reviewId: string,
+    params: IFinishReviewRequest
+  ): Promise<Event<PmDocSnapshot>> {
     const [_d, snapshot, _r] = await prisma.$transaction([
       prisma.pmDoc.update({
         data: {
@@ -126,7 +136,7 @@ export const reviewService = {
           doc: {
             connect: {
               id: docId,
-            }
+            },
           },
         },
       }),
@@ -137,7 +147,7 @@ export const reviewService = {
         where: {
           id: reviewId,
         },
-      })
+      }),
     ])
     return {
       ok: true,
@@ -160,9 +170,9 @@ export const reviewService = {
         },
         include: {
           before_snapshot: true,
-          after_snapshot: true
-        }
-      })
+          after_snapshot: true,
+        },
+      }),
     ])
     return { ok: true, data: review }
   },

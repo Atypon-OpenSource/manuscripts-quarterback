@@ -68,7 +68,7 @@ const HistoryList = observer((props: IProps) => {
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
         {history.map((h: HistoryItem, i: number) => (
           <HistoryListItem key={`${h.id}`}>
-            {isSnapshot(h) && <SnapshotItem snap={h} viewProvider={viewProvider}/>}
+            {isSnapshot(h) && <SnapshotItem snap={h} viewProvider={viewProvider} />}
             {isReview(h) && <ReviewItem review={h} />}
           </HistoryListItem>
         ))}

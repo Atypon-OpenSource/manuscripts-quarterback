@@ -46,9 +46,7 @@ const ReviewList = observer((props: IProps) => {
         {reviews.map((r: Review, i: number) => (
           <SnapListItem key={`${r.id}`}>
             <TitleWrapper>
-              <h4>
-                {new Date(r.createdAt).toLocaleString()}
-              </h4>
+              <h4>{new Date(r.createdAt).toLocaleString()}</h4>
             </TitleWrapper>
             <small>{new Date(r.createdAt).toLocaleString()}</small>
           </SnapListItem>

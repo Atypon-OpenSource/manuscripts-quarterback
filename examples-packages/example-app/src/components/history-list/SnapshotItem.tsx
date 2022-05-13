@@ -98,10 +98,14 @@ const SnapshotItem = observer((props: IProps) => {
   }
   return (
     <Container inspected={isBeingInspected(snap)}>
-      <ItemTypeBtn onClick={() => setIsVisible(v => !v)}>
+      <ItemTypeBtn onClick={() => setIsVisible((v) => !v)}>
         <ItemType>Snapshot</ItemType>
         <Chevron>{isVisible ? <FiChevronDown size={16} /> : <FiChevronRight size={16} />}</Chevron>
-        { !isVisible && <Time dateTime={snap.createdAt.toLocaleString()}>{new Date(snap.createdAt).toLocaleString()}</Time>}
+        {!isVisible && (
+          <Time dateTime={snap.createdAt.toLocaleString()}>
+            {new Date(snap.createdAt).toLocaleString()}
+          </Time>
+        )}
       </ItemTypeBtn>
       <div className={isVisible ? '' : 'hidden'}>
         <TitleWrapper>
@@ -135,7 +139,7 @@ const SnapshotItem = observer((props: IProps) => {
 })
 
 const Container = styled.div<{ inspected: boolean }>`
-  background: ${({ inspected }) => inspected ? '#aaffaa' : ''};
+  background: ${({ inspected }) => (inspected ? '#aaffaa' : '')};
   border-radius: 2px;
   padding: 0.25rem;
 `
@@ -158,7 +162,7 @@ const Chevron = styled.span`
 `
 const Time = styled.time<{ smallFont?: boolean }>`
   font-family: 'Times';
-  font-size: ${({ smallFont }) => smallFont ? 'smaller' : '0.9rem'};
+  font-size: ${({ smallFont }) => (smallFont ? 'smaller' : '0.9rem')};
 `
 const TitleWrapper = styled.div`
   align-items: center;

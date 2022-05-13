@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Review,
-  ReviewWithSnapshots,
-  SnapshotLabel,
-} from '@manuscripts/examples-track-shared'
+import { Review, ReviewWithSnapshots, SnapshotLabel } from '@manuscripts/examples-track-shared'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import { AuthStore } from './AuthStore'
@@ -62,15 +58,18 @@ export class HistoryStore {
   }
 
   @computed get history(): HistoryItem[] {
-    let snaps: HistorySnapshot[] = this.documentStore.snapshotLabels.map(s => ({ ...s, type: 'snapshot' }))
+    let snaps: HistorySnapshot[] = this.documentStore.snapshotLabels.map((s) => ({
+      ...s,
+      type: 'snapshot',
+    }))
     const filteredSnaps: string[] = []
-    const joinSnapshotsToReviews: HistoryReview[] = this.reviewStore.reviews.map(r => {
+    const joinSnapshotsToReviews: HistoryReview[] = this.reviewStore.reviews.map((r) => {
       const rr = {
         ...r,
         type: 'review',
       } as HistoryReview
-      const before = snaps.find(s => s.id === rr.before_snapshot_id)
-      const after = rr.after_snapshot_id && snaps.find(s => s.id === rr.after_snapshot_id)
+      const before = snaps.find((s) => s.id === rr.before_snapshot_id)
+      const after = rr.after_snapshot_id && snaps.find((s) => s.id === rr.after_snapshot_id)
       if (before) {
         rr.before_snapshot = before
         filteredSnaps.push(r.before_snapshot_id)
@@ -81,11 +80,11 @@ export class HistoryStore {
       }
       return rr
     })
-    snaps = snaps.filter(s => !filteredSnaps.includes(s.id))
-    return [...joinSnapshotsToReviews, ...snaps]
-      .sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1)
+    snaps = snaps.filter((s) => !filteredSnaps.includes(s.id))
+    return [...joinSnapshotsToReviews, ...snaps].sort((a, b) =>
+      new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1
+    )
   }
 
-  @action reset = () => {
-  }
+  @action reset = () => {}
 }

@@ -67,14 +67,20 @@ const DocControls = observer((props: Props) => {
     <Wrapper className={className}>
       <legend>Document</legend>
       <Title>{currentDocument.name}</Title>
-      <p>
-        Status: {currentDocument.status}
-      </p>
+      <p>Status: {currentDocument.status}</p>
       <small>Created: {new Date(currentDocument.createdAt).toLocaleString()}</small>
       <small>Updated: {new Date(currentDocument.updatedAt).toLocaleString()}</small>
       <Buttons>
-        {currentDocument.status === DocStatus.EDITABLE && <button onClick={handleSubmitForReview} disabled={loading}>Submit doc for review</button>}
-        {currentDocument.status === DocStatus.WAITING_REVIEW && <button onClick={handleCancelReviewRequest} disabled={loading}>Cancel review request</button>}
+        {currentDocument.status === DocStatus.EDITABLE && (
+          <button onClick={handleSubmitForReview} disabled={loading}>
+            Submit doc for review
+          </button>
+        )}
+        {currentDocument.status === DocStatus.WAITING_REVIEW && (
+          <button onClick={handleCancelReviewRequest} disabled={loading}>
+            Cancel review request
+          </button>
+        )}
         {error && <ErrorMsg>{error}</ErrorMsg>}
       </Buttons>
     </Wrapper>

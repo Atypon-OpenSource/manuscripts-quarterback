@@ -90,17 +90,15 @@ export const RightPanel = memo((props: Props) => {
   return (
     <RightSide>
       <DocControls />
-      <ReviewControls
-        viewProvider={viewProvider}
-      />
+      <ReviewControls viewProvider={viewProvider} />
       <ChangesControls
         className="changes-controls"
         viewProvider={viewProvider}
         trackChangesState={trackChangesState}
         createSnapshot={handleCreateSnapshot}
       />
-      <HistoryList viewProvider={viewProvider}/>
-      <ReviewList/>
+      <HistoryList viewProvider={viewProvider} />
+      <ReviewList />
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />
       ) : (

@@ -86,7 +86,7 @@ export const createReview = async (
 }
 
 export const finishReview = async (
-  req: AuthRequest<IFinishReviewRequest, { documentId: string, reviewId: string }>,
+  req: AuthRequest<IFinishReviewRequest, { documentId: string; reviewId: string }>,
   res: AuthResponse<IFinishReviewResponse>,
   next: NextFunction
 ) => {
@@ -104,7 +104,7 @@ export const finishReview = async (
 }
 
 export const deleteReview = async (
-  req: AuthRequest<Record<string, never>, { documentId: string, reviewId: string }>,
+  req: AuthRequest<Record<string, never>, { documentId: string; reviewId: string }>,
   res: AuthResponse<IDeleteReviewResponse>,
   next: NextFunction
 ) => {

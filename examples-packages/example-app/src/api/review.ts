@@ -35,7 +35,11 @@ export const createReview = (docId: string, payload: ICreateReviewRequest) =>
   post<ICreateReviewResponse>(`doc/${docId}/review`, payload, 'Creating review failed')
 
 export const finishReview = (docId: string, reviewId: string, payload: IFinishReviewRequest) =>
-  post<IFinishReviewResponse>(`doc/${docId}/review/${reviewId}/finish`, payload, 'Finishing review failed')
+  post<IFinishReviewResponse>(
+    `doc/${docId}/review/${reviewId}/finish`,
+    payload,
+    'Finishing review failed'
+  )
 
 export const deleteReview = (docId: string, reviewId: string) =>
   del<IDeleteReviewResponse>(`doc/${docId}/review/${reviewId}`, 'Deleting review failed')
