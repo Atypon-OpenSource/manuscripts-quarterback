@@ -24,10 +24,10 @@ import { CustomError, log, prisma } from '$common'
 import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
 export const snapService = {
-  async listSnapshotLabels(manuscriptId: string): Promise<Event<SnapshotLabel[]>> {
+  async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {
     const found = await prisma.manuscriptSnapshot.findMany({
       where: {
-        manuscript_id: manuscriptId,
+        doc_id: docId,
       },
       select: {
         id: true,
@@ -53,7 +53,7 @@ export const snapService = {
     const saved = await prisma.manuscriptSnapshot.create({
       data: {
         snapshot,
-        manuscript_id: docId,
+        doc_id: docId,
         name,
       },
     })

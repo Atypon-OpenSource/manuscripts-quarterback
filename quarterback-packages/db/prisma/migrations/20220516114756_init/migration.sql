@@ -16,7 +16,7 @@ CREATE TABLE "manuscript_doc_snapshot" (
     "name" VARCHAR(500) NOT NULL DEFAULT E'',
     "snapshot" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "manuscript_id" TEXT NOT NULL,
+    "doc_id" TEXT NOT NULL,
 
     CONSTRAINT "manuscript_doc_snapshot_pkey" PRIMARY KEY ("id")
 );
@@ -35,7 +35,7 @@ CREATE TABLE "manuscript_comment" (
 );
 
 -- AddForeignKey
-ALTER TABLE "manuscript_doc_snapshot" ADD CONSTRAINT "manuscript_doc_snapshot_manuscript_id_fkey" FOREIGN KEY ("manuscript_id") REFERENCES "manuscript_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "manuscript_doc_snapshot" ADD CONSTRAINT "manuscript_doc_snapshot_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "manuscript_comment" ADD CONSTRAINT "manuscript_comment_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;

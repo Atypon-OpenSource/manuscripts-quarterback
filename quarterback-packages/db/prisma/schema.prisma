@@ -25,13 +25,13 @@ model ManuscriptDoc {
 }
 
 model ManuscriptSnapshot {
-  id            String              @id @default(uuid())
-  name          String              @default("") @db.VarChar(500)
-  snapshot      Json
-  createdAt     DateTime            @default(now())
-  manuscript    ManuscriptDoc       @relation("ManuscriptSnapshotToManuscriptDoc", fields: [manuscript_id], references: [id], onDelete: Cascade)
-  manuscript_id String
-  comments      ManuscriptComment[] @relation("ManuscriptCommentToManuscriptSnapshot")
+  id        String              @id @default(uuid())
+  name      String              @default("") @db.VarChar(500)
+  snapshot  Json
+  createdAt DateTime            @default(now())
+  doc       ManuscriptDoc       @relation("ManuscriptSnapshotToManuscriptDoc", fields: [doc_id], references: [id], onDelete: Cascade)
+  doc_id    String
+  comments  ManuscriptComment[] @relation("ManuscriptCommentToManuscriptSnapshot")
 
   @@map("manuscript_doc_snapshot")
 }
