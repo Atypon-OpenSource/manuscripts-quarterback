@@ -42,7 +42,9 @@ jobs:
         uses: ./.github/actions/pnpm
 
       - name: Build packages
-        run: pnpm build:track
+        run: |
+          pnpm run build --filter @manuscripts/quarterback-shared \
+          pnpm run build --filter @manuscripts/track-changes-plugin
 
       - name: Create and publish versions
         uses: changesets/action@v1
