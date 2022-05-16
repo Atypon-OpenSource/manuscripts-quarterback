@@ -74,7 +74,7 @@ export class EditorViewProvider {
     this.updateState(state, true)
   }
 
-  hydrateStateFromJSON(rawValue: { doc: Record<string, any>, selection: Record<string, any> }) {
+  hydrateStateFromJSON(rawValue: { doc: Record<string, any>; selection: Record<string, any> }) {
     const state = EditorState.fromJSON(
       {
         schema: this.view.state.schema,
