@@ -22,8 +22,8 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 2. Start the databases: `docker-compose up -d postgres redis`
 3. Initialize example database: `./scripts.sh db:init-ex`
 4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/client/.example-env ./examples-packages/client/.env`
-5. Migrate the database: `pnpm run migrate --filter @manuscripts/examples-track-db`
-6. And seed it with test data: `pnpm run seed --filter @manuscripts/examples-track-db`
+5. Migrate the database: `pnpm --filter @manuscripts/examples-track-db migrate`
+6. And seed it with test data: `pnpm --filter @manuscripts/examples-track-db seed`
 7. Build the external manuscripts packages: `pnpm build`
 8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` and `pnpm ex:client`.
 
@@ -34,12 +34,12 @@ Also, if you were to remove a package inside `packages` the node_modules in the 
 `quarterback-packages` includes the deployed packages that are used in Manuscripts app.
 
 1. Copy the environment variables: `cp ./quarterback-packages/api/.example-env ./quarterback-packages/api/.env && cp ./quarterback-packages/db/.example-env ./quarterback-packages/db/.env`
-2. Migrate the database: `pnpm run migrate --filter @manuscripts/quarterback-db`
+2. Migrate the database: `pnpm --filter @manuscripts/quarterback-db migrate`
 3. Bundle the libraries and start the Quarterback API at http://localhost:5500 with: `pnpm start`
 
 ## Commands
 
-You should run commands to individual packages with eg: `pnpm run watch --filter @manuscripts/examples-track-api`. To run them recursively for every package you can use `-r` eg: `pnpm run format -r`.
+You should run commands to individual packages with eg: `pnpm --filter @manuscripts/examples-track-api watch`. To run them recursively for every package you can use `-r` eg: `pnpm -r format`.
 
 ## Test users
 

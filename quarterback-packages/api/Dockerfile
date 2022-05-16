@@ -10,7 +10,7 @@ ENV PNPM_PATH /home/node/.pnpm
 
 WORKDIR ${INSTALL_PATH}
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@7
 RUN pnpm config set store-dir ${PNPM_PATH}
 
 COPY package.json tsconfig.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -24,17 +24,17 @@ RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
   --filter @manuscripts/quarterback-shared
 
 COPY quarterback-packages/db ./quarterback-packages/db
-RUN pnpm run generate --filter @manuscripts/quarterback-db
+RUN pnpm --filter @manuscripts/quarterback-db generate
 COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
 
 COPY quarterback-packages/shared ./quarterback-packages/shared
-RUN pnpm run build --filter @manuscripts/quarterback-shared
+RUN pnpm --filter @manuscripts/quarterback-shared build
 
 COPY quarterback-packages/api ./quarterback-packages/api
-# RUN pnpm run test --filter @manuscripts/quarterback-api
-RUN pnpm run build --filter @manuscripts/quarterback-api
+# RUN pnpm test --filter @manuscripts/quarterback-api test
+RUN pnpm --filter @manuscripts/quarterback-api build
 
-RUN pnpm prune
+# RUN pnpm prune
 
 ENV CORS_SAME_ORIGIN true
 

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-pnpm run prod:migrate --filter @manuscripts/quarterback-db && \
+pnpm --filter @manuscripts/quarterback-db prod:migrate && \
 node ./quarterback-packages/api/dist/index.js

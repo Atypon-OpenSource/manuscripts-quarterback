@@ -20,13 +20,22 @@ case "$1" in
 EOSQL
   ;;
   utils)
-    pnpm run watch --parallel --filter @manuscripts/examples-track-shared --filter @manuscripts/examples-track-schema --filter @manuscripts/examples-track-editor --filter @manuscripts/track-changes-plugin --filter @manuscripts/ext-yjs
+    pnpm --parallel --filter @manuscripts/examples-track-shared \
+      --filter @manuscripts/examples-track-schema \
+      --filter @manuscripts/examples-track-editor \
+      --filter @manuscripts/track-changes-plugin \
+      --filter @manuscripts/ext-yjs \
+      watch
     ;;
   api:watch)
-    pnpm run watch --parallel --filter @manuscripts/examples-track-api --filter @manuscripts/examples-track-collab
+    pnpm --parallel --filter @manuscripts/examples-track-api \
+      --filter @manuscripts/examples-track-collab \
+      watch
     ;;
   api:dev)
-    pnpm run dev --filter @manuscripts/examples-track-api --filter @manuscripts/examples-track-collab
+    pnpm --filter @manuscripts/examples-track-api \
+      --filter @manuscripts/examples-track-collab \
+      dev
     ;;
   *)
     echo $"Usage: $0 db:connect|db:init-ex|utils|api:watch|api:dev"
