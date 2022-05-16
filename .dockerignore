@@ -3,5 +3,7 @@ db/postgres
 **dist
 **tmp
 **build
+**Dockerfile
+**.prisma
 **generated
 **.env

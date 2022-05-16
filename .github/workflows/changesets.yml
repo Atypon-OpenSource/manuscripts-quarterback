@@ -42,7 +42,7 @@ jobs:
         uses: ./.github/actions/pnpm
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm build:track
 
       - name: Create and publish versions
         uses: changesets/action@v1

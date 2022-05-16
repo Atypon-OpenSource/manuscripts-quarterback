@@ -14,25 +14,30 @@ RUN npm install -g pnpm
 RUN pnpm config set store-dir ${PNPM_PATH}
 
 COPY package.json tsconfig.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY quarterback-packages/api ./quarterback-packages/api
-COPY quarterback-packages/db ./quarterback-packages/db
-COPY quarterback-packages/shared ./quarterback-packages/shared
+# Copy package.jsons first to cache pnpm install to run only if they were changed, not on source file changes
+COPY quarterback-packages/api/package.json ./quarterback-packages/api/package.json
+COPY quarterback-packages/db/package.json ./quarterback-packages/db/package.json
+COPY quarterback-packages/shared/package.json ./quarterback-packages/shared/package.json
 
 RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
   --filter @manuscripts/quarterback-db \
   --filter @manuscripts/quarterback-shared
+
+COPY quarterback-packages/db ./quarterback-packages/db
 RUN pnpm run generate --filter @manuscripts/quarterback-db
+COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
+
+COPY quarterback-packages/shared ./quarterback-packages/shared
 RUN pnpm run build --filter @manuscripts/quarterback-shared
 
+COPY quarterback-packages/api ./quarterback-packages/api
 # RUN pnpm run test --filter @manuscripts/quarterback-api
-
-ENV CORS_SAME_ORIGIN true
-
 RUN pnpm run build --filter @manuscripts/quarterback-api
 
 RUN pnpm prune
-COPY ./quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
+
+ENV CORS_SAME_ORIGIN true
 
 EXPOSE ${PORT}
 
-CMD ["node", "./quarterback-packages/api/dist/index.js"]
+CMD ./quarterback-packages/api/start.sh
