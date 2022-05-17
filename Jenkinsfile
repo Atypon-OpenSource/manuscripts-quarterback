@@ -11,7 +11,7 @@ node {
     stage("Install dependencies") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
             sh (script: "npm install pnpm@7 -g")
-            sh (script: "pnpm i --frozen-lockfile --filter ./quarterback-packages", returnStdout: true)
+            sh (script: "pnpm --frozen-lockfile --filter \"./quarterback-packages/**\" i", returnStdout: true)
         }
     }
 
@@ -37,10 +37,6 @@ node {
     }
     
     if (VARS.GIT_BRANCH == "origin/main") {
-        stage ("Publish quarterback packages") {
-            sh (script: "pnpm publish --filter ./quarterback-packages")
-        }
-    
         stage("Build docker image") {
             docker.withServer('unix:///var/run/docker-ci.sock') {
                 app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
@@ -54,7 +50,6 @@ node {
                 app.push('latest');
             }
         }
-
 
         stage("Publish") {
             withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {

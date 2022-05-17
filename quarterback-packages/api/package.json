@@ -1,6 +1,7 @@
 {
   "name": "@manuscripts/quarterback-api",
   "version": "0.0.1",
+  "private": true,
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",

@@ -32,7 +32,7 @@
     "cs:version": "changeset version",
     "cs:publish": "changeset publish",
     "ci:version": "changeset version && pnpm i --lockfile-only",
-    "ci:publish": "pnpm --filter ./quarterback-packages --no-git-checks publish"
+    "ci:publish": "pnpm --filter \"./quarterback-packages/**\" --no-git-checks publish"
   },
   "engines": {
     "node": ">=16",
