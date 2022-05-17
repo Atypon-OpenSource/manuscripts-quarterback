@@ -20,6 +20,7 @@ node {
             sh (script: "pnpm --filter @manuscripts/quarterback-db build")
             sh (script: "pnpm --filter @manuscripts/quarterback-shared build")
             sh (script: "pnpm --filter @manuscripts/quarterback-api build")
+            sh (script: "pnpm --filter @manuscripts/track-changes-plugin build")
             sh (script: "pnpm --filter @manuscripts/quarterback-api test")
             sh (script: "pnpm --filter @manuscripts/track-changes-plugin test")
         }
@@ -31,11 +32,6 @@ node {
         }
     }
 
-    stage("DB migration") {
-        echo 'placeholder stage for now'
-        echo 'may be used to run the database migration scripts'
-    }
-    
     if (VARS.GIT_BRANCH == "origin/main") {
         stage("Build docker image") {
             docker.withServer('unix:///var/run/docker-ci.sock') {

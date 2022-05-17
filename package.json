@@ -1,5 +1,6 @@
 {
   "name": "manuscripts-quarterback",
+  "private": true,
   "type": "module",
   "repository": {
     "type": "git",
