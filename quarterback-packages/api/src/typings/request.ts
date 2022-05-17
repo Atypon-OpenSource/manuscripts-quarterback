@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { User } from '@manuscripts/quarterback-shared'
-import type { Request } from 'express'
+import type { UserProfileWithAvatar } from '@manuscripts/quarterback-shared'
+import type { Request, Response } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 
 export type IRequest<
@@ -22,19 +22,17 @@ export type IRequest<
   P extends ParamsDictionary = Record<string, any>
 > = Request<P, Record<string, never>, B, Record<string, never>>
 
-export type IAuthRequest<
+type AuthLocals = {
+  user: UserProfileWithAvatar
+}
+
+export type AuthRequest<
   B = Record<string, any>,
   P extends ParamsDictionary = Record<string, any>
-> = Request<
-  P,
-  Record<string, never>,
-  B,
-  Record<string, never>,
-  {
-    user: User
-  }
->
+> = Request<P, Record<string, never>, B, Record<string, never>, AuthLocals>
+
+export type AuthResponse<R = Record<string, never>> = Response<R, AuthLocals>
 
 export type AnyRequest<B = Record<string, any>, Q extends ParamsDictionary = Record<string, any>> =
   | IRequest<B, Q>
-  | IAuthRequest<B, Q>
+  | AuthRequest<B, Q>

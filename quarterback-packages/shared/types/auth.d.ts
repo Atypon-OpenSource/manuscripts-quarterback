@@ -15,6 +15,8 @@
  */
 import type { UserProfileWithAvatar } from '@manuscripts/manuscript-transform'
 
+export type { UserProfileWithAvatar } from '@manuscripts/manuscript-transform'
+
 export type User = {
   id: string
   name: string

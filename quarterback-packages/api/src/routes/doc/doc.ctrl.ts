@@ -22,13 +22,13 @@ import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
 import { CustomError } from '$common'
-import { IAuthRequest, IRequest } from '$typings/request'
+import { AuthRequest, AuthResponse } from '$typings/request'
 
 import { docService } from './doc.svc'
 
 export const findDocument = async (
-  req: IAuthRequest,
-  res: Response<IGetDocumentResponse>,
+  req: AuthRequest,
+  res: AuthResponse<IGetDocumentResponse>,
   next: NextFunction
 ) => {
   try {
@@ -45,8 +45,8 @@ export const findDocument = async (
 }
 
 export const createDocument = async (
-  req: IAuthRequest<ICreateDocRequest>,
-  res: Response<ICreateDocResponse>,
+  req: AuthRequest<ICreateDocRequest>,
+  res: AuthResponse<ICreateDocResponse>,
   next: NextFunction
 ) => {
   try {
@@ -66,8 +66,8 @@ export const createDocument = async (
 }
 
 export const deleteDocument = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response,
+  req: AuthRequest<Record<string, never>, { documentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {

@@ -24,13 +24,13 @@ import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
 import { CustomError } from '$common'
-import { IAuthRequest, IRequest } from '$typings/request'
+import { AuthRequest, AuthResponse } from '$typings/request'
 
 import { snapService } from './snap.svc'
 
 export const listSnapshotLabels = async (
-  req: IAuthRequest<Record<string, never>, { documentId: string }>,
-  res: Response<IGetSnapshotLabelsResponse>,
+  req: AuthRequest<Record<string, never>, { documentId: string }>,
+  res: AuthResponse<IGetSnapshotLabelsResponse>,
   next: NextFunction
 ) => {
   try {
@@ -47,8 +47,8 @@ export const listSnapshotLabels = async (
 }
 
 export const getSnapshot = async (
-  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
-  res: Response<IGetSnapshotResponse>,
+  req: AuthRequest<Record<string, never>, { snapshotId: string }>,
+  res: AuthResponse<IGetSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
@@ -65,8 +65,8 @@ export const getSnapshot = async (
 }
 
 export const saveSnapshot = async (
-  req: IAuthRequest<ISaveSnapshotRequest>,
-  res: Response<ISaveSnapshotResponse>,
+  req: AuthRequest<ISaveSnapshotRequest>,
+  res: AuthResponse<ISaveSnapshotResponse>,
   next: NextFunction
 ) => {
   try {
@@ -82,8 +82,8 @@ export const saveSnapshot = async (
 }
 
 export const updateSnapshot = async (
-  req: IAuthRequest<IUpdateSnapshotRequest, { snapshotId: string }>,
-  res: Response,
+  req: AuthRequest<IUpdateSnapshotRequest, { snapshotId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
@@ -100,8 +100,8 @@ export const updateSnapshot = async (
 }
 
 export const deleteSnapshot = async (
-  req: IAuthRequest<Record<string, never>, { snapshotId: string }>,
-  res: Response<ISaveSnapshotResponse>,
+  req: AuthRequest<Record<string, never>, { snapshotId: string }>,
+  res: AuthResponse<ISaveSnapshotResponse>,
   next: NextFunction
 ) => {
   try {

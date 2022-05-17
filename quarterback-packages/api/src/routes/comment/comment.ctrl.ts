@@ -23,13 +23,13 @@ import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
 import { CustomError } from '$common'
-import { IAuthRequest, IRequest } from '$typings/request'
+import { AuthRequest, AuthResponse } from '$typings/request'
 
 import { commentService } from './comment.svc'
 
 export const listComments = async (
-  req: IAuthRequest<{}, { documentId: string }>,
-  res: Response<IListCommentsResponse>,
+  req: AuthRequest<{}, { documentId: string }>,
+  res: AuthResponse<IListCommentsResponse>,
   next: NextFunction
 ) => {
   try {
@@ -48,8 +48,8 @@ export const listComments = async (
 }
 
 export const createComment = async (
-  req: IAuthRequest<ICreateCommentRequest>,
-  res: Response<ICreateCommentResponse>,
+  req: AuthRequest<ICreateCommentRequest>,
+  res: AuthResponse<ICreateCommentResponse>,
   next: NextFunction
 ) => {
   try {
@@ -69,8 +69,8 @@ export const createComment = async (
 }
 
 export const updateComment = async (
-  req: IAuthRequest<IUpdateCommentRequest, { commentId: string }>,
-  res: Response,
+  req: AuthRequest<IUpdateCommentRequest, { commentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
@@ -87,8 +87,8 @@ export const updateComment = async (
 }
 
 export const deleteComment = async (
-  req: IAuthRequest<Record<string, never>, { commentId: string }>,
-  res: Response,
+  req: AuthRequest<Record<string, never>, { commentId: string }>,
+  res: AuthResponse,
   next: NextFunction
 ) => {
   try {
