@@ -1,4 +1,4 @@
-node {
+node("cisc && !cisc03") {
     def imageTagBadge = addEmbeddableBadgeConfiguration(id: "dockerImage", subject: "image")
     def versionIdBadge = addEmbeddableBadgeConfiguration(id: "versionId", subject: "version")
     REGISTRY="docker-reg.atypon.com"
