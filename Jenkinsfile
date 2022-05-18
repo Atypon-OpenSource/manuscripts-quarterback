@@ -48,8 +48,10 @@ node("cisc && !cisc03") {
         }
 
         stage("Publish") {
-            withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
-                sh ("pnpm ci:publish")
+            nodejs(nodeJSInstallationName: 'node_16_14_2') {
+                withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
+                    sh ("pnpm ci:publish")
+                }
             }
         }
     }
