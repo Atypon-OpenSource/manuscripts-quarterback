@@ -3,7 +3,7 @@ node {
     def versionIdBadge = addEmbeddableBadgeConfiguration(id: "versionId", subject: "version")
     REGISTRY="docker-reg.atypon.com"
     stage("Checkout") {
-        checkout scm
+        VARS = checkout scm
         DOCKER_IMAGE="man/quarterback"
         IMG_TAG=sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
