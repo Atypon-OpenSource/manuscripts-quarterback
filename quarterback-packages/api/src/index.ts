@@ -17,6 +17,7 @@ import { app } from './app'
 import { config } from './common/config'
 import { log } from './common/logger'
 
+// hello
 app.listen(config.PORT, () => {
   log.info(`Quarterback API started at port: ${config.PORT}`)
 })
