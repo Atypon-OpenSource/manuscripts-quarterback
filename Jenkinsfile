@@ -32,7 +32,7 @@ node {
         }
     }
 
-    if (VARS.GIT_BRANCH == "origin/main") {
+    if (GIT_BRANCH == "origin/main") {
         stage("Build docker image") {
             docker.withServer('unix:///var/run/docker-ci.sock') {
                 app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
