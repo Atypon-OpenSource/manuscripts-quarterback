@@ -15,7 +15,7 @@
     "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
     "init": "pnpm run migrate && pnpm run api-hack",
     "api-hack": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma",
-    "build": "prisma generate && pnpm run api-hack",
+    "build": "DEBUG=* prisma generate && pnpm run api-hack",
     "format": "prisma format",
     "generate": "prisma generate && pnpm run api-hack",
     "migrate": "prisma migrate dev && pnpm run api-hack",
