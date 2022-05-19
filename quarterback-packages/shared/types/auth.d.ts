@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { UserProfileWithAvatar } from '@manuscripts/manuscript-transform'
+import type { UserProfile } from '@manuscripts/manuscripts-json-schema'
 
-export type { UserProfileWithAvatar } from '@manuscripts/manuscript-transform'
+export type { UserProfile } from '@manuscripts/manuscripts-json-schema'
 
 export type User = {
   id: string
@@ -25,7 +25,7 @@ export type UserWithColor = User & { color: string }
 
 // POST /authenticate
 export interface IAuthenticateParams {
-  user: UserProfileWithAvatar
+  user: UserProfile
   token: string
 }
 export interface IAuthenticateResponse {

@@ -38,6 +38,7 @@
   "dependencies": {
     "@manuscripts/quarterback-db": "workspace:*",
     "@manuscripts/quarterback-shared": "workspace:*",
+    "@manuscripts/manuscripts-json-schema": "^1.49.12",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "~4.17.1",

@@ -29,13 +29,13 @@
     "watch": "rollup -cw"
   },
   "devDependencies": {
-    "@manuscripts/manuscript-transform": "^0.48.23",
+    "@manuscripts/manuscripts-json-schema": "^1.49.12",
     "rimraf": "^3.0.2",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "@manuscripts/manuscript-transform": "*"
+    "@manuscripts/manuscripts-json-schema": "*"
   }
 }
