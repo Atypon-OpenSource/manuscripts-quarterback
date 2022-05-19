@@ -7,20 +7,17 @@
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
   "main": "generated/index.js",
   "types": "generated/index.d.ts",
-  "files": [
-    "generated/*"
-  ],
   "scripts": {
-    "prod:init": "prisma generate && prisma migrate deploy && pnpm run api-hack",
+    "prod:init": "prisma generate && prisma migrate deploy && pnpm run cp-files",
     "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
-    "init": "pnpm run migrate && pnpm run api-hack",
-    "api-hack": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma",
-    "build": "prisma generate && pnpm run api-hack",
+    "init": "pnpm run migrate && pnpm run cp-files",
+    "cp-files": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma && cp ./generated/index.d.ts ../shared/prisma",
+    "build": "prisma generate && pnpm run cp-files",
     "format": "prisma format",
-    "generate": "prisma generate && pnpm run api-hack",
-    "migrate": "prisma migrate dev && pnpm run api-hack",
+    "generate": "prisma generate && pnpm run cp-files",
+    "migrate": "prisma migrate dev && pnpm run cp-files",
     "delete": "prisma migrate reset",
-    "reset": "prisma migrate reset && pnpm run api-hack"
+    "reset": "prisma migrate reset && pnpm run cp-files"
   },
   "devDependencies": {
     "@types/node": "^16.11.6",

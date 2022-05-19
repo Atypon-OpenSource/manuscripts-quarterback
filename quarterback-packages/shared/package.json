@@ -15,8 +15,12 @@
   "files": [
     "dist",
     "src",
+    "prisma",
     "types"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rimraf dist && rollup -c",
     "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
@@ -25,8 +29,7 @@
     "watch": "rollup -cw"
   },
   "devDependencies": {
-    "@manuscripts/quarterback-db": "workspace:*",
-    "@manuscripts/manuscript-transform": "workspace:*",
+    "@manuscripts/manuscript-transform": "^0.48.23",
     "rimraf": "^3.0.2",
     "rollup": "^2.58.3",
     "rollup-plugin-typescript2": "^0.30.0",

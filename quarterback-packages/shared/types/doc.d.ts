@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ManuscriptDoc } from '@manuscripts/quarterback-db'
+import { ManuscriptDoc } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 
-export { ManuscriptDoc } from '@manuscripts/quarterback-db'
+export { ManuscriptDoc } from '../prisma'
 
 export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
   snapshots: SnapshotLabel[]

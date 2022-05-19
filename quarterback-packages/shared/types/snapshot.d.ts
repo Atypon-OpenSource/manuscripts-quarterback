@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+import { ManuscriptSnapshot } from '../prisma'
 
-export { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+export { ManuscriptSnapshot } from '../prisma'
 
 export type SnapshotLabel = Pick<ManuscriptSnapshot, 'id' | 'name' | 'createdAt'>
 

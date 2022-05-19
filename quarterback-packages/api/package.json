@@ -5,13 +5,10 @@
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "rimraf dist && rollup -c",
     "watch": "rollup -cw",
