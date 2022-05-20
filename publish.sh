@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -e
 
-gcloud auth application-default login
 gcloud artifacts print-settings npm \
   --project=atypon-artifact \
   --repository=npm-repo \
