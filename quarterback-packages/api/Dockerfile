@@ -15,7 +15,7 @@ COPY package.json tsconfig.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # Copy package.jsons first to cache pnpm install to run only if they were changed, not on source file changes
 COPY quarterback-packages/api/package.json ./quarterback-packages/api/package.json
 COPY quarterback-packages/db/package.json ./quarterback-packages/db/package.json
-COPY quarterback-packages/shared/package.json ./quarterback-packages/shared/package.json
+COPY quarterback-packages/types/package.json ./quarterback-packages/types/package.json
 
 RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
   --filter @manuscripts/quarterback-db \
@@ -24,9 +24,9 @@ RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
 COPY quarterback-packages/db ./quarterback-packages/db
 RUN pnpm --filter @manuscripts/quarterback-db generate
 COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
-COPY quarterback-packages/db/generated/index.d.ts ./quarterback-packages/shared/prisma/index.d.ts
+COPY quarterback-packages/db/generated/index.d.ts ./quarterback-packages/types/prisma/index.d.ts
 
-COPY quarterback-packages/shared ./quarterback-packages/shared
+COPY quarterback-packages/types ./quarterback-packages/types
 RUN pnpm --filter @manuscripts/quarterback-types build
 
 COPY quarterback-packages/api ./quarterback-packages/api
