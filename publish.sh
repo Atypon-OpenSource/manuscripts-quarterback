@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+set -e;
+set -x;
 echo "Creating .npmrc"
 cat << EOF >.npmrc
 registry=https://registry.npmjs.org/
