@@ -42,7 +42,7 @@ node("cisc && !cisc03") {
         // }
 
         stage("Publish") {
-            withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
+            nodejs(nodeJSInstallationName: 'node_16_14_2') {
                 sh ("./publish.sh")
                 sh ("rm ~/.npmrc")
             }
