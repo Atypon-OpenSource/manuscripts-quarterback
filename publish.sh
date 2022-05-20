@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
 
 gcloud artifacts print-settings npm \
   --project=atypon-artifact \

@@ -53,7 +53,6 @@ jobs:
           version: pnpm ci:version
           commit: 'chore(changeset): version update'
           title: 'chore(changeset): version update'
-          publish: pnpm ci:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
