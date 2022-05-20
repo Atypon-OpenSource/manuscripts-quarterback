@@ -43,7 +43,7 @@ node("cisc && !cisc03") {
 
         stage("Publish") {
             withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
-                sh ("pnpm ci:publish")
+                sh ("./publish.sh")
                 sh ("rm ~/.npmrc")
             }
         }
