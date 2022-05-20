@@ -10,7 +10,7 @@ node("cisc && !cisc03") {
 
     stage("Install dependencies") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
-            sh (script "rm ~/.npmrc")
+            sh (script: "rm ~/.npmrc")
             sh (script: "npm install pnpm@7 -g")
             sh (script: "pnpm --frozen-lockfile --filter \"./quarterback-packages/**\" i", returnStdout: true)
         }
