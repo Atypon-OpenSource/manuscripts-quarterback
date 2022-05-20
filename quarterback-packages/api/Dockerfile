@@ -6,12 +6,10 @@ FROM node:16.10.0-alpine3.11
 
 ENV NODE_ENV build
 ENV INSTALL_PATH /usr/local/quarterback_api
-ENV PNPM_PATH /home/node/.pnpm
 
 WORKDIR ${INSTALL_PATH}
 
 RUN npm install -g pnpm@7
-RUN pnpm config set store-dir ${PNPM_PATH}
 
 COPY package.json tsconfig.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # Copy package.jsons first to cache pnpm install to run only if they were changed, not on source file changes
@@ -26,6 +24,7 @@ RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
 COPY quarterback-packages/db ./quarterback-packages/db
 RUN pnpm --filter @manuscripts/quarterback-db generate
 COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
+COPY quarterback-packages/db/generated/index.d.ts ./quarterback-packages/shared/prisma/index.d.ts
 
 COPY quarterback-packages/shared ./quarterback-packages/shared
 RUN pnpm --filter @manuscripts/quarterback-shared build

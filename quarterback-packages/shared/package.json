@@ -31,9 +31,9 @@
   "devDependencies": {
     "@manuscripts/manuscripts-json-schema": "^1.49.12",
     "rimraf": "^3.0.2",
-    "rollup": "^2.58.3",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.4.4"
+    "rollup": "^2.74.0",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "@manuscripts/manuscripts-json-schema": "*"

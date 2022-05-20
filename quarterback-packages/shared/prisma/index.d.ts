@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime';
+import * as runtime from './runtime/index';
 declare const prisma: unique symbol
 export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
@@ -14,8 +14,8 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
 
 /**
  * Model ManuscriptDoc
+ * 
  */
-
 export type ManuscriptDoc = {
   id: string
   createdAt: Date
@@ -27,8 +27,8 @@ export type ManuscriptDoc = {
 
 /**
  * Model ManuscriptSnapshot
+ * 
  */
-
 export type ManuscriptSnapshot = {
   id: string
   name: string
@@ -39,8 +39,8 @@ export type ManuscriptSnapshot = {
 
 /**
  * Model ManuscriptComment
+ * 
  */
-
 export type ManuscriptComment = {
   id: string
   body: string
@@ -124,14 +124,14 @@ export class PrismaClient<
   /**
    * Disconnect from the database
    */
-  $disconnect(): Promise<any>;
+  $disconnect(): Promise<void>;
 
   /**
    * Add a middleware
    */
   $use(cb: Prisma.Middleware): void
 
-  /**
+/**
    * Executes a prepared raw query and returns the number of affected rows.
    * @example
    * ```
@@ -192,7 +192,6 @@ export class PrismaClient<
    */
   $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
 
-
       /**
    * `prisma.manuscriptDoc`: Exposes CRUD operations for the **ManuscriptDoc** model.
     * Example usage:
@@ -251,8 +250,8 @@ export namespace Prisma {
   export import Decimal = runtime.Decimal
 
   /**
-   * Prisma Client JS version: 3.1.1
-   * Query Engine version: c22652b7e418506fab23052d569b85d3aec4883f
+   * Prisma Client JS version: 3.14.0
+   * Query Engine version: 2b0c12756921c891fec4f68d9444e18c7d5d4a6a
    */
   export type PrismaVersion = {
     client: string
@@ -270,13 +269,13 @@ export namespace Prisma {
    * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
    */
   export type JsonObject = {[Key in string]?: JsonValue}
- 
+
   /**
    * From https://github.com/sindresorhus/type-fest/
    * Matches a JSON array.
    */
   export interface JsonArray extends Array<JsonValue> {}
- 
+
   /**
    * From https://github.com/sindresorhus/type-fest/
    * Matches any valid JSON value.
@@ -284,12 +283,30 @@ export namespace Prisma {
   export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
 
   /**
-   * Same as JsonObject, but allows undefined
+   * Matches a JSON object.
+   * Unlike `JsonObject`, this type allows undefined and read-only properties.
    */
-  export type InputJsonObject = {[Key in string]?: JsonValue}
- 
-  export interface InputJsonArray extends Array<JsonValue> {}
- 
+  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
+
+  /**
+   * Matches a JSON array.
+   * Unlike `JsonArray`, readonly arrays are assignable to this type.
+   */
+  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
+
+  /**
+   * Matches any valid value that can be used as an input for operations like
+   * create and update as the value of a JSON field. Unlike `JsonValue`, this
+   * type allows read-only arrays and read-only object properties and disallows
+   * `null` at the top level.
+   *
+   * `null` cannot be used as the value of a JSON field because its meaning
+   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
+   * `Prisma.DbNull` to clear the JSON value and set the field to the database
+   * NULL value instead.
+   *
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+   */
   export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray
 
   /**
@@ -396,7 +413,11 @@ export namespace Prisma {
    * XOR is needed to have a real mutually exclusive union type
    * https://stackoverflow.com/questions/42123407/does-typescript-support-mutually-exclusive-types
    */
-  type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
+  type XOR<T, U> =
+    T extends object ?
+    U extends object ?
+      (Without<T, U> & U) | (Without<U, T> & T)
+    : U : T
 
 
   /**
@@ -639,7 +660,7 @@ export namespace Prisma {
     ? IsReject<LocalRejectSettings>
     : GlobalRejectSettings extends RejectPerOperation
     ? Action extends keyof GlobalRejectSettings
-      ? GlobalRejectSettings[Action] extends boolean
+      ? GlobalRejectSettings[Action] extends RejectOnNotFound
         ? IsReject<GlobalRejectSettings[Action]>
         : GlobalRejectSettings[Action] extends RejectPerModel
         ? Model extends keyof GlobalRejectSettings[Action]
@@ -740,6 +761,8 @@ export namespace Prisma {
     | 'queryRaw'
     | 'aggregate'
     | 'count'
+    | 'runCommandRaw'
+    | 'findRaw'
 
   /**
    * These options are being passed in to the middleware as "params"
@@ -761,7 +784,8 @@ export namespace Prisma {
   ) => Promise<T>
 
   // tested in getLogLevel.test.ts
-  export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined; 
+  export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
+
   export type Datasource = {
     url?: string
   }
@@ -798,9 +822,8 @@ export namespace Prisma {
     ? ManuscriptDocCountOutputType 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof ManuscriptDocCountOutputType ?ManuscriptDocCountOutputType [P]
-  : 
-     never
+    [P in TrueKeys<S['select']>]:
+    P extends keyof ManuscriptDocCountOutputType ? ManuscriptDocCountOutputType[P] : never
   } 
     : ManuscriptDocCountOutputType
   : ManuscriptDocCountOutputType
@@ -848,9 +871,8 @@ export namespace Prisma {
     ? ManuscriptSnapshotCountOutputType 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof ManuscriptSnapshotCountOutputType ?ManuscriptSnapshotCountOutputType [P]
-  : 
-     never
+    [P in TrueKeys<S['select']>]:
+    P extends keyof ManuscriptSnapshotCountOutputType ? ManuscriptSnapshotCountOutputType[P] : never
   } 
     : ManuscriptSnapshotCountOutputType
   : ManuscriptSnapshotCountOutputType
@@ -1008,8 +1030,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type ManuscriptDocGroupByArgs = {
     where?: ManuscriptDocWhereInput
     orderBy?: Enumerable<ManuscriptDocOrderByWithAggregationInput>
@@ -1035,17 +1057,17 @@ export namespace Prisma {
     _max: ManuscriptDocMaxAggregateOutputType | null
   }
 
-  type GetManuscriptDocGroupByPayload<T extends ManuscriptDocGroupByArgs> = Promise<
+  type GetManuscriptDocGroupByPayload<T extends ManuscriptDocGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<ManuscriptDocGroupByOutputType, T['by']> & 
+      PickArray<ManuscriptDocGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ManuscriptDocGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], ManuscriptDocGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof ManuscriptDocGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ManuscriptDocGroupByOutputType[P]>
             : GetScalarType<T[P], ManuscriptDocGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -1077,24 +1099,17 @@ export namespace Prisma {
     : S extends ManuscriptDocArgs | ManuscriptDocFindManyArgs
     ?'include' extends U
     ? ManuscriptDoc  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'snapshots'
-        ? Array < ManuscriptSnapshotGetPayload<S['include'][P]>>  :
-        P extends 'comments'
-        ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
-        P extends '_count'
-        ? ManuscriptDocCountOutputTypeGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<S['include'][P]>>  :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof ManuscriptDoc ?ManuscriptDoc [P]
-  : 
-          P extends 'snapshots'
-        ? Array < ManuscriptSnapshotGetPayload<S['select'][P]>>  :
-        P extends 'comments'
-        ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
-        P extends '_count'
-        ? ManuscriptDocCountOutputTypeGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<S['select'][P]>>  :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ManuscriptDoc ? ManuscriptDoc[P] : never
   } 
     : ManuscriptDoc
   : ManuscriptDoc
@@ -1408,13 +1423,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ManuscriptDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptDocGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, ManuscriptDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptDocGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for ManuscriptDoc.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__ManuscriptDocClient<T> implements PrismaPromise<T> {
@@ -1629,6 +1644,10 @@ export namespace Prisma {
    * ManuscriptDoc createMany
    */
   export type ManuscriptDocCreateManyArgs = {
+    /**
+     * The data used to create many ManuscriptDocs.
+     * 
+    **/
     data: Enumerable<ManuscriptDocCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -1665,7 +1684,15 @@ export namespace Prisma {
    * ManuscriptDoc updateMany
    */
   export type ManuscriptDocUpdateManyArgs = {
+    /**
+     * The data used to update ManuscriptDocs.
+     * 
+    **/
     data: XOR<ManuscriptDocUpdateManyMutationInput, ManuscriptDocUncheckedUpdateManyInput>
+    /**
+     * Filter which ManuscriptDocs to update
+     * 
+    **/
     where?: ManuscriptDocWhereInput
   }
 
@@ -1728,6 +1755,10 @@ export namespace Prisma {
    * ManuscriptDoc deleteMany
    */
   export type ManuscriptDocDeleteManyArgs = {
+    /**
+     * Filter which ManuscriptDocs to delete
+     * 
+    **/
     where?: ManuscriptDocWhereInput
   }
 
@@ -1871,8 +1902,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type ManuscriptSnapshotGroupByArgs = {
     where?: ManuscriptSnapshotWhereInput
     orderBy?: Enumerable<ManuscriptSnapshotOrderByWithAggregationInput>
@@ -1897,17 +1928,17 @@ export namespace Prisma {
     _max: ManuscriptSnapshotMaxAggregateOutputType | null
   }
 
-  type GetManuscriptSnapshotGroupByPayload<T extends ManuscriptSnapshotGroupByArgs> = Promise<
+  type GetManuscriptSnapshotGroupByPayload<T extends ManuscriptSnapshotGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<ManuscriptSnapshotGroupByOutputType, T['by']> & 
+      PickArray<ManuscriptSnapshotGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ManuscriptSnapshotGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], ManuscriptSnapshotGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof ManuscriptSnapshotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ManuscriptSnapshotGroupByOutputType[P]>
             : GetScalarType<T[P], ManuscriptSnapshotGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -1938,24 +1969,17 @@ export namespace Prisma {
     : S extends ManuscriptSnapshotArgs | ManuscriptSnapshotFindManyArgs
     ?'include' extends U
     ? ManuscriptSnapshot  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'doc'
-        ? ManuscriptDocGetPayload<S['include'][P]> :
-        P extends 'comments'
-        ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
-        P extends '_count'
-        ? ManuscriptSnapshotCountOutputTypeGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'doc' ? ManuscriptDocGetPayload<S['include'][P]> :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof ManuscriptSnapshot ?ManuscriptSnapshot [P]
-  : 
-          P extends 'doc'
-        ? ManuscriptDocGetPayload<S['select'][P]> :
-        P extends 'comments'
-        ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
-        P extends '_count'
-        ? ManuscriptSnapshotCountOutputTypeGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'doc' ? ManuscriptDocGetPayload<S['select'][P]> :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ManuscriptSnapshot ? ManuscriptSnapshot[P] : never
   } 
     : ManuscriptSnapshot
   : ManuscriptSnapshot
@@ -2269,13 +2293,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ManuscriptSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptSnapshotGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, ManuscriptSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptSnapshotGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for ManuscriptSnapshot.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__ManuscriptSnapshotClient<T> implements PrismaPromise<T> {
@@ -2490,6 +2514,10 @@ export namespace Prisma {
    * ManuscriptSnapshot createMany
    */
   export type ManuscriptSnapshotCreateManyArgs = {
+    /**
+     * The data used to create many ManuscriptSnapshots.
+     * 
+    **/
     data: Enumerable<ManuscriptSnapshotCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -2526,7 +2554,15 @@ export namespace Prisma {
    * ManuscriptSnapshot updateMany
    */
   export type ManuscriptSnapshotUpdateManyArgs = {
+    /**
+     * The data used to update ManuscriptSnapshots.
+     * 
+    **/
     data: XOR<ManuscriptSnapshotUpdateManyMutationInput, ManuscriptSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which ManuscriptSnapshots to update
+     * 
+    **/
     where?: ManuscriptSnapshotWhereInput
   }
 
@@ -2589,6 +2625,10 @@ export namespace Prisma {
    * ManuscriptSnapshot deleteMany
    */
   export type ManuscriptSnapshotDeleteManyArgs = {
+    /**
+     * Filter which ManuscriptSnapshots to delete
+     * 
+    **/
     where?: ManuscriptSnapshotWhereInput
   }
 
@@ -2748,8 +2788,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type ManuscriptCommentGroupByArgs = {
     where?: ManuscriptCommentWhereInput
     orderBy?: Enumerable<ManuscriptCommentOrderByWithAggregationInput>
@@ -2776,17 +2816,17 @@ export namespace Prisma {
     _max: ManuscriptCommentMaxAggregateOutputType | null
   }
 
-  type GetManuscriptCommentGroupByPayload<T extends ManuscriptCommentGroupByArgs> = Promise<
+  type GetManuscriptCommentGroupByPayload<T extends ManuscriptCommentGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<ManuscriptCommentGroupByOutputType, T['by']> & 
+      PickArray<ManuscriptCommentGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ManuscriptCommentGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], ManuscriptCommentGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof ManuscriptCommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ManuscriptCommentGroupByOutputType[P]>
             : GetScalarType<T[P], ManuscriptCommentGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -2817,20 +2857,15 @@ export namespace Prisma {
     : S extends ManuscriptCommentArgs | ManuscriptCommentFindManyArgs
     ?'include' extends U
     ? ManuscriptComment  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'doc'
-        ? ManuscriptDocGetPayload<S['include'][P]> :
-        P extends 'snapshot'
-        ? ManuscriptSnapshotGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'doc' ? ManuscriptDocGetPayload<S['include'][P]> :
+        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<S['include'][P]> | null :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof ManuscriptComment ?ManuscriptComment [P]
-  : 
-          P extends 'doc'
-        ? ManuscriptDocGetPayload<S['select'][P]> :
-        P extends 'snapshot'
-        ? ManuscriptSnapshotGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'doc' ? ManuscriptDocGetPayload<S['select'][P]> :
+        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<S['select'][P]> | null :  P extends keyof ManuscriptComment ? ManuscriptComment[P] : never
   } 
     : ManuscriptComment
   : ManuscriptComment
@@ -3144,13 +3179,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ManuscriptCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptCommentGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, ManuscriptCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptCommentGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for ManuscriptComment.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__ManuscriptCommentClient<T> implements PrismaPromise<T> {
@@ -3365,6 +3400,10 @@ export namespace Prisma {
    * ManuscriptComment createMany
    */
   export type ManuscriptCommentCreateManyArgs = {
+    /**
+     * The data used to create many ManuscriptComments.
+     * 
+    **/
     data: Enumerable<ManuscriptCommentCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -3401,7 +3440,15 @@ export namespace Prisma {
    * ManuscriptComment updateMany
    */
   export type ManuscriptCommentUpdateManyArgs = {
+    /**
+     * The data used to update ManuscriptComments.
+     * 
+    **/
     data: XOR<ManuscriptCommentUpdateManyMutationInput, ManuscriptCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which ManuscriptComments to update
+     * 
+    **/
     where?: ManuscriptCommentWhereInput
   }
 
@@ -3464,6 +3511,10 @@ export namespace Prisma {
    * ManuscriptComment deleteMany
    */
   export type ManuscriptCommentDeleteManyArgs = {
+    /**
+     * Filter which ManuscriptComments to delete
+     * 
+    **/
     where?: ManuscriptCommentWhereInput
   }
 
@@ -4189,10 +4240,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptSnapshotUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ManuscriptSnapshotCreateManyDocInputEnvelope
-    connect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     set?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     delete?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
+    connect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     update?: Enumerable<ManuscriptSnapshotUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ManuscriptSnapshotUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ManuscriptSnapshotScalarWhereInput>
@@ -4203,10 +4254,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ManuscriptCommentCreateManyDocInputEnvelope
-    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     set?: Enumerable<ManuscriptCommentWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     delete?: Enumerable<ManuscriptCommentWhereUniqueInput>
+    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     update?: Enumerable<ManuscriptCommentUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ManuscriptCommentUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
@@ -4217,10 +4268,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptSnapshotUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ManuscriptSnapshotCreateManyDocInputEnvelope
-    connect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     set?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     delete?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
+    connect?: Enumerable<ManuscriptSnapshotWhereUniqueInput>
     update?: Enumerable<ManuscriptSnapshotUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ManuscriptSnapshotUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ManuscriptSnapshotScalarWhereInput>
@@ -4231,10 +4282,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ManuscriptCommentCreateManyDocInputEnvelope
-    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     set?: Enumerable<ManuscriptCommentWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     delete?: Enumerable<ManuscriptCommentWhereUniqueInput>
+    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     update?: Enumerable<ManuscriptCommentUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ManuscriptCommentUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
@@ -4273,10 +4324,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutSnapshotInput>
     createMany?: ManuscriptCommentCreateManySnapshotInputEnvelope
-    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     set?: Enumerable<ManuscriptCommentWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     delete?: Enumerable<ManuscriptCommentWhereUniqueInput>
+    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     update?: Enumerable<ManuscriptCommentUpdateWithWhereUniqueWithoutSnapshotInput>
     updateMany?: Enumerable<ManuscriptCommentUpdateManyWithWhereWithoutSnapshotInput>
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
@@ -4287,10 +4338,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutSnapshotInput>
     createMany?: ManuscriptCommentCreateManySnapshotInputEnvelope
-    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     set?: Enumerable<ManuscriptCommentWhereUniqueInput>
     disconnect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     delete?: Enumerable<ManuscriptCommentWhereUniqueInput>
+    connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
     update?: Enumerable<ManuscriptCommentUpdateWithWhereUniqueWithoutSnapshotInput>
     updateMany?: Enumerable<ManuscriptCommentUpdateManyWithWhereWithoutSnapshotInput>
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
@@ -4320,9 +4371,9 @@ export namespace Prisma {
     create?: XOR<ManuscriptSnapshotCreateWithoutCommentsInput, ManuscriptSnapshotUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: ManuscriptSnapshotCreateOrConnectWithoutCommentsInput
     upsert?: ManuscriptSnapshotUpsertWithoutCommentsInput
-    connect?: ManuscriptSnapshotWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: ManuscriptSnapshotWhereUniqueInput
     update?: XOR<ManuscriptSnapshotUpdateWithoutCommentsInput, ManuscriptSnapshotUncheckedUpdateWithoutCommentsInput>
   }
 

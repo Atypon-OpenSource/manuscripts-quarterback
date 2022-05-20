@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { TrackedAttrs } from '@manuscripts/track-changes-plugin'
-import { Schema } from 'prosemirror-model'
+import { Mark, Node as PMNode, Schema } from 'prosemirror-model'
 import { bulletList, listItem, orderedList } from 'prosemirror-schema-list'
 
 import { Marks, Nodes, QuarterBackSchema } from './types'
@@ -102,7 +102,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         { tag: 'h5', attrs: { level: 5 } },
         { tag: 'h6', attrs: { level: 6 } },
       ],
-      toDOM(node) {
+      toDOM(node: PMNode) {
         return ['h' + node.attrs.level, 0]
       },
     },
@@ -144,7 +144,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       parseDOM: [
         {
           tag: 'img[src]',
-          getAttrs(p) {
+          getAttrs(p: Node | string) {
             const dom = p as HTMLElement
             return {
               src: dom.getAttribute('src'),
@@ -154,7 +154,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
           },
         },
       ],
-      toDOM(node) {
+      toDOM(node: PMNode) {
         const { src, alt, title } = node.attrs
         return ['img', { src, alt, title }]
       },
@@ -261,7 +261,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         { tag: 'td', getAttrs: getCellAttrs },
         { tag: 'th', getAttrs: getCellAttrs },
       ],
-      toDOM: (node) => {
+      toDOM: (node: PMNode) => {
         const tableCellNode = node
         const attrs: { [attr: string]: string } = {}
         const tag = tableCellNode.attrs.celltype
@@ -285,7 +285,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       parseDOM: [
         {
           tag: 'col',
-          getAttrs: (p) => {
+          getAttrs: (p: Node | string) => {
             const dom = p as HTMLTableColElement
             return {
               width: dom.getAttribute('width'),
@@ -293,7 +293,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
           },
         },
       ],
-      toDOM: (node) => {
+      toDOM: (node: PMNode) => {
         const tableColNode = node
         const attrs: { [key: string]: string } = {}
         if (tableColNode.attrs.width) {
@@ -317,7 +317,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       parseDOM: [
         {
           tag: 'a[href]',
-          getAttrs(p) {
+          getAttrs(p: Node | string) {
             const dom = p as HTMLElement
             return {
               href: dom.getAttribute('href'),
@@ -326,7 +326,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
           },
         },
       ],
-      toDOM(node) {
+      toDOM(node: Mark) {
         const { href, title } = node.attrs
         return ['a', { href, title }, 0]
       },
@@ -353,14 +353,14 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         // tags with a font-weight normal.
         {
           tag: 'b',
-          getAttrs: (p) => {
+          getAttrs: (p: Node | string) => {
             const node = p as HTMLElement
             return node.style.fontWeight != 'normal' && null
           },
         },
         {
           style: 'font-weight',
-          getAttrs: (p) => {
+          getAttrs: (p: Node | string) => {
             const value = p as string
             return /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null
           },
@@ -397,7 +397,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         dataTracked: { default: null },
       },
       parseDOM: [{ tag: 'ins' }],
-      toDOM: (el) => {
+      toDOM: (el: Mark) => {
         const dataTracked: TrackedAttrs | undefined = el.attrs.dataTracked
         const { status = 'pending' } = dataTracked || {}
         const attrs = {
@@ -413,7 +413,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         dataTracked: { default: null },
       },
       parseDOM: [{ tag: 'del' }],
-      toDOM: (el) => {
+      toDOM: (el: Mark) => {
         const dataTracked: TrackedAttrs | undefined = el.attrs.dataTracked
         const { status = 'pending' } = dataTracked || {}
         const attrs = {
@@ -431,7 +431,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       },
       inclusive: false,
       parseDOM: [{ tag: 'ychange' }],
-      toDOM(node) {
+      toDOM(node: Mark) {
         return [
           'ychange',
           {

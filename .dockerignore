@@ -5,5 +5,4 @@ db/postgres
 **build
 **Dockerfile
 **.prisma
-**generated
 **.env
