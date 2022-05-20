@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "Creating .npmrc"
 cat << EOF >.npmrc
 registry=https://registry.npmjs.org/
 @manuscripts:registry=https://us-central1-npm.pkg.dev/atypon-artifact/npm-repo/
