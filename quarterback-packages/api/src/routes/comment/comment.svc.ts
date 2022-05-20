@@ -18,7 +18,7 @@ import {
   Event,
   ICreateCommentRequest,
   IUpdateCommentRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/quarterback-types'
 
 import { CustomError, log, prisma } from '$common'
 import { ManuscriptComment } from '@manuscripts/quarterback-db'

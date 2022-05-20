@@ -18,7 +18,7 @@ import {
   SnapshotLabel,
   ISaveSnapshotRequest,
   IUpdateSnapshotRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/quarterback-types'
 
 import { CustomError, log, prisma } from '$common'
 import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'

@@ -18,7 +18,7 @@ import {
   ManuscriptDoc,
   ICreateDocRequest,
   ManuscriptDocWithSnapshots,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/quarterback-types'
 
 import { CustomError, log, prisma } from '$common'
 

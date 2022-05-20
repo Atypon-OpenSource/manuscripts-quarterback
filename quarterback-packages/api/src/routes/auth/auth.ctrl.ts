@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IAuthenticateParams } from '@manuscripts/quarterback-shared'
+import { IAuthenticateParams } from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 

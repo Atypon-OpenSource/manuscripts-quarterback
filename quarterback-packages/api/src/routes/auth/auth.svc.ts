@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IAuthenticateParams, User } from '@manuscripts/quarterback-shared'
+import { IAuthenticateParams, User } from '@manuscripts/quarterback-types'
 
 import { CustomError, prisma } from '$common'
 

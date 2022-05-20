@@ -1044,7 +1044,7 @@ importers:
     specifiers:
       '@manuscripts/manuscripts-json-schema': ^1.49.12
       '@manuscripts/quarterback-db': workspace:*
-      '@manuscripts/quarterback-shared': workspace:*
+      '@manuscripts/quarterback-types': workspace:*
       '@rollup/plugin-alias': ^3.1.9
       '@rollup/plugin-commonjs': ^22.0.0
       '@types/bcrypt': ^5.0.0
@@ -1070,7 +1070,7 @@ importers:
     dependencies:
       '@manuscripts/manuscripts-json-schema': 1.49.12
       '@manuscripts/quarterback-db': link:../db
-      '@manuscripts/quarterback-shared': link:../shared
+      '@manuscripts/quarterback-types': link:../types
       bcrypt: 5.0.1
       cors: 2.8.5
       express: 4.18.1
@@ -1108,20 +1108,6 @@ importers:
       '@types/node': 17.0.35
       prisma: 3.14.0
       ts-node: 10.7.0_ihi2kx3po6rqbrzdqgpcfvwinm
-      typescript: 4.6.4
-
-  quarterback-packages/shared:
-    specifiers:
-      '@manuscripts/manuscripts-json-schema': ^1.49.12
-      rimraf: ^3.0.2
-      rollup: ^2.74.0
-      rollup-plugin-typescript2: ^0.31.2
-      typescript: ^4.6.4
-    devDependencies:
-      '@manuscripts/manuscripts-json-schema': 1.49.12
-      rimraf: 3.0.2
-      rollup: 2.74.0
-      rollup-plugin-typescript2: 0.31.2_dyu3set7imqii5ytavmnwecwpy
       typescript: 4.6.4
 
   quarterback-packages/track-changes-plugin:
@@ -1181,6 +1167,20 @@ importers:
       rollup-plugin-typescript2: 0.31.2_dyu3set7imqii5ytavmnwecwpy
       ts-jest: 28.0.2_qy5m32hwmbz5mebulkdtchzcz4
       tslib: 2.4.0
+      typescript: 4.6.4
+
+  quarterback-packages/types:
+    specifiers:
+      '@manuscripts/manuscripts-json-schema': ^1.49.12
+      rimraf: ^3.0.2
+      rollup: ^2.74.0
+      rollup-plugin-typescript2: ^0.31.2
+      typescript: ^4.6.4
+    devDependencies:
+      '@manuscripts/manuscripts-json-schema': 1.49.12
+      rimraf: 3.0.2
+      rollup: 2.74.0
+      rollup-plugin-typescript2: 0.31.2_dyu3set7imqii5ytavmnwecwpy
       typescript: 4.6.4
 
 packages:

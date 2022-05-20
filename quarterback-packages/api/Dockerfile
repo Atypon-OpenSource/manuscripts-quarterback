@@ -19,7 +19,7 @@ COPY quarterback-packages/shared/package.json ./quarterback-packages/shared/pack
 
 RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
   --filter @manuscripts/quarterback-db \
-  --filter @manuscripts/quarterback-shared
+  --filter @manuscripts/quarterback-types
 
 COPY quarterback-packages/db ./quarterback-packages/db
 RUN pnpm --filter @manuscripts/quarterback-db generate
@@ -27,7 +27,7 @@ COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
 COPY quarterback-packages/db/generated/index.d.ts ./quarterback-packages/shared/prisma/index.d.ts
 
 COPY quarterback-packages/shared ./quarterback-packages/shared
-RUN pnpm --filter @manuscripts/quarterback-shared build
+RUN pnpm --filter @manuscripts/quarterback-types build
 
 COPY quarterback-packages/api ./quarterback-packages/api
 # RUN pnpm test --filter @manuscripts/quarterback-api test

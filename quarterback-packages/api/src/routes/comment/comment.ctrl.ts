@@ -18,7 +18,7 @@ import {
   ICreateCommentRequest,
   ICreateCommentResponse,
   IUpdateCommentRequest,
-} from '@manuscripts/quarterback-shared'
+} from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 

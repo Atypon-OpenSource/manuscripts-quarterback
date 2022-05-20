@@ -43,7 +43,7 @@ jobs:
 
       - name: Build packages
         run: |
-          pnpm --filter @manuscripts/quarterback-shared \
+          pnpm --filter @manuscripts/quarterback-types \
             --filter @manuscripts/track-changes-plugin \
             build
 

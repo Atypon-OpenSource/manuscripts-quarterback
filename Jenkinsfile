@@ -18,7 +18,7 @@ node("cisc && !cisc03") {
     stage("Build & test") {
         nodejs(nodeJSInstallationName: 'node_16_14_2') {
             sh (script: "pnpm --filter @manuscripts/quarterback-db build")
-            sh (script: "pnpm --filter @manuscripts/quarterback-shared build")
+            sh (script: "pnpm --filter @manuscripts/quarterback-types build")
             sh (script: "pnpm --filter @manuscripts/quarterback-api build")
             sh (script: "pnpm --filter @manuscripts/track-changes-plugin build")
             sh (script: "pnpm --filter @manuscripts/quarterback-api test")
