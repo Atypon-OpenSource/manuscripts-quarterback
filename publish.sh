@@ -3,8 +3,10 @@ set -e;
 set -x;
 echo "Creating .npmrc"
 cat << EOF >.npmrc
-registry=https://registry.npmjs.org/
 @manuscripts:registry=https://us-central1-npm.pkg.dev/atypon-artifact/npm-repo/
+//us-central1-npm.pkg.dev/atypon-artifact/npm-repo/:_password=""
+//us-central1-npm.pkg.dev/atypon-artifact/npm-repo/:username=oauth2accesstoken
+//us-central1-npm.pkg.dev/atypon-artifact/npm-repo/:email=not.valid@email.com
 //us-central1-npm.pkg.dev/atypon-artifact/npm-repo/:always-auth=true
 EOF
 npx google-artifactregistry-auth
