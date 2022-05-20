@@ -32,27 +32,19 @@ node("cisc && !cisc03") {
         }
     }
 
-    if (VARS.GIT_BRANCH == "origin/main") {
-        stage("Build docker image") {
-            docker.withServer('unix:///var/run/docker-ci.sock') {
-                app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
-            }
-        }
-
-        stage("Push to registry") {
-            echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
-            docker.withRegistry("https://${REGISTRY}") {
-                app.push();
-                app.push('latest');
-            }
-        }
+    // if (VARS.GIT_BRANCH == "origin/main") {
+        // stage("Push Docker image to registry") {
+        //     echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
+        //     docker.withRegistry("https://${REGISTRY}") {
+        //         app.push();
+        //         app.push('latest');
+        //     }
+        // }
 
         stage("Publish") {
             nodejs(nodeJSInstallationName: 'node_16_14_2') {
-                withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
-                    sh ("pnpm ci:publish")
-                }
+                sh ("pnpm ci:publish")
             }
         }
-    }
+    // }
 }
