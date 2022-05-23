@@ -32,14 +32,14 @@ node("cisc && !cisc03") {
         }
     }
 
-    // if (VARS.GIT_BRANCH == "origin/main") {
-        // stage("Push Docker image to registry") {
-        //     echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
-        //     docker.withRegistry("https://${REGISTRY}") {
-        //         app.push();
-        //         app.push('latest');
-        //     }
-        // }
+    if (VARS.GIT_BRANCH == "origin/main") {
+        stage("Push Docker image to registry") {
+            echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
+            docker.withRegistry("https://${REGISTRY}") {
+                app.push();
+                app.push('latest');
+            }
+        }
 
         stage("Publish") {
             nodejs(nodeJSInstallationName: 'node_16_14_2') {
@@ -47,5 +47,5 @@ node("cisc && !cisc03") {
                 sh ("./publish.sh")
             }
         }
-    // }
+    }
 }
