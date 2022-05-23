@@ -45,7 +45,6 @@ node("cisc && !cisc03") {
             nodejs(nodeJSInstallationName: 'node_16_14_2') {
                 env.GOOGLE_APPLICATION_CREDENTIALS='/var/tmp/puppet-gcp-key.json'
                 sh ("./publish.sh")
-                sh ("rm .npmrc")
             }
         }
     // }
