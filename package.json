@@ -30,8 +30,7 @@
     "ex:e2e:open": "pnpm --filter @manuscripts/examples-track-e2e start",
     "cs": "changeset",
     "ci:version": "changeset version",
-    "ci:publish": "./publish.sh",
-    "artifactregistry-login": "npx google-artifactregistry-auth"
+    "ci:publish": "./publish.sh"
   },
   "engines": {
     "node": ">=16",
