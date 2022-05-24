@@ -5,7 +5,7 @@ node("cisc && !cisc03") {
     stage("Checkout") {
         VARS = checkout scm
         DOCKER_IMAGE="man/quarterback"
-        IMG_TAG=sh(script: " jq .version < package.json | tr -d '\"' ", returnStdout: true).trim()
+        IMG_TAG=sh(script: " jq .version < quarterback-packages/api/package.json | tr -d '\"' ", returnStdout: true).trim()
     }
 
     stage("Install dependencies") {
