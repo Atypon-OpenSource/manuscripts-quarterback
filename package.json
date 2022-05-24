@@ -30,7 +30,7 @@
     "ex:e2e:open": "pnpm --filter @manuscripts/examples-track-e2e start",
     "cs": "changeset",
     "ci:version": "changeset version",
-    "ci:publish": "./publish.sh"
+    "ci:publish": "pnpm --filter \"./quarterback-packages/**\" --no-git-checks publish"
   },
   "engines": {
     "node": ">=16",

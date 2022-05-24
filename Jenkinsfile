@@ -43,8 +43,9 @@ node("cisc && !cisc03") {
 
         stage("Publish") {
             nodejs(nodeJSInstallationName: 'node_16_14_2') {
-                env.GOOGLE_APPLICATION_CREDENTIALS='/var/tmp/puppet-gcp-key.json'
-                sh ("pnpm ci:publish")
+                withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
+                    sh ("pnpm ci:publish")
+                }
             }
         }
     }
