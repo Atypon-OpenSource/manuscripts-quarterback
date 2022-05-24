@@ -54,6 +54,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@manuscripts/manuscript-transform': resolve('../manuscript-transform'),
+      debug: resolve('node_modules/@manuscripts/track-changes-plugin/node_modules/debug'),
       lib0: resolve('node_modules/lib0'),
       'prosemirror-model': resolve(
         'node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-model'
