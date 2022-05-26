@@ -1,10 +1,10 @@
 node("cisanta && !cisc03") {
     def imageTagBadge = addEmbeddableBadgeConfiguration(id: "dockerImage", subject: "image")
     def versionIdBadge = addEmbeddableBadgeConfiguration(id: "versionId", subject: "version")
-    REGISTRY="docker-reg.atypon.com"
+    REGISTRY="us-central1-docker.pkg.dev/atypon-artifact/docker-registry-public"
     stage("Checkout") {
         VARS = checkout scm
-        DOCKER_IMAGE="man/quarterback"
+        DOCKER_IMAGE="leanworkflow/quarterback"
         IMG_TAG=sh(script: " jq .version < quarterback-packages/api/package.json | tr -d '\"' ", returnStdout: true).trim()
     }
 
@@ -27,18 +27,29 @@ node("cisanta && !cisc03") {
     }
 
     stage("Build quarterback-api docker image") {
-        docker.withServer('unix:///var/run/docker-ci.sock') {
-            app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
-        }
+        // build docker image with native docker 
+        sh("""
+        docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
+        """)
+
+        // docker.withServer('unix:///var/run/docker-ci.sock') {
+        //     app = docker.build("${DOCKER_IMAGE}:${IMG_TAG}", "-f quarterback-packages/api/Dockerfile .")
+        // }
     }
 
     if (VARS.GIT_BRANCH == "origin/main") {
         stage("Push Docker image to registry") {
             echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
-            docker.withRegistry("https://${REGISTRY}") {
-                app.push();
-                app.push('latest');
-            }
+
+            // push to registry
+            sh("""
+            docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} && \
+            docker push ${REGISTRY}/${DOCKER_IMAGE}
+            """)
+            // docker.withRegistry("https://${REGISTRY}") {
+            //     app.push();
+            //     app.push('latest');
+            // }
         }
 
         stage("Publish") {
