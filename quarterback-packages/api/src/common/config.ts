@@ -29,22 +29,12 @@ function parseNodeEnv(NODE_ENV?: string): 'production' | 'dev' {
 // TODO use default import
 export const config = {
   ENV: parseNodeEnv(process.env.NODE_ENV),
-  PORT: parseInt(process.env.PORT || '') || 5070,
+  PORT: parseInt(process.env.PORT || '') || 5500,
   CORS_SAME_ORIGIN: process.env.CORS_SAME_ORIGIN || true,
   LOG: {
     LEVEL: process.env.LOG_LEVEL || 'info',
   },
   JWT: {
     SECRET: process.env.JWT_SECRET || 'verylongrandomstring',
-  },
-  POSTGRES: {
-    USER: process.env.POSTGRES_USER || 'pg-user',
-    PASSWORD: process.env.POSTGRES_PASSWORD || 'my-pg-password',
-    HOST: process.env.POSTGRES_HOST || 'localhost',
-    PORT: parseInt(process.env.POSTGRES_PORT || '') || 5432,
-    DB: process.env.POSTGRES_DB || 'my_postgres_db',
-  },
-  REDIS: {
-    URL: process.env.REDIS_URL || '',
   },
 }

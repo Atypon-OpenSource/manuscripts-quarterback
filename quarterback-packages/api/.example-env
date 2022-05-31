@@ -1,4 +1,5 @@
 NODE_ENV=local
 PORT=5500
 LOG_LEVEL=debug
+JWT_SECRET=verysecret
 DATABASE_URL=postgresql://pg-user:pg-password@localhost:5402/local_quarterback_db?schema=public
