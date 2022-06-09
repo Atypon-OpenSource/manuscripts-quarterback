@@ -1,5 +1,14 @@
 # @manuscripts/quarterback-api
 
+## 0.1.1
+
+### Patch Changes
+
+- a1bf083: Rename Event to Maybe to make it less ambiguous
+- 1607120: API: fix user.\_id to .id
+- Updated dependencies [a1bf083]
+  - @manuscripts/quarterback-types@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

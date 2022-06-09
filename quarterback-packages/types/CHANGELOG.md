@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-types
 
+## 0.2.0
+
+### Minor Changes
+
+- a1bf083: Rename Event to Maybe to make it less ambiguous
+
 ## 0.1.0
 
 ### Minor Changes
