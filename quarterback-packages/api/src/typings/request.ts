@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { UserProfile } from '@manuscripts/manuscripts-json-schema'
+import type { User } from '@manuscripts/quarterback-types'
 import type { Request, Response } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 
@@ -23,7 +23,7 @@ export type IRequest<
 > = Request<P, Record<string, never>, B, Record<string, never>>
 
 type AuthLocals = {
-  user: UserProfile
+  user: User
 }
 
 export type AuthRequest<

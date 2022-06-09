@@ -36,7 +36,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   if (!decrypted.ok) {
     next(new CustomError(decrypted.error, decrypted.status))
   } else {
-    // const mutatedReq = req as IAuthRequest
     res.locals.user = decrypted.data.user
     next()
   }
