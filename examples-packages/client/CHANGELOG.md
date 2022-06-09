@@ -1,5 +1,11 @@
 # @manuscripts/examples-track-client
 
+## 0.0.3
+
+### Patch Changes
+
+- 81c018f: feat: save current doc as well to Quarterback
+
 ## 0.0.2
 
 ### Patch Changes
