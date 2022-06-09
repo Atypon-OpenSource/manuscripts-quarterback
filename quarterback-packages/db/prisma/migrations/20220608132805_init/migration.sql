@@ -1,13 +1,13 @@
 -- CreateTable
 CREATE TABLE "manuscript_doc" (
-    "id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
     "manuscript_model_id" TEXT NOT NULL,
     "user_model_id" TEXT NOT NULL,
     "project_model_id" TEXT NOT NULL,
+    "doc" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "manuscript_doc_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "manuscript_doc_pkey" PRIMARY KEY ("manuscript_model_id")
 );
 
 -- CreateTable
@@ -35,10 +35,10 @@ CREATE TABLE "manuscript_comment" (
 );
 
 -- AddForeignKey
-ALTER TABLE "manuscript_doc_snapshot" ADD CONSTRAINT "manuscript_doc_snapshot_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "manuscript_doc_snapshot" ADD CONSTRAINT "manuscript_doc_snapshot_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("manuscript_model_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "manuscript_comment" ADD CONSTRAINT "manuscript_comment_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "manuscript_comment" ADD CONSTRAINT "manuscript_comment_doc_id_fkey" FOREIGN KEY ("doc_id") REFERENCES "manuscript_doc"("manuscript_model_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "manuscript_comment" ADD CONSTRAINT "manuscript_comment_snapshot_id_fkey" FOREIGN KEY ("snapshot_id") REFERENCES "manuscript_doc_snapshot"("id") ON DELETE CASCADE ON UPDATE CASCADE;

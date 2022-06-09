@@ -29,5 +29,11 @@ export type IGetDocumentResponse = ManuscriptDocWithSnapshots
 export interface ICreateDocRequest {
   manuscript_model_id: string
   project_model_id: string
+  doc: Record<string, any>
 }
 export type ICreateDocResponse = ManuscriptDocWithSnapshots
+
+// PUT /doc/:documentId
+export type IUpdateDocumentRequest = {
+  doc: Record<string, any>
+}

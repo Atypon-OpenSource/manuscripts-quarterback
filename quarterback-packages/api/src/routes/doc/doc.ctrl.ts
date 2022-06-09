@@ -17,6 +17,7 @@ import {
   IGetDocumentResponse,
   ICreateDocRequest,
   ICreateDocResponse,
+  IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -57,6 +58,24 @@ export const createDocument = async (
     const result = await docService.createDocument(req.body, userId)
     if (result.ok) {
       res.json(result.data)
+    } else {
+      next(new CustomError(result.error, result.status))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const updateDocument = async (
+  req: AuthRequest<IUpdateDocumentRequest, { documentId: string }>,
+  res: AuthResponse,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const result = await docService.updateDocument(documentId, req.body)
+    if (result.ok) {
+      res.sendStatus(200)
     } else {
       next(new CustomError(result.error, result.status))
     }

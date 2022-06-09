@@ -17,12 +17,12 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
  * 
  */
 export type ManuscriptDoc = {
-  id: string
-  createdAt: Date
-  updatedAt: Date
   manuscript_model_id: string
   user_model_id: string
   project_model_id: string
+  doc: Prisma.JsonValue
+  createdAt: Date
+  updatedAt: Date
 }
 
 /**
@@ -911,59 +911,55 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocMinAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
     manuscript_model_id: string | null
     user_model_id: string | null
     project_model_id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ManuscriptDocMaxAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
     manuscript_model_id: string | null
     user_model_id: string | null
     project_model_id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ManuscriptDocCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    updatedAt: number
     manuscript_model_id: number
     user_model_id: number
     project_model_id: number
+    doc: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type ManuscriptDocMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ManuscriptDocMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ManuscriptDocCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    doc?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1046,12 +1042,12 @@ export namespace Prisma {
 
 
   export type ManuscriptDocGroupByOutputType = {
-    id: string
-    createdAt: Date
-    updatedAt: Date
     manuscript_model_id: string
     user_model_id: string
     project_model_id: string
+    doc: JsonValue
+    createdAt: Date
+    updatedAt: Date
     _count: ManuscriptDocCountAggregateOutputType | null
     _min: ManuscriptDocMinAggregateOutputType | null
     _max: ManuscriptDocMaxAggregateOutputType | null
@@ -1072,12 +1068,12 @@ export namespace Prisma {
 
 
   export type ManuscriptDocSelect = {
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
     manuscript_model_id?: boolean
     user_model_id?: boolean
     project_model_id?: boolean
+    doc?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     snapshots?: boolean | ManuscriptSnapshotFindManyArgs
     comments?: boolean | ManuscriptCommentFindManyArgs
     _count?: boolean | ManuscriptDocCountOutputTypeArgs
@@ -1166,8 +1162,8 @@ export namespace Prisma {
      * // Get first 10 ManuscriptDocs
      * const manuscriptDocs = await prisma.manuscriptDoc.findMany({ take: 10 })
      * 
-     * // Only select the `id`
-     * const manuscriptDocWithIdOnly = await prisma.manuscriptDoc.findMany({ select: { id: true } })
+     * // Only select the `manuscript_model_id`
+     * const manuscriptDocWithManuscript_model_idOnly = await prisma.manuscriptDoc.findMany({ select: { manuscript_model_id: true } })
      * 
     **/
     findMany<T extends ManuscriptDocFindManyArgs>(
@@ -3545,12 +3541,12 @@ export namespace Prisma {
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
   export const ManuscriptDocScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
     manuscript_model_id: 'manuscript_model_id',
     user_model_id: 'user_model_id',
-    project_model_id: 'project_model_id'
+    project_model_id: 'project_model_id',
+    doc: 'doc',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ManuscriptDocScalarFieldEnum = (typeof ManuscriptDocScalarFieldEnum)[keyof typeof ManuscriptDocScalarFieldEnum]
@@ -3621,38 +3617,38 @@ export namespace Prisma {
     AND?: Enumerable<ManuscriptDocWhereInput>
     OR?: Enumerable<ManuscriptDocWhereInput>
     NOT?: Enumerable<ManuscriptDocWhereInput>
-    id?: StringFilter | string
-    createdAt?: DateTimeFilter | Date | string
-    updatedAt?: DateTimeFilter | Date | string
     manuscript_model_id?: StringFilter | string
     user_model_id?: StringFilter | string
     project_model_id?: StringFilter | string
+    doc?: JsonFilter
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
     snapshots?: ManuscriptSnapshotListRelationFilter
     comments?: ManuscriptCommentListRelationFilter
   }
 
   export type ManuscriptDocOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    doc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     snapshots?: ManuscriptSnapshotOrderByRelationAggregateInput
     comments?: ManuscriptCommentOrderByRelationAggregateInput
   }
 
   export type ManuscriptDocWhereUniqueInput = {
-    id?: string
+    manuscript_model_id?: string
   }
 
   export type ManuscriptDocOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    doc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ManuscriptDocCountOrderByAggregateInput
     _max?: ManuscriptDocMaxOrderByAggregateInput
     _min?: ManuscriptDocMinOrderByAggregateInput
@@ -3662,12 +3658,12 @@ export namespace Prisma {
     AND?: Enumerable<ManuscriptDocScalarWhereWithAggregatesInput>
     OR?: Enumerable<ManuscriptDocScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ManuscriptDocScalarWhereWithAggregatesInput>
-    id?: StringWithAggregatesFilter | string
-    createdAt?: DateTimeWithAggregatesFilter | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter | Date | string
     manuscript_model_id?: StringWithAggregatesFilter | string
     user_model_id?: StringWithAggregatesFilter | string
     project_model_id?: StringWithAggregatesFilter | string
+    doc?: JsonWithAggregatesFilter
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type ManuscriptSnapshotWhereInput = {
@@ -3777,74 +3773,74 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     snapshots?: ManuscriptSnapshotCreateNestedManyWithoutDocInput
     comments?: ManuscriptCommentCreateNestedManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     snapshots?: ManuscriptSnapshotUncheckedCreateNestedManyWithoutDocInput
     comments?: ManuscriptCommentUncheckedCreateNestedManyWithoutDocInput
   }
 
   export type ManuscriptDocUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     snapshots?: ManuscriptSnapshotUpdateManyWithoutDocInput
     comments?: ManuscriptCommentUpdateManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocInput
     comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocInput
   }
 
   export type ManuscriptDocCreateManyInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ManuscriptDocUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ManuscriptDocUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ManuscriptSnapshotCreateInput = {
@@ -3988,6 +3984,17 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedStringFilter | string
   }
+  export type JsonFilter = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase>, Exclude<keyof Required<JsonFilterBase>, 'path'>>,
+        Required<JsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
+
+  export type JsonFilterBase = {
+    equals?: JsonNullValueFilter | InputJsonValue
+    not?: JsonNullValueFilter | InputJsonValue
+  }
 
   export type DateTimeFilter = {
     equals?: Date | string
@@ -4021,30 +4028,28 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    doc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ManuscriptDocMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ManuscriptDocMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter = {
@@ -4064,6 +4069,20 @@ export namespace Prisma {
     _min?: NestedStringFilter
     _max?: NestedStringFilter
   }
+  export type JsonWithAggregatesFilter = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase>, Exclude<keyof Required<JsonWithAggregatesFilterBase>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase = {
+    equals?: JsonNullValueFilter | InputJsonValue
+    not?: JsonNullValueFilter | InputJsonValue
+    _count?: NestedIntFilter
+    _min?: NestedJsonFilter
+    _max?: NestedJsonFilter
+  }
 
   export type DateTimeWithAggregatesFilter = {
     equals?: Date | string
@@ -4077,17 +4096,6 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
-  }
-  export type JsonFilter = 
-    | PatchUndefined<
-        Either<Required<JsonFilterBase>, Exclude<keyof Required<JsonFilterBase>, 'path'>>,
-        Required<JsonFilterBase>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
-
-  export type JsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
   }
 
   export type ManuscriptDocRelationFilter = {
@@ -4115,20 +4123,6 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     doc_id?: SortOrder
-  }
-  export type JsonWithAggregatesFilter = 
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase>, Exclude<keyof Required<JsonWithAggregatesFilterBase>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
-    _count?: NestedIntFilter
-    _min?: NestedJsonFilter
-    _max?: NestedJsonFilter
   }
 
   export type ManuscriptSnapshotRelationFilter = {
@@ -4433,6 +4427,17 @@ export namespace Prisma {
     gte?: number
     not?: NestedIntFilter | number
   }
+  export type NestedJsonFilter = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase>, Exclude<keyof Required<NestedJsonFilterBase>, 'path'>>,
+        Required<NestedJsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
+
+  export type NestedJsonFilterBase = {
+    equals?: JsonNullValueFilter | InputJsonValue
+    not?: JsonNullValueFilter | InputJsonValue
+  }
 
   export type NestedDateTimeWithAggregatesFilter = {
     equals?: Date | string
@@ -4446,17 +4451,6 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
-  }
-  export type NestedJsonFilter = 
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase>, Exclude<keyof Required<NestedJsonFilterBase>, 'path'>>,
-        Required<NestedJsonFilterBase>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
-
-  export type NestedJsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
   }
 
   export type NestedStringNullableFilter = {
@@ -4612,22 +4606,22 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocCreateWithoutSnapshotsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     comments?: ManuscriptCommentCreateNestedManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedCreateWithoutSnapshotsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     comments?: ManuscriptCommentUncheckedCreateNestedManyWithoutDocInput
   }
 
@@ -4670,22 +4664,22 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocUpdateWithoutSnapshotsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: ManuscriptCommentUpdateManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedUpdateWithoutSnapshotsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocInput
   }
 
@@ -4706,22 +4700,22 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocCreateWithoutCommentsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     snapshots?: ManuscriptSnapshotCreateNestedManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedCreateWithoutCommentsInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    manuscript_model_id: string
+    manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    doc: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     snapshots?: ManuscriptSnapshotUncheckedCreateNestedManyWithoutDocInput
   }
 
@@ -4757,22 +4751,22 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     snapshots?: ManuscriptSnapshotUpdateManyWithoutDocInput
   }
 
   export type ManuscriptDocUncheckedUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    doc?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocInput
   }
 

@@ -16,8 +16,9 @@
 import {
   Event,
   ManuscriptDoc,
-  ICreateDocRequest,
   ManuscriptDocWithSnapshots,
+  ICreateDocRequest,
+  IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
 
 import { CustomError, log, prisma } from '$common'
@@ -26,7 +27,7 @@ export const docService = {
   async findDocument(id: string): Promise<Event<ManuscriptDocWithSnapshots>> {
     const found = await prisma.manuscriptDoc.findUnique({
       where: {
-        id,
+        manuscript_model_id: id,
       },
       include: {
         snapshots: {
@@ -49,18 +50,30 @@ export const docService = {
   ): Promise<Event<ManuscriptDocWithSnapshots>> {
     const saved = await prisma.manuscriptDoc.create({
       data: {
-        id: payload.manuscript_model_id,
         manuscript_model_id: payload.manuscript_model_id,
         user_model_id: userId,
         project_model_id: payload.project_model_id,
+        doc: payload.doc,
       },
     })
     return { ok: true, data: { ...saved, snapshots: [] } }
   },
+  async updateDocument(
+    docId: string,
+    payload: IUpdateDocumentRequest
+  ): Promise<Event<ManuscriptDoc>> {
+    const saved = await prisma.manuscriptDoc.update({
+      data: payload,
+      where: {
+        manuscript_model_id: docId,
+      },
+    })
+    return { ok: true, data: saved }
+  },
   async deleteDocument(docId: string): Promise<Event<ManuscriptDoc>> {
     const deleted = await prisma.manuscriptDoc.delete({
       where: {
-        id: docId,
+        manuscript_model_id: docId,
       },
     })
     return { ok: true, data: deleted }
