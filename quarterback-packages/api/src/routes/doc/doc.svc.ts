@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {
-  Event,
+  Maybe,
   ManuscriptDoc,
   ManuscriptDocWithSnapshots,
   ICreateDocRequest,
@@ -24,7 +24,7 @@ import {
 import { CustomError, log, prisma } from '$common'
 
 export const docService = {
-  async findDocument(id: string): Promise<Event<ManuscriptDocWithSnapshots>> {
+  async findDocument(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const found = await prisma.manuscriptDoc.findUnique({
       where: {
         manuscript_model_id: id,
@@ -40,14 +40,14 @@ export const docService = {
       },
     })
     if (!found) {
-      return { ok: false, error: 'Document not found', status: 404 }
+      return { ok: false, err: 'Document not found', code: 404 }
     }
     return { ok: true, data: found }
   },
   async createDocument(
     payload: ICreateDocRequest,
     userId: string
-  ): Promise<Event<ManuscriptDocWithSnapshots>> {
+  ): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const saved = await prisma.manuscriptDoc.create({
       data: {
         manuscript_model_id: payload.manuscript_model_id,
@@ -61,7 +61,7 @@ export const docService = {
   async updateDocument(
     docId: string,
     payload: IUpdateDocumentRequest
-  ): Promise<Event<ManuscriptDoc>> {
+  ): Promise<Maybe<ManuscriptDoc>> {
     const saved = await prisma.manuscriptDoc.update({
       data: payload,
       where: {
@@ -70,7 +70,7 @@ export const docService = {
     })
     return { ok: true, data: saved }
   },
-  async deleteDocument(docId: string): Promise<Event<ManuscriptDoc>> {
+  async deleteDocument(docId: string): Promise<Maybe<ManuscriptDoc>> {
     const deleted = await prisma.manuscriptDoc.delete({
       where: {
         manuscript_model_id: docId,

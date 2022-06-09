@@ -40,7 +40,7 @@ export const listComments = async (
         comments: result.data,
       })
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -61,7 +61,7 @@ export const createComment = async (
     if (result.ok) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -79,7 +79,7 @@ export const updateComment = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -97,7 +97,7 @@ export const deleteComment = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)

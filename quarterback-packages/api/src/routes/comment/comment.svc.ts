@@ -15,7 +15,7 @@
  */
 import {
   ListedComment,
-  Event,
+  Maybe,
   ICreateCommentRequest,
   IUpdateCommentRequest,
 } from '@manuscripts/quarterback-types'
@@ -24,7 +24,7 @@ import { CustomError, log, prisma } from '$common'
 import { ManuscriptComment } from '@manuscripts/quarterback-db'
 
 export const commentService = {
-  async listComments(docId: string): Promise<Event<ListedComment[]>> {
+  async listComments(docId: string): Promise<Maybe<ListedComment[]>> {
     const found = await prisma.manuscriptComment.findMany({
       where: {
         doc_id: docId,
@@ -44,7 +44,7 @@ export const commentService = {
   async createComment(
     payload: ICreateCommentRequest,
     userId: string
-  ): Promise<Event<ManuscriptComment>> {
+  ): Promise<Maybe<ManuscriptComment>> {
     const saved = await prisma.manuscriptComment.create({
       data: {
         ...payload,
@@ -57,7 +57,7 @@ export const commentService = {
   async updateComment(
     commentId: string,
     payload: IUpdateCommentRequest
-  ): Promise<Event<ManuscriptComment>> {
+  ): Promise<Maybe<ManuscriptComment>> {
     const saved = await prisma.manuscriptComment.update({
       data: payload,
       where: {
@@ -67,7 +67,7 @@ export const commentService = {
     return { ok: true, data: saved }
   },
   // TODO check permissions
-  async deleteComment(commentId: string): Promise<Event<ManuscriptComment>> {
+  async deleteComment(commentId: string): Promise<Maybe<ManuscriptComment>> {
     const saved = await prisma.manuscriptComment.delete({
       where: {
         id: commentId,

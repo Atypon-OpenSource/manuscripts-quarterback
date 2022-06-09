@@ -34,7 +34,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   }
   const decrypted = jwtService.decryptSessionToken(jwtToken)
   if (!decrypted.ok) {
-    next(new CustomError(decrypted.error, decrypted.status))
+    next(new CustomError(decrypted.err, decrypted.code))
   } else {
     res.locals.user = decrypted.data.user
     next()

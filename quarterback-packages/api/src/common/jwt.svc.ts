@@ -16,7 +16,7 @@
 import pkg from 'jsonwebtoken'
 const { sign, verify } = pkg
 
-import { Event, User } from '@manuscripts/quarterback-types'
+import { Maybe, User } from '@manuscripts/quarterback-types'
 
 import { IJwtPayload } from '$typings/auth'
 
@@ -36,18 +36,18 @@ export const jwtService = {
     }
     return sign(payload, SECRET, { algorithm: ALGORITHM, expiresIn: expires })
   },
-  decryptSessionToken(jwtToken: string): Event<IJwtPayload> {
+  decryptSessionToken(jwtToken: string): Maybe<IJwtPayload> {
     try {
       const decrypted = verify(jwtToken, SECRET) as IJwtPayload
       if (decrypted && decrypted.expires > Date.now()) {
         return { ok: true, data: decrypted }
       }
-      return { ok: false, error: 'Jwt token has expired', status: 401 }
+      return { ok: false, err: 'Jwt token has expired', code: 401 }
     } catch (err: any) {
       if (err && err.name === 'TokenExpiredError') {
-        return { ok: false, error: 'Jwt token has expired', status: 401 }
+        return { ok: false, err: 'Jwt token has expired', code: 401 }
       } else {
-        return { ok: false, error: 'Jwt token is invalid', status: 401 }
+        return { ok: false, err: 'Jwt token is invalid', code: 401 }
       }
     }
   },

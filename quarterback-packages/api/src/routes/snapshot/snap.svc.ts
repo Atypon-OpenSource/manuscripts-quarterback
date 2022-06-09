@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {
-  Event,
+  Maybe,
   SnapshotLabel,
   ISaveSnapshotRequest,
   IUpdateSnapshotRequest,
@@ -24,7 +24,7 @@ import { CustomError, log, prisma } from '$common'
 import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
 export const snapService = {
-  async listSnapshotLabels(docId: string): Promise<Event<SnapshotLabel[]>> {
+  async listSnapshotLabels(docId: string): Promise<Maybe<SnapshotLabel[]>> {
     const found = await prisma.manuscriptSnapshot.findMany({
       where: {
         doc_id: docId,
@@ -37,18 +37,18 @@ export const snapService = {
     })
     return { ok: true, data: found }
   },
-  async getSnapshot(snapId: string): Promise<Event<ManuscriptSnapshot>> {
+  async getSnapshot(snapId: string): Promise<Maybe<ManuscriptSnapshot>> {
     const found = await prisma.manuscriptSnapshot.findUnique({
       where: {
         id: snapId,
       },
     })
     if (!found) {
-      return { ok: false, error: 'Snapshot not found', status: 404 }
+      return { ok: false, err: 'Snapshot not found', code: 404 }
     }
     return { ok: true, data: found }
   },
-  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Event<ManuscriptSnapshot>> {
+  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Maybe<ManuscriptSnapshot>> {
     const { docId, snapshot, name } = payload
     const saved = await prisma.manuscriptSnapshot.create({
       data: {
@@ -62,7 +62,7 @@ export const snapService = {
   async updateSnapshot(
     snapId: string,
     payload: IUpdateSnapshotRequest
-  ): Promise<Event<ManuscriptSnapshot>> {
+  ): Promise<Maybe<ManuscriptSnapshot>> {
     const saved = await prisma.manuscriptSnapshot.update({
       data: payload,
       where: {
@@ -71,7 +71,7 @@ export const snapService = {
     })
     return { ok: true, data: saved }
   },
-  async deleteSnapshot(snapshotId: string): Promise<Event<ManuscriptSnapshot>> {
+  async deleteSnapshot(snapshotId: string): Promise<Maybe<ManuscriptSnapshot>> {
     const saved = await prisma.manuscriptSnapshot.delete({
       where: {
         id: snapshotId,

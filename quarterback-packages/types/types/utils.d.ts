@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type Event<T> = SuccessEvent<T> | ErrorEvent
-export interface SuccessEvent<T> {
+export type Ok<T> = {
   ok: true
   data: T
+  err?: undefined
+  code?: undefined
 }
-export interface ErrorEvent {
+export type Error = {
   ok: false
-  error: string
-  status: number
+  err: string
+  code: number
+  data?: undefined
 }
+export type Maybe<T> = Ok<T> | Error
 export type OkEvt<T> = {
   e: 'ok'
   data: T
 }
 export type ErrorEvt = {
   e: 'error'
-  error: string
-  code?: number
+  err: string
+  code: number
 }
 export type FinallyEvt = {
   e: 'finally'

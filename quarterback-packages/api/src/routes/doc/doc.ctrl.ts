@@ -38,7 +38,7 @@ export const findDocument = async (
     if (result.ok) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -59,7 +59,7 @@ export const createDocument = async (
     if (result.ok) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -77,7 +77,7 @@ export const updateDocument = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -95,7 +95,7 @@ export const deleteDocument = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)

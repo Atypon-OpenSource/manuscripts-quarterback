@@ -39,7 +39,7 @@ export const listSnapshotLabels = async (
     if (result.ok) {
       res.json({ labels: result.data })
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -57,7 +57,7 @@ export const getSnapshot = async (
     if (result.ok) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -74,7 +74,7 @@ export const saveSnapshot = async (
     if (result.ok) {
       res.json({ snapshot: result.data })
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -92,7 +92,7 @@ export const updateSnapshot = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -110,7 +110,7 @@ export const deleteSnapshot = async (
     if (result.ok) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
