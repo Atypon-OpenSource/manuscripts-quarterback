@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.3
+
+### Patch Changes
+
+- b0974f0: feat(api): add /stats route to show version & uptime
+
 ## 0.1.2
 
 ### Patch Changes
