@@ -40,14 +40,14 @@ export const jwtService = {
     try {
       const decrypted = verify(jwtToken, SECRET) as IJwtPayload
       if (decrypted && decrypted.expires > Date.now()) {
-        return { ok: true, data: decrypted }
+        return { data: decrypted }
       }
-      return { ok: false, err: 'Jwt token has expired', code: 401 }
+      return { err: 'Jwt token has expired', code: 401 }
     } catch (err: any) {
       if (err && err.name === 'TokenExpiredError') {
-        return { ok: false, err: 'Jwt token has expired', code: 401 }
+        return { err: 'Jwt token has expired', code: 401 }
       } else {
-        return { ok: false, err: 'Jwt token is invalid', code: 401 }
+        return { err: 'Jwt token is invalid', code: 401 }
       }
     }
   },

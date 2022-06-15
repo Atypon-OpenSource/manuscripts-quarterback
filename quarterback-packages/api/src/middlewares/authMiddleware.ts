@@ -33,7 +33,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     return next(new CustomError('Missing authorization header with Bearer token', 401))
   }
   const decrypted = jwtService.decryptSessionToken(jwtToken)
-  if (!decrypted.ok) {
+  if ('err' in decrypted) {
     next(new CustomError(decrypted.err, decrypted.code))
   } else {
     res.locals.user = decrypted.data.user

@@ -35,7 +35,7 @@ export const snapService = {
         createdAt: true,
       },
     })
-    return { ok: true, data: found }
+    return { data: found }
   },
   async getSnapshot(snapId: string): Promise<Maybe<ManuscriptSnapshot>> {
     const found = await prisma.manuscriptSnapshot.findUnique({
@@ -44,9 +44,9 @@ export const snapService = {
       },
     })
     if (!found) {
-      return { ok: false, err: 'Snapshot not found', code: 404 }
+      return { err: 'Snapshot not found', code: 404 }
     }
-    return { ok: true, data: found }
+    return { data: found }
   },
   async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Maybe<ManuscriptSnapshot>> {
     const { docId, snapshot, name } = payload
@@ -57,7 +57,7 @@ export const snapService = {
         name,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
   async updateSnapshot(
     snapId: string,
@@ -69,7 +69,7 @@ export const snapService = {
         id: snapId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
   async deleteSnapshot(snapshotId: string): Promise<Maybe<ManuscriptSnapshot>> {
     const saved = await prisma.manuscriptSnapshot.delete({
@@ -77,6 +77,6 @@ export const snapService = {
         id: snapshotId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
 }

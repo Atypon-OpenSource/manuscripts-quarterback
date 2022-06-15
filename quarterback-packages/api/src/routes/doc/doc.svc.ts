@@ -40,9 +40,9 @@ export const docService = {
       },
     })
     if (!found) {
-      return { ok: false, err: 'Document not found', code: 404 }
+      return { err: 'Document not found', code: 404 }
     }
-    return { ok: true, data: found }
+    return { data: found }
   },
   async createDocument(
     payload: ICreateDocRequest,
@@ -56,7 +56,7 @@ export const docService = {
         doc: payload.doc,
       },
     })
-    return { ok: true, data: { ...saved, snapshots: [] } }
+    return { data: { ...saved, snapshots: [] } }
   },
   async updateDocument(
     docId: string,
@@ -68,7 +68,7 @@ export const docService = {
         manuscript_model_id: docId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
   async deleteDocument(docId: string): Promise<Maybe<ManuscriptDoc>> {
     const deleted = await prisma.manuscriptDoc.delete({
@@ -76,6 +76,6 @@ export const docService = {
         manuscript_model_id: docId,
       },
     })
-    return { ok: true, data: deleted }
+    return { data: deleted }
   },
 }

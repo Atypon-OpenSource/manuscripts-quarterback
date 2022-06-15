@@ -35,7 +35,7 @@ export const listComments = async (
   try {
     const { documentId } = req.params
     const result = await commentService.listComments(documentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json({
         comments: result.data,
       })
@@ -58,7 +58,7 @@ export const createComment = async (
       return next(new CustomError('Missing user.id from res.locals', 401))
     }
     const result = await commentService.createComment(req.body, userId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json(result.data)
     } else {
       next(new CustomError(result.err, result.code))
@@ -76,7 +76,7 @@ export const updateComment = async (
   try {
     const { commentId } = req.params
     const result = await commentService.updateComment(commentId, req.body)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))
@@ -94,7 +94,7 @@ export const deleteComment = async (
   try {
     const { commentId } = req.params
     const result = await commentService.deleteComment(commentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))

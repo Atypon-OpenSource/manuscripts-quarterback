@@ -35,7 +35,7 @@ export const findDocument = async (
   try {
     const { documentId } = req.params
     const result = await docService.findDocument(documentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json(result.data)
     } else {
       next(new CustomError(result.err, result.code))
@@ -56,7 +56,7 @@ export const createDocument = async (
       return next(new CustomError('Missing user.id from res.locals', 401))
     }
     const result = await docService.createDocument(req.body, userId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json(result.data)
     } else {
       next(new CustomError(result.err, result.code))
@@ -74,7 +74,7 @@ export const updateDocument = async (
   try {
     const { documentId } = req.params
     const result = await docService.updateDocument(documentId, req.body)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))
@@ -92,7 +92,7 @@ export const deleteDocument = async (
   try {
     const { documentId } = req.params
     const result = await docService.deleteDocument(documentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))

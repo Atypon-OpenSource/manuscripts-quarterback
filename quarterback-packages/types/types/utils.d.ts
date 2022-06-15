@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 export type Ok<T> = {
-  ok: true
   data: T
-  err?: undefined
-  code?: undefined
 }
 export type Error = {
-  ok: false
   err: string
   code: number
-  data?: undefined
 }
 export type Maybe<T> = Ok<T> | Error
 export type OkEvt<T> = {

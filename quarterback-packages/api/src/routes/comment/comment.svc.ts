@@ -39,7 +39,7 @@ export const commentService = {
         snapshot_id: true,
       },
     })
-    return { ok: true, data: found }
+    return { data: found }
   },
   async createComment(
     payload: ICreateCommentRequest,
@@ -51,7 +51,7 @@ export const commentService = {
         user_model_id: userId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
   // TODO check permissions
   async updateComment(
@@ -64,7 +64,7 @@ export const commentService = {
         id: commentId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
   // TODO check permissions
   async deleteComment(commentId: string): Promise<Maybe<ManuscriptComment>> {
@@ -73,6 +73,6 @@ export const commentService = {
         id: commentId,
       },
     })
-    return { ok: true, data: saved }
+    return { data: saved }
   },
 }

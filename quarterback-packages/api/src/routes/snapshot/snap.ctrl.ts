@@ -36,7 +36,7 @@ export const listSnapshotLabels = async (
   try {
     const { documentId } = req.params
     const result = await snapService.listSnapshotLabels(documentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json({ labels: result.data })
     } else {
       next(new CustomError(result.err, result.code))
@@ -54,7 +54,7 @@ export const getSnapshot = async (
   try {
     const { snapshotId } = req.params
     const result = await snapService.getSnapshot(snapshotId)
-    if (result.ok) {
+    if ('data' in result) {
       res.json(result.data)
     } else {
       next(new CustomError(result.err, result.code))
@@ -71,7 +71,7 @@ export const saveSnapshot = async (
 ) => {
   try {
     const result = await snapService.saveSnapshot(req.body)
-    if (result.ok) {
+    if ('data' in result) {
       res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.err, result.code))
@@ -89,7 +89,7 @@ export const updateSnapshot = async (
   try {
     const { snapshotId } = req.params
     const result = await snapService.updateSnapshot(snapshotId, req.body)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))
@@ -107,7 +107,7 @@ export const deleteSnapshot = async (
   try {
     const { snapshotId } = req.params
     const result = await snapService.deleteSnapshot(snapshotId)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))
