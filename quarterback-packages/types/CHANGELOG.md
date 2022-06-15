@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-types
 
+## 0.2.1
+
+### Patch Changes
+
+- f625736: remove ok from Maybe type
+
 ## 0.2.0
 
 ### Minor Changes

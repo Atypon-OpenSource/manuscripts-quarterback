@@ -1,5 +1,16 @@
 # @manuscripts/quarterback-api
 
+## 0.1.2
+
+### Patch Changes
+
+- d8e23e8: fix: temporarily reset prod DB on Quarterback API launch
+- f625736: remove ok from Maybe type
+- Updated dependencies [d8e23e8]
+- Updated dependencies [f625736]
+  - @manuscripts/quarterback-db@0.1.1
+  - @manuscripts/quarterback-types@0.2.1
+
 ## 0.1.1
 
 ### Patch Changes
