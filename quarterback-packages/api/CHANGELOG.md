@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.4
+
+### Patch Changes
+
+- 6084422: fix(api): version for /stats route, disable resetting db in production
+
 ## 0.1.3
 
 ### Patch Changes
