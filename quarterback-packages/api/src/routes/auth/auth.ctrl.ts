@@ -22,6 +22,8 @@ import { IRequest } from '$typings/request'
 
 import { authService } from './auth.svc'
 
+import { version } from '../../../package.json'
+
 export const AUTHENTICATE_SCHEMA = Joi.object({
   token: Joi.string().min(8).max(255).required(),
 })
@@ -61,7 +63,7 @@ export const stats = async (
     const up_d =  Math.floor(up_s / 60 / 60 / 24)
     const started = new Date(Date.now() - up_s * 1000)
     res.json({
-      version: process.env.npm_package_version,
+      version,
       process: {
         started: started.toISOString(),
         up_seconds: Math.floor(up_s),

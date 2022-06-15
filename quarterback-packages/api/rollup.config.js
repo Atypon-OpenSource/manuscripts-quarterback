@@ -15,6 +15,7 @@
  */
 import alias from '@rollup/plugin-alias'
 import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 import path from 'path'
 import typescript from 'rollup-plugin-typescript2'
 
@@ -46,5 +47,6 @@ export default {
     }),
     typescript(),
     commonjs(),
+    json(),
   ],
 }
