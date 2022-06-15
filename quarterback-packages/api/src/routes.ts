@@ -25,6 +25,7 @@ import * as snapCtrl from './routes/snapshot/snap.ctrl'
 const router = Router()
 
 router.post('/authenticate', authCtrl.authenticate)
+router.get('/stats', authCtrl.stats)
 
 router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)

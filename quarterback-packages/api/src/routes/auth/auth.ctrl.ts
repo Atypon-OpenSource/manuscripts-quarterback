@@ -48,3 +48,29 @@ export const authenticate = async (
     next(err)
   }
 }
+
+export const stats = async (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const up_s = process.uptime()
+    const up_min = Math.floor(up_s / 60)
+    const up_h =  Math.floor(up_s / 60 / 60)
+    const up_d =  Math.floor(up_s / 60 / 60 / 24)
+    const started = new Date(Date.now() - up_s * 1000)
+    res.json({
+      version: process.env.npm_package_version,
+      process: {
+        started: started.toISOString(),
+        up_seconds: Math.floor(up_s),
+        up_minutes: up_min,
+        up_hours: up_h,
+        up_days: up_d,
+      }
+    })
+  } catch (err) {
+    next(err)
+  }
+}
