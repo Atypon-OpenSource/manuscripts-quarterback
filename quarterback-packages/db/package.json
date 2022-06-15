@@ -10,6 +10,7 @@
   "scripts": {
     "prod:init": "prisma generate && prisma migrate deploy && pnpm run cp-files",
     "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "prod:reset": "prisma migrate reset --force --preview-feature && prisma migrate deploy --preview-feature",
     "init": "pnpm run migrate && pnpm run cp-files",
     "cp-files": "mkdir -p ../api/.prisma && cp ./generated/schema.prisma ../api/.prisma && cp ./generated/index.d.ts ../types/prisma",
     "build": "prisma generate && pnpm run cp-files",

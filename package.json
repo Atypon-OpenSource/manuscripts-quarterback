@@ -28,7 +28,7 @@
     "track": "pnpm --filter @manuscripts/track-changes-plugin watch",
     "ex:e2e": "pnpm --filter @manuscripts/examples-track-e2e test",
     "ex:e2e:open": "pnpm --filter @manuscripts/examples-track-e2e start",
-    "cs": "changeset",
+    "cs": "changeset && git add .changeset",
     "ci:version": "changeset version",
     "ci:publish": "pnpm --filter \"./quarterback-packages/**\" --no-git-checks publish"
   },
