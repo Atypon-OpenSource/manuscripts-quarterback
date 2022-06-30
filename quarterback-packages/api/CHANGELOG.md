@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.5
+
+### Patch Changes
+
+- b0cbbcb: fix(api): parse CORS_SAME_ORIGIN properly
+
 ## 0.1.4
 
 ### Patch Changes
