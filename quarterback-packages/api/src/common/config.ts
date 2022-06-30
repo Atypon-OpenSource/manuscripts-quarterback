@@ -15,7 +15,10 @@
  */
 if (process.env.NODE_ENV === undefined || process.env.NODE_ENV !== 'production') {
   await import('dotenv').then((exports) => {
-    exports.config()
+    exports.config({
+      // For some reason CORS_SAME_ORIGIN is not parsed otherwise
+      override: true
+    })
   })
 }
 
@@ -26,11 +29,31 @@ function parseNodeEnv(NODE_ENV?: string): 'production' | 'dev' {
   return 'dev'
 }
 
-// TODO use default import
+function parseInteger(env?: string) {
+  try {
+    return parseInt(env || '')
+  } catch (err) {}
+  return undefined
+}
+
+function parseStringArray(env?: string): string[] | undefined {
+  try {
+    const parsed = JSON.parse(env || '')
+    if (Array.isArray(parsed) && parsed.every(s => typeof s === 'string')) {
+      return parsed
+    }
+    console.error('config.ts: Provided environment variable was not a string array!', parsed)
+  } catch (err) {}
+  return undefined
+}
+
 export const config = {
   ENV: parseNodeEnv(process.env.NODE_ENV),
-  PORT: parseInt(process.env.PORT || '') || 5500,
-  CORS_SAME_ORIGIN: process.env.CORS_SAME_ORIGIN || true,
+  PORT: parseInteger(process.env.PORT) || 5500,
+  CORS: {
+    SAME_ORIGIN: process.env.CORS_SAME_ORIGIN === 'false' ? false : true,
+    WHITELIST: parseStringArray(process.env.CORS_WHITELIST) || [],
+  },
   LOG: {
     LEVEL: process.env.LOG_LEVEL || 'info',
   },

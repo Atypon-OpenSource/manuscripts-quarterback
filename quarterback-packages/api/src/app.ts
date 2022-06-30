@@ -17,15 +17,20 @@ import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
 
-import { logStream } from './common'
+import { config } from './common/config'
+import { logStream, CustomError } from './common'
 import { errorHandler } from './middlewares'
 import routes from './routes'
 
 const app = express()
 
 const corsOptions: cors.CorsOptions = {
-  origin(origin, callback) {
-    callback(null, true)
+  origin: config.CORS.SAME_ORIGIN || function (origin, callback) {
+    if (origin && config.CORS.WHITELIST.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new CustomError('Not allowed by CORS', 403))
+    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }
