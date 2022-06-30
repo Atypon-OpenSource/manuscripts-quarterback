@@ -22,6 +22,7 @@ node("cisanta && !cisc03") {
             sh (script: "pnpm --filter @manuscripts/quarterback-api build")
             sh (script: "pnpm --filter @manuscripts/track-changes-plugin build")
             sh (script: "pnpm --filter @manuscripts/quarterback-api test")
+            sh (script: "pnpm --filter @manuscripts/track-changes-plugin typecheck")
             sh (script: "pnpm --filter @manuscripts/track-changes-plugin test")
         }
     }
