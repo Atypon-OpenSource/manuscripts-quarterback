@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.6
+
+### Patch Changes
+
+- e58bdee: fix(api): disable CORS since it breaks & requests are already blocked unless from deployed site
+
 ## 0.1.5
 
 ### Patch Changes
