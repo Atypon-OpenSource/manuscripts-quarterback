@@ -35,7 +35,8 @@ RUN pnpm --filter @manuscripts/quarterback-api build
 
 # RUN pnpm prune
 
-ENV CORS_SAME_ORIGIN true
+# CORS is disabled since 1) it breaks 2) requests are blocked already outside deployed site
+ENV CORS_SAME_ORIGIN false
 
 EXPOSE ${PORT}
 
