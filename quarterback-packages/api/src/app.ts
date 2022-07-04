@@ -25,13 +25,13 @@ import routes from './routes'
 const app = express()
 
 const corsOptions: cors.CorsOptions = {
-  origin: config.CORS.ENABLED ? function (origin, callback) {
-    if (origin && config.CORS.WHITELIST.indexOf(origin) !== -1) {
+  origin: function (origin, callback) {
+    if (!config.CORS.ENABLED || (origin && config.CORS.WHITELIST.indexOf(origin) !== -1)) {
       callback(null, true)
     } else {
       callback(new CustomError('Not allowed by CORS', 403))
     }
-  } : false,
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }
 
