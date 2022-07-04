@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.8
+
+### Patch Changes
+
+- d55715e: fix(api): disable CORS by default, dont rely on set env
+
 ## 0.1.7
 
 ### Patch Changes
