@@ -2,6 +2,12 @@
 
 Quarterback is a service to manage tracking of changes and their related metadata for Manuscripts app. It also includes a prototype implementation for collaboration using Yjs.
 
+## How to run locally
+
+You need Docker & Docker Compose.
+
+1. `docker-compose up -d api redis`
+
 ## How to install for local development
 
 First you should check you have Node.js v16 installed: `node -v`. If not, I recommend using [nvm](https://github.com/nvm-sh/nvm) to install 16 version. This is needed for the ES modules and other new features.
