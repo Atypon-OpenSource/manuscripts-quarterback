@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.7
+
+### Patch Changes
+
+- 0856ccb: fix(api): CORS origin value
+
 ## 0.1.6
 
 ### Patch Changes
