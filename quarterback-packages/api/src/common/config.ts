@@ -51,7 +51,7 @@ export const config = {
   ENV: parseNodeEnv(process.env.NODE_ENV),
   PORT: parseInteger(process.env.PORT) || 5500,
   CORS: {
-    SAME_ORIGIN: process.env.CORS_SAME_ORIGIN === 'false' ? false : true,
+    ENABLED: !!parseInteger(process.env.CORS_ENABLED),
     WHITELIST: parseStringArray(process.env.CORS_WHITELIST) || [],
   },
   LOG: {

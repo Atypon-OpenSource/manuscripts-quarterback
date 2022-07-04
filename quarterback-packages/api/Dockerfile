@@ -36,7 +36,7 @@ RUN pnpm --filter @manuscripts/quarterback-api build
 # RUN pnpm prune
 
 # CORS is disabled since 1) it breaks 2) requests are blocked already outside deployed site
-ENV CORS_SAME_ORIGIN false
+ENV CORS_ENABLED 0
 
 EXPOSE ${PORT}
 
