@@ -119,6 +119,7 @@ importers:
     specifiers:
       '@manuscripts/examples-track-editor': workspace:*
       '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/ext-comments': workspace:*
       '@manuscripts/ext-yjs': workspace:*
       '@manuscripts/manuscript-editor': workspace:*
       '@manuscripts/manuscript-transform': workspace:*
@@ -166,6 +167,7 @@ importers:
     dependencies:
       '@manuscripts/examples-track-editor': link:../editor
       '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/ext-comments': link:../ext-comments
       '@manuscripts/ext-yjs': link:../ext-yjs
       '@manuscripts/manuscript-editor': link:../manuscript-editor
       '@manuscripts/manuscript-transform': link:../manuscript-transform
@@ -395,6 +397,43 @@ importers:
       rollup-plugin-postcss: 4.0.2_postcss@8.4.13
       rollup-plugin-typescript2: 0.30.0_anzmtkbpu2qkzgkvydr4fm6zcm
       ttypescript: 1.5.13_typescript@4.6.4
+      typescript: 4.6.4
+
+  examples-packages/ext-comments:
+    specifiers:
+      '@manuscripts/manuscript-editor': workspace:*
+      '@rollup/plugin-commonjs': ^20.0.0
+      '@types/react': ^17.0.20
+      '@types/uuid': ^8.3.4
+      debug: ^4.1.1
+      prosemirror-commands: ^1.3.0
+      prosemirror-keymap: ^1.2.0
+      prosemirror-model: ^1.18.1
+      prosemirror-state: ^1.4.1
+      prosemirror-transform: ^1.6.0
+      prosemirror-view: ^1.26.2
+      react: ^17.0.2
+      rollup: ^2.58.3
+      rollup-plugin-typescript2: ^0.30.0
+      typescript: ^4.4.4
+      uuid: ^8.3.2
+    dependencies:
+      debug: 4.3.4
+      uuid: 8.3.2
+    devDependencies:
+      '@manuscripts/manuscript-editor': link:../manuscript-editor
+      '@rollup/plugin-commonjs': 20.0.0_rollup@2.74.0
+      '@types/react': 17.0.45
+      '@types/uuid': 8.3.4
+      prosemirror-commands: 1.3.0
+      prosemirror-keymap: 1.2.0
+      prosemirror-model: 1.18.1
+      prosemirror-state: 1.4.1
+      prosemirror-transform: 1.6.0
+      prosemirror-view: 1.26.2
+      react: 17.0.2
+      rollup: 2.74.0
+      rollup-plugin-typescript2: 0.30.0_dyu3set7imqii5ytavmnwecwpy
       typescript: 4.6.4
 
   examples-packages/ext-yjs:
@@ -4586,6 +4625,22 @@ packages:
       magic-string: 0.25.9
       resolve: 1.22.0
       rollup: 2.73.0
+    dev: true
+
+  /@rollup/plugin-commonjs/20.0.0_rollup@2.74.0:
+    resolution: {integrity: sha512-5K0g5W2Ol8hAcTHqcTBHiA7M58tfmYi1o9KxeJuuRNpGaTa5iLjcyemBitCBcKXaHamOBBEH2dGom6v6Unmqjg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^2.38.3
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.74.0
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      glob: 7.2.3
+      is-reference: 1.2.1
+      magic-string: 0.25.9
+      resolve: 1.22.0
+      rollup: 2.74.0
     dev: true
 
   /@rollup/plugin-commonjs/21.1.0_rollup@2.73.0:
@@ -9340,7 +9395,7 @@ packages:
     engines: {node: '>=4.0.0'}
 
   /commondir/1.0.1:
-    resolution: {integrity: sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=}
+    resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
 
   /compare-versions/3.6.0:
     resolution: {integrity: sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==}
@@ -17870,7 +17925,7 @@ packages:
     dev: true
 
   /object-assign/4.1.1:
-    resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
+    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
 
   /object-copy/0.1.0:
@@ -21724,6 +21779,21 @@ packages:
       fs-extra: 8.1.0
       resolve: 1.20.0
       rollup: 2.73.0
+      tslib: 2.1.0
+      typescript: 4.6.4
+    dev: true
+
+  /rollup-plugin-typescript2/0.30.0_dyu3set7imqii5ytavmnwecwpy:
+    resolution: {integrity: sha512-NUFszIQyhgDdhRS9ya/VEmsnpTe+GERDMmFo0Y+kf8ds51Xy57nPNGglJY+W6x1vcouA7Au7nsTgsLFj2I0PxQ==}
+    peerDependencies:
+      rollup: '>=1.26.3'
+      typescript: '>=2.4.0'
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      find-cache-dir: 3.3.2
+      fs-extra: 8.1.0
+      resolve: 1.20.0
+      rollup: 2.74.0
       tslib: 2.1.0
       typescript: 4.6.4
     dev: true

@@ -123,6 +123,42 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       },
     },
 
+    highlight_marker: {
+      inline: true,
+      group: 'inline',
+      atom: true,
+      attrs: {
+        id: { default: '' },
+        rid: { default: '' },
+        position: { default: '' },
+        // dataTracked: { default: null },
+      },
+      parseDOM: [
+        {
+          tag: 'span.highlight-marker',
+          getAttrs: (dom: HTMLElement | string) => {
+            if (dom instanceof HTMLElement) {
+              return {
+                id: dom.getAttribute('id'),
+                rid: dom.getAttribute('data-reference-id'),
+                position: dom.getAttribute('data-position'),
+              }
+            }
+            return null
+          },
+        },
+      ],
+      toDOM: (node: PMNode) => {
+        const attrs = {
+          class: 'highlight-marker',
+          id: node.attrs.id,
+          'data-reference-id': node.attrs.rid,
+          'data-position': node.attrs.position,
+        }
+        return ['span', attrs]
+      },
+    },
+
     // :: NodeSpec The text node.
     text: {
       group: 'inline',
@@ -144,13 +180,15 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       parseDOM: [
         {
           tag: 'img[src]',
-          getAttrs(p: Node | string) {
-            const dom = p as HTMLElement
-            return {
-              src: dom.getAttribute('src'),
-              title: dom.getAttribute('title'),
-              alt: dom.getAttribute('alt'),
+          getAttrs(dom: HTMLElement | string) {
+            if (dom instanceof HTMLElement) {
+              return {
+                src: dom.getAttribute('src'),
+                title: dom.getAttribute('title'),
+                alt: dom.getAttribute('alt'),
+              }
             }
+            return null
           },
         },
       ],
@@ -205,7 +243,6 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
 
     table_body: {
       content: 'table_row{3,}',
-      group: 'block',
       tableRole: 'tbody',
       parseDOM: [
         {
@@ -219,7 +256,6 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
 
     table_colgroup: {
       content: 'table_col+',
-      group: 'block',
       tableRole: 'colgroup',
       attrs: { dataTracked: { default: null } },
       parseDOM: [
@@ -280,16 +316,17 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         dataTracked: { default: null },
         width: { default: '' },
       },
-      group: 'block',
       tableRole: 'col',
       parseDOM: [
         {
           tag: 'col',
-          getAttrs: (p: Node | string) => {
-            const dom = p as HTMLTableColElement
-            return {
-              width: dom.getAttribute('width'),
+          getAttrs: (dom: HTMLElement | string) => {
+            if (dom instanceof HTMLElement) {
+              return {
+                width: dom.getAttribute('width'),
+              }
             }
+            return null
           },
         },
       ],
@@ -317,12 +354,15 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       parseDOM: [
         {
           tag: 'a[href]',
-          getAttrs(p: Node | string) {
-            const dom = p as HTMLElement
-            return {
-              href: dom.getAttribute('href'),
-              title: dom.getAttribute('title'),
+          getAttrs(dom: HTMLElement | string) {
+            if (dom instanceof HTMLElement) {
+              return {
+                src: dom.getAttribute('src'),
+                title: dom.getAttribute('title'),
+                alt: dom.getAttribute('alt'),
+              }
             }
+            return null
           },
         },
       ],
@@ -353,16 +393,20 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
         // tags with a font-weight normal.
         {
           tag: 'b',
-          getAttrs: (p: Node | string) => {
-            const node = p as HTMLElement
-            return node.style.fontWeight != 'normal' && null
+          getAttrs: (dom: HTMLElement | string) => {
+            if (dom instanceof HTMLElement) {
+              return dom.style.fontWeight !== 'normal' && null
+            }
+            return null
           },
         },
         {
           style: 'font-weight',
-          getAttrs: (p: Node | string) => {
-            const value = p as string
-            return /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null
+          getAttrs: (dom: HTMLElement | string) => {
+            if (typeof dom === 'string') {
+              return /^(bold(er)?|[5-9]\d{2,})$/.test(dom) && null
+            }
+            return null
           },
         },
       ],

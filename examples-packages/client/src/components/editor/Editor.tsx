@@ -19,6 +19,7 @@ import {
   trackChangesPluginKey,
   TrackChangesState,
 } from '@manuscripts/track-changes-plugin'
+import { commentsExtension } from '@manuscripts/ext-comments'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
@@ -74,6 +75,14 @@ export const Editor = observer(() => {
         },
         user: options.user,
         ws_url: YJS_WS_URL,
+      }),
+      commentsExtension({
+        document: {
+          id: options.documentId,
+        },
+        setCommentTarget: (target?: string) => {
+          console.log('target ', target)
+        },
       }),
     ],
     [options]

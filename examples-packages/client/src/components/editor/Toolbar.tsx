@@ -21,8 +21,18 @@ import {
   useEditorContext,
   usePluginState,
 } from '@manuscripts/examples-track-editor'
+import { commentsCommands } from '@manuscripts/ext-comments'
+
 import React from 'react'
-import { FiAtSign, FiBold, FiEye, FiFileMinus, FiFilePlus, FiItalic } from 'react-icons/fi'
+import {
+  FiAtSign,
+  FiBold,
+  FiEye,
+  FiFileMinus,
+  FiFilePlus,
+  FiItalic,
+  FiMessageSquare,
+} from 'react-icons/fi'
 import { GrBlockQuote } from 'react-icons/gr'
 import { MdViewWeek } from 'react-icons/md'
 import styled from 'styled-components'
@@ -36,6 +46,7 @@ type IconType =
   | 'italic'
   | 'toggle-blockquote'
   | 'update-attribute'
+  | 'insert-comment'
   | 'toggle-split-view'
   | 'toggle-track-changes'
   | 'set-inserted'
@@ -66,6 +77,10 @@ const commandIcons: {
   {
     title: 'update-attribute',
     icon: <FiAtSign size={16} />,
+  },
+  {
+    title: 'insert-comment',
+    icon: <FiMessageSquare size={16} />,
   },
   {
     title: 'toggle-split-view',
@@ -106,6 +121,9 @@ export function Toolbar(props: IProps) {
         return
       case 'update-attribute':
         viewProvider?.execCommand(trackCommands.setParagraphTestAttribute())
+        return
+      case 'insert-comment':
+        viewProvider?.execCommand(commentsCommands.insertHighlight())
         return
       case 'toggle-split-view':
         return

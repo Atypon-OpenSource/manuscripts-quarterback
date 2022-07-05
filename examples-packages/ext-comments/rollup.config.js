@@ -13,37 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node as PMNode, Schema } from 'prosemirror-model'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from 'rollup-plugin-typescript2'
 
-export type Nodes =
-  | 'blockquote'
-  | 'code_block'
-  | 'doc'
-  | 'hard_break'
-  | 'heading'
-  | 'highlight_marker'
-  | 'horizontal_rule'
-  | 'image'
-  | 'paragraph'
-  | 'text'
-  | 'ordered_list'
-  | 'bullet_list'
-  | 'list_item'
-  | 'table'
-  | 'table_body'
-  | 'table_colgroup'
-  | 'table_row'
-  | 'table_cell'
-  | 'table_col'
+import pkg from './package.json'
 
-export type Marks =
-  | 'bold'
-  | 'code'
-  | 'italic'
-  | 'link'
-  | 'strikethrough'
-  | 'tracked_insert'
-  | 'tracked_delete'
-  | 'ychange'
-
-export type QuarterBackSchema = Schema<Nodes, Marks>
+export default {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs',
+    },
+    {
+      file: pkg.module,
+      format: 'es',
+    },
+  ],
+  external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+  plugins: [typescript(), commonjs()],
+}

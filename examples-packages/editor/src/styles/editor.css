@@ -10,3 +10,7 @@
 .ProseMirror img {
   width: -webkit-fill-available;
 }
+
+.ProseMirror .highlight-marker {
+  background: rgba(250, 224, 150, 0.6);
+}

@@ -13,37 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node as PMNode, Schema } from 'prosemirror-model'
+import type { Transaction } from 'prosemirror-state'
 
-export type Nodes =
-  | 'blockquote'
-  | 'code_block'
-  | 'doc'
-  | 'hard_break'
-  | 'heading'
-  | 'highlight_marker'
-  | 'horizontal_rule'
-  | 'image'
-  | 'paragraph'
-  | 'text'
-  | 'ordered_list'
-  | 'bullet_list'
-  | 'list_item'
-  | 'table'
-  | 'table_body'
-  | 'table_colgroup'
-  | 'table_row'
-  | 'table_cell'
-  | 'table_col'
+export enum Action {
+  createComment = 'create-comment',
+}
 
-export type Marks =
-  | 'bold'
-  | 'code'
-  | 'italic'
-  | 'link'
-  | 'strikethrough'
-  | 'tracked_insert'
-  | 'tracked_delete'
-  | 'ychange'
+export type ActionParams = {
+  [Action.createComment]: {
+    id: string
+  }
+}
 
-export type QuarterBackSchema = Schema<Nodes, Marks>
+export const getAction = <K extends keyof ActionParams & string>(tr: Transaction, action: K) =>
+  tr.getMeta(action) as ActionParams[K] | undefined
+
+export const setAction = <K extends keyof ActionParams & string>(
+  tr: Transaction,
+  action: K,
+  payload: ActionParams[K]
+) => tr.setMeta(action, payload)

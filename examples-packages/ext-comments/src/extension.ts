@@ -13,37 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node as PMNode, Schema } from 'prosemirror-model'
+import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 
-export type Nodes =
-  | 'blockquote'
-  | 'code_block'
-  | 'doc'
-  | 'hard_break'
-  | 'heading'
-  | 'highlight_marker'
-  | 'horizontal_rule'
-  | 'image'
-  | 'paragraph'
-  | 'text'
-  | 'ordered_list'
-  | 'bullet_list'
-  | 'list_item'
-  | 'table'
-  | 'table_body'
-  | 'table_colgroup'
-  | 'table_row'
-  | 'table_cell'
-  | 'table_col'
+import * as commands from './commands'
+import plugin from './plugin'
+import { commentsExtensionName, ExtensionProps } from './types'
 
-export type Marks =
-  | 'bold'
-  | 'code'
-  | 'italic'
-  | 'link'
-  | 'strikethrough'
-  | 'tracked_insert'
-  | 'tracked_delete'
-  | 'ychange'
+export const commentsExtension = (props: ExtensionProps) => (ctx: EditorProviders) => {
+  return {
+    name: commentsExtensionName,
+    opts: props,
+    commands: { ...commands },
+    keymaps: [],
+    plugins: [plugin(props)],
+  }
+}
 
-export type QuarterBackSchema = Schema<Nodes, Marks>
+function typeCheck(): CreateExtensionFn {
+  return commentsExtension
+}

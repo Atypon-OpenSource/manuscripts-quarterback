@@ -6,7 +6,7 @@ Quarterback is a service to manage tracking of changes and their related metadat
 
 You need Docker & Docker Compose.
 
-1. `docker-compose up -d api redis`
+1. `docker-compose up -d api postgres`
 
 ## How to install for local development
 
@@ -31,7 +31,7 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 5. Migrate the database: `pnpm --filter @manuscripts/examples-track-db migrate`
 6. And seed it with test data: `pnpm --filter @manuscripts/examples-track-db seed`
 7. Build the external manuscripts packages: `pnpm build`
-8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` and `pnpm ex:client`.
+8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` `pnpm ex:collab` and `pnpm ex:client`.
 
 Also, if you were to remove a package inside `packages` the node_modules in the other packages that import it must be deleted (even after you do `pnpm i`). The symlinks are not always removed properly it seems.
 

@@ -18,9 +18,6 @@ import type { Command } from '@manuscripts/manuscript-editor'
 import { setAction, YjsAction } from './actions'
 
 export const createSnapshot = (): Command => (state, dispatch) => {
-  if (dispatch) {
-    dispatch(setAction(state.tr, YjsAction.createSnapshot, true))
-    return true
-  }
-  return false
+  dispatch && dispatch(setAction(state.tr, YjsAction.createSnapshot, true))
+  return true
 }
