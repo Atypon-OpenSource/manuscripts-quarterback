@@ -18,7 +18,7 @@ import { Evt, PmDocSnapshot, SnapshotLabel } from '@manuscripts/examples-track-s
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { inject, observer } from 'mobx-react'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
 // import { MdOutlineAssignment, MdSave } from 'react-icons/md'
 import { stores } from 'stores'
@@ -28,7 +28,6 @@ import { Stores } from 'stores'
 import { HistorySnapshot } from 'stores/HistoryStore'
 
 import { EditSnapshotForm, UpdateSnapshotFormValues } from './EditSnapshotForm'
-import { useMemo } from 'react'
 
 interface IProps {
   className?: string

@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { QuarterBackSchema } from '@manuscripts/examples-track-schema'
 import { Plugin, PluginKey } from 'prosemirror-state'
 
 import { getActiveMarks } from './commands'
 import type { ActiveNodesMarksState } from './types'
 
-export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState, QuarterBackSchema>(
+export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState>(
   'active-nodes-marks'
 )
 
 export const activeNodesMarksPlugin = () => {
-  return new Plugin<ActiveNodesMarksState, QuarterBackSchema>({
+  return new Plugin<ActiveNodesMarksState>({
     key: activeNodesMarksPluginKey,
     state: {
       init() {

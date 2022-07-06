@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarterBackSchema } from '@manuscripts/examples-track-schema'
 import { Observable } from '@manuscripts/examples-track-shared'
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
@@ -21,25 +20,25 @@ import { EditorView } from 'prosemirror-view'
 import { Command, JSONEditorState } from '$typings/editor'
 
 export class EditorViewProvider {
-  _view?: EditorView<QuarterBackSchema>
-  _state?: EditorState<QuarterBackSchema>
+  _view?: EditorView
+  _state?: EditorState
   _observable = new Observable<'updateState'>()
 
-  get view(): EditorView<QuarterBackSchema> {
+  get view(): EditorView {
     if (!this._view) {
       throw Error('EditorViewProvider view accessed before initialization')
     }
     return this._view
   }
 
-  get state(): EditorState<QuarterBackSchema> {
+  get state(): EditorState {
     if (!this._state) {
       throw Error('EditorViewProvider state accessed before initialization')
     }
     return this._state
   }
 
-  init(view: EditorView<QuarterBackSchema>) {
+  init(view: EditorView) {
     this._view = view
   }
 

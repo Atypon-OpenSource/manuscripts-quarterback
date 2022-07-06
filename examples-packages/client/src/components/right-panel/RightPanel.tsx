@@ -19,6 +19,7 @@ import {
   trackCommands,
   TrackedChange,
 } from '@manuscripts/track-changes-plugin'
+import { commentsCommands, CommentsPluginState } from '@manuscripts/ext-comments'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
@@ -29,6 +30,7 @@ import styled from 'styled-components'
 import { ChangeList } from '../change-list/ChangeList'
 import { ChangesControls } from './ChangesControls'
 import DocControls from 'components/doc-controls/DocControls'
+import { CommentMarkersList } from './CommentMarkersList'
 import HistoryList from 'components/history-list/HistoryList'
 import ReviewControls from './ReviewControls'
 import { SnapshotsList } from '../snapshots/SnapshotsList'
@@ -40,10 +42,11 @@ interface Props {
   yjsStore?: YjsExtension['store']
   viewProvider: EditorViewProvider | MViewProvider
   trackChangesState: TrackChangesState | null
+  commentsState: CommentsPluginState | null
 }
 
 export const RightPanel = memo((props: Props) => {
-  const { yjsDisabled, yjsState, yjsStore, viewProvider, trackChangesState } = props
+  const { yjsDisabled, yjsState, yjsStore, viewProvider, trackChangesState, commentsState } = props
   const { changeSet } = trackChangesState || {}
   const { documentStore } = stores
   const [showPending, setShowPending] = useState(true)
@@ -85,6 +88,9 @@ export const RightPanel = memo((props: Props) => {
       yjsStore?.createSnapshot()
     }
   }
+  function handleDeleteCommentMarker(id: string) {
+    viewProvider.execCommand(commentsCommands.deleteCommentMarker(id))
+  }
 
   return (
     <RightSide>
@@ -96,6 +102,7 @@ export const RightPanel = memo((props: Props) => {
         trackChangesState={trackChangesState}
         createSnapshot={handleCreateSnapshot}
       />
+      <CommentMarkersList markers={commentsState?.markers} onDelete={handleDeleteCommentMarker} />
       <HistoryList viewProvider={viewProvider} />
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />

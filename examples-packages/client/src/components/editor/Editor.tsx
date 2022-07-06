@@ -19,7 +19,11 @@ import {
   trackChangesPluginKey,
   TrackChangesState,
 } from '@manuscripts/track-changes-plugin'
-import { commentsExtension } from '@manuscripts/ext-comments'
+import {
+  commentsPluginKey,
+  commentsExtension,
+  CommentsPluginState,
+} from '@manuscripts/ext-comments'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   baseExtension,
@@ -57,6 +61,7 @@ export const Editor = observer(() => {
   const { viewProvider } = useEditorContext()
   const { yjsState, yjsStore } = useYjsExtension(100)
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
+  const commentsState = usePluginState<CommentsPluginState>(commentsPluginKey, 100)
   const extensions = useMemo(
     () => [
       baseExtension(),
@@ -77,11 +82,9 @@ export const Editor = observer(() => {
         ws_url: YJS_WS_URL,
       }),
       commentsExtension({
-        document: {
-          id: options.documentId,
-        },
-        setCommentTarget: (target?: string) => {
-          console.log('target ', target)
+        onCreateMarker: (id: string, node: any) => {
+          console.log('id', id)
+          console.log('node', node)
         },
       }),
     ],
@@ -129,6 +132,7 @@ export const Editor = observer(() => {
               yjsStore={yjsStore}
               viewProvider={viewProvider}
               trackChangesState={trackChangesState}
+              commentsState={commentsState}
             />
           )}
         </ViewGrid>

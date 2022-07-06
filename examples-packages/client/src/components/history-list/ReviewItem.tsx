@@ -16,10 +16,9 @@
 import { inject, observer } from 'mobx-react'
 import React, { useCallback, useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEye, FiEyeOff, FiEdit3, FiTrash } from 'react-icons/fi'
-import { stores } from 'stores'
+import { stores, Stores } from 'stores'
 import styled from 'styled-components'
 
-import { Stores } from 'stores'
 import { HistoryReview } from 'stores/HistoryStore'
 
 import ReviewSnapshots from './ReviewSnapshots'

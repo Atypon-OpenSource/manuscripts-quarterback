@@ -123,24 +123,25 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       },
     },
 
-    highlight_marker: {
+    comment_marker: {
       inline: true,
       group: 'inline',
       atom: true,
       attrs: {
         id: { default: '' },
-        rid: { default: '' },
+        userID: { default: null },
+        createdAt: { default: null },
         position: { default: '' },
-        // dataTracked: { default: null },
       },
       parseDOM: [
         {
-          tag: 'span.highlight-marker',
+          tag: 'span',
           getAttrs: (dom: HTMLElement | string) => {
             if (dom instanceof HTMLElement) {
               return {
                 id: dom.getAttribute('id'),
-                rid: dom.getAttribute('data-reference-id'),
+                userID: dom.getAttribute('data-user-id'),
+                createdAt: dom.getAttribute('data-created-at'),
                 position: dom.getAttribute('data-position'),
               }
             }
@@ -150,10 +151,10 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       ],
       toDOM: (node: PMNode) => {
         const attrs = {
-          class: 'highlight-marker',
-          id: node.attrs.id,
-          'data-reference-id': node.attrs.rid,
+          'data-user-id': node.attrs.userID,
+          'data-created-at': node.attrs.createdAt,
           'data-position': node.attrs.position,
+          ...(node.attrs.position === 'start' && { id: node.attrs.id, })
         }
         return ['span', attrs]
       },

@@ -19,64 +19,51 @@ import { v4 as uuidv4 } from 'uuid'
 import { setAction, Action } from './actions'
 import { commentsPluginKey } from './plugin'
 
-export const insertHighlight = (): Command => (state, dispatch) => {
-  const { from, to } = state.selection
-  const text = state.doc.textBetween(from, to, '\n')
-  const id = uuidv4()
-  const fromNode = state.schema.nodes.highlight_marker.create({
-    id,
-    position: 'start',
-    text,
-  })
-  const toNode = state.schema.nodes.highlight_marker.create({
-    id,
-    position: 'end',
-  })
-  const { tr } = state
-  tr.insert(from, fromNode)
-  tr.insert(to + 1, toNode)
-  tr.setMeta('addToHistory', false)
-  setAction(tr, Action.createComment, { id })
-  dispatch && dispatch(tr)
-  return true
-}
+export const insertCommentMarker =
+  (userID: string): Command =>
+  (state, dispatch) => {
+    const { from, to } = state.selection
+    const id = uuidv4()
+    const createdAt = Date.now()
+    const fromNode = state.schema.nodes.comment_marker.create({
+      id,
+      position: 'start',
+      userID,
+      createdAt,
+    })
+    const toNode = state.schema.nodes.comment_marker.create({
+      id,
+      position: 'end',
+      userID,
+      createdAt,
+    })
+    const { tr } = state
+    tr.insert(from, fromNode)
+    tr.insert(to + 1, toNode)
+    tr.setMeta('addToHistory', false)
+    setAction(tr, Action.createComment, { id, node: fromNode })
+    dispatch && dispatch(tr)
+    return true
+  }
 
-export const deleteHighlightMarkers =
-  (rid: string): Command =>
+export const deleteCommentMarker =
+  (id: string): Command =>
   (state, dispatch) => {
     const markersToDelete: number[] = []
-
-    // TODO: work through the doc instead of using the plugin positions?
-
-    const pluginState = commentsPluginKey.getState(state)
-    if (!pluginState) return false
-
-    for (const highlight of pluginState.highlights.values()) {
-      if (highlight.rid === rid) {
-        if (highlight.start !== undefined) {
-          markersToDelete.push(highlight.start - 1)
-        }
-
-        if (highlight.end !== undefined) {
-          markersToDelete.push(highlight.end)
-        }
+    commentsPluginKey.getState(state)?.markers.forEach((highlight) => {
+      if (highlight.id === id) {
+        markersToDelete.push(highlight.from - 1)
+        markersToDelete.push(highlight.to)
       }
-    }
-
-    if (markersToDelete.length) {
-      const { tr } = state
-
-      // delete markers last first
-      markersToDelete.sort((a, b) => b - a)
-
-      for (const pos of markersToDelete) {
+    })
+    if (markersToDelete.length === 0) return false
+    const { tr } = state
+    markersToDelete
+      .sort((a, b) => b - a)
+      .forEach((pos) => {
         tr.delete(pos, pos + 1)
-      }
-
-      tr.setMeta('addToHistory', false)
-
-      dispatch && dispatch(tr)
-      return true
-    }
-    return false
+      })
+    tr.setMeta('addToHistory', false)
+    dispatch && dispatch(tr)
+    return true
   }

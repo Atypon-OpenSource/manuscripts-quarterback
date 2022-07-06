@@ -22,6 +22,7 @@ export enum Action {
 export type ActionParams = {
   [Action.createComment]: {
     id: string
+    node: any
   }
 }
 

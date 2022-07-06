@@ -16,5 +16,6 @@
 export * as commentsCommands from './commands'
 
 export { commentsExtension } from './extension'
+export { commentsPluginKey, commentsPlugin } from './plugin'
 
 export * from './types'

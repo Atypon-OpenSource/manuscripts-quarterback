@@ -20,22 +20,23 @@ import type { commentsExtension } from './extension'
 
 export const commentsExtensionName = 'comments' as const
 
-export interface HighlightWithNode {
-  start?: number
-  end?: number
-  rid?: string
-  text?: string
-  node?: PMNode
+export interface CommentStartMarker {
+  id: string
+  from: number
+  userID: string
+  createdAt: number
 }
-export interface PluginState {
-  highlights: Map<string, HighlightWithNode>
+export interface CommentMarker extends CommentStartMarker {
+  to: number
+  text: string
+}
+
+export interface CommentsPluginState {
+  markers: CommentMarker[]
   decorations: DecorationSet
 }
 
 export type CommentsExtension = ReturnType<ReturnType<typeof commentsExtension>>
 export type ExtensionProps = {
-  document: {
-    id: string
-  }
-  setCommentTarget: (target?: string) => void
+  onCreateMarker: (markerId: string, node: PMNode) => void
 }

@@ -11,6 +11,6 @@
   width: -webkit-fill-available;
 }
 
-.ProseMirror .highlight-marker {
-  background: rgba(250, 224, 150, 0.6);
+.ProseMirror mark {
+  background-color: rgba(250, 224, 150, 0.6);
 }

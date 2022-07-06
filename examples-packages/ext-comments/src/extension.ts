@@ -16,7 +16,7 @@
 import type { CreateExtensionFn, EditorProviders } from '@manuscripts/manuscript-editor'
 
 import * as commands from './commands'
-import plugin from './plugin'
+import { commentsPlugin } from './plugin'
 import { commentsExtensionName, ExtensionProps } from './types'
 
 export const commentsExtension = (props: ExtensionProps) => (ctx: EditorProviders) => {
@@ -25,7 +25,7 @@ export const commentsExtension = (props: ExtensionProps) => (ctx: EditorProvider
     opts: props,
     commands: { ...commands },
     keymaps: [],
-    plugins: [plugin(props)],
+    plugins: [commentsPlugin(props)],
   }
 }
 

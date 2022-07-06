@@ -37,6 +37,8 @@ import { GrBlockQuote } from 'react-icons/gr'
 import { MdViewWeek } from 'react-icons/md'
 import styled from 'styled-components'
 
+import { stores } from 'stores'
+
 interface IProps {
   className?: string
 }
@@ -102,6 +104,9 @@ const commandIcons: {
 
 export function Toolbar(props: IProps) {
   const { className } = props
+  const {
+    authStore: { user },
+  } = stores
   const { viewProvider } = useEditorContext()
   const activeNodesMarksPlugin = usePluginState<ActiveNodesMarksState>(activeNodesMarksPluginKey)
 
@@ -123,7 +128,8 @@ export function Toolbar(props: IProps) {
         viewProvider?.execCommand(trackCommands.setParagraphTestAttribute())
         return
       case 'insert-comment':
-        viewProvider?.execCommand(commentsCommands.insertHighlight())
+        const userID = user?.id || 'anon'
+        viewProvider?.execCommand(commentsCommands.insertCommentMarker(userID))
         return
       case 'toggle-split-view':
         return

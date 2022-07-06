@@ -21,7 +21,7 @@ import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { ChildrenChangeList } from './ChildrenChangeList'
-import { Comments } from '../comments/Comments'
+import { ChangeComments } from '../change-comments/ChangeComments'
 
 interface IProps {
   className?: string
@@ -100,7 +100,7 @@ export const ChangeList = observer((props: IProps) => {
                   </CommentButton>
                 </ChangeBottom>
               </ChangeBody>
-              <Comments change={c} />
+              <ChangeComments change={c} />
             </TopChange>
             {ChangeSet.isNodeChange(c) && c.children.length > 0 && (
               <ChildrenChangeList

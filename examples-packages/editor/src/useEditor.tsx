@@ -53,6 +53,7 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
       view.setProps({
         state,
         dispatchTransaction(tr: Transaction) {
+          if (!this.state) return
           const oldEditorState = this.state
           const newState = oldEditorState.apply(tr)
           ctx.viewProvider.updateState(newState)

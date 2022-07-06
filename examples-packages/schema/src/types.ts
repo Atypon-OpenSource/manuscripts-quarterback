@@ -21,7 +21,7 @@ export type Nodes =
   | 'doc'
   | 'hard_break'
   | 'heading'
-  | 'highlight_marker'
+  | 'comment_marker'
   | 'horizontal_rule'
   | 'image'
   | 'paragraph'

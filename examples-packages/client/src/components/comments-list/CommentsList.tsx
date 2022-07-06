@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TrackedChange } from '@manuscripts/track-changes-plugin'
 import {
   CommentWithUserColor,
   Event,
@@ -21,17 +20,15 @@ import {
 } from '@manuscripts/examples-track-shared'
 import { inject, observer } from 'mobx-react'
 import React, { useState, useCallback } from 'react'
-import { FiEdit3, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'
 import styled from 'styled-components'
 import { Stores } from 'stores'
 
-import { NewCommentForm } from './NewCommentForm'
 import { UserCircle } from 'elements/UserCircle'
 
 interface IProps {
   className?: string
-  change: TrackedChange
-  isVisible?: boolean
+  targetId: string
   userId?: string
   isAdmin?: boolean
   comments?: CommentWithUserColor[]
@@ -39,25 +36,15 @@ interface IProps {
   deleteComment?: (commentId: string) => Promise<Event<boolean>>
 }
 
-export const Comments = inject((stores: Stores, { change: { id } }: IProps) => ({
+export const CommentsList = inject((stores: Stores, { targetId }) => ({
   userId: stores.authStore.user?.id,
   isAdmin: stores.authStore.isAdmin,
-  comments: stores.commentStore.changeComments.get(id),
-  isVisible: stores.commentStore.openCommentLists.has(id),
+  comments: stores.commentStore.changeComments.get(targetId),
   updateComment: stores.commentStore.updateComment,
   deleteComment: stores.commentStore.deleteComment,
 }))(
   observer((props: IProps) => {
-    const {
-      className,
-      userId,
-      isAdmin,
-      isVisible,
-      change,
-      comments = [],
-      updateComment,
-      deleteComment,
-    } = props
+    const { className, userId, isAdmin, comments = [], updateComment, deleteComment } = props
     const isEditable = useCallback(
       (c: CommentWithUserColor) => isAdmin || c.user_id === userId,
       [userId, isAdmin]
@@ -105,84 +92,72 @@ export const Comments = inject((stores: Stores, { change: { id } }: IProps) => (
       setEditedBody('')
     }
     return (
-      <Container className={`${className || ''} ${isVisible ? '' : 'hidden'}`}>
-        <Title>Comments</Title>
-        <List>
-          {comments.map((c: CommentWithUserColor, i: number) => (
-            <ListItem key={`${c.id}-${i}`}>
-              <CommentAuthor>
-                <UserCircle color={c.user.color} currentUser={false}>
-                  {c.user.firstname.charAt(0)}
-                </UserCircle>
-              </CommentAuthor>
-              <Body>
-                <CommentTop>
-                  <CommentName>
-                    <Name>{c.user.firstname}</Name>
-                    {isEditable(c) && (
-                      <IconButtons>
-                        <Button onClick={() => handleEdit(c)}>
-                          <FiEdit3 size={16} />
-                        </Button>
-                        <Button onClick={() => handleDelete(c)}>
-                          <FiTrash size={16} />
-                        </Button>
-                      </IconButtons>
-                    )}
-                  </CommentName>
-                  <Time>{new Date(c.createdAt).toLocaleString()}</Time>
-                </CommentTop>
-                <Text>
-                  {editedCommentId === c.id ? (
-                    <EditForm onSubmit={handleEditSubmit}>
-                      <textarea
-                        value={editedBody}
-                        required
-                        onChange={(e) => setEditedBody(e.target.value)}
-                      />
-                      {error && <ErrorMsg>{error}</ErrorMsg>}
-                      <button type="submit" disabled={loading}>
-                        Save
-                      </button>
-                      <button type="button" disabled={loading} onClick={handleEditCancel}>
-                        Cancel
-                      </button>
-                    </EditForm>
-                  ) : (
-                    <span>{c.body}</span>
+      <List className={className}>
+        {comments.map((c: CommentWithUserColor, i: number) => (
+          <ListItem key={`${c.id}-${i}`}>
+            <CommentAuthor>
+              <UserCircle color={c.user.color} currentUser={false}>
+                {c.user.firstname.charAt(0).toUpperCase()}
+              </UserCircle>
+            </CommentAuthor>
+            <Body>
+              <CommentTop>
+                <CommentName>
+                  <Name>{c.user.firstname}</Name>
+                  {isEditable(c) && (
+                    <IconButtons>
+                      <Button onClick={() => handleEdit(c)}>
+                        <FiEdit3 size={16} />
+                      </Button>
+                      <Button onClick={() => handleDelete(c)}>
+                        <FiTrash size={16} />
+                      </Button>
+                    </IconButtons>
                   )}
-                </Text>
-              </Body>
-            </ListItem>
-          ))}
-        </List>
-        <NewCommentForm change={change} />
-      </Container>
+                </CommentName>
+                <Time>{new Date(c.createdAt).toLocaleString()}</Time>
+              </CommentTop>
+              <Text>
+                {editedCommentId === c.id ? (
+                  <EditForm onSubmit={handleEditSubmit}>
+                    <textarea
+                      value={editedBody}
+                      required
+                      onChange={(e) => setEditedBody(e.target.value)}
+                    />
+                    {error && <ErrorMsg>{error}</ErrorMsg>}
+                    <button type="submit" disabled={loading}>
+                      Save
+                    </button>
+                    <button type="button" disabled={loading} onClick={handleEditCancel}>
+                      Cancel
+                    </button>
+                  </EditForm>
+                ) : (
+                  <span>{c.body}</span>
+                )}
+              </Text>
+            </Body>
+          </ListItem>
+        ))}
+      </List>
     )
   })
 )
 
-const Container = styled.div`
-  border: 1px solid #e7e7e7;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  &.hidden {
-    display: none;
-    visibility: hidden;
-  }
-`
-const Title = styled.h3`
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0.5rem;
-  text-transform: uppercase;
-`
 const List = styled.ul<{ indent?: boolean }>`
   display: flex;
   flex-direction: column;
   list-style: none;
   margin: 0;
   padding: 0;
+  &.hidden {
+    display: none;
+    visibility: hidden;
+  }
+  & > li:nth-child(odd) {
+    background: #f3f3f3;
+  }
 `
 const ListItem = styled.li`
   display: flex;
@@ -233,9 +208,12 @@ const Text = styled.div`
 `
 const EditForm = styled.form`
   margin: 0;
+  width: 100%;
   textarea {
     height: 5rem;
     margin: 0 0 0.5rem 0;
+    padding: 4px;
+    width: calc(100% - 8px);
   }
   button {
     cursor: pointer;
