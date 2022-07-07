@@ -36,7 +36,7 @@ export function DocumentListPage() {
   ): AsyncGenerator<Evt<PmDocWithSnapshots>, void, unknown> {
     const { name } = values
     try {
-      const resp = await documentStore.createDocument(name)
+      const resp = await documentStore.createDocument({ name })
       if (resp.ok) {
         yield { e: 'ok', data: resp.data }
       } else {

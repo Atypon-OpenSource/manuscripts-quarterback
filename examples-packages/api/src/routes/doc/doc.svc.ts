@@ -92,7 +92,8 @@ export const docService = {
     const doc = schema.nodes.manuscript.createAndFill()?.toJSON() || {}
     const saved = await prisma.pmDoc.create({
       data: {
-        name: payload.name,
+        ...('id' in payload && { id: payload.id }),
+        name: 'name' in payload ? payload.name : 'Untitled',
         doc,
         user_id: userId,
       },

@@ -94,8 +94,8 @@ export class DocumentStore {
 
   @action openDocument = async (id: string) => {}
 
-  @action createDocument = async (name: string) => {
-    const resp = await docApi.createDocument({ name })
+  @action createDocument = async (payload: { name: string } | { id: string } | { name: string, id: string }) => {
+    const resp = await docApi.createDocument(payload)
     if (!resp.ok) {
       console.error(resp.error)
     } else {

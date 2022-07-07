@@ -42,9 +42,7 @@ export type IGetDocumentResponse = PmDocWithSnapshots
 export type IOpenDocumentResponse = Uint8Array
 
 // POST /doc
-export interface ICreateDocRequest {
-  name: string
-}
+export type ICreateDocRequest = { name: string } | { id: string } | { name: string, id: string }
 export type ICreateDocResponse = PmDocWithSnapshots
 
 // PUT /doc/:documentId

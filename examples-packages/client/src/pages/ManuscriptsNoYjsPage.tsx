@@ -31,7 +31,7 @@ export function ManuscriptsNoYjsPage() {
   const {
     authStore: { user, setUserColor },
     documentFlows,
-    documentStore: { updateCurrentDocument },
+    documentStore: { createDocument, updateCurrentDocument },
   } = stores
   const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
@@ -50,13 +50,16 @@ export function ManuscriptsNoYjsPage() {
   const [initialData, setInitialData] = useState<PmDoc>()
 
   useEffect(() => {
-    async function init() {
-      const resp = await documentFlows.getDoc(documentId)
+    async function fetchOrCreateDoc() {
+      let resp = await documentFlows.getDoc(documentId)
+      if (!resp.ok && resp.status === 404) {
+        resp = await createDocument({ id: documentId })
+      }
       if (resp.ok) {
         setInitialData(resp.data)
       }
     }
-    init()
+    fetchOrCreateDoc()
   }, [documentId])
   useEffect(() => {
     if (user?.color !== options.user.color) {

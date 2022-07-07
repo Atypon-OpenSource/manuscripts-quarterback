@@ -32,6 +32,8 @@ import { ManuscriptsEditorContext } from '../components/manuscripts-editor/Manus
 export function ManuscriptsPage() {
   const {
     authStore: { user: loggedUser, setEditorUser },
+    documentFlows,
+    documentStore: { createDocument },
   } = stores
   const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
@@ -46,6 +48,15 @@ export function ManuscriptsPage() {
   }>()
 
   useEffect(() => {
+    async function fetchOrCreateDoc() {
+      let resp = await documentFlows.getDoc(documentId)
+      if (!resp.ok && resp.status === 404) {
+        resp = await createDocument({ id: documentId })
+      }
+      if (resp.ok) {
+        // The postgres data is discarded since the Yjs updates are only persisted to Redis for now
+      }
+    }
     initialData && history.push(documentId)
     const yDoc = new Doc({ gc: false })
     const provider = new WebsocketProvider(YJS_WS_URL, documentId, yDoc)
@@ -59,6 +70,7 @@ export function ManuscriptsPage() {
       }
       setInitialData(data)
     })
+    fetchOrCreateDoc()
   }, [documentId])
 
   function handleSetUser(type: 'new' | 'logged', cb: (user: YjsUser) => void) {
