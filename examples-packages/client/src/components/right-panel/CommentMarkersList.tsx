@@ -50,9 +50,7 @@ export const CommentMarkersList = inject((stores: Stores) => ({
       onFocusToMarker,
       onDelete,
     } = props
-    const {
-      commentStore,
-    } = stores
+    const { commentStore } = stores
     const [isVisible, setIsVisible] = useState(true)
     const isEditable = useCallback(
       (c: CommentMarker) => isAdmin || c.userID === userId,
@@ -113,7 +111,7 @@ export const CommentMarkersList = inject((stores: Stores) => ({
               </Body>
               <CommentsList targetId={marker.id} />
               {isNewCommentFormVisible(marker.id) ? (
-                <NewCommentForm targetId={marker.id} onCancel={handleAddCommentCancel}/>
+                <NewCommentForm targetId={marker.id} onCancel={handleAddCommentCancel} />
               ) : (
                 <ReplyBox>
                   <div></div>

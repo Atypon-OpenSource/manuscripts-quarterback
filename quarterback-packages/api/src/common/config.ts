@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV !== 'production')
   await import('dotenv').then((exports) => {
     exports.config({
       // For some reason CORS_SAME_ORIGIN is not parsed otherwise
-      override: true
+      override: true,
     })
   })
 }
@@ -39,7 +39,7 @@ function parseInteger(env?: string) {
 function parseStringArray(env?: string): string[] | undefined {
   try {
     const parsed = JSON.parse(env || '')
-    if (Array.isArray(parsed) && parsed.every(s => typeof s === 'string')) {
+    if (Array.isArray(parsed) && parsed.every((s) => typeof s === 'string')) {
       return parsed
     }
     console.error('config.ts: Provided environment variable was not a string array!', parsed)

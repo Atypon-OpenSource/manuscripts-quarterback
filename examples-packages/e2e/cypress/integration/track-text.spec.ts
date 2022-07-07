@@ -92,7 +92,10 @@ describe('Track changes', () => {
       const attrs = node.marks[0]?.attrs
       expect(attrs?.dataTracked?.id).to.have.lengthOf(36)
       expect(attrs?.dataTracked?.userID).to.equal(TEST_USER.id)
-      expect(attrs?.dataTracked?.createdAt).to.be.within(Date.now() - 1000 * 60, Date.now() + 1000 * 60)
+      expect(attrs?.dataTracked?.createdAt).to.be.within(
+        Date.now() - 1000 * 60,
+        Date.now() + 1000 * 60
+      )
     })
     cy.get('ins.pending').should('have.text', 'asdf')
     cy.get('del.pending').should('have.length', 0)

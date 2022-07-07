@@ -26,11 +26,9 @@ function parseNodeEnv(NODE_ENV?: string): 'production' | 'dev' {
   return 'dev'
 }
 
-// TODO use default import
 export const config = {
   ENV: parseNodeEnv(process.env.NODE_ENV),
   PORT: parseInt(process.env.PORT || '') || 5070,
-  CORS_SAME_ORIGIN: process.env.CORS_SAME_ORIGIN || true,
   LOG: {
     LEVEL: process.env.LOG_LEVEL || 'info',
   },

@@ -109,7 +109,7 @@ const CommentAuthor = styled.div`
   margin: 0.5rem 0.75rem;
 `
 const ReplyBox = styled.div`
-  background: rgb(226,226,226); // #ededed;
+  background: rgb(226, 226, 226); // #ededed;
   display: flex;
   padding: 0.25rem 0;
 `

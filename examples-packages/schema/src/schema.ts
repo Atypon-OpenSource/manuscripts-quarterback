@@ -154,7 +154,7 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
           'data-user-id': node.attrs.userID,
           'data-created-at': node.attrs.createdAt,
           'data-position': node.attrs.position,
-          ...(node.attrs.position === 'start' && { id: node.attrs.id, })
+          ...(node.attrs.position === 'start' && { id: node.attrs.id }),
         }
         return ['span', attrs]
       },

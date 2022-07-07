@@ -64,7 +64,7 @@ interface Props {
 export const Editor = observer((props: Props) => {
   const { className = '', options, initialData } = props
   const {
-    commentStore: { toggleCommentListOpen }
+    commentStore: { toggleCommentListOpen },
   } = stores
   const editorDOMRef = useRef(null)
   const { viewProvider } = useEditorContext()
