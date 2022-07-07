@@ -49,11 +49,14 @@ export function ManuscriptsNoYjsPage() {
   const { documentId } = options
   const [initialData, setInitialData] = useState<PmDoc>()
 
-  useEffect(async () => {
-    const resp = await documentFlows.getDoc(documentId)
-    if (resp.ok) {
-      setInitialData(resp.data)
+  useEffect(() => {
+    async function init() {
+      const resp = await documentFlows.getDoc(documentId)
+      if (resp.ok) {
+        setInitialData(resp.data)
+      }
     }
+    init()
   }, [documentId])
   useEffect(() => {
     if (user?.color !== options.user.color) {

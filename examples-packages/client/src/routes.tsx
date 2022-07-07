@@ -27,13 +27,13 @@ import { ManuscriptsNoYjsPage } from './pages/ManuscriptsNoYjsPage'
 export const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <WrappedRoute exact path="/" component={FrontPage} />
+      <WrappedRoute exact path="/example/:documentId" component={FrontPage} />
       <WrappedRoute exact path="/login" component={LoginPage} />
       <WrappedRoute exact path="/account" component={AccountPage} />
       <WrappedRoute exact path="/docs" component={DocumentListPage} />
       <WrappedRoute exact path="/manuscripts/:documentId" component={ManuscriptsPage} />
       <WrappedRoute exact path="/manuscripts-no-yjs/:documentId" component={ManuscriptsNoYjsPage} />
-      <Redirect to="/" />
+      <Redirect to="/example/abc123" />
     </Switch>
   </BrowserRouter>
 )

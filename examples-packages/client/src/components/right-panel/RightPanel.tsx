@@ -19,7 +19,7 @@ import {
   trackCommands,
   TrackedChange,
 } from '@manuscripts/track-changes-plugin'
-import { commentsCommands, CommentsPluginState } from '@manuscripts/ext-comments'
+import { CommentMarker, commentsCommands, CommentsPluginState } from '@manuscripts/ext-comments'
 import { YjsExtension, YjsExtensionState } from '@manuscripts/ext-yjs'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
@@ -88,6 +88,9 @@ export const RightPanel = memo((props: Props) => {
       yjsStore?.createSnapshot()
     }
   }
+  function handleFocusCommentMarker(c: CommentMarker) {
+    viewProvider.execCommand(commentsCommands.focusCommentMarker(c))
+  }
   function handleDeleteCommentMarker(id: string) {
     viewProvider.execCommand(commentsCommands.deleteCommentMarker(id))
   }
@@ -102,7 +105,11 @@ export const RightPanel = memo((props: Props) => {
         trackChangesState={trackChangesState}
         createSnapshot={handleCreateSnapshot}
       />
-      <CommentMarkersList markers={commentsState?.markers} onDelete={handleDeleteCommentMarker} />
+      <CommentMarkersList
+        markers={commentsState?.markers}
+        onFocusToMarker={handleFocusCommentMarker}
+        onDelete={handleDeleteCommentMarker}
+      />
       <HistoryList viewProvider={viewProvider} />
       {yjsDisabled ? (
         <SnapshotsList viewProvider={viewProvider} />

@@ -98,8 +98,8 @@ export const DocumentList = observer((props: IProps) => {
         </button>
       </Header>
       <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
-        {documentsWithTitles.map((doc: ListedDocument & { userTitle?: string }, i: number) => (
-          <SnapListItem key={`${doc.id}`}>
+        {documentsWithTitles.map((doc: ListedDocument & { userTitle?: string }) => (
+          <ListItem key={`${doc.id}`}>
             {doc.userTitle && <h3>{doc.userTitle}</h3>}
             <TitleWrapper>
               {editedDocId === doc.id ? (
@@ -125,7 +125,7 @@ export const DocumentList = observer((props: IProps) => {
               )}
             </TitleWrapper>
             <small>Created: {new Date(doc.createdAt).toLocaleString()}</small>
-          </SnapListItem>
+          </ListItem>
         ))}
       </List>
     </>
@@ -175,7 +175,7 @@ const List = styled.ul`
     background: #f3f3f3;
   }
 `
-const SnapListItem = styled.li`
+const ListItem = styled.li`
   border-radius: 2px;
   padding: 0.25rem;
 `

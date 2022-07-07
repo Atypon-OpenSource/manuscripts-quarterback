@@ -39,8 +39,9 @@ import React, { useMemo, useRef, useState } from 'react'
 import { stores } from 'stores'
 import styled from 'styled-components'
 import { ySyncPluginKey } from 'y-prosemirror'
+import type { WebsocketProvider } from 'y-websocket'
+import type { Doc } from 'yjs'
 
-import useTrackOptions from '../../hooks/useTrackOptions'
 import { trackChangesExtension } from '../../trackExtension'
 import { TrackOptions } from '../TrackOptions'
 import { RightPanel } from '../right-panel/RightPanel'
@@ -50,18 +51,26 @@ import { useYjsExtension } from './useYjsExtension'
 
 import '@manuscripts/track-changes-plugin/src/styles.css'
 
-export const Editor = observer(() => {
+interface Props {
+  className?: string
+  options: TrackOptions
+  initialData: {
+    yDoc: Doc
+    pmDoc: Record<string, any>
+    provider: WebsocketProvider
+  }
+}
+
+export const Editor = observer((props: Props) => {
+  const { className = '', options, initialData } = props
   const {
-    authStore: { user: loggedUser, setEditorUser },
+    commentStore: { toggleCommentListOpen }
   } = stores
   const editorDOMRef = useRef(null)
-  const { options, setOptions } = useTrackOptions('editor-track-options', {
-    documentId: 'abc123',
-  })
   const { viewProvider } = useEditorContext()
   const { yjsState, yjsStore } = useYjsExtension(100)
   const trackChangesState = usePluginState<TrackChangesState>(trackChangesPluginKey, 100)
-  const commentsState = usePluginState<CommentsPluginState>(commentsPluginKey, 100)
+  const commentsState = usePluginState<CommentsPluginState>(commentsPluginKey, 1)
   const extensions = useMemo(
     () => [
       baseExtension(),
@@ -79,12 +88,17 @@ export const Editor = observer(() => {
           id: options.documentId,
         },
         user: options.user,
+        initial: {
+          doc: initialData.yDoc,
+          provider: initialData.provider,
+        },
         ws_url: YJS_WS_URL,
       }),
       commentsExtension({
         onCreateMarker: (id: string, node: any) => {
           console.log('id', id)
           console.log('node', node)
+          toggleCommentListOpen(id)
         },
       }),
     ],
@@ -92,6 +106,7 @@ export const Editor = observer(() => {
   )
   const editorProps = useMemo<EditorProps>(
     () => ({
+      initialDoc: initialData.pmDoc,
       extensions,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
@@ -102,24 +117,9 @@ export const Editor = observer(() => {
   )
   useEditor(editorProps, editorDOMRef)
 
-  function handleSetUser(type: 'new' | 'logged', cb: (user: YjsUser) => void) {
-    if (type === 'new') {
-      const user = generateUser()
-      setEditorUser(user)
-      cb(user)
-    } else if (type === 'logged' && loggedUser) {
-      const user = generateUser({
-        id: loggedUser.id,
-        name: loggedUser.firstname,
-        clientID: loggedUser.firstname.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0),
-      })
-      cb(user)
-    }
-  }
   return (
     <>
       <UsersList yjsState={yjsState} />
-      <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
       <div>
         <ViewGrid>
           <LeftSide>

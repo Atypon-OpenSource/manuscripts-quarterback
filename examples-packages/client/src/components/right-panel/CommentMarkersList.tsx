@@ -23,7 +23,7 @@ import { stores, Stores } from 'stores'
 
 import { UserCircle } from 'elements/UserCircle'
 import { CommentsList } from '../comments-list/CommentsList'
-import { NewCommentForm } from '../comments-list/NewCommentForm'
+import NewCommentForm from '../comments-list/NewCommentForm'
 
 interface IProps {
   className?: string
@@ -31,6 +31,7 @@ interface IProps {
   userId?: string
   isAdmin?: string
   openCommentLists?: Set<string>
+  onFocusToMarker: (c: CommentMarker) => void
   onDelete: (id: string) => void
 }
 
@@ -40,9 +41,17 @@ export const CommentMarkersList = inject((stores: Stores) => ({
   openCommentLists: stores.commentStore.openCommentLists,
 }))(
   observer((props: IProps) => {
-    const { className, userId, isAdmin, markers = [], openCommentLists, onDelete } = props
     const {
-      commentStore: { toggleCommentListOpen },
+      className,
+      userId,
+      isAdmin,
+      markers = [],
+      openCommentLists,
+      onFocusToMarker,
+      onDelete,
+    } = props
+    const {
+      commentStore,
     } = stores
     const [isVisible, setIsVisible] = useState(true)
     const isEditable = useCallback(
@@ -55,6 +64,18 @@ export const CommentMarkersList = inject((stores: Stores) => ({
     )
     function handleDelete(c: CommentMarker) {
       onDelete(c.id)
+    }
+    function handleTextClick(c: CommentMarker) {
+      onFocusToMarker(c)
+    }
+    function handleReplyButtonClick(c: CommentMarker) {
+      commentStore.toggleCommentListOpen(c.id)
+    }
+    function handleAddCommentCancel(id: string) {
+      console.log('canceled ', commentStore.changeComments.get(id))
+      if (!commentStore.changeComments.get(id)?.length) {
+        onDelete(id)
+      }
     }
     return (
       <>
@@ -86,15 +107,17 @@ export const CommentMarkersList = inject((stores: Stores) => ({
                   </CommentName>
                   <Time>{new Date(marker.createdAt).toLocaleString()}</Time>
                 </CommentTop>
-                <Text>{marker.text}</Text>
+                <Text onClick={() => handleTextClick(marker)} tabIndex={0}>
+                  {marker.text}
+                </Text>
               </Body>
               <CommentsList targetId={marker.id} />
               {isNewCommentFormVisible(marker.id) ? (
-                <NewCommentForm targetId={marker.id} />
+                <NewCommentForm targetId={marker.id} onCancel={handleAddCommentCancel}/>
               ) : (
                 <ReplyBox>
                   <div></div>
-                  <Button onClick={() => toggleCommentListOpen(marker.id)}>
+                  <Button onClick={() => handleReplyButtonClick(marker)}>
                     <FiCornerUpLeft size={16} />
                   </Button>
                 </ReplyBox>
@@ -151,12 +174,17 @@ const List = styled.ul`
   }
 `
 const ListItem = styled.li`
-  background: rgb(255, 255, 255);
-  border-width: 1px 1px 1px 4px;
+  /* border-width: 1px 1px 1px 4px;
   border-style: solid;
   border-color: rgb(226, 226, 226);
-  border-radius: 2px;
-  padding: 0.25rem;
+  border-radius: 2px; */
+  border: 1px solid rgb(181, 181, 181);
+  border-radius: 5px;
+  margin: 0;
+  padding: 0;
+  & > ${NewCommentForm} {
+    margin-top: 1rem;
+  }
 `
 const CommentAuthor = styled.div`
   margin: 0.5rem 0.75rem;
@@ -194,12 +222,16 @@ const Button = styled.button`
 const Body = styled.div`
   flex-grow: 1;
   margin-right: 0.5rem;
+  padding: 0.25rem;
 `
 const Text = styled.div`
   align-items: center;
   background-color: rgb(255, 224, 139);
+  border-radius: 2px;
+  cursor: pointer;
   display: flex;
   margin: 0.25rem 0 0 0;
+  padding: 0.25rem;
   white-space: pre-line;
 `
 const ReplyBox = styled.div`

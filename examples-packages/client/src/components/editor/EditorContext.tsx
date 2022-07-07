@@ -16,13 +16,9 @@
 import { createDefaultProviders, ReactEditorContext } from '@manuscripts/examples-track-editor'
 import React, { useMemo } from 'react'
 
-import { Editor } from './Editor'
-
-export const EditorWrapper: React.FC = () => {
+export const EditorContext: React.FC = ({ children }) => {
   const editorProviders = useMemo(() => createDefaultProviders(), [])
   return (
-    <ReactEditorContext.Provider value={editorProviders}>
-      <Editor />
-    </ReactEditorContext.Provider>
+    <ReactEditorContext.Provider value={editorProviders}>{children}</ReactEditorContext.Provider>
   )
 }

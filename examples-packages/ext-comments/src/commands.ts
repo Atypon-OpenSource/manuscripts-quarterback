@@ -13,11 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Command } from '@manuscripts/manuscript-editor'
+import type { Command } from 'prosemirror-state'
 import { v4 as uuidv4 } from 'uuid'
 
 import { setAction, Action } from './actions'
 import { commentsPluginKey } from './plugin'
+import { CommentMarker } from './types'
+
+export const focusCommentMarker =
+  (marker: CommentMarker): Command =>
+  (state, dispatch, view) => {
+    // const { tr } = state
+    // tr.scrollIntoView()
+    const dom = document.getElementById(marker.id)
+    console.log('hello', view)
+    console.log('dom', dom)
+    if (dom instanceof HTMLElement) {
+      // dom.scrollIntoView()
+      // dom.focus()
+      dom.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+      })
+    }
+    return true
+  }
 
 export const insertCommentMarker =
   (userID: string): Command =>

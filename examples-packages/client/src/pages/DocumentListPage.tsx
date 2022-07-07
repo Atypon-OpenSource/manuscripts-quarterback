@@ -52,7 +52,11 @@ export function DocumentListPage() {
   return (
     <Container>
       <header>
-        <h1>Documents in the database</h1>
+        <h1>Documents in Postgres</h1>
+        <p>
+          These are different from the ones edited by Yjs collaboration since they are currently
+          only persisted as binary updates to Redis.
+        </p>
       </header>
       <fieldset>
         <legend>New document</legend>

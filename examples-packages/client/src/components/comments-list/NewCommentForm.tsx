@@ -24,10 +24,11 @@ import { UserCircle } from 'elements/UserCircle'
 interface IProps {
   className?: string
   targetId: string
+  onCancel?: (id: string) => void
 }
 
-export const NewCommentForm = observer((props: IProps) => {
-  const { className, targetId } = props
+const NewCommentForm = observer((props: IProps) => {
+  const { className = '', targetId, onCancel } = props
   const {
     authStore: { user },
     commentStore,
@@ -73,9 +74,11 @@ export const NewCommentForm = observer((props: IProps) => {
   function handleCancel() {
     setBody('')
     commentStore.toggleCommentListOpen(targetId)
+    console.log('targetId', targetId)
+    onCancel && onCancel(targetId)
   }
   return (
-    <ReplyBox className={className || ''}>
+    <ReplyBox className={className}>
       <CommentAuthor>
         <UserCircle color={user?.color || 'red'} currentUser={false}>
           {user?.firstname.charAt(0)}
@@ -106,7 +109,7 @@ const CommentAuthor = styled.div`
   margin: 0.5rem 0.75rem;
 `
 const ReplyBox = styled.div`
-  background: #e7e7e7;
+  background: rgb(226,226,226); // #ededed;
   display: flex;
   padding: 0.25rem 0;
 `
@@ -136,3 +139,4 @@ const ReplyButtons = styled.div`
 const SendButton = styled.button`
   cursor: pointer;
 `
+export default styled(NewCommentForm)``

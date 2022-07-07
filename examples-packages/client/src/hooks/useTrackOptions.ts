@@ -23,9 +23,7 @@ function useTrackOptions(storageKey: string, initial?: Partial<TrackOptions>) {
       let persisted: TrackOptions | undefined
       try {
         persisted = JSON.parse(localStorage.getItem(storageKey) || '')
-      } catch (err) {
-        console.error(err)
-      }
+      } catch (err) {}
       if (persisted) {
         return {
           ...persisted,

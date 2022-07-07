@@ -13,18 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
+import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
+import { YJS_WS_URL } from 'config'
+import useTrackOptions from 'hooks/useTrackOptions'
+import React, { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { stores } from 'stores'
 import styled from 'styled-components'
+import { yDocToProsemirrorJSON } from 'y-prosemirror'
+import { WebsocketProvider } from 'y-websocket'
+import { Doc } from 'yjs'
 
-import { EditorWrapper } from '../components/editor/EditorWrapper'
+import { TrackOptions } from '../components/TrackOptions'
+import { EditorContext } from '../components/editor/EditorContext'
+import { Editor } from '../components/editor/Editor'
 
 export function FrontPage() {
+  const {
+    authStore: { user: loggedUser, setEditorUser },
+  } = stores
+  const history = useHistory()
+  const routeParams = useParams<{ documentId: string }>()
+  const { options, setOptions } = useTrackOptions('editor-track-options', {
+    documentId: routeParams.documentId,
+  })
+  const { documentId } = options
+  const [initialData, setInitialData] = useState<{
+    yDoc: Doc
+    pmDoc: Record<string, any>
+    provider: WebsocketProvider
+  }>()
+
+  useEffect(() => {
+    initialData && history.push(documentId)
+    const yDoc = new Doc({ gc: false })
+    const provider = new WebsocketProvider(YJS_WS_URL, documentId, yDoc)
+    provider.on('synced', () => {
+      const pmDoc = yDocToProsemirrorJSON(yDoc, 'pm-doc')
+      const data = {
+        yDoc,
+        pmDoc,
+        provider,
+      }
+      setInitialData(data)
+    })
+  }, [documentId])
+
+  function handleSetUser(type: 'new' | 'logged', cb: (user: YjsUser) => void) {
+    if (type === 'new') {
+      const user = generateUser()
+      setEditorUser(user)
+      cb(user)
+    } else if (type === 'logged' && loggedUser) {
+      const user = generateUser({
+        id: loggedUser.id,
+        name: loggedUser.firstname,
+        clientID: loggedUser.firstname.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0),
+      })
+      cb(user)
+    }
+  }
+
   return (
     <Container>
       <header>
         <h1>Track changes with Yjs</h1>
+        <TrackOptions options={options} setOptions={setOptions} setUser={handleSetUser} />
       </header>
-      <EditorWrapper />
+      {initialData && (
+        <EditorContext>
+          <Editor options={options} initialData={initialData} />
+        </EditorContext>
+      )}
     </Container>
   )
 }

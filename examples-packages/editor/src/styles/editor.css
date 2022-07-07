@@ -14,3 +14,6 @@
 .ProseMirror mark {
   background-color: rgba(250, 224, 150, 0.6);
 }
+.ProseMirror mark:focus {
+  background-color: rgb(255 192 13);
+}

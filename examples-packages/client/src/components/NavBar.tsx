@@ -33,7 +33,7 @@ export const NavBar = observer((props: IProps) => {
     <Container className={className}>
       <Nav>
         <div>
-          <Link to="/" exact activeClassName="current">
+          <Link to="/example/abc123" exact activeClassName="current">
             Front page
           </Link>
           <Link to="/manuscripts/doc1" exact activeClassName="current">

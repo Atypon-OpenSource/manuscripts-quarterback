@@ -18,9 +18,7 @@ import { Plugin, PluginKey } from 'prosemirror-state'
 import { getActiveMarks } from './commands'
 import type { ActiveNodesMarksState } from './types'
 
-export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState>(
-  'active-nodes-marks'
-)
+export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState>('active-nodes-marks')
 
 export const activeNodesMarksPlugin = () => {
   return new Plugin<ActiveNodesMarksState>({

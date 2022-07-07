@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateUser, generateYjsUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
+import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import { YJS_WS_URL } from 'config'
 import useTrackOptions from 'hooks/useTrackOptions'
 import React, { useEffect, useState } from 'react'
