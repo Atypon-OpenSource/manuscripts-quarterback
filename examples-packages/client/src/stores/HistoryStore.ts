@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Review, ReviewWithSnapshots, SnapshotLabel } from '@manuscripts/examples-track-shared'
+import { Review, ReviewWithSnapshots, SnapshotLabel } from '@manuscripts/examples-track-types'
 import { action, autorun, computed, makeObservable, observable, reaction } from 'mobx'
 
 import { AuthStore } from './AuthStore'

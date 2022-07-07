@@ -42,7 +42,7 @@
   "dependencies": {
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/examples-track-db": "workspace:*",
-    "@manuscripts/examples-track-shared": "workspace:*",
+    "@manuscripts/examples-track-types": "workspace:*",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "~4.17.1",
@@ -53,6 +53,6 @@
     "morgan": "^1.10.0",
     "winston": "^3.3.3",
     "y-prosemirror": "^1.0.14",
-    "yjs": "^13.5.27"
+    "yjs": "^13.5.39"
   }
 }

@@ -20,7 +20,7 @@
     "@manuscripts/manuscript-transform": "workspace:*",
     "@manuscripts/manuscripts-json-schema": "^1.47.0",
     "@manuscripts/examples-track-editor": "workspace:*",
-    "@manuscripts/examples-track-shared": "workspace:*",
+    "@manuscripts/examples-track-types": "workspace:*",
     "@manuscripts/style-guide": "workspace:*",
     "@popperjs/core": "^2.10.2",
     "history": "^4.10.1",
@@ -46,7 +46,7 @@
     "uuid": "^8.3.1",
     "y-prosemirror": "^1.0.14",
     "y-websocket": "^1.3.18",
-    "yjs": "^13.5.27"
+    "yjs": "^13.5.39"
   },
   "devDependencies": {
     "@types/history": "^4.7.8",

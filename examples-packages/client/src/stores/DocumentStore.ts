@@ -22,7 +22,7 @@ import {
   ListedDocument,
   PmDocSnapshot,
   PmDocWithSnapshots,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import * as docApi from 'api/document'
 import * as snapApi from 'api/snapshot'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'

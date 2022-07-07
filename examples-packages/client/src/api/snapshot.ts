@@ -19,7 +19,7 @@ import {
   ISaveSnapshotRequest,
   ISaveSnapshotResponse,
   IUpdateSnapshotRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 
 import { get, post, put, del } from './methods'
 

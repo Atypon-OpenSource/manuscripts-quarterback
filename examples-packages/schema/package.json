@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "prosemirror-model": "^1.18.1",
-    "@manuscripts/examples-track-shared": "workspace:*",
+    "@manuscripts/examples-track-types": "workspace:*",
     "@manuscripts/track-changes-plugin": "workspace:*"
   }
 }

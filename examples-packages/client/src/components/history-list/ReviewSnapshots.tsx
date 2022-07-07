@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SnapshotLabel } from '@manuscripts/examples-track-shared'
+import { SnapshotLabel } from '@manuscripts/examples-track-types'
 import React from 'react'
 import { BsQuestion } from 'react-icons/bs'
 import { FiCheck, FiX } from 'react-icons/fi'

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { User } from '@manuscripts/examples-track-shared'
+import type { User } from '@manuscripts/examples-track-types'
 import type { Request, Response } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 

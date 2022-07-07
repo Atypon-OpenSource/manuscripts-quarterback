@@ -20,11 +20,12 @@ case "$1" in
 EOSQL
   ;;
   utils)
-    pnpm --parallel --filter @manuscripts/examples-track-shared \
+    pnpm --parallel --filter @manuscripts/examples-track-types \
       --filter @manuscripts/examples-track-schema \
       --filter @manuscripts/examples-track-editor \
       --filter @manuscripts/track-changes-plugin \
       --filter @manuscripts/ext-yjs \
+      --filter @manuscripts/ext-comments \
       watch
     ;;
   api:watch)

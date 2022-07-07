@@ -19,7 +19,7 @@ import {
   Event,
   ICreateReviewRequest,
   PmDocWithSnapshots,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import { AuthStore } from './AuthStore'
 import { CommentStore } from './CommentStore'
 import { DocumentStore } from './DocumentStore'

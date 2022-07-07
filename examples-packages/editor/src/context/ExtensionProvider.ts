@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Observable } from '@manuscripts/examples-track-shared'
+import { Observable } from '@manuscripts/examples-track-types'
 import { Plugin } from 'prosemirror-state'
 
 import { Commands } from '$typings/editor'

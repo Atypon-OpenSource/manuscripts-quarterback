@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDoc } from '@manuscripts/examples-track-db'
+import { PmDoc } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 import { DocStatus } from '../src/doc'
 
-export { PmDoc } from '@manuscripts/examples-track-db'
+export { PmDoc } from '../prisma'
 export { DocStatus } from '../src/doc'
 
 export type ListedDocument = Pick<PmDoc, 'id' | 'name' | 'createdAt'> & {

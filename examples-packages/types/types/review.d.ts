@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Review } from '@manuscripts/examples-track-db'
+import { Review } from '../prisma'
 import { PmDocSnapshot, SnapshotLabel } from './snapshot'
 
-export { Review } from '@manuscripts/examples-track-db'
+export { Review } from '../prisma'
 export { ReviewStatus } from '../src/review'
 
 export type ReviewWithSnapshots = Review & {

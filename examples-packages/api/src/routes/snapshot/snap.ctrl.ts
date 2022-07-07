@@ -19,7 +19,7 @@ import {
   ISaveSnapshotResponse,
   ISaveSnapshotRequest,
   IUpdateDocRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import { NextFunction } from 'express'
 import Joi from 'joi'
 

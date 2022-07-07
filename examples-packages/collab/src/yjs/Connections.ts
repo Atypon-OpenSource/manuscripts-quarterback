@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { uuidv4 } from '@manuscripts/examples-track-shared'
+import { uuidv4 } from '@manuscripts/examples-track-types'
 import { IncomingMessage } from 'http'
 import WebSocket from 'ws'
 

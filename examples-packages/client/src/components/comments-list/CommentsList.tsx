@@ -17,7 +17,7 @@ import {
   CommentWithUserColor,
   Event,
   IUpdateCommentRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import { inject, observer } from 'mobx-react'
 import React, { useState, useCallback } from 'react'
 import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'

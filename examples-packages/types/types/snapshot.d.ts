@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PmDocSnapshot } from '@manuscripts/examples-track-db'
+import { PmDocSnapshot } from '../prisma'
 
-export { PmDocSnapshot } from '@manuscripts/examples-track-db'
+export { PmDocSnapshot } from '../prisma'
 
 export type SnapshotLabel = Pick<PmDocSnapshot, 'id' | 'name' | 'createdAt'>
 

@@ -21,7 +21,7 @@ import {
   IFinishReviewRequest,
   IFinishReviewResponse,
   IDeleteReviewResponse,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import { NextFunction } from 'express'
 import Joi from 'joi'
 

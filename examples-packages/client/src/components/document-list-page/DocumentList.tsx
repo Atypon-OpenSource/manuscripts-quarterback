@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Evt, ListedDocument } from '@manuscripts/examples-track-shared'
+import { Evt, ListedDocument } from '@manuscripts/examples-track-types'
 import { observer } from 'mobx-react'
 import React, { useCallback, useMemo, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'

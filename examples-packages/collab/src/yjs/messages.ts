@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Event } from '@manuscripts/examples-track-shared'
+import type { Event } from '@manuscripts/examples-track-types'
 import type { Decoder } from 'lib0/decoding'
 import { createDecoder, readVarUint, readVarUint8Array } from 'lib0/decoding'
 import {

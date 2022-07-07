@@ -51,7 +51,7 @@ importers:
   examples-packages/api:
     specifiers:
       '@manuscripts/examples-track-db': workspace:*
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/manuscript-transform': workspace:*
       '@rollup/plugin-alias': ^3.1.8
       '@rollup/plugin-commonjs': ^21.0.1
@@ -80,10 +80,10 @@ importers:
       typescript: ^4.4.4
       winston: ^3.3.3
       y-prosemirror: ^1.0.14
-      yjs: ^13.5.27
+      yjs: ^13.5.39
     dependencies:
       '@manuscripts/examples-track-db': link:../db
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/manuscript-transform': link:../manuscript-transform
       bcrypt: 5.0.1
       cors: 2.8.5
@@ -94,8 +94,8 @@ importers:
       jsonwebtoken: 8.5.1
       morgan: 1.10.0
       winston: 3.7.2
-      y-prosemirror: 1.1.0_yjs@13.5.38
-      yjs: 13.5.38
+      y-prosemirror: 1.1.0_yjs@13.5.39
+      yjs: 13.5.39
     devDependencies:
       '@rollup/plugin-alias': 3.1.9_rollup@2.73.0
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.73.0
@@ -118,7 +118,7 @@ importers:
   examples-packages/client:
     specifiers:
       '@manuscripts/examples-track-editor': workspace:*
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/ext-comments': workspace:*
       '@manuscripts/ext-yjs': workspace:*
       '@manuscripts/manuscript-editor': workspace:*
@@ -164,10 +164,10 @@ importers:
       vite-tsconfig-paths: ^3.3.17
       y-prosemirror: ^1.0.14
       y-websocket: ^1.3.18
-      yjs: ^13.5.27
+      yjs: ^13.5.39
     dependencies:
       '@manuscripts/examples-track-editor': link:../editor
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/ext-comments': link:../ext-comments
       '@manuscripts/ext-yjs': link:../ext-yjs
       '@manuscripts/manuscript-editor': link:../manuscript-editor
@@ -197,9 +197,9 @@ importers:
       typescript: 4.4.2
       unique-names-generator: 4.7.1
       uuid: 8.3.2
-      y-prosemirror: 1.1.0_a7sdyutmhbr3v2z42yv3zhjo6e
-      y-websocket: 1.4.3_yjs@13.5.38
-      yjs: 13.5.38
+      y-prosemirror: 1.1.0_tmij62orzheg6nz2bngi2e76pu
+      y-websocket: 1.4.3_yjs@13.5.39
+      yjs: 13.5.39
     devDependencies:
       '@types/history': 4.7.11
       '@types/lodash.debounce': 4.0.7
@@ -219,7 +219,7 @@ importers:
   examples-packages/collab:
     specifiers:
       '@manuscripts/examples-track-db': workspace:*
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/manuscript-transform': workspace:*
       '@rollup/plugin-alias': ^3.1.8
       '@rollup/plugin-commonjs': ^21.0.1
@@ -251,10 +251,10 @@ importers:
       ws: ^8.2.3
       y-prosemirror: ^1.0.14
       y-protocols: ^1.0.5
-      yjs: ^13.5.27
+      yjs: ^13.5.39
     dependencies:
       '@manuscripts/examples-track-db': link:../db
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/manuscript-transform': link:../manuscript-transform
       bcrypt: 5.0.1
       cors: 2.8.5
@@ -267,9 +267,9 @@ importers:
       morgan: 1.10.0
       winston: 3.7.2
       ws: 8.6.0
-      y-prosemirror: 1.1.0_dnzaxnwjrozgvchelvsd2mbjo4
+      y-prosemirror: 1.1.0_jzascd4egnm6q536yt5eavl4be
       y-protocols: 1.0.5
-      yjs: 13.5.38
+      yjs: 13.5.39
     devDependencies:
       '@rollup/plugin-alias': 3.1.9_rollup@2.73.0
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.73.0
@@ -323,7 +323,7 @@ importers:
   examples-packages/editor:
     specifiers:
       '@manuscripts/examples-track-schema': workspace:*
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/track-changes-plugin': workspace:*
       '@rollup/plugin-alias': ^3.1.8
       '@rollup/plugin-commonjs': ^20.0.0
@@ -359,10 +359,10 @@ importers:
       y-prosemirror: ^1.0.14
       y-protocols: ^1.0.5
       y-websocket: ^1.3.18
-      yjs: ^13.5.27
+      yjs: ^13.5.39
     dependencies:
       '@manuscripts/examples-track-schema': link:../schema
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/track-changes-plugin': link:../../quarterback-packages/track-changes-plugin
       lib0: 0.2.51
       prosemirror-commands: 1.3.0
@@ -380,10 +380,10 @@ importers:
       prosemirror-view: 1.26.2
       randomcolor: 0.6.2
       unique-names-generator: 4.7.1
-      y-prosemirror: 1.1.0_3qq7ktm6ru3v5okb4ejeo6knjq
+      y-prosemirror: 1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4
       y-protocols: 1.0.5
-      y-websocket: 1.4.3_yjs@13.5.38
-      yjs: 13.5.38
+      y-websocket: 1.4.3_yjs@13.5.39
+      yjs: 13.5.39
     devDependencies:
       '@rollup/plugin-alias': 3.1.9_rollup@2.73.0
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.73.0
@@ -440,7 +440,7 @@ importers:
 
   examples-packages/ext-yjs:
     specifiers:
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/manuscript-editor': workspace:*
       '@manuscripts/track-changes-plugin': workspace:*
       '@rollup/plugin-commonjs': ^20.0.0
@@ -463,18 +463,18 @@ importers:
       y-prosemirror: ^1.0.14
       y-protocols: ^1.0.5
       y-websocket: ^1.3.18
-      yjs: ^13.5.27
+      yjs: ^13.5.39
     dependencies:
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/track-changes-plugin': link:../../quarterback-packages/track-changes-plugin
       debug: 4.3.4
       lib0: 0.2.51
       randomcolor: 0.6.2
       unique-names-generator: 4.7.1
-      y-prosemirror: 1.1.0_3qq7ktm6ru3v5okb4ejeo6knjq
+      y-prosemirror: 1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4
       y-protocols: 1.0.5
-      y-websocket: 1.4.3_yjs@13.5.38
-      yjs: 13.5.38
+      y-websocket: 1.4.3_yjs@13.5.39
+      yjs: 13.5.39
     devDependencies:
       '@manuscripts/manuscript-editor': link:../manuscript-editor
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.73.0
@@ -815,7 +815,7 @@ importers:
 
   examples-packages/schema:
     specifiers:
-      '@manuscripts/examples-track-shared': workspace:*
+      '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/track-changes-plugin': workspace:*
       '@rollup/plugin-commonjs': ^20.0.0
       prosemirror-model: ^1.18.1
@@ -824,26 +824,12 @@ importers:
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.4.4
     dependencies:
-      '@manuscripts/examples-track-shared': link:../shared
+      '@manuscripts/examples-track-types': link:../types
       '@manuscripts/track-changes-plugin': link:../../quarterback-packages/track-changes-plugin
       prosemirror-model: 1.18.1
     devDependencies:
       '@rollup/plugin-commonjs': 20.0.0_rollup@2.73.0
       prosemirror-schema-list: 1.2.0
-      rollup: 2.73.0
-      rollup-plugin-typescript2: 0.30.0_anzmtkbpu2qkzgkvydr4fm6zcm
-      typescript: 4.6.4
-
-  examples-packages/shared:
-    specifiers:
-      '@manuscripts/examples-track-db': workspace:*
-      rimraf: ^3.0.2
-      rollup: ^2.58.3
-      rollup-plugin-typescript2: ^0.30.0
-      typescript: ^4.4.4
-    devDependencies:
-      '@manuscripts/examples-track-db': link:../db
-      rimraf: 3.0.2
       rollup: 2.73.0
       rollup-plugin-typescript2: 0.30.0_anzmtkbpu2qkzgkvydr4fm6zcm
       typescript: 4.6.4
@@ -1008,6 +994,18 @@ importers:
       rimraf: 3.0.2
       styled-components: 5.3.5_mdz3marskokvq6744hhidi3r5a
       typescript: 4.4.4
+
+  examples-packages/types:
+    specifiers:
+      rimraf: ^3.0.2
+      rollup: ^2.58.3
+      rollup-plugin-typescript2: ^0.30.0
+      typescript: ^4.4.4
+    devDependencies:
+      rimraf: 3.0.2
+      rollup: 2.74.0
+      rollup-plugin-typescript2: 0.30.0_dyu3set7imqii5ytavmnwecwpy
+      typescript: 4.6.4
 
   quarterback-packages/api:
     specifiers:
@@ -16294,7 +16292,7 @@ packages:
     bundledDependencies: []
 
   /jsonfile/4.0.0:
-    resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
+    resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
     optionalDependencies:
       graceful-fs: 4.2.10
 
@@ -25153,7 +25151,7 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
 
-  /y-leveldb/0.1.1_yjs@13.5.38:
+  /y-leveldb/0.1.1_yjs@13.5.39:
     resolution: {integrity: sha512-L8Q0MQmxCQ0qWIOuPzLbWn95TNhrCI7M6LaHnilU4I2IX08e4Dmfg5Tgy4JZ3tnl2aiuZyDOJplHl/msIB/IsA==}
     requiresBuild: true
     peerDependencies:
@@ -25161,11 +25159,40 @@ packages:
     dependencies:
       level: 6.0.1
       lib0: 0.2.51
-      yjs: 13.5.38
+      yjs: 13.5.39
     dev: false
     optional: true
 
-  /y-prosemirror/1.1.0_3qq7ktm6ru3v5okb4ejeo6knjq:
+  /y-prosemirror/1.1.0_jzascd4egnm6q536yt5eavl4be:
+    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.5.38
+    dependencies:
+      lib0: 0.2.51
+      y-protocols: 1.0.5
+      yjs: 13.5.39
+    dev: false
+
+  /y-prosemirror/1.1.0_tmij62orzheg6nz2bngi2e76pu:
+    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.5.38
+    dependencies:
+      lib0: 0.2.51
+      prosemirror-state: 1.4.1
+      prosemirror-view: 1.26.2
+      yjs: 13.5.39
+    dev: false
+
+  /y-prosemirror/1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4:
     resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -25179,10 +25206,10 @@ packages:
       prosemirror-state: 1.4.1
       prosemirror-view: 1.26.2
       y-protocols: 1.0.5
-      yjs: 13.5.38
+      yjs: 13.5.39
     dev: false
 
-  /y-prosemirror/1.1.0_a7sdyutmhbr3v2z42yv3zhjo6e:
+  /y-prosemirror/1.1.0_yjs@13.5.39:
     resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -25192,36 +25219,7 @@ packages:
       yjs: ^13.5.38
     dependencies:
       lib0: 0.2.51
-      prosemirror-state: 1.4.1
-      prosemirror-view: 1.26.2
-      yjs: 13.5.38
-    dev: false
-
-  /y-prosemirror/1.1.0_dnzaxnwjrozgvchelvsd2mbjo4:
-    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
-    peerDependencies:
-      prosemirror-model: ^1.7.1
-      prosemirror-state: ^1.2.3
-      prosemirror-view: ^1.9.10
-      y-protocols: ^1.0.1
-      yjs: ^13.5.38
-    dependencies:
-      lib0: 0.2.51
-      y-protocols: 1.0.5
-      yjs: 13.5.38
-    dev: false
-
-  /y-prosemirror/1.1.0_yjs@13.5.38:
-    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
-    peerDependencies:
-      prosemirror-model: ^1.7.1
-      prosemirror-state: ^1.2.3
-      prosemirror-view: ^1.9.10
-      y-protocols: ^1.0.1
-      yjs: ^13.5.38
-    dependencies:
-      lib0: 0.2.51
-      yjs: 13.5.38
+      yjs: 13.5.39
     dev: false
 
   /y-protocols/1.0.5:
@@ -25230,7 +25228,7 @@ packages:
       lib0: 0.2.51
     dev: false
 
-  /y-websocket/1.4.3_yjs@13.5.38:
+  /y-websocket/1.4.3_yjs@13.5.39:
     resolution: {integrity: sha512-VobyJaAoyWIETETNZragnTpL7kcJr8a/CIUQP6DfXcQ4v0UmZUuANdsPsbmMjDsEeUECVFRhHauxpDtRhYqkaQ==}
     hasBin: true
     peerDependencies:
@@ -25239,10 +25237,10 @@ packages:
       lib0: 0.2.51
       lodash.debounce: 4.0.8
       y-protocols: 1.0.5
-      yjs: 13.5.38
+      yjs: 13.5.39
     optionalDependencies:
       ws: 6.2.2
-      y-leveldb: 0.1.1_yjs@13.5.38
+      y-leveldb: 0.1.1_yjs@13.5.39
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -25337,8 +25335,8 @@ packages:
       fd-slicer: 1.1.0
     dev: true
 
-  /yjs/13.5.38:
-    resolution: {integrity: sha512-YCHj6DkgxhIRqdxqTI+htGAhvfmgkS974pz+/OOiuLOj0EgGfUKvtp4yYyQGg1Wf3m4oLet9x7gEvCrxaGiVZQ==}
+  /yjs/13.5.39:
+    resolution: {integrity: sha512-EoVT856l301lomtjjVspgTdSRiFqZ7gNKnmVPX4/V8NHI5EYS39/MdjB9iNv0Mw1weKDZRU8NgxgerqwJ3y2xA==}
     dependencies:
       lib0: 0.2.51
     dev: false

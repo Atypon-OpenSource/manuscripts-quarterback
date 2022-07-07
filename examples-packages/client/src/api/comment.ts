@@ -18,7 +18,7 @@ import {
   IUpdateCommentRequest,
   ICreateCommentRequest,
   ICreateCommentResponse,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 
 import { get, post, put, del } from './methods'
 

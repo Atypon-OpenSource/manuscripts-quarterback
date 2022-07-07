@@ -16,7 +16,7 @@
 import pkg from 'jsonwebtoken'
 const { sign, verify } = pkg
 
-import { Event, User } from '@manuscripts/examples-track-shared'
+import { Event, User } from '@manuscripts/examples-track-types'
 
 import { IJwtPayload } from '$typings/auth'
 

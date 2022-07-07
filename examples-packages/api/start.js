@@ -29,6 +29,7 @@ import { JSDOM } from 'jsdom'
 const { window } = new JSDOM()
 
 global.window = window
+global.navigator = window.navigator
 global.document = window.document
 global.DOMParser = window.DOMParser
 global.Element = window.Element

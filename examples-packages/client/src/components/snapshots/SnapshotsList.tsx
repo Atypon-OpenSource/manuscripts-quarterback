@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { TrackChangesStatus, trackCommands } from '@manuscripts/track-changes-plugin'
-import { Evt, SnapshotLabel } from '@manuscripts/examples-track-shared'
+import { Evt, SnapshotLabel } from '@manuscripts/examples-track-types'
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'

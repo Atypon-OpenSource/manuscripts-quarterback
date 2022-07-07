@@ -18,7 +18,7 @@ import {
   SnapshotLabel,
   ISaveSnapshotRequest,
   IUpdateSnapshotRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 
 import { CustomError, log, prisma } from '$common'
 import { PmDocSnapshot } from '@manuscripts/examples-track-db'

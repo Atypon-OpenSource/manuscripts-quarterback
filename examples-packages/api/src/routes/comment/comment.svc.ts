@@ -18,7 +18,7 @@ import {
   Event,
   ICreateCommentRequest,
   IUpdateCommentRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 
 import { CustomError, log, prisma } from '$common'
 import { Comment } from '@manuscripts/examples-track-db'

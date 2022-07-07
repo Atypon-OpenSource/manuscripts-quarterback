@@ -18,7 +18,7 @@ import {
   ICreateCommentRequest,
   ICreateCommentResponse,
   IUpdateCommentRequest,
-} from '@manuscripts/examples-track-shared'
+} from '@manuscripts/examples-track-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 

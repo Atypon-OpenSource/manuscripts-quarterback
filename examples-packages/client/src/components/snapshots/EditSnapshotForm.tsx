@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Evt, SnapshotLabel } from '@manuscripts/examples-track-shared'
+import { Evt, SnapshotLabel } from '@manuscripts/examples-track-types'
 import { observer } from 'mobx-react'
 import React, { useState } from 'react'
 import styled from 'styled-components'

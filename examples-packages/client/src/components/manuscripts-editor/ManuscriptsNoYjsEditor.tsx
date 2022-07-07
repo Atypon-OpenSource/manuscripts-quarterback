@@ -22,7 +22,7 @@ import {
   trackCommands,
   TrackChangesState,
 } from '@manuscripts/track-changes-plugin'
-import { PmDoc } from '@manuscripts/examples-track-shared'
+import { PmDoc } from '@manuscripts/examples-track-types'
 import {
   // styles,
   usePluginState,

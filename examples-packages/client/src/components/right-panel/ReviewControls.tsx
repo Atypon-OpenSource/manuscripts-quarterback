@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { EditorViewProvider } from '@manuscripts/examples-track-editor'
-import { DocStatus, Evt, ReviewStatus } from '@manuscripts/examples-track-shared'
+import { DocStatus, Evt, ReviewStatus } from '@manuscripts/examples-track-types'
 import { EditorViewProvider as MViewProvider } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
 import React, { useMemo } from 'react'

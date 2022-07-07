@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Review, ReviewStatus, ICreateReviewRequest } from '@manuscripts/examples-track-shared'
+import { Review, ReviewStatus, ICreateReviewRequest } from '@manuscripts/examples-track-types'
 import * as reviewApi from 'api/review'
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 

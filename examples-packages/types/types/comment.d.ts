@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Comment } from '@manuscripts/examples-track-db'
+import { Comment } from '../prisma'
 
-export { Comment } from '@manuscripts/examples-track-db'
+export { Comment } from '../prisma'
 
 export type CommentWithUserColor = Comment & {
   user: {
