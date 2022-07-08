@@ -41,7 +41,7 @@ export function findCommentMarkers(doc: PMNode) {
         })
         current = undefined
       } else {
-        console.warn('Encounted comment_marker node with incorrect position!', node)
+        console.warn('Encountered comment_marker node with incorrect position!', node)
       }
     }
   })

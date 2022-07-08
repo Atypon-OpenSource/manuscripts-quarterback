@@ -18,8 +18,11 @@ import { NextFunction, Request, Response } from 'express'
 import { CustomError, jwtService } from '$common'
 
 function parseJwtFromHeaders(req: Request) {
-  if (req.headers.authorization && req.headers.authorization.toLowerCase().includes('bearer')) {
-    return req.headers.authorization.split(' ')[1]
+  // @TODO use non-standard header while istio is enabled but not configured properly
+  // https://jira.atypon.com/browse/LEAN-1274
+  const authHeader = req.headers.authorization || req.headers['x-authorization'] || ''
+  if (typeof authHeader === 'string' && authHeader.toLowerCase().includes('bearer')) {
+    return authHeader.split(' ')[1]
   }
   return null
 }
