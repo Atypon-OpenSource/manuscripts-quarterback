@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-types
 
+## 0.2.2
+
+### Patch Changes
+
+- 3b16fbc: refactor: rename comment change_id to target_id, reset db
+
 ## 0.2.1
 
 ### Patch Changes
