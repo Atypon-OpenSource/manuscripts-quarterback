@@ -33,7 +33,7 @@ export interface IListCommentsResponse {
 // POST /comment
 export interface ICreateCommentRequest {
   body: string
-  change_id: string
+  target_id: string
   doc_id: string
   snapshot_id: string | null
 }
@@ -42,6 +42,6 @@ export type ICreateCommentResponse = ManuscriptComment
 // PUT /comment/:commentId
 export type IUpdateCommentRequest = {
   body?: string
-  change_id?: string
+  target_id?: string
   snapshot_id?: string | null
 }

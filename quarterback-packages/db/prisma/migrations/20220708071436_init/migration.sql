@@ -13,7 +13,7 @@ CREATE TABLE "manuscript_doc" (
 -- CreateTable
 CREATE TABLE "manuscript_doc_snapshot" (
     "id" TEXT NOT NULL,
-    "name" VARCHAR(500) NOT NULL DEFAULT E'',
+    "name" VARCHAR(500) NOT NULL DEFAULT '',
     "snapshot" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "doc_id" TEXT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE "manuscript_comment" (
     "id" TEXT NOT NULL,
     "body" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "change_id" TEXT NOT NULL,
+    "target_id" TEXT NOT NULL,
     "user_model_id" TEXT NOT NULL,
     "doc_id" TEXT NOT NULL,
     "snapshot_id" TEXT,

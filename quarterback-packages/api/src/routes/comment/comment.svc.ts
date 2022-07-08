@@ -33,7 +33,7 @@ export const commentService = {
         id: true,
         body: true,
         createdAt: true,
-        change_id: true,
+        target_id: true,
         user_model_id: true,
         doc_id: true,
         snapshot_id: true,

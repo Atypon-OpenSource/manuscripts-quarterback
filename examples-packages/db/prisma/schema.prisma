@@ -71,7 +71,7 @@ model Comment {
   id          String         @id @default(uuid())
   body        String
   createdAt   DateTime       @default(now())
-  change_id   String
+  target_id   String
   user        User           @relation("CommentToUser", fields: [user_id], references: [id])
   user_id     String
   doc         PmDoc          @relation("CommentToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)

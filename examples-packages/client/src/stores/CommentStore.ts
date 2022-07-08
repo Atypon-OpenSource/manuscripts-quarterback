@@ -41,11 +41,11 @@ export class CommentStore {
   @computed get changeComments() {
     const changeMap = new Map<string, CommentWithUserColor[]>()
     Array.from(this.commentsMap.values()).forEach((c) => {
-      const prev = changeMap.get(c.change_id)
+      const prev = changeMap.get(c.target_id)
       if (prev) {
-        changeMap.set(c.change_id, [...prev, c])
+        changeMap.set(c.target_id, [...prev, c])
       } else {
-        changeMap.set(c.change_id, [c])
+        changeMap.set(c.target_id, [c])
       }
     })
     return changeMap

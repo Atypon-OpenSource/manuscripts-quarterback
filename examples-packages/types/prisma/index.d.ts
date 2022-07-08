@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime';
+import * as runtime from './runtime/index';
 declare const prisma: unique symbol
 export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
@@ -14,8 +14,8 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
 
 /**
  * Model User
+ * 
  */
-
 export type User = {
   id: string
   email: string
@@ -27,8 +27,8 @@ export type User = {
 
 /**
  * Model PmDoc
+ * 
  */
-
 export type PmDoc = {
   id: string
   name: string
@@ -41,8 +41,8 @@ export type PmDoc = {
 
 /**
  * Model PmDocSnapshot
+ * 
  */
-
 export type PmDocSnapshot = {
   id: string
   name: string
@@ -53,13 +53,13 @@ export type PmDocSnapshot = {
 
 /**
  * Model Comment
+ * 
  */
-
 export type Comment = {
   id: string
   body: string
   createdAt: Date
-  change_id: string
+  target_id: string
   user_id: string
   doc_id: string
   snapshot_id: string | null
@@ -67,8 +67,8 @@ export type Comment = {
 
 /**
  * Model Review
+ * 
  */
-
 export type Review = {
   id: string
   name: string
@@ -187,14 +187,14 @@ export class PrismaClient<
   /**
    * Disconnect from the database
    */
-  $disconnect(): Promise<any>;
+  $disconnect(): Promise<void>;
 
   /**
    * Add a middleware
    */
   $use(cb: Prisma.Middleware): void
 
-  /**
+/**
    * Executes a prepared raw query and returns the number of affected rows.
    * @example
    * ```
@@ -254,7 +254,6 @@ export class PrismaClient<
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
   $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
-
 
       /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -333,9 +332,19 @@ export namespace Prisma {
    */
   export import Decimal = runtime.Decimal
 
+  export type DecimalJsLike = runtime.DecimalJsLike
+
   /**
-   * Prisma Client JS version: 3.1.1
-   * Query Engine version: c22652b7e418506fab23052d569b85d3aec4883f
+   * Metrics 
+   */
+  export import Metrics = runtime.Metrics
+  export import Metric = runtime.Metric
+  export import MetricHistogram = runtime.MetricHistogram
+  export import MetricHistogramBucket = runtime.MetricHistogramBucket
+
+  /**
+   * Prisma Client JS version: 4.0.0
+   * Query Engine version: da41d2bb3406da22087b849f0e911199ba4fbf11
    */
   export type PrismaVersion = {
     client: string
@@ -353,13 +362,13 @@ export namespace Prisma {
    * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
    */
   export type JsonObject = {[Key in string]?: JsonValue}
- 
+
   /**
    * From https://github.com/sindresorhus/type-fest/
    * Matches a JSON array.
    */
   export interface JsonArray extends Array<JsonValue> {}
- 
+
   /**
    * From https://github.com/sindresorhus/type-fest/
    * Matches any valid JSON value.
@@ -367,34 +376,95 @@ export namespace Prisma {
   export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
 
   /**
-   * Same as JsonObject, but allows undefined
+   * Matches a JSON object.
+   * Unlike `JsonObject`, this type allows undefined and read-only properties.
    */
-  export type InputJsonObject = {[Key in string]?: JsonValue}
- 
-  export interface InputJsonArray extends Array<JsonValue> {}
- 
+  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
+
+  /**
+   * Matches a JSON array.
+   * Unlike `JsonArray`, readonly arrays are assignable to this type.
+   */
+  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
+
+  /**
+   * Matches any valid value that can be used as an input for operations like
+   * create and update as the value of a JSON field. Unlike `JsonValue`, this
+   * type allows read-only arrays and read-only object properties and disallows
+   * `null` at the top level.
+   *
+   * `null` cannot be used as the value of a JSON field because its meaning
+   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
+   * `Prisma.DbNull` to clear the JSON value and set the field to the database
+   * NULL value instead.
+   *
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+   */
   export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray
+
+  /**
+   * Types of the values used to represent different kinds of `null` values when working with JSON fields.
+   * 
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+   */
+  namespace NullTypes {
+    /**
+    * Type of `Prisma.DbNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class DbNull {
+      private DbNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.JsonNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class JsonNull {
+      private JsonNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.AnyNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class AnyNull {
+      private AnyNull: never
+      private constructor()
+    }
+  }
 
   /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const DbNull: 'DbNull'
+  export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const JsonNull: 'JsonNull'
+  export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const AnyNull: 'AnyNull'
+  export const AnyNull: NullTypes.AnyNull
 
   type SelectAndInclude = {
     select: any
@@ -479,7 +549,11 @@ export namespace Prisma {
    * XOR is needed to have a real mutually exclusive union type
    * https://stackoverflow.com/questions/42123407/does-typescript-support-mutually-exclusive-types
    */
-  type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
+  type XOR<T, U> =
+    T extends object ?
+    U extends object ?
+      (Without<T, U> & U) | (Without<U, T> & T)
+    : U : T
 
 
   /**
@@ -724,7 +798,7 @@ export namespace Prisma {
     ? IsReject<LocalRejectSettings>
     : GlobalRejectSettings extends RejectPerOperation
     ? Action extends keyof GlobalRejectSettings
-      ? GlobalRejectSettings[Action] extends boolean
+      ? GlobalRejectSettings[Action] extends RejectOnNotFound
         ? IsReject<GlobalRejectSettings[Action]>
         : GlobalRejectSettings[Action] extends RejectPerModel
         ? Model extends keyof GlobalRejectSettings[Action]
@@ -738,7 +812,8 @@ export namespace Prisma {
   export interface PrismaClientOptions {
     /**
      * Configure findUnique/findFirst to throw an error if the query returns null. 
-     *  * @example
+     * @deprecated since 4.0.0. Use `findUniqueOrThrow`/`findFirstOrThrow` methods instead.
+     * @example
      * ```
      * // Reject on both findUnique/findFirst
      * rejectOnNotFound: true
@@ -825,6 +900,8 @@ export namespace Prisma {
     | 'queryRaw'
     | 'aggregate'
     | 'count'
+    | 'runCommandRaw'
+    | 'findRaw'
 
   /**
    * These options are being passed in to the middleware as "params"
@@ -846,7 +923,8 @@ export namespace Prisma {
   ) => Promise<T>
 
   // tested in getLogLevel.test.ts
-  export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined; 
+  export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
+
   export type Datasource = {
     url?: string
   }
@@ -885,9 +963,8 @@ export namespace Prisma {
     ? UserCountOutputType 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof UserCountOutputType ?UserCountOutputType [P]
-  : 
-     never
+    [P in TrueKeys<S['select']>]:
+    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
   } 
     : UserCountOutputType
   : UserCountOutputType
@@ -939,9 +1016,8 @@ export namespace Prisma {
     ? PmDocCountOutputType 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof PmDocCountOutputType ?PmDocCountOutputType [P]
-  : 
-     never
+    [P in TrueKeys<S['select']>]:
+    P extends keyof PmDocCountOutputType ? PmDocCountOutputType[P] : never
   } 
     : PmDocCountOutputType
   : PmDocCountOutputType
@@ -989,9 +1065,8 @@ export namespace Prisma {
     ? PmDocSnapshotCountOutputType 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof PmDocSnapshotCountOutputType ?PmDocSnapshotCountOutputType [P]
-  : 
-     never
+    [P in TrueKeys<S['select']>]:
+    P extends keyof PmDocSnapshotCountOutputType ? PmDocSnapshotCountOutputType[P] : never
   } 
     : PmDocSnapshotCountOutputType
   : PmDocSnapshotCountOutputType
@@ -1149,8 +1224,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type UserGroupByArgs = {
     where?: UserWhereInput
     orderBy?: Enumerable<UserOrderByWithAggregationInput>
@@ -1176,17 +1251,17 @@ export namespace Prisma {
     _max: UserMaxAggregateOutputType | null
   }
 
-  type GetUserGroupByPayload<T extends UserGroupByArgs> = Promise<
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<UserGroupByOutputType, T['by']> & 
+      PickArray<UserGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], UserGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserGroupByOutputType[P]>
             : GetScalarType<T[P], UserGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -1220,28 +1295,19 @@ export namespace Prisma {
     : S extends UserArgs | UserFindManyArgs
     ?'include' extends U
     ? User  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'docs'
-        ? Array < PmDocGetPayload<S['include'][P]>>  :
-        P extends 'reviews'
-        ? Array < ReviewGetPayload<S['include'][P]>>  :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count'
-        ? UserCountOutputTypeGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'docs' ? Array < PmDocGetPayload<S['include'][P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<S['include'][P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof User ?User [P]
-  : 
-          P extends 'docs'
-        ? Array < PmDocGetPayload<S['select'][P]>>  :
-        P extends 'reviews'
-        ? Array < ReviewGetPayload<S['select'][P]>>  :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count'
-        ? UserCountOutputTypeGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'docs' ? Array < PmDocGetPayload<S['select'][P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<S['select'][P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
     : User
   : User
@@ -1432,6 +1498,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
 
     /**
+     * Find one User that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, UserFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, UserFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+
+    /**
      * Count the number of Users.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -1555,13 +1655,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for User.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__UserClient<T> implements PrismaPromise<T> {
@@ -1613,9 +1713,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * User findUnique
+   * User base type for findUnique actions
    */
-  export type UserFindUniqueArgs = {
+  export type UserFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the User
      * 
@@ -1626,11 +1726,6 @@ export namespace Prisma {
      * 
     **/
     include?: UserInclude | null
-    /**
-     * Throw an Error if a User can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which User to fetch.
      * 
@@ -1638,11 +1733,22 @@ export namespace Prisma {
     where: UserWhereUniqueInput
   }
 
+  /**
+   * User: findUnique
+   */
+  export interface UserFindUniqueArgs extends UserFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * User findFirst
+   * User base type for findFirst actions
    */
-  export type UserFindFirstArgs = {
+  export type UserFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the User
      * 
@@ -1653,11 +1759,6 @@ export namespace Prisma {
      * 
     **/
     include?: UserInclude | null
-    /**
-     * Throw an Error if a User can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which User to fetch.
      * 
@@ -1700,6 +1801,17 @@ export namespace Prisma {
     distinct?: Enumerable<UserScalarFieldEnum>
   }
 
+  /**
+   * User: findFirst
+   */
+  export interface UserFindFirstArgs extends UserFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * User findMany
@@ -1778,6 +1890,10 @@ export namespace Prisma {
    * User createMany
    */
   export type UserCreateManyArgs = {
+    /**
+     * The data used to create many Users.
+     * 
+    **/
     data: Enumerable<UserCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -1814,7 +1930,15 @@ export namespace Prisma {
    * User updateMany
    */
   export type UserUpdateManyArgs = {
+    /**
+     * The data used to update Users.
+     * 
+    **/
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     * 
+    **/
     where?: UserWhereInput
   }
 
@@ -1877,9 +2001,25 @@ export namespace Prisma {
    * User deleteMany
    */
   export type UserDeleteManyArgs = {
+    /**
+     * Filter which Users to delete
+     * 
+    **/
     where?: UserWhereInput
   }
 
+
+  /**
+   * User: findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs = UserFindUniqueArgsBase
+      
+
+  /**
+   * User: findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs = UserFindFirstArgsBase
+      
 
   /**
    * User without action
@@ -2032,8 +2172,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type PmDocGroupByArgs = {
     where?: PmDocWhereInput
     orderBy?: Enumerable<PmDocOrderByWithAggregationInput>
@@ -2060,17 +2200,17 @@ export namespace Prisma {
     _max: PmDocMaxAggregateOutputType | null
   }
 
-  type GetPmDocGroupByPayload<T extends PmDocGroupByArgs> = Promise<
+  type GetPmDocGroupByPayload<T extends PmDocGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<PmDocGroupByOutputType, T['by']> & 
+      PickArray<PmDocGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PmDocGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], PmDocGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof PmDocGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PmDocGroupByOutputType[P]>
             : GetScalarType<T[P], PmDocGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -2107,32 +2247,21 @@ export namespace Prisma {
     : S extends PmDocArgs | PmDocFindManyArgs
     ?'include' extends U
     ? PmDoc  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'user'
-        ? UserGetPayload<S['include'][P]> :
-        P extends 'snapshots'
-        ? Array < PmDocSnapshotGetPayload<S['include'][P]>>  :
-        P extends 'reviews'
-        ? Array < ReviewGetPayload<S['include'][P]>>  :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count'
-        ? PmDocCountOutputTypeGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'user' ? UserGetPayload<S['include'][P]> :
+        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<S['include'][P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<S['include'][P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? PmDocCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof PmDoc ?PmDoc [P]
-  : 
-          P extends 'user'
-        ? UserGetPayload<S['select'][P]> :
-        P extends 'snapshots'
-        ? Array < PmDocSnapshotGetPayload<S['select'][P]>>  :
-        P extends 'reviews'
-        ? Array < ReviewGetPayload<S['select'][P]>>  :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count'
-        ? PmDocCountOutputTypeGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'user' ? UserGetPayload<S['select'][P]> :
+        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<S['select'][P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<S['select'][P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? PmDocCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PmDoc ? PmDoc[P] : never
   } 
     : PmDoc
   : PmDoc
@@ -2323,6 +2452,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__PmDocClient<PmDoc>, Prisma__PmDocClient<PmDocGetPayload<T>>>
 
     /**
+     * Find one PmDoc that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {PmDocFindUniqueOrThrowArgs} args - Arguments to find a PmDoc
+     * @example
+     * // Get one PmDoc
+     * const pmDoc = await prisma.pmDoc.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PmDocFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PmDocFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__PmDocClient<PmDoc>, Prisma__PmDocClient<PmDocGetPayload<T>>>
+
+    /**
+     * Find the first PmDoc that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PmDocFindFirstOrThrowArgs} args - Arguments to find a PmDoc
+     * @example
+     * // Get one PmDoc
+     * const pmDoc = await prisma.pmDoc.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PmDocFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PmDocFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__PmDocClient<PmDoc>, Prisma__PmDocClient<PmDocGetPayload<T>>>
+
+    /**
      * Count the number of PmDocs.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -2446,13 +2609,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PmDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, PmDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for PmDoc.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__PmDocClient<T> implements PrismaPromise<T> {
@@ -2506,9 +2669,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * PmDoc findUnique
+   * PmDoc base type for findUnique actions
    */
-  export type PmDocFindUniqueArgs = {
+  export type PmDocFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the PmDoc
      * 
@@ -2519,11 +2682,6 @@ export namespace Prisma {
      * 
     **/
     include?: PmDocInclude | null
-    /**
-     * Throw an Error if a PmDoc can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which PmDoc to fetch.
      * 
@@ -2531,11 +2689,22 @@ export namespace Prisma {
     where: PmDocWhereUniqueInput
   }
 
+  /**
+   * PmDoc: findUnique
+   */
+  export interface PmDocFindUniqueArgs extends PmDocFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * PmDoc findFirst
+   * PmDoc base type for findFirst actions
    */
-  export type PmDocFindFirstArgs = {
+  export type PmDocFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the PmDoc
      * 
@@ -2546,11 +2715,6 @@ export namespace Prisma {
      * 
     **/
     include?: PmDocInclude | null
-    /**
-     * Throw an Error if a PmDoc can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which PmDoc to fetch.
      * 
@@ -2593,6 +2757,17 @@ export namespace Prisma {
     distinct?: Enumerable<PmDocScalarFieldEnum>
   }
 
+  /**
+   * PmDoc: findFirst
+   */
+  export interface PmDocFindFirstArgs extends PmDocFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * PmDoc findMany
@@ -2671,6 +2846,10 @@ export namespace Prisma {
    * PmDoc createMany
    */
   export type PmDocCreateManyArgs = {
+    /**
+     * The data used to create many PmDocs.
+     * 
+    **/
     data: Enumerable<PmDocCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -2707,7 +2886,15 @@ export namespace Prisma {
    * PmDoc updateMany
    */
   export type PmDocUpdateManyArgs = {
+    /**
+     * The data used to update PmDocs.
+     * 
+    **/
     data: XOR<PmDocUpdateManyMutationInput, PmDocUncheckedUpdateManyInput>
+    /**
+     * Filter which PmDocs to update
+     * 
+    **/
     where?: PmDocWhereInput
   }
 
@@ -2770,9 +2957,25 @@ export namespace Prisma {
    * PmDoc deleteMany
    */
   export type PmDocDeleteManyArgs = {
+    /**
+     * Filter which PmDocs to delete
+     * 
+    **/
     where?: PmDocWhereInput
   }
 
+
+  /**
+   * PmDoc: findUniqueOrThrow
+   */
+  export type PmDocFindUniqueOrThrowArgs = PmDocFindUniqueArgsBase
+      
+
+  /**
+   * PmDoc: findFirstOrThrow
+   */
+  export type PmDocFindFirstOrThrowArgs = PmDocFindFirstArgsBase
+      
 
   /**
    * PmDoc without action
@@ -2913,8 +3116,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type PmDocSnapshotGroupByArgs = {
     where?: PmDocSnapshotWhereInput
     orderBy?: Enumerable<PmDocSnapshotOrderByWithAggregationInput>
@@ -2939,17 +3142,17 @@ export namespace Prisma {
     _max: PmDocSnapshotMaxAggregateOutputType | null
   }
 
-  type GetPmDocSnapshotGroupByPayload<T extends PmDocSnapshotGroupByArgs> = Promise<
+  type GetPmDocSnapshotGroupByPayload<T extends PmDocSnapshotGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<PmDocSnapshotGroupByOutputType, T['by']> & 
+      PickArray<PmDocSnapshotGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PmDocSnapshotGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], PmDocSnapshotGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof PmDocSnapshotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PmDocSnapshotGroupByOutputType[P]>
             : GetScalarType<T[P], PmDocSnapshotGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -2984,32 +3187,21 @@ export namespace Prisma {
     : S extends PmDocSnapshotArgs | PmDocSnapshotFindManyArgs
     ?'include' extends U
     ? PmDocSnapshot  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'doc'
-        ? PmDocGetPayload<S['include'][P]> :
-        P extends 'before_snap_review'
-        ? ReviewGetPayload<S['include'][P]> | null :
-        P extends 'after_snap_review'
-        ? ReviewGetPayload<S['include'][P]> | null :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count'
-        ? PmDocSnapshotCountOutputTypeGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
+        P extends 'before_snap_review' ? ReviewGetPayload<S['include'][P]> | null :
+        P extends 'after_snap_review' ? ReviewGetPayload<S['include'][P]> | null :
+        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof PmDocSnapshot ?PmDocSnapshot [P]
-  : 
-          P extends 'doc'
-        ? PmDocGetPayload<S['select'][P]> :
-        P extends 'before_snap_review'
-        ? ReviewGetPayload<S['select'][P]> | null :
-        P extends 'after_snap_review'
-        ? ReviewGetPayload<S['select'][P]> | null :
-        P extends 'comments'
-        ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count'
-        ? PmDocSnapshotCountOutputTypeGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
+        P extends 'before_snap_review' ? ReviewGetPayload<S['select'][P]> | null :
+        P extends 'after_snap_review' ? ReviewGetPayload<S['select'][P]> | null :
+        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PmDocSnapshot ? PmDocSnapshot[P] : never
   } 
     : PmDocSnapshot
   : PmDocSnapshot
@@ -3200,6 +3392,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__PmDocSnapshotClient<PmDocSnapshot>, Prisma__PmDocSnapshotClient<PmDocSnapshotGetPayload<T>>>
 
     /**
+     * Find one PmDocSnapshot that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {PmDocSnapshotFindUniqueOrThrowArgs} args - Arguments to find a PmDocSnapshot
+     * @example
+     * // Get one PmDocSnapshot
+     * const pmDocSnapshot = await prisma.pmDocSnapshot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PmDocSnapshotFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PmDocSnapshotFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__PmDocSnapshotClient<PmDocSnapshot>, Prisma__PmDocSnapshotClient<PmDocSnapshotGetPayload<T>>>
+
+    /**
+     * Find the first PmDocSnapshot that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PmDocSnapshotFindFirstOrThrowArgs} args - Arguments to find a PmDocSnapshot
+     * @example
+     * // Get one PmDocSnapshot
+     * const pmDocSnapshot = await prisma.pmDocSnapshot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PmDocSnapshotFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PmDocSnapshotFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__PmDocSnapshotClient<PmDocSnapshot>, Prisma__PmDocSnapshotClient<PmDocSnapshotGetPayload<T>>>
+
+    /**
      * Count the number of PmDocSnapshots.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -3323,13 +3549,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PmDocSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocSnapshotGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, PmDocSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocSnapshotGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for PmDocSnapshot.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__PmDocSnapshotClient<T> implements PrismaPromise<T> {
@@ -3383,9 +3609,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * PmDocSnapshot findUnique
+   * PmDocSnapshot base type for findUnique actions
    */
-  export type PmDocSnapshotFindUniqueArgs = {
+  export type PmDocSnapshotFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the PmDocSnapshot
      * 
@@ -3396,11 +3622,6 @@ export namespace Prisma {
      * 
     **/
     include?: PmDocSnapshotInclude | null
-    /**
-     * Throw an Error if a PmDocSnapshot can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which PmDocSnapshot to fetch.
      * 
@@ -3408,11 +3629,22 @@ export namespace Prisma {
     where: PmDocSnapshotWhereUniqueInput
   }
 
+  /**
+   * PmDocSnapshot: findUnique
+   */
+  export interface PmDocSnapshotFindUniqueArgs extends PmDocSnapshotFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * PmDocSnapshot findFirst
+   * PmDocSnapshot base type for findFirst actions
    */
-  export type PmDocSnapshotFindFirstArgs = {
+  export type PmDocSnapshotFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the PmDocSnapshot
      * 
@@ -3423,11 +3655,6 @@ export namespace Prisma {
      * 
     **/
     include?: PmDocSnapshotInclude | null
-    /**
-     * Throw an Error if a PmDocSnapshot can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which PmDocSnapshot to fetch.
      * 
@@ -3470,6 +3697,17 @@ export namespace Prisma {
     distinct?: Enumerable<PmDocSnapshotScalarFieldEnum>
   }
 
+  /**
+   * PmDocSnapshot: findFirst
+   */
+  export interface PmDocSnapshotFindFirstArgs extends PmDocSnapshotFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * PmDocSnapshot findMany
@@ -3548,6 +3786,10 @@ export namespace Prisma {
    * PmDocSnapshot createMany
    */
   export type PmDocSnapshotCreateManyArgs = {
+    /**
+     * The data used to create many PmDocSnapshots.
+     * 
+    **/
     data: Enumerable<PmDocSnapshotCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -3584,7 +3826,15 @@ export namespace Prisma {
    * PmDocSnapshot updateMany
    */
   export type PmDocSnapshotUpdateManyArgs = {
+    /**
+     * The data used to update PmDocSnapshots.
+     * 
+    **/
     data: XOR<PmDocSnapshotUpdateManyMutationInput, PmDocSnapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which PmDocSnapshots to update
+     * 
+    **/
     where?: PmDocSnapshotWhereInput
   }
 
@@ -3647,9 +3897,25 @@ export namespace Prisma {
    * PmDocSnapshot deleteMany
    */
   export type PmDocSnapshotDeleteManyArgs = {
+    /**
+     * Filter which PmDocSnapshots to delete
+     * 
+    **/
     where?: PmDocSnapshotWhereInput
   }
 
+
+  /**
+   * PmDocSnapshot: findUniqueOrThrow
+   */
+  export type PmDocSnapshotFindUniqueOrThrowArgs = PmDocSnapshotFindUniqueArgsBase
+      
+
+  /**
+   * PmDocSnapshot: findFirstOrThrow
+   */
+  export type PmDocSnapshotFindFirstOrThrowArgs = PmDocSnapshotFindFirstArgsBase
+      
 
   /**
    * PmDocSnapshot without action
@@ -3684,7 +3950,7 @@ export namespace Prisma {
     id: string | null
     body: string | null
     createdAt: Date | null
-    change_id: string | null
+    target_id: string | null
     user_id: string | null
     doc_id: string | null
     snapshot_id: string | null
@@ -3694,7 +3960,7 @@ export namespace Prisma {
     id: string | null
     body: string | null
     createdAt: Date | null
-    change_id: string | null
+    target_id: string | null
     user_id: string | null
     doc_id: string | null
     snapshot_id: string | null
@@ -3704,7 +3970,7 @@ export namespace Prisma {
     id: number
     body: number
     createdAt: number
-    change_id: number
+    target_id: number
     user_id: number
     doc_id: number
     snapshot_id: number
@@ -3716,7 +3982,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -3726,7 +3992,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -3736,7 +4002,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -3806,8 +4072,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type CommentGroupByArgs = {
     where?: CommentWhereInput
     orderBy?: Enumerable<CommentOrderByWithAggregationInput>
@@ -3825,7 +4091,7 @@ export namespace Prisma {
     id: string
     body: string
     createdAt: Date
-    change_id: string
+    target_id: string
     user_id: string
     doc_id: string
     snapshot_id: string | null
@@ -3834,17 +4100,17 @@ export namespace Prisma {
     _max: CommentMaxAggregateOutputType | null
   }
 
-  type GetCommentGroupByPayload<T extends CommentGroupByArgs> = Promise<
+  type GetCommentGroupByPayload<T extends CommentGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<CommentGroupByOutputType, T['by']> & 
+      PickArray<CommentGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof CommentGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], CommentGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof CommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommentGroupByOutputType[P]>
             : GetScalarType<T[P], CommentGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -3852,7 +4118,7 @@ export namespace Prisma {
     id?: boolean
     body?: boolean
     createdAt?: boolean
-    change_id?: boolean
+    target_id?: boolean
     user?: boolean | UserArgs
     user_id?: boolean
     doc?: boolean | PmDocArgs
@@ -3877,24 +4143,17 @@ export namespace Prisma {
     : S extends CommentArgs | CommentFindManyArgs
     ?'include' extends U
     ? Comment  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'user'
-        ? UserGetPayload<S['include'][P]> :
-        P extends 'doc'
-        ? PmDocGetPayload<S['include'][P]> :
-        P extends 'snapshot'
-        ? PmDocSnapshotGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'user' ? UserGetPayload<S['include'][P]> :
+        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
+        P extends 'snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> | null :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof Comment ?Comment [P]
-  : 
-          P extends 'user'
-        ? UserGetPayload<S['select'][P]> :
-        P extends 'doc'
-        ? PmDocGetPayload<S['select'][P]> :
-        P extends 'snapshot'
-        ? PmDocSnapshotGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'user' ? UserGetPayload<S['select'][P]> :
+        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
+        P extends 'snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> | null :  P extends keyof Comment ? Comment[P] : never
   } 
     : Comment
   : Comment
@@ -4085,6 +4344,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__CommentClient<Comment>, Prisma__CommentClient<CommentGetPayload<T>>>
 
     /**
+     * Find one Comment that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {CommentFindUniqueOrThrowArgs} args - Arguments to find a Comment
+     * @example
+     * // Get one Comment
+     * const comment = await prisma.comment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CommentFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CommentFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__CommentClient<Comment>, Prisma__CommentClient<CommentGetPayload<T>>>
+
+    /**
+     * Find the first Comment that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentFindFirstOrThrowArgs} args - Arguments to find a Comment
+     * @example
+     * // Get one Comment
+     * const comment = await prisma.comment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CommentFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CommentFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__CommentClient<Comment>, Prisma__CommentClient<CommentGetPayload<T>>>
+
+    /**
      * Count the number of Comments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -4208,13 +4501,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, CommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, CommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for Comment.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__CommentClient<T> implements PrismaPromise<T> {
@@ -4266,9 +4559,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * Comment findUnique
+   * Comment base type for findUnique actions
    */
-  export type CommentFindUniqueArgs = {
+  export type CommentFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Comment
      * 
@@ -4279,11 +4572,6 @@ export namespace Prisma {
      * 
     **/
     include?: CommentInclude | null
-    /**
-     * Throw an Error if a Comment can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which Comment to fetch.
      * 
@@ -4291,11 +4579,22 @@ export namespace Prisma {
     where: CommentWhereUniqueInput
   }
 
+  /**
+   * Comment: findUnique
+   */
+  export interface CommentFindUniqueArgs extends CommentFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * Comment findFirst
+   * Comment base type for findFirst actions
    */
-  export type CommentFindFirstArgs = {
+  export type CommentFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Comment
      * 
@@ -4306,11 +4605,6 @@ export namespace Prisma {
      * 
     **/
     include?: CommentInclude | null
-    /**
-     * Throw an Error if a Comment can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which Comment to fetch.
      * 
@@ -4353,6 +4647,17 @@ export namespace Prisma {
     distinct?: Enumerable<CommentScalarFieldEnum>
   }
 
+  /**
+   * Comment: findFirst
+   */
+  export interface CommentFindFirstArgs extends CommentFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Comment findMany
@@ -4431,6 +4736,10 @@ export namespace Prisma {
    * Comment createMany
    */
   export type CommentCreateManyArgs = {
+    /**
+     * The data used to create many Comments.
+     * 
+    **/
     data: Enumerable<CommentCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -4467,7 +4776,15 @@ export namespace Prisma {
    * Comment updateMany
    */
   export type CommentUpdateManyArgs = {
+    /**
+     * The data used to update Comments.
+     * 
+    **/
     data: XOR<CommentUpdateManyMutationInput, CommentUncheckedUpdateManyInput>
+    /**
+     * Filter which Comments to update
+     * 
+    **/
     where?: CommentWhereInput
   }
 
@@ -4530,9 +4847,25 @@ export namespace Prisma {
    * Comment deleteMany
    */
   export type CommentDeleteManyArgs = {
+    /**
+     * Filter which Comments to delete
+     * 
+    **/
     where?: CommentWhereInput
   }
 
+
+  /**
+   * Comment: findUniqueOrThrow
+   */
+  export type CommentFindUniqueOrThrowArgs = CommentFindUniqueArgsBase
+      
+
+  /**
+   * Comment: findFirstOrThrow
+   */
+  export type CommentFindFirstOrThrowArgs = CommentFindFirstArgsBase
+      
 
   /**
    * Comment without action
@@ -4697,8 +5030,8 @@ export namespace Prisma {
   }
 
 
-    
-    
+
+
   export type ReviewGroupByArgs = {
     where?: ReviewWhereInput
     orderBy?: Enumerable<ReviewOrderByWithAggregationInput>
@@ -4727,17 +5060,17 @@ export namespace Prisma {
     _max: ReviewMaxAggregateOutputType | null
   }
 
-  type GetReviewGroupByPayload<T extends ReviewGroupByArgs> = Promise<
+  type GetReviewGroupByPayload<T extends ReviewGroupByArgs> = PrismaPromise<
     Array<
-      PickArray<ReviewGroupByOutputType, T['by']> & 
+      PickArray<ReviewGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ReviewGroupByOutputType))]: P extends '_count' 
-            ? T[P] extends boolean 
-              ? number 
-              : GetScalarType<T[P], ReviewGroupByOutputType[P]> 
+          [P in ((keyof T) & (keyof ReviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReviewGroupByOutputType[P]>
             : GetScalarType<T[P], ReviewGroupByOutputType[P]>
         }
-      > 
+      >
     >
 
 
@@ -4774,28 +5107,19 @@ export namespace Prisma {
     : S extends ReviewArgs | ReviewFindManyArgs
     ?'include' extends U
     ? Review  & {
-    [P in TrueKeys<S['include']>]: 
-          P extends 'user'
-        ? UserGetPayload<S['include'][P]> :
-        P extends 'doc'
-        ? PmDocGetPayload<S['include'][P]> :
-        P extends 'before_snapshot'
-        ? PmDocSnapshotGetPayload<S['include'][P]> :
-        P extends 'after_snapshot'
-        ? PmDocSnapshotGetPayload<S['include'][P]> | null : never
+    [P in TrueKeys<S['include']>]:
+        P extends 'user' ? UserGetPayload<S['include'][P]> :
+        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
+        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> :
+        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> | null :  never
   } 
     : 'select' extends U
     ? {
-    [P in TrueKeys<S['select']>]: P extends keyof Review ?Review [P]
-  : 
-          P extends 'user'
-        ? UserGetPayload<S['select'][P]> :
-        P extends 'doc'
-        ? PmDocGetPayload<S['select'][P]> :
-        P extends 'before_snapshot'
-        ? PmDocSnapshotGetPayload<S['select'][P]> :
-        P extends 'after_snapshot'
-        ? PmDocSnapshotGetPayload<S['select'][P]> | null : never
+    [P in TrueKeys<S['select']>]:
+        P extends 'user' ? UserGetPayload<S['select'][P]> :
+        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
+        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> :
+        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> | null :  P extends keyof Review ? Review[P] : never
   } 
     : Review
   : Review
@@ -4986,6 +5310,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__ReviewClient<Review>, Prisma__ReviewClient<ReviewGetPayload<T>>>
 
     /**
+     * Find one Review that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {ReviewFindUniqueOrThrowArgs} args - Arguments to find a Review
+     * @example
+     * // Get one Review
+     * const review = await prisma.review.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ReviewFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ReviewFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__ReviewClient<Review>, Prisma__ReviewClient<ReviewGetPayload<T>>>
+
+    /**
+     * Find the first Review that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReviewFindFirstOrThrowArgs} args - Arguments to find a Review
+     * @example
+     * // Get one Review
+     * const review = await prisma.review.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ReviewFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ReviewFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__ReviewClient<Review>, Prisma__ReviewClient<ReviewGetPayload<T>>>
+
+    /**
      * Count the number of Reviews.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -5109,13 +5467,13 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReviewGroupByPayload<T> : Promise<InputErrors>
+    >(args: SubsetIntersection<T, ReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReviewGroupByPayload<T> : PrismaPromise<InputErrors>
   }
 
   /**
    * The delegate class that acts as a "Promise-like" for Review.
    * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in 
+   * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
   export class Prisma__ReviewClient<T> implements PrismaPromise<T> {
@@ -5169,9 +5527,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * Review findUnique
+   * Review base type for findUnique actions
    */
-  export type ReviewFindUniqueArgs = {
+  export type ReviewFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Review
      * 
@@ -5182,11 +5540,6 @@ export namespace Prisma {
      * 
     **/
     include?: ReviewInclude | null
-    /**
-     * Throw an Error if a Review can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which Review to fetch.
      * 
@@ -5194,11 +5547,22 @@ export namespace Prisma {
     where: ReviewWhereUniqueInput
   }
 
+  /**
+   * Review: findUnique
+   */
+  export interface ReviewFindUniqueArgs extends ReviewFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * Review findFirst
+   * Review base type for findFirst actions
    */
-  export type ReviewFindFirstArgs = {
+  export type ReviewFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Review
      * 
@@ -5209,11 +5573,6 @@ export namespace Prisma {
      * 
     **/
     include?: ReviewInclude | null
-    /**
-     * Throw an Error if a Review can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which Review to fetch.
      * 
@@ -5256,6 +5615,17 @@ export namespace Prisma {
     distinct?: Enumerable<ReviewScalarFieldEnum>
   }
 
+  /**
+   * Review: findFirst
+   */
+  export interface ReviewFindFirstArgs extends ReviewFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Review findMany
@@ -5334,6 +5704,10 @@ export namespace Prisma {
    * Review createMany
    */
   export type ReviewCreateManyArgs = {
+    /**
+     * The data used to create many Reviews.
+     * 
+    **/
     data: Enumerable<ReviewCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -5370,7 +5744,15 @@ export namespace Prisma {
    * Review updateMany
    */
   export type ReviewUpdateManyArgs = {
+    /**
+     * The data used to update Reviews.
+     * 
+    **/
     data: XOR<ReviewUpdateManyMutationInput, ReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which Reviews to update
+     * 
+    **/
     where?: ReviewWhereInput
   }
 
@@ -5433,9 +5815,25 @@ export namespace Prisma {
    * Review deleteMany
    */
   export type ReviewDeleteManyArgs = {
+    /**
+     * Filter which Reviews to delete
+     * 
+    **/
     where?: ReviewWhereInput
   }
 
+
+  /**
+   * Review: findUniqueOrThrow
+   */
+  export type ReviewFindUniqueOrThrowArgs = ReviewFindUniqueArgsBase
+      
+
+  /**
+   * Review: findFirstOrThrow
+   */
+  export type ReviewFindFirstOrThrowArgs = ReviewFindFirstArgsBase
+      
 
   /**
    * Review without action
@@ -5502,7 +5900,7 @@ export namespace Prisma {
     id: 'id',
     body: 'body',
     createdAt: 'createdAt',
-    change_id: 'change_id',
+    target_id: 'target_id',
     user_id: 'user_id',
     doc_id: 'doc_id',
     snapshot_id: 'snapshot_id'
@@ -5535,7 +5933,7 @@ export namespace Prisma {
 
 
   export const JsonNullValueInput: {
-    JsonNull: 'JsonNull'
+    JsonNull: typeof JsonNull
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
@@ -5550,9 +5948,9 @@ export namespace Prisma {
 
 
   export const JsonNullValueFilter: {
-    DbNull: 'DbNull',
-    JsonNull: 'JsonNull',
-    AnyNull: 'AnyNull'
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
@@ -5740,7 +6138,7 @@ export namespace Prisma {
     id?: StringFilter | string
     body?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    change_id?: StringFilter | string
+    target_id?: StringFilter | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     user_id?: StringFilter | string
     doc?: XOR<PmDocRelationFilter, PmDocWhereInput>
@@ -5753,7 +6151,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user?: UserOrderByWithRelationInput
     user_id?: SortOrder
     doc?: PmDocOrderByWithRelationInput
@@ -5770,7 +6168,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -5786,7 +6184,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter | string
     body?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
-    change_id?: StringWithAggregatesFilter | string
+    target_id?: StringWithAggregatesFilter | string
     user_id?: StringWithAggregatesFilter | string
     doc_id?: StringWithAggregatesFilter | string
     snapshot_id?: StringNullableWithAggregatesFilter | string | null
@@ -5829,6 +6227,8 @@ export namespace Prisma {
 
   export type ReviewWhereUniqueInput = {
     id?: string
+    before_snapshot_id?: string
+    after_snapshot_id?: string
   }
 
   export type ReviewOrderByWithAggregationInput = {
@@ -5892,9 +6292,9 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUpdateManyWithoutUserInput
-    reviews?: ReviewUpdateManyWithoutUserInput
-    comments?: CommentUpdateManyWithoutUserInput
+    docs?: PmDocUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -5904,9 +6304,9 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUncheckedUpdateManyWithoutUserInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserInput
-    comments?: CommentUncheckedUpdateManyWithoutUserInput
+    docs?: PmDocUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -5969,10 +6369,10 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutDocsInput
-    snapshots?: PmDocSnapshotUpdateManyWithoutDocInput
-    reviews?: ReviewUpdateManyWithoutDocInput
-    comments?: CommentUpdateManyWithoutDocInput
+    user?: UserUpdateOneRequiredWithoutDocsNestedInput
+    snapshots?: PmDocSnapshotUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUpdateManyWithoutDocNestedInput
+    comments?: CommentUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateInput = {
@@ -5983,9 +6383,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
-    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocInput
-    reviews?: ReviewUncheckedUpdateManyWithoutDocInput
-    comments?: CommentUncheckedUpdateManyWithoutDocInput
+    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutDocNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocCreateManyInput = {
@@ -6044,10 +6444,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: PmDocUpdateOneRequiredWithoutSnapshotsInput
-    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUpdateManyWithoutSnapshotInput
+    doc?: PmDocUpdateOneRequiredWithoutSnapshotsNestedInput
+    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateInput = {
@@ -6056,9 +6456,9 @@ export namespace Prisma {
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doc_id?: StringFieldUpdateOperationsInput | string
-    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUncheckedUpdateManyWithoutSnapshotInput
+    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotCreateManyInput = {
@@ -6088,7 +6488,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user: UserCreateNestedOneWithoutCommentsInput
     doc: PmDocCreateNestedOneWithoutCommentsInput
     snapshot?: PmDocSnapshotCreateNestedOneWithoutCommentsInput
@@ -6098,7 +6498,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     doc_id: string
     snapshot_id?: string | null
@@ -6108,17 +6508,17 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutCommentsInput
-    doc?: PmDocUpdateOneRequiredWithoutCommentsInput
-    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsInput
+    target_id?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    doc?: PmDocUpdateOneRequiredWithoutCommentsNestedInput
+    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6128,7 +6528,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     doc_id: string
     snapshot_id?: string | null
@@ -6138,14 +6538,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type CommentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6156,8 +6556,8 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
-    changes?: ReviewCreatechangesInput | Enumerable<string>
     user: UserCreateNestedOneWithoutReviewsInput
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc: PmDocCreateNestedOneWithoutReviewsInput
     before_snapshot: PmDocSnapshotCreateNestedOneWithoutBefore_snap_reviewInput
     after_snapshot?: PmDocSnapshotCreateNestedOneWithoutAfter_snap_reviewInput
@@ -6169,10 +6569,10 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreatechangesInput | Enumerable<string>
   }
 
   export type ReviewUpdateInput = {
@@ -6180,11 +6580,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     changes?: ReviewUpdatechangesInput | Enumerable<string>
-    user?: UserUpdateOneRequiredWithoutReviewsInput
-    doc?: PmDocUpdateOneRequiredWithoutReviewsInput
-    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewInput
-    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewInput
+    doc?: PmDocUpdateOneRequiredWithoutReviewsNestedInput
+    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewNestedInput
+    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewNestedInput
   }
 
   export type ReviewUncheckedUpdateInput = {
@@ -6193,10 +6593,10 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type ReviewCreateManyInput = {
@@ -6205,10 +6605,10 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreateManychangesInput | Enumerable<string>
   }
 
   export type ReviewUpdateManyMutationInput = {
@@ -6225,10 +6625,10 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type StringFilter = {
@@ -6346,6 +6746,17 @@ export namespace Prisma {
 
   export type JsonFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
   }
 
@@ -6418,6 +6829,17 @@ export namespace Prisma {
 
   export type JsonWithAggregatesFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
     _count?: NestedIntFilter
     _min?: NestedJsonFilter
@@ -6504,7 +6926,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -6514,7 +6936,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -6524,7 +6946,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -6657,85 +7079,85 @@ export namespace Prisma {
     set?: UserRole
   }
 
-  export type PmDocUpdateManyWithoutUserInput = {
+  export type PmDocUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<PmDocCreateWithoutUserInput>, Enumerable<PmDocUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<PmDocCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<PmDocUpsertWithWhereUniqueWithoutUserInput>
     createMany?: PmDocCreateManyUserInputEnvelope
-    connect?: Enumerable<PmDocWhereUniqueInput>
     set?: Enumerable<PmDocWhereUniqueInput>
     disconnect?: Enumerable<PmDocWhereUniqueInput>
     delete?: Enumerable<PmDocWhereUniqueInput>
+    connect?: Enumerable<PmDocWhereUniqueInput>
     update?: Enumerable<PmDocUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<PmDocUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<PmDocScalarWhereInput>
   }
 
-  export type ReviewUpdateManyWithoutUserInput = {
+  export type ReviewUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<ReviewCreateWithoutUserInput>, Enumerable<ReviewUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<ReviewCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<ReviewUpsertWithWhereUniqueWithoutUserInput>
     createMany?: ReviewCreateManyUserInputEnvelope
-    connect?: Enumerable<ReviewWhereUniqueInput>
     set?: Enumerable<ReviewWhereUniqueInput>
     disconnect?: Enumerable<ReviewWhereUniqueInput>
     delete?: Enumerable<ReviewWhereUniqueInput>
+    connect?: Enumerable<ReviewWhereUniqueInput>
     update?: Enumerable<ReviewUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<ReviewUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<ReviewScalarWhereInput>
   }
 
-  export type CommentUpdateManyWithoutUserInput = {
+  export type CommentUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutUserInput>, Enumerable<CommentUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutUserInput>
     createMany?: CommentCreateManyUserInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
   }
 
-  export type PmDocUncheckedUpdateManyWithoutUserInput = {
+  export type PmDocUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<PmDocCreateWithoutUserInput>, Enumerable<PmDocUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<PmDocCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<PmDocUpsertWithWhereUniqueWithoutUserInput>
     createMany?: PmDocCreateManyUserInputEnvelope
-    connect?: Enumerable<PmDocWhereUniqueInput>
     set?: Enumerable<PmDocWhereUniqueInput>
     disconnect?: Enumerable<PmDocWhereUniqueInput>
     delete?: Enumerable<PmDocWhereUniqueInput>
+    connect?: Enumerable<PmDocWhereUniqueInput>
     update?: Enumerable<PmDocUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<PmDocUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<PmDocScalarWhereInput>
   }
 
-  export type ReviewUncheckedUpdateManyWithoutUserInput = {
+  export type ReviewUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<ReviewCreateWithoutUserInput>, Enumerable<ReviewUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<ReviewCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<ReviewUpsertWithWhereUniqueWithoutUserInput>
     createMany?: ReviewCreateManyUserInputEnvelope
-    connect?: Enumerable<ReviewWhereUniqueInput>
     set?: Enumerable<ReviewWhereUniqueInput>
     disconnect?: Enumerable<ReviewWhereUniqueInput>
     delete?: Enumerable<ReviewWhereUniqueInput>
+    connect?: Enumerable<ReviewWhereUniqueInput>
     update?: Enumerable<ReviewUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<ReviewUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<ReviewScalarWhereInput>
   }
 
-  export type CommentUncheckedUpdateManyWithoutUserInput = {
+  export type CommentUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutUserInput>, Enumerable<CommentUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutUserInput>
     createMany?: CommentCreateManyUserInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
@@ -6797,7 +7219,7 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type UserUpdateOneRequiredWithoutDocsInput = {
+  export type UserUpdateOneRequiredWithoutDocsNestedInput = {
     create?: XOR<UserCreateWithoutDocsInput, UserUncheckedCreateWithoutDocsInput>
     connectOrCreate?: UserCreateOrConnectWithoutDocsInput
     upsert?: UserUpsertWithoutDocsInput
@@ -6805,85 +7227,85 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutDocsInput, UserUncheckedUpdateWithoutDocsInput>
   }
 
-  export type PmDocSnapshotUpdateManyWithoutDocInput = {
+  export type PmDocSnapshotUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<PmDocSnapshotCreateWithoutDocInput>, Enumerable<PmDocSnapshotUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<PmDocSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<PmDocSnapshotUpsertWithWhereUniqueWithoutDocInput>
     createMany?: PmDocSnapshotCreateManyDocInputEnvelope
-    connect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     set?: Enumerable<PmDocSnapshotWhereUniqueInput>
     disconnect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     delete?: Enumerable<PmDocSnapshotWhereUniqueInput>
+    connect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     update?: Enumerable<PmDocSnapshotUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<PmDocSnapshotUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<PmDocSnapshotScalarWhereInput>
   }
 
-  export type ReviewUpdateManyWithoutDocInput = {
+  export type ReviewUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ReviewCreateWithoutDocInput>, Enumerable<ReviewUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ReviewCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ReviewUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ReviewCreateManyDocInputEnvelope
-    connect?: Enumerable<ReviewWhereUniqueInput>
     set?: Enumerable<ReviewWhereUniqueInput>
     disconnect?: Enumerable<ReviewWhereUniqueInput>
     delete?: Enumerable<ReviewWhereUniqueInput>
+    connect?: Enumerable<ReviewWhereUniqueInput>
     update?: Enumerable<ReviewUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ReviewUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ReviewScalarWhereInput>
   }
 
-  export type CommentUpdateManyWithoutDocInput = {
+  export type CommentUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutDocInput>, Enumerable<CommentUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutDocInput>
     createMany?: CommentCreateManyDocInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
   }
 
-  export type PmDocSnapshotUncheckedUpdateManyWithoutDocInput = {
+  export type PmDocSnapshotUncheckedUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<PmDocSnapshotCreateWithoutDocInput>, Enumerable<PmDocSnapshotUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<PmDocSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<PmDocSnapshotUpsertWithWhereUniqueWithoutDocInput>
     createMany?: PmDocSnapshotCreateManyDocInputEnvelope
-    connect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     set?: Enumerable<PmDocSnapshotWhereUniqueInput>
     disconnect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     delete?: Enumerable<PmDocSnapshotWhereUniqueInput>
+    connect?: Enumerable<PmDocSnapshotWhereUniqueInput>
     update?: Enumerable<PmDocSnapshotUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<PmDocSnapshotUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<PmDocSnapshotScalarWhereInput>
   }
 
-  export type ReviewUncheckedUpdateManyWithoutDocInput = {
+  export type ReviewUncheckedUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ReviewCreateWithoutDocInput>, Enumerable<ReviewUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ReviewCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ReviewUpsertWithWhereUniqueWithoutDocInput>
     createMany?: ReviewCreateManyDocInputEnvelope
-    connect?: Enumerable<ReviewWhereUniqueInput>
     set?: Enumerable<ReviewWhereUniqueInput>
     disconnect?: Enumerable<ReviewWhereUniqueInput>
     delete?: Enumerable<ReviewWhereUniqueInput>
+    connect?: Enumerable<ReviewWhereUniqueInput>
     update?: Enumerable<ReviewUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<ReviewUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<ReviewScalarWhereInput>
   }
 
-  export type CommentUncheckedUpdateManyWithoutDocInput = {
+  export type CommentUncheckedUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutDocInput>, Enumerable<CommentUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutDocInput>
     createMany?: CommentCreateManyDocInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutDocInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutDocInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
@@ -6933,7 +7355,7 @@ export namespace Prisma {
     connect?: Enumerable<CommentWhereUniqueInput>
   }
 
-  export type PmDocUpdateOneRequiredWithoutSnapshotsInput = {
+  export type PmDocUpdateOneRequiredWithoutSnapshotsNestedInput = {
     create?: XOR<PmDocCreateWithoutSnapshotsInput, PmDocUncheckedCreateWithoutSnapshotsInput>
     connectOrCreate?: PmDocCreateOrConnectWithoutSnapshotsInput
     upsert?: PmDocUpsertWithoutSnapshotsInput
@@ -6941,69 +7363,69 @@ export namespace Prisma {
     update?: XOR<PmDocUpdateWithoutSnapshotsInput, PmDocUncheckedUpdateWithoutSnapshotsInput>
   }
 
-  export type ReviewUpdateOneWithoutBefore_snapshotInput = {
+  export type ReviewUpdateOneWithoutBefore_snapshotNestedInput = {
     create?: XOR<ReviewCreateWithoutBefore_snapshotInput, ReviewUncheckedCreateWithoutBefore_snapshotInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutBefore_snapshotInput
     upsert?: ReviewUpsertWithoutBefore_snapshotInput
-    connect?: ReviewWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: ReviewWhereUniqueInput
     update?: XOR<ReviewUpdateWithoutBefore_snapshotInput, ReviewUncheckedUpdateWithoutBefore_snapshotInput>
   }
 
-  export type ReviewUpdateOneWithoutAfter_snapshotInput = {
+  export type ReviewUpdateOneWithoutAfter_snapshotNestedInput = {
     create?: XOR<ReviewCreateWithoutAfter_snapshotInput, ReviewUncheckedCreateWithoutAfter_snapshotInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutAfter_snapshotInput
     upsert?: ReviewUpsertWithoutAfter_snapshotInput
-    connect?: ReviewWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: ReviewWhereUniqueInput
     update?: XOR<ReviewUpdateWithoutAfter_snapshotInput, ReviewUncheckedUpdateWithoutAfter_snapshotInput>
   }
 
-  export type CommentUpdateManyWithoutSnapshotInput = {
+  export type CommentUpdateManyWithoutSnapshotNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutSnapshotInput>, Enumerable<CommentUncheckedCreateWithoutSnapshotInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutSnapshotInput>
     createMany?: CommentCreateManySnapshotInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutSnapshotInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutSnapshotInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
   }
 
-  export type ReviewUncheckedUpdateOneWithoutBefore_snapshotInput = {
+  export type ReviewUncheckedUpdateOneWithoutBefore_snapshotNestedInput = {
     create?: XOR<ReviewCreateWithoutBefore_snapshotInput, ReviewUncheckedCreateWithoutBefore_snapshotInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutBefore_snapshotInput
     upsert?: ReviewUpsertWithoutBefore_snapshotInput
-    connect?: ReviewWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: ReviewWhereUniqueInput
     update?: XOR<ReviewUpdateWithoutBefore_snapshotInput, ReviewUncheckedUpdateWithoutBefore_snapshotInput>
   }
 
-  export type ReviewUncheckedUpdateOneWithoutAfter_snapshotInput = {
+  export type ReviewUncheckedUpdateOneWithoutAfter_snapshotNestedInput = {
     create?: XOR<ReviewCreateWithoutAfter_snapshotInput, ReviewUncheckedCreateWithoutAfter_snapshotInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutAfter_snapshotInput
     upsert?: ReviewUpsertWithoutAfter_snapshotInput
-    connect?: ReviewWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: ReviewWhereUniqueInput
     update?: XOR<ReviewUpdateWithoutAfter_snapshotInput, ReviewUncheckedUpdateWithoutAfter_snapshotInput>
   }
 
-  export type CommentUncheckedUpdateManyWithoutSnapshotInput = {
+  export type CommentUncheckedUpdateManyWithoutSnapshotNestedInput = {
     create?: XOR<Enumerable<CommentCreateWithoutSnapshotInput>, Enumerable<CommentUncheckedCreateWithoutSnapshotInput>>
     connectOrCreate?: Enumerable<CommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<CommentUpsertWithWhereUniqueWithoutSnapshotInput>
     createMany?: CommentCreateManySnapshotInputEnvelope
-    connect?: Enumerable<CommentWhereUniqueInput>
     set?: Enumerable<CommentWhereUniqueInput>
     disconnect?: Enumerable<CommentWhereUniqueInput>
     delete?: Enumerable<CommentWhereUniqueInput>
+    connect?: Enumerable<CommentWhereUniqueInput>
     update?: Enumerable<CommentUpdateWithWhereUniqueWithoutSnapshotInput>
     updateMany?: Enumerable<CommentUpdateManyWithWhereWithoutSnapshotInput>
     deleteMany?: Enumerable<CommentScalarWhereInput>
@@ -7027,7 +7449,7 @@ export namespace Prisma {
     connect?: PmDocSnapshotWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutCommentsInput = {
+  export type UserUpdateOneRequiredWithoutCommentsNestedInput = {
     create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
     upsert?: UserUpsertWithoutCommentsInput
@@ -7035,7 +7457,7 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutCommentsInput, UserUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type PmDocUpdateOneRequiredWithoutCommentsInput = {
+  export type PmDocUpdateOneRequiredWithoutCommentsNestedInput = {
     create?: XOR<PmDocCreateWithoutCommentsInput, PmDocUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: PmDocCreateOrConnectWithoutCommentsInput
     upsert?: PmDocUpsertWithoutCommentsInput
@@ -7043,13 +7465,13 @@ export namespace Prisma {
     update?: XOR<PmDocUpdateWithoutCommentsInput, PmDocUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type PmDocSnapshotUpdateOneWithoutCommentsInput = {
+  export type PmDocSnapshotUpdateOneWithoutCommentsNestedInput = {
     create?: XOR<PmDocSnapshotCreateWithoutCommentsInput, PmDocSnapshotUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: PmDocSnapshotCreateOrConnectWithoutCommentsInput
     upsert?: PmDocSnapshotUpsertWithoutCommentsInput
-    connect?: PmDocSnapshotWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: PmDocSnapshotWhereUniqueInput
     update?: XOR<PmDocSnapshotUpdateWithoutCommentsInput, PmDocSnapshotUncheckedUpdateWithoutCommentsInput>
   }
 
@@ -7057,14 +7479,14 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type ReviewCreatechangesInput = {
-    set: Enumerable<string>
-  }
-
   export type UserCreateNestedOneWithoutReviewsInput = {
     create?: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: UserCreateOrConnectWithoutReviewsInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type ReviewCreatechangesInput = {
+    set: Enumerable<string>
   }
 
   export type PmDocCreateNestedOneWithoutReviewsInput = {
@@ -7089,12 +7511,7 @@ export namespace Prisma {
     set?: ReviewStatus
   }
 
-  export type ReviewUpdatechangesInput = {
-    set?: Enumerable<string>
-    push?: string | Enumerable<string>
-  }
-
-  export type UserUpdateOneRequiredWithoutReviewsInput = {
+  export type UserUpdateOneRequiredWithoutReviewsNestedInput = {
     create?: XOR<UserCreateWithoutReviewsInput, UserUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: UserCreateOrConnectWithoutReviewsInput
     upsert?: UserUpsertWithoutReviewsInput
@@ -7102,7 +7519,12 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutReviewsInput, UserUncheckedUpdateWithoutReviewsInput>
   }
 
-  export type PmDocUpdateOneRequiredWithoutReviewsInput = {
+  export type ReviewUpdatechangesInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
+  }
+
+  export type PmDocUpdateOneRequiredWithoutReviewsNestedInput = {
     create?: XOR<PmDocCreateWithoutReviewsInput, PmDocUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: PmDocCreateOrConnectWithoutReviewsInput
     upsert?: PmDocUpsertWithoutReviewsInput
@@ -7110,7 +7532,7 @@ export namespace Prisma {
     update?: XOR<PmDocUpdateWithoutReviewsInput, PmDocUncheckedUpdateWithoutReviewsInput>
   }
 
-  export type PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewInput = {
+  export type PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewNestedInput = {
     create?: XOR<PmDocSnapshotCreateWithoutBefore_snap_reviewInput, PmDocSnapshotUncheckedCreateWithoutBefore_snap_reviewInput>
     connectOrCreate?: PmDocSnapshotCreateOrConnectWithoutBefore_snap_reviewInput
     upsert?: PmDocSnapshotUpsertWithoutBefore_snap_reviewInput
@@ -7118,18 +7540,14 @@ export namespace Prisma {
     update?: XOR<PmDocSnapshotUpdateWithoutBefore_snap_reviewInput, PmDocSnapshotUncheckedUpdateWithoutBefore_snap_reviewInput>
   }
 
-  export type PmDocSnapshotUpdateOneWithoutAfter_snap_reviewInput = {
+  export type PmDocSnapshotUpdateOneWithoutAfter_snap_reviewNestedInput = {
     create?: XOR<PmDocSnapshotCreateWithoutAfter_snap_reviewInput, PmDocSnapshotUncheckedCreateWithoutAfter_snap_reviewInput>
     connectOrCreate?: PmDocSnapshotCreateOrConnectWithoutAfter_snap_reviewInput
     upsert?: PmDocSnapshotUpsertWithoutAfter_snap_reviewInput
-    connect?: PmDocSnapshotWhereUniqueInput
     disconnect?: boolean
     delete?: boolean
+    connect?: PmDocSnapshotWhereUniqueInput
     update?: XOR<PmDocSnapshotUpdateWithoutAfter_snap_reviewInput, PmDocSnapshotUncheckedUpdateWithoutAfter_snap_reviewInput>
-  }
-
-  export type ReviewCreateManychangesInput = {
-    set: Enumerable<string>
   }
 
   export type NestedStringFilter = {
@@ -7217,6 +7635,17 @@ export namespace Prisma {
 
   export type NestedJsonFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
   }
 
@@ -7353,10 +7782,10 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreatechangesInput | Enumerable<string>
   }
 
   export type ReviewCreateOrConnectWithoutUserInput = {
@@ -7373,7 +7802,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     doc: PmDocCreateNestedOneWithoutCommentsInput
     snapshot?: PmDocSnapshotCreateNestedOneWithoutCommentsInput
   }
@@ -7382,7 +7811,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     doc_id: string
     snapshot_id?: string | null
   }
@@ -7480,7 +7909,7 @@ export namespace Prisma {
     id?: StringFilter | string
     body?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    change_id?: StringFilter | string
+    target_id?: StringFilter | string
     user_id?: StringFilter | string
     doc_id?: StringFilter | string
     snapshot_id?: StringNullableFilter | string | null
@@ -7548,8 +7977,8 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
-    changes?: ReviewCreatechangesInput | Enumerable<string>
     user: UserCreateNestedOneWithoutReviewsInput
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     before_snapshot: PmDocSnapshotCreateNestedOneWithoutBefore_snap_reviewInput
     after_snapshot?: PmDocSnapshotCreateNestedOneWithoutAfter_snap_reviewInput
   }
@@ -7560,9 +7989,9 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreatechangesInput | Enumerable<string>
   }
 
   export type ReviewCreateOrConnectWithoutDocInput = {
@@ -7579,7 +8008,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user: UserCreateNestedOneWithoutCommentsInput
     snapshot?: PmDocSnapshotCreateNestedOneWithoutCommentsInput
   }
@@ -7588,7 +8017,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     snapshot_id?: string | null
   }
@@ -7615,8 +8044,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    reviews?: ReviewUpdateManyWithoutUserInput
-    comments?: CommentUpdateManyWithoutUserInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocsInput = {
@@ -7626,8 +8055,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    reviews?: ReviewUncheckedUpdateManyWithoutUserInput
-    comments?: CommentUncheckedUpdateManyWithoutUserInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PmDocSnapshotUpsertWithWhereUniqueWithoutDocInput = {
@@ -7723,8 +8152,8 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
-    changes?: ReviewCreatechangesInput | Enumerable<string>
     user: UserCreateNestedOneWithoutReviewsInput
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc: PmDocCreateNestedOneWithoutReviewsInput
     after_snapshot?: PmDocSnapshotCreateNestedOneWithoutAfter_snap_reviewInput
   }
@@ -7735,9 +8164,9 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreatechangesInput | Enumerable<string>
   }
 
   export type ReviewCreateOrConnectWithoutBefore_snapshotInput = {
@@ -7750,8 +8179,8 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
-    changes?: ReviewCreatechangesInput | Enumerable<string>
     user: UserCreateNestedOneWithoutReviewsInput
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc: PmDocCreateNestedOneWithoutReviewsInput
     before_snapshot: PmDocSnapshotCreateNestedOneWithoutBefore_snap_reviewInput
   }
@@ -7762,9 +8191,9 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     before_snapshot_id: string
-    changes?: ReviewCreatechangesInput | Enumerable<string>
   }
 
   export type ReviewCreateOrConnectWithoutAfter_snapshotInput = {
@@ -7776,7 +8205,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user: UserCreateNestedOneWithoutCommentsInput
     doc: PmDocCreateNestedOneWithoutCommentsInput
   }
@@ -7785,7 +8214,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     doc_id: string
   }
@@ -7812,9 +8241,9 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutDocsInput
-    reviews?: ReviewUpdateManyWithoutDocInput
-    comments?: CommentUpdateManyWithoutDocInput
+    user?: UserUpdateOneRequiredWithoutDocsNestedInput
+    reviews?: ReviewUpdateManyWithoutDocNestedInput
+    comments?: CommentUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateWithoutSnapshotsInput = {
@@ -7825,8 +8254,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
-    reviews?: ReviewUncheckedUpdateManyWithoutDocInput
-    comments?: CommentUncheckedUpdateManyWithoutDocInput
+    reviews?: ReviewUncheckedUpdateManyWithoutDocNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type ReviewUpsertWithoutBefore_snapshotInput = {
@@ -7839,10 +8268,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     changes?: ReviewUpdatechangesInput | Enumerable<string>
-    user?: UserUpdateOneRequiredWithoutReviewsInput
-    doc?: PmDocUpdateOneRequiredWithoutReviewsInput
-    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewInput
+    doc?: PmDocUpdateOneRequiredWithoutReviewsNestedInput
+    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutBefore_snapshotInput = {
@@ -7851,9 +8280,9 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type ReviewUpsertWithoutAfter_snapshotInput = {
@@ -7866,10 +8295,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     changes?: ReviewUpdatechangesInput | Enumerable<string>
-    user?: UserUpdateOneRequiredWithoutReviewsInput
-    doc?: PmDocUpdateOneRequiredWithoutReviewsInput
-    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewInput
+    doc?: PmDocUpdateOneRequiredWithoutReviewsNestedInput
+    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutAfter_snapshotInput = {
@@ -7878,9 +8307,9 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type CommentUpsertWithWhereUniqueWithoutSnapshotInput = {
@@ -7992,8 +8421,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUpdateManyWithoutUserInput
-    reviews?: ReviewUpdateManyWithoutUserInput
+    docs?: PmDocUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -8003,8 +8432,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUncheckedUpdateManyWithoutUserInput
-    reviews?: ReviewUncheckedUpdateManyWithoutUserInput
+    docs?: PmDocUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PmDocUpsertWithoutCommentsInput = {
@@ -8019,9 +8448,9 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutDocsInput
-    snapshots?: PmDocSnapshotUpdateManyWithoutDocInput
-    reviews?: ReviewUpdateManyWithoutDocInput
+    user?: UserUpdateOneRequiredWithoutDocsNestedInput
+    snapshots?: PmDocSnapshotUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateWithoutCommentsInput = {
@@ -8032,8 +8461,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
-    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocInput
-    reviews?: ReviewUncheckedUpdateManyWithoutDocInput
+    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocSnapshotUpsertWithoutCommentsInput = {
@@ -8046,9 +8475,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: PmDocUpdateOneRequiredWithoutSnapshotsInput
-    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotInput
+    doc?: PmDocUpdateOneRequiredWithoutSnapshotsNestedInput
+    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateWithoutCommentsInput = {
@@ -8057,8 +8486,8 @@ export namespace Prisma {
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doc_id?: StringFieldUpdateOperationsInput | string
-    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotInput
+    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -8179,8 +8608,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUpdateManyWithoutUserInput
-    comments?: CommentUpdateManyWithoutUserInput
+    docs?: PmDocUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -8190,8 +8619,8 @@ export namespace Prisma {
     lastname?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | UserRole
-    docs?: PmDocUncheckedUpdateManyWithoutUserInput
-    comments?: CommentUncheckedUpdateManyWithoutUserInput
+    docs?: PmDocUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PmDocUpsertWithoutReviewsInput = {
@@ -8206,9 +8635,9 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutDocsInput
-    snapshots?: PmDocSnapshotUpdateManyWithoutDocInput
-    comments?: CommentUpdateManyWithoutDocInput
+    user?: UserUpdateOneRequiredWithoutDocsNestedInput
+    snapshots?: PmDocSnapshotUpdateManyWithoutDocNestedInput
+    comments?: CommentUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateWithoutReviewsInput = {
@@ -8219,8 +8648,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
-    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocInput
-    comments?: CommentUncheckedUpdateManyWithoutDocInput
+    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocSnapshotUpsertWithoutBefore_snap_reviewInput = {
@@ -8233,9 +8662,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: PmDocUpdateOneRequiredWithoutSnapshotsInput
-    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUpdateManyWithoutSnapshotInput
+    doc?: PmDocUpdateOneRequiredWithoutSnapshotsNestedInput
+    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateWithoutBefore_snap_reviewInput = {
@@ -8244,8 +8673,8 @@ export namespace Prisma {
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doc_id?: StringFieldUpdateOperationsInput | string
-    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUncheckedUpdateManyWithoutSnapshotInput
+    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUpsertWithoutAfter_snap_reviewInput = {
@@ -8258,9 +8687,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: PmDocUpdateOneRequiredWithoutSnapshotsInput
-    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotInput
-    comments?: CommentUpdateManyWithoutSnapshotInput
+    doc?: PmDocUpdateOneRequiredWithoutSnapshotsNestedInput
+    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotNestedInput
+    comments?: CommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateWithoutAfter_snap_reviewInput = {
@@ -8269,8 +8698,8 @@ export namespace Prisma {
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doc_id?: StringFieldUpdateOperationsInput | string
-    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotInput
-    comments?: CommentUncheckedUpdateManyWithoutSnapshotInput
+    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocCreateManyUserInput = {
@@ -8287,17 +8716,17 @@ export namespace Prisma {
     name?: string
     status?: ReviewStatus
     createdAt?: Date | string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     doc_id: string
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreateManychangesInput | Enumerable<string>
   }
 
   export type CommentCreateManyUserInput = {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     doc_id: string
     snapshot_id?: string | null
   }
@@ -8309,9 +8738,9 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: PmDocSnapshotUpdateManyWithoutDocInput
-    reviews?: ReviewUpdateManyWithoutDocInput
-    comments?: CommentUpdateManyWithoutDocInput
+    snapshots?: PmDocSnapshotUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUpdateManyWithoutDocNestedInput
+    comments?: CommentUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateWithoutUserInput = {
@@ -8321,9 +8750,9 @@ export namespace Prisma {
     status?: EnumDocStatusFieldUpdateOperationsInput | DocStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocInput
-    reviews?: ReviewUncheckedUpdateManyWithoutDocInput
-    comments?: CommentUncheckedUpdateManyWithoutDocInput
+    snapshots?: PmDocSnapshotUncheckedUpdateManyWithoutDocNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutDocNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type PmDocUncheckedUpdateManyWithoutDocsInput = {
@@ -8341,9 +8770,9 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     changes?: ReviewUpdatechangesInput | Enumerable<string>
-    doc?: PmDocUpdateOneRequiredWithoutReviewsInput
-    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewInput
-    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewInput
+    doc?: PmDocUpdateOneRequiredWithoutReviewsNestedInput
+    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewNestedInput
+    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutUserInput = {
@@ -8351,10 +8780,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type ReviewUncheckedUpdateManyWithoutReviewsInput = {
@@ -8362,26 +8791,26 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     doc_id?: StringFieldUpdateOperationsInput | string
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type CommentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
-    doc?: PmDocUpdateOneRequiredWithoutCommentsInput
-    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsInput
+    target_id?: StringFieldUpdateOperationsInput | string
+    doc?: PmDocUpdateOneRequiredWithoutCommentsNestedInput
+    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -8390,7 +8819,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -8408,16 +8837,16 @@ export namespace Prisma {
     status?: ReviewStatus
     createdAt?: Date | string
     user_id: string
+    changes?: ReviewCreatechangesInput | Enumerable<string>
     before_snapshot_id: string
     after_snapshot_id?: string | null
-    changes?: ReviewCreateManychangesInput | Enumerable<string>
   }
 
   export type CommentCreateManyDocInput = {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     snapshot_id?: string | null
   }
@@ -8427,9 +8856,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUpdateManyWithoutSnapshotInput
+    before_snap_review?: ReviewUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateWithoutDocInput = {
@@ -8437,9 +8866,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotInput
-    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotInput
-    comments?: CommentUncheckedUpdateManyWithoutSnapshotInput
+    before_snap_review?: ReviewUncheckedUpdateOneWithoutBefore_snapshotNestedInput
+    after_snap_review?: ReviewUncheckedUpdateOneWithoutAfter_snapshotNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type PmDocSnapshotUncheckedUpdateManyWithoutSnapshotsInput = {
@@ -8454,10 +8883,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     changes?: ReviewUpdatechangesInput | Enumerable<string>
-    user?: UserUpdateOneRequiredWithoutReviewsInput
-    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewInput
-    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewInput
+    before_snapshot?: PmDocSnapshotUpdateOneRequiredWithoutBefore_snap_reviewNestedInput
+    after_snapshot?: PmDocSnapshotUpdateOneWithoutAfter_snap_reviewNestedInput
   }
 
   export type ReviewUncheckedUpdateWithoutDocInput = {
@@ -8466,25 +8895,25 @@ export namespace Prisma {
     status?: EnumReviewStatusFieldUpdateOperationsInput | ReviewStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user_id?: StringFieldUpdateOperationsInput | string
+    changes?: ReviewUpdatechangesInput | Enumerable<string>
     before_snapshot_id?: StringFieldUpdateOperationsInput | string
     after_snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
-    changes?: ReviewUpdatechangesInput | Enumerable<string>
   }
 
   export type CommentUpdateWithoutDocInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutCommentsInput
-    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsInput
+    target_id?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    snapshot?: PmDocSnapshotUpdateOneWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateWithoutDocInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -8493,7 +8922,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_id: string
     doc_id: string
   }
@@ -8502,16 +8931,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutCommentsInput
-    doc?: PmDocUpdateOneRequiredWithoutCommentsInput
+    target_id?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    doc?: PmDocUpdateOneRequiredWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateWithoutSnapshotInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
   }
@@ -8529,5 +8958,5 @@ export namespace Prisma {
   /**
    * DMMF
    */
-  export const dmmf: runtime.DMMF.Document;
+  export const dmmf: runtime.BaseDMMF
 }

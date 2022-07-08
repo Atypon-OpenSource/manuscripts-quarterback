@@ -53,7 +53,7 @@ const NewCommentForm = observer((props: IProps) => {
       .createComment(
         {
           body,
-          change_id: targetId,
+          target_id: targetId,
           doc_id: docId,
           snapshot_id: null,
         },

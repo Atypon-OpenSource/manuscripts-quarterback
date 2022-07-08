@@ -45,7 +45,7 @@ export type ManuscriptComment = {
   id: string
   body: string
   createdAt: Date
-  change_id: string
+  target_id: string
   user_model_id: string
   doc_id: string
   snapshot_id: string | null
@@ -249,9 +249,19 @@ export namespace Prisma {
    */
   export import Decimal = runtime.Decimal
 
+  export type DecimalJsLike = runtime.DecimalJsLike
+
   /**
-   * Prisma Client JS version: 3.14.0
-   * Query Engine version: 2b0c12756921c891fec4f68d9444e18c7d5d4a6a
+   * Metrics 
+   */
+  export import Metrics = runtime.Metrics
+  export import Metric = runtime.Metric
+  export import MetricHistogram = runtime.MetricHistogram
+  export import MetricHistogramBucket = runtime.MetricHistogramBucket
+
+  /**
+   * Prisma Client JS version: 4.0.0
+   * Query Engine version: da41d2bb3406da22087b849f0e911199ba4fbf11
    */
   export type PrismaVersion = {
     client: string
@@ -310,25 +320,68 @@ export namespace Prisma {
   export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray
 
   /**
+   * Types of the values used to represent different kinds of `null` values when working with JSON fields.
+   * 
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+   */
+  namespace NullTypes {
+    /**
+    * Type of `Prisma.DbNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class DbNull {
+      private DbNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.JsonNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class JsonNull {
+      private JsonNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.AnyNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class AnyNull {
+      private AnyNull: never
+      private constructor()
+    }
+  }
+
+  /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const DbNull: 'DbNull'
+  export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const JsonNull: 'JsonNull'
+  export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const AnyNull: 'AnyNull'
+  export const AnyNull: NullTypes.AnyNull
 
   type SelectAndInclude = {
     select: any
@@ -674,7 +727,8 @@ export namespace Prisma {
   export interface PrismaClientOptions {
     /**
      * Configure findUnique/findFirst to throw an error if the query returns null. 
-     *  * @example
+     * @deprecated since 4.0.0. Use `findUniqueOrThrow`/`findFirstOrThrow` methods instead.
+     * @example
      * ```
      * // Reject on both findUnique/findFirst
      * rejectOnNotFound: true
@@ -1296,6 +1350,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__ManuscriptDocClient<ManuscriptDoc>, Prisma__ManuscriptDocClient<ManuscriptDocGetPayload<T>>>
 
     /**
+     * Find one ManuscriptDoc that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {ManuscriptDocFindUniqueOrThrowArgs} args - Arguments to find a ManuscriptDoc
+     * @example
+     * // Get one ManuscriptDoc
+     * const manuscriptDoc = await prisma.manuscriptDoc.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ManuscriptDocFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptDocFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocClient<ManuscriptDoc>, Prisma__ManuscriptDocClient<ManuscriptDocGetPayload<T>>>
+
+    /**
+     * Find the first ManuscriptDoc that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocFindFirstOrThrowArgs} args - Arguments to find a ManuscriptDoc
+     * @example
+     * // Get one ManuscriptDoc
+     * const manuscriptDoc = await prisma.manuscriptDoc.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ManuscriptDocFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptDocFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocClient<ManuscriptDoc>, Prisma__ManuscriptDocClient<ManuscriptDocGetPayload<T>>>
+
+    /**
      * Count the number of ManuscriptDocs.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -1475,9 +1563,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * ManuscriptDoc findUnique
+   * ManuscriptDoc base type for findUnique actions
    */
-  export type ManuscriptDocFindUniqueArgs = {
+  export type ManuscriptDocFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptDoc
      * 
@@ -1488,11 +1576,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptDocInclude | null
-    /**
-     * Throw an Error if a ManuscriptDoc can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptDoc to fetch.
      * 
@@ -1500,11 +1583,22 @@ export namespace Prisma {
     where: ManuscriptDocWhereUniqueInput
   }
 
+  /**
+   * ManuscriptDoc: findUnique
+   */
+  export interface ManuscriptDocFindUniqueArgs extends ManuscriptDocFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * ManuscriptDoc findFirst
+   * ManuscriptDoc base type for findFirst actions
    */
-  export type ManuscriptDocFindFirstArgs = {
+  export type ManuscriptDocFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptDoc
      * 
@@ -1515,11 +1609,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptDocInclude | null
-    /**
-     * Throw an Error if a ManuscriptDoc can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptDoc to fetch.
      * 
@@ -1562,6 +1651,17 @@ export namespace Prisma {
     distinct?: Enumerable<ManuscriptDocScalarFieldEnum>
   }
 
+  /**
+   * ManuscriptDoc: findFirst
+   */
+  export interface ManuscriptDocFindFirstArgs extends ManuscriptDocFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * ManuscriptDoc findMany
@@ -1758,6 +1858,18 @@ export namespace Prisma {
     where?: ManuscriptDocWhereInput
   }
 
+
+  /**
+   * ManuscriptDoc: findUniqueOrThrow
+   */
+  export type ManuscriptDocFindUniqueOrThrowArgs = ManuscriptDocFindUniqueArgsBase
+      
+
+  /**
+   * ManuscriptDoc: findFirstOrThrow
+   */
+  export type ManuscriptDocFindFirstOrThrowArgs = ManuscriptDocFindFirstArgsBase
+      
 
   /**
    * ManuscriptDoc without action
@@ -2166,6 +2278,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshot>, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshotGetPayload<T>>>
 
     /**
+     * Find one ManuscriptSnapshot that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {ManuscriptSnapshotFindUniqueOrThrowArgs} args - Arguments to find a ManuscriptSnapshot
+     * @example
+     * // Get one ManuscriptSnapshot
+     * const manuscriptSnapshot = await prisma.manuscriptSnapshot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ManuscriptSnapshotFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptSnapshotFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshot>, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshotGetPayload<T>>>
+
+    /**
+     * Find the first ManuscriptSnapshot that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptSnapshotFindFirstOrThrowArgs} args - Arguments to find a ManuscriptSnapshot
+     * @example
+     * // Get one ManuscriptSnapshot
+     * const manuscriptSnapshot = await prisma.manuscriptSnapshot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ManuscriptSnapshotFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptSnapshotFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshot>, Prisma__ManuscriptSnapshotClient<ManuscriptSnapshotGetPayload<T>>>
+
+    /**
      * Count the number of ManuscriptSnapshots.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -2345,9 +2491,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * ManuscriptSnapshot findUnique
+   * ManuscriptSnapshot base type for findUnique actions
    */
-  export type ManuscriptSnapshotFindUniqueArgs = {
+  export type ManuscriptSnapshotFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptSnapshot
      * 
@@ -2358,11 +2504,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptSnapshotInclude | null
-    /**
-     * Throw an Error if a ManuscriptSnapshot can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptSnapshot to fetch.
      * 
@@ -2370,11 +2511,22 @@ export namespace Prisma {
     where: ManuscriptSnapshotWhereUniqueInput
   }
 
+  /**
+   * ManuscriptSnapshot: findUnique
+   */
+  export interface ManuscriptSnapshotFindUniqueArgs extends ManuscriptSnapshotFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * ManuscriptSnapshot findFirst
+   * ManuscriptSnapshot base type for findFirst actions
    */
-  export type ManuscriptSnapshotFindFirstArgs = {
+  export type ManuscriptSnapshotFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptSnapshot
      * 
@@ -2385,11 +2537,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptSnapshotInclude | null
-    /**
-     * Throw an Error if a ManuscriptSnapshot can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptSnapshot to fetch.
      * 
@@ -2432,6 +2579,17 @@ export namespace Prisma {
     distinct?: Enumerable<ManuscriptSnapshotScalarFieldEnum>
   }
 
+  /**
+   * ManuscriptSnapshot: findFirst
+   */
+  export interface ManuscriptSnapshotFindFirstArgs extends ManuscriptSnapshotFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * ManuscriptSnapshot findMany
@@ -2630,6 +2788,18 @@ export namespace Prisma {
 
 
   /**
+   * ManuscriptSnapshot: findUniqueOrThrow
+   */
+  export type ManuscriptSnapshotFindUniqueOrThrowArgs = ManuscriptSnapshotFindUniqueArgsBase
+      
+
+  /**
+   * ManuscriptSnapshot: findFirstOrThrow
+   */
+  export type ManuscriptSnapshotFindFirstOrThrowArgs = ManuscriptSnapshotFindFirstArgsBase
+      
+
+  /**
    * ManuscriptSnapshot without action
    */
   export type ManuscriptSnapshotArgs = {
@@ -2662,7 +2832,7 @@ export namespace Prisma {
     id: string | null
     body: string | null
     createdAt: Date | null
-    change_id: string | null
+    target_id: string | null
     user_model_id: string | null
     doc_id: string | null
     snapshot_id: string | null
@@ -2672,7 +2842,7 @@ export namespace Prisma {
     id: string | null
     body: string | null
     createdAt: Date | null
-    change_id: string | null
+    target_id: string | null
     user_model_id: string | null
     doc_id: string | null
     snapshot_id: string | null
@@ -2682,7 +2852,7 @@ export namespace Prisma {
     id: number
     body: number
     createdAt: number
-    change_id: number
+    target_id: number
     user_model_id: number
     doc_id: number
     snapshot_id: number
@@ -2694,7 +2864,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_model_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -2704,7 +2874,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_model_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -2714,7 +2884,7 @@ export namespace Prisma {
     id?: true
     body?: true
     createdAt?: true
-    change_id?: true
+    target_id?: true
     user_model_id?: true
     doc_id?: true
     snapshot_id?: true
@@ -2803,7 +2973,7 @@ export namespace Prisma {
     id: string
     body: string
     createdAt: Date
-    change_id: string
+    target_id: string
     user_model_id: string
     doc_id: string
     snapshot_id: string | null
@@ -2830,7 +3000,7 @@ export namespace Prisma {
     id?: boolean
     body?: boolean
     createdAt?: boolean
-    change_id?: boolean
+    target_id?: boolean
     user_model_id?: boolean
     doc?: boolean | ManuscriptDocArgs
     doc_id?: boolean
@@ -3052,6 +3222,40 @@ export namespace Prisma {
     ): CheckSelect<T, Prisma__ManuscriptCommentClient<ManuscriptComment>, Prisma__ManuscriptCommentClient<ManuscriptCommentGetPayload<T>>>
 
     /**
+     * Find one ManuscriptComment that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {ManuscriptCommentFindUniqueOrThrowArgs} args - Arguments to find a ManuscriptComment
+     * @example
+     * // Get one ManuscriptComment
+     * const manuscriptComment = await prisma.manuscriptComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ManuscriptCommentFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptCommentFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptCommentClient<ManuscriptComment>, Prisma__ManuscriptCommentClient<ManuscriptCommentGetPayload<T>>>
+
+    /**
+     * Find the first ManuscriptComment that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptCommentFindFirstOrThrowArgs} args - Arguments to find a ManuscriptComment
+     * @example
+     * // Get one ManuscriptComment
+     * const manuscriptComment = await prisma.manuscriptComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ManuscriptCommentFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptCommentFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptCommentClient<ManuscriptComment>, Prisma__ManuscriptCommentClient<ManuscriptCommentGetPayload<T>>>
+
+    /**
      * Count the number of ManuscriptComments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -3231,9 +3435,9 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * ManuscriptComment findUnique
+   * ManuscriptComment base type for findUnique actions
    */
-  export type ManuscriptCommentFindUniqueArgs = {
+  export type ManuscriptCommentFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptComment
      * 
@@ -3244,11 +3448,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptCommentInclude | null
-    /**
-     * Throw an Error if a ManuscriptComment can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptComment to fetch.
      * 
@@ -3256,11 +3455,22 @@ export namespace Prisma {
     where: ManuscriptCommentWhereUniqueInput
   }
 
+  /**
+   * ManuscriptComment: findUnique
+   */
+  export interface ManuscriptCommentFindUniqueArgs extends ManuscriptCommentFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
-   * ManuscriptComment findFirst
+   * ManuscriptComment base type for findFirst actions
    */
-  export type ManuscriptCommentFindFirstArgs = {
+  export type ManuscriptCommentFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the ManuscriptComment
      * 
@@ -3271,11 +3481,6 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptCommentInclude | null
-    /**
-     * Throw an Error if a ManuscriptComment can't be found
-     * 
-    **/
-    rejectOnNotFound?: RejectOnNotFound
     /**
      * Filter, which ManuscriptComment to fetch.
      * 
@@ -3318,6 +3523,17 @@ export namespace Prisma {
     distinct?: Enumerable<ManuscriptCommentScalarFieldEnum>
   }
 
+  /**
+   * ManuscriptComment: findFirst
+   */
+  export interface ManuscriptCommentFindFirstArgs extends ManuscriptCommentFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * ManuscriptComment findMany
@@ -3516,6 +3732,18 @@ export namespace Prisma {
 
 
   /**
+   * ManuscriptComment: findUniqueOrThrow
+   */
+  export type ManuscriptCommentFindUniqueOrThrowArgs = ManuscriptCommentFindUniqueArgsBase
+      
+
+  /**
+   * ManuscriptComment: findFirstOrThrow
+   */
+  export type ManuscriptCommentFindFirstOrThrowArgs = ManuscriptCommentFindFirstArgsBase
+      
+
+  /**
    * ManuscriptComment without action
    */
   export type ManuscriptCommentArgs = {
@@ -3567,7 +3795,7 @@ export namespace Prisma {
     id: 'id',
     body: 'body',
     createdAt: 'createdAt',
-    change_id: 'change_id',
+    target_id: 'target_id',
     user_model_id: 'user_model_id',
     doc_id: 'doc_id',
     snapshot_id: 'snapshot_id'
@@ -3585,7 +3813,7 @@ export namespace Prisma {
 
 
   export const JsonNullValueInput: {
-    JsonNull: 'JsonNull'
+    JsonNull: typeof JsonNull
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
@@ -3600,9 +3828,9 @@ export namespace Prisma {
 
 
   export const JsonNullValueFilter: {
-    DbNull: 'DbNull',
-    JsonNull: 'JsonNull',
-    AnyNull: 'AnyNull'
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
@@ -3722,7 +3950,7 @@ export namespace Prisma {
     id?: StringFilter | string
     body?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    change_id?: StringFilter | string
+    target_id?: StringFilter | string
     user_model_id?: StringFilter | string
     doc?: XOR<ManuscriptDocRelationFilter, ManuscriptDocWhereInput>
     doc_id?: StringFilter | string
@@ -3734,7 +3962,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_model_id?: SortOrder
     doc?: ManuscriptDocOrderByWithRelationInput
     doc_id?: SortOrder
@@ -3750,7 +3978,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -3766,7 +3994,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter | string
     body?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
-    change_id?: StringWithAggregatesFilter | string
+    target_id?: StringWithAggregatesFilter | string
     user_model_id?: StringWithAggregatesFilter | string
     doc_id?: StringWithAggregatesFilter | string
     snapshot_id?: StringNullableWithAggregatesFilter | string | null
@@ -3801,8 +4029,8 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: ManuscriptSnapshotUpdateManyWithoutDocInput
-    comments?: ManuscriptCommentUpdateManyWithoutDocInput
+    snapshots?: ManuscriptSnapshotUpdateManyWithoutDocNestedInput
+    comments?: ManuscriptCommentUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptDocUncheckedUpdateInput = {
@@ -3812,8 +4040,8 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocInput
-    comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocInput
+    snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocNestedInput
+    comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptDocCreateManyInput = {
@@ -3866,8 +4094,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: ManuscriptDocUpdateOneRequiredWithoutSnapshotsInput
-    comments?: ManuscriptCommentUpdateManyWithoutSnapshotInput
+    doc?: ManuscriptDocUpdateOneRequiredWithoutSnapshotsNestedInput
+    comments?: ManuscriptCommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type ManuscriptSnapshotUncheckedUpdateInput = {
@@ -3876,7 +4104,7 @@ export namespace Prisma {
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     doc_id?: StringFieldUpdateOperationsInput | string
-    comments?: ManuscriptCommentUncheckedUpdateManyWithoutSnapshotInput
+    comments?: ManuscriptCommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type ManuscriptSnapshotCreateManyInput = {
@@ -3906,7 +4134,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc: ManuscriptDocCreateNestedOneWithoutCommentsInput
     snapshot?: ManuscriptSnapshotCreateNestedOneWithoutCommentsInput
@@ -3916,7 +4144,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc_id: string
     snapshot_id?: string | null
@@ -3926,17 +4154,17 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
-    doc?: ManuscriptDocUpdateOneRequiredWithoutCommentsInput
-    snapshot?: ManuscriptSnapshotUpdateOneWithoutCommentsInput
+    doc?: ManuscriptDocUpdateOneRequiredWithoutCommentsNestedInput
+    snapshot?: ManuscriptSnapshotUpdateOneWithoutCommentsNestedInput
   }
 
   export type ManuscriptCommentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -3946,7 +4174,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc_id: string
     snapshot_id?: string | null
@@ -3956,7 +4184,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
   }
 
@@ -3964,7 +4192,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -3993,6 +4221,17 @@ export namespace Prisma {
 
   export type JsonFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
   }
 
@@ -4078,6 +4317,17 @@ export namespace Prisma {
 
   export type JsonWithAggregatesFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
     _count?: NestedIntFilter
     _min?: NestedJsonFilter
@@ -4149,7 +4399,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -4159,7 +4409,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -4169,7 +4419,7 @@ export namespace Prisma {
     id?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-    change_id?: SortOrder
+    target_id?: SortOrder
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
@@ -4229,7 +4479,7 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type ManuscriptSnapshotUpdateManyWithoutDocInput = {
+  export type ManuscriptSnapshotUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ManuscriptSnapshotCreateWithoutDocInput>, Enumerable<ManuscriptSnapshotUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ManuscriptSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptSnapshotUpsertWithWhereUniqueWithoutDocInput>
@@ -4243,7 +4493,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ManuscriptSnapshotScalarWhereInput>
   }
 
-  export type ManuscriptCommentUpdateManyWithoutDocInput = {
+  export type ManuscriptCommentUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ManuscriptCommentCreateWithoutDocInput>, Enumerable<ManuscriptCommentUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutDocInput>
@@ -4257,7 +4507,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
   }
 
-  export type ManuscriptSnapshotUncheckedUpdateManyWithoutDocInput = {
+  export type ManuscriptSnapshotUncheckedUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ManuscriptSnapshotCreateWithoutDocInput>, Enumerable<ManuscriptSnapshotUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ManuscriptSnapshotCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptSnapshotUpsertWithWhereUniqueWithoutDocInput>
@@ -4271,7 +4521,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ManuscriptSnapshotScalarWhereInput>
   }
 
-  export type ManuscriptCommentUncheckedUpdateManyWithoutDocInput = {
+  export type ManuscriptCommentUncheckedUpdateManyWithoutDocNestedInput = {
     create?: XOR<Enumerable<ManuscriptCommentCreateWithoutDocInput>, Enumerable<ManuscriptCommentUncheckedCreateWithoutDocInput>>
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutDocInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutDocInput>
@@ -4305,7 +4555,7 @@ export namespace Prisma {
     connect?: Enumerable<ManuscriptCommentWhereUniqueInput>
   }
 
-  export type ManuscriptDocUpdateOneRequiredWithoutSnapshotsInput = {
+  export type ManuscriptDocUpdateOneRequiredWithoutSnapshotsNestedInput = {
     create?: XOR<ManuscriptDocCreateWithoutSnapshotsInput, ManuscriptDocUncheckedCreateWithoutSnapshotsInput>
     connectOrCreate?: ManuscriptDocCreateOrConnectWithoutSnapshotsInput
     upsert?: ManuscriptDocUpsertWithoutSnapshotsInput
@@ -4313,7 +4563,7 @@ export namespace Prisma {
     update?: XOR<ManuscriptDocUpdateWithoutSnapshotsInput, ManuscriptDocUncheckedUpdateWithoutSnapshotsInput>
   }
 
-  export type ManuscriptCommentUpdateManyWithoutSnapshotInput = {
+  export type ManuscriptCommentUpdateManyWithoutSnapshotNestedInput = {
     create?: XOR<Enumerable<ManuscriptCommentCreateWithoutSnapshotInput>, Enumerable<ManuscriptCommentUncheckedCreateWithoutSnapshotInput>>
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutSnapshotInput>
@@ -4327,7 +4577,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
   }
 
-  export type ManuscriptCommentUncheckedUpdateManyWithoutSnapshotInput = {
+  export type ManuscriptCommentUncheckedUpdateManyWithoutSnapshotNestedInput = {
     create?: XOR<Enumerable<ManuscriptCommentCreateWithoutSnapshotInput>, Enumerable<ManuscriptCommentUncheckedCreateWithoutSnapshotInput>>
     connectOrCreate?: Enumerable<ManuscriptCommentCreateOrConnectWithoutSnapshotInput>
     upsert?: Enumerable<ManuscriptCommentUpsertWithWhereUniqueWithoutSnapshotInput>
@@ -4353,7 +4603,7 @@ export namespace Prisma {
     connect?: ManuscriptSnapshotWhereUniqueInput
   }
 
-  export type ManuscriptDocUpdateOneRequiredWithoutCommentsInput = {
+  export type ManuscriptDocUpdateOneRequiredWithoutCommentsNestedInput = {
     create?: XOR<ManuscriptDocCreateWithoutCommentsInput, ManuscriptDocUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: ManuscriptDocCreateOrConnectWithoutCommentsInput
     upsert?: ManuscriptDocUpsertWithoutCommentsInput
@@ -4361,7 +4611,7 @@ export namespace Prisma {
     update?: XOR<ManuscriptDocUpdateWithoutCommentsInput, ManuscriptDocUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type ManuscriptSnapshotUpdateOneWithoutCommentsInput = {
+  export type ManuscriptSnapshotUpdateOneWithoutCommentsNestedInput = {
     create?: XOR<ManuscriptSnapshotCreateWithoutCommentsInput, ManuscriptSnapshotUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: ManuscriptSnapshotCreateOrConnectWithoutCommentsInput
     upsert?: ManuscriptSnapshotUpsertWithoutCommentsInput
@@ -4436,6 +4686,17 @@ export namespace Prisma {
 
   export type NestedJsonFilterBase = {
     equals?: JsonNullValueFilter | InputJsonValue
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
     not?: JsonNullValueFilter | InputJsonValue
   }
 
@@ -4525,7 +4786,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     snapshot?: ManuscriptSnapshotCreateNestedOneWithoutCommentsInput
   }
@@ -4534,7 +4795,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     snapshot_id?: string | null
   }
@@ -4599,7 +4860,7 @@ export namespace Prisma {
     id?: StringFilter | string
     body?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    change_id?: StringFilter | string
+    target_id?: StringFilter | string
     user_model_id?: StringFilter | string
     doc_id?: StringFilter | string
     snapshot_id?: StringNullableFilter | string | null
@@ -4634,7 +4895,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc: ManuscriptDocCreateNestedOneWithoutCommentsInput
   }
@@ -4643,7 +4904,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc_id: string
   }
@@ -4670,7 +4931,7 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: ManuscriptCommentUpdateManyWithoutDocInput
+    comments?: ManuscriptCommentUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptDocUncheckedUpdateWithoutSnapshotsInput = {
@@ -4680,7 +4941,7 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocInput
+    comments?: ManuscriptCommentUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptCommentUpsertWithWhereUniqueWithoutSnapshotInput = {
@@ -4757,7 +5018,7 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: ManuscriptSnapshotUpdateManyWithoutDocInput
+    snapshots?: ManuscriptSnapshotUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptDocUncheckedUpdateWithoutCommentsInput = {
@@ -4767,7 +5028,7 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocInput
+    snapshots?: ManuscriptSnapshotUncheckedUpdateManyWithoutDocNestedInput
   }
 
   export type ManuscriptSnapshotUpsertWithoutCommentsInput = {
@@ -4780,7 +5041,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    doc?: ManuscriptDocUpdateOneRequiredWithoutSnapshotsInput
+    doc?: ManuscriptDocUpdateOneRequiredWithoutSnapshotsNestedInput
   }
 
   export type ManuscriptSnapshotUncheckedUpdateWithoutCommentsInput = {
@@ -4802,7 +5063,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     snapshot_id?: string | null
   }
@@ -4812,7 +5073,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: ManuscriptCommentUpdateManyWithoutSnapshotInput
+    comments?: ManuscriptCommentUpdateManyWithoutSnapshotNestedInput
   }
 
   export type ManuscriptSnapshotUncheckedUpdateWithoutDocInput = {
@@ -4820,7 +5081,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     snapshot?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: ManuscriptCommentUncheckedUpdateManyWithoutSnapshotInput
+    comments?: ManuscriptCommentUncheckedUpdateManyWithoutSnapshotNestedInput
   }
 
   export type ManuscriptSnapshotUncheckedUpdateManyWithoutSnapshotsInput = {
@@ -4834,16 +5095,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
-    snapshot?: ManuscriptSnapshotUpdateOneWithoutCommentsInput
+    snapshot?: ManuscriptSnapshotUpdateOneWithoutCommentsNestedInput
   }
 
   export type ManuscriptCommentUncheckedUpdateWithoutDocInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -4852,7 +5113,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     snapshot_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -4861,7 +5122,7 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    change_id: string
+    target_id: string
     user_model_id: string
     doc_id: string
   }
@@ -4870,16 +5131,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
-    doc?: ManuscriptDocUpdateOneRequiredWithoutCommentsInput
+    doc?: ManuscriptDocUpdateOneRequiredWithoutCommentsNestedInput
   }
 
   export type ManuscriptCommentUncheckedUpdateWithoutSnapshotInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    change_id?: StringFieldUpdateOperationsInput | string
+    target_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     doc_id?: StringFieldUpdateOperationsInput | string
   }
@@ -4897,5 +5158,5 @@ export namespace Prisma {
   /**
    * DMMF
    */
-  export const dmmf: runtime.DMMF.Document;
+  export const dmmf: runtime.BaseDMMF
 }
