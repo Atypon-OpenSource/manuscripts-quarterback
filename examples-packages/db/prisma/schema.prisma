@@ -98,9 +98,9 @@ model Review {
   doc                PmDoc          @relation("ReviewToPmDoc", fields: [doc_id], references: [id], onDelete: Cascade)
   doc_id             String
   before_snapshot    PmDocSnapshot  @relation("beforeSnapshot", fields: [before_snapshot_id], references: [id])
-  before_snapshot_id String
+  before_snapshot_id String         @unique
   after_snapshot     PmDocSnapshot? @relation("afterSnapshot", fields: [after_snapshot_id], references: [id])
-  after_snapshot_id  String?
+  after_snapshot_id  String?        @unique
 
   @@map("review")
 }
