@@ -1,5 +1,16 @@
 # @manuscripts/quarterback-api
 
+## 0.1.9
+
+### Patch Changes
+
+- 3b16fbc: refactor: rename comment change_id to target_id, reset db
+- 70107ce: fix(api): use x-authorization header while istio is not configured
+- Updated dependencies [3b16fbc]
+- Updated dependencies [081f7fd]
+  - @manuscripts/quarterback-db@0.1.2
+  - @manuscripts/quarterback-types@0.2.2
+
 ## 0.1.8
 
 ### Patch Changes

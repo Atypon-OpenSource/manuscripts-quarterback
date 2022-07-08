@@ -1,5 +1,12 @@
 # @manuscripts/quarterback-db
 
+## 0.1.2
+
+### Patch Changes
+
+- 3b16fbc: refactor: rename comment change_id to target_id, reset db
+- 081f7fd: chore(db): update prisma to v4
+
 ## 0.1.1
 
 ### Patch Changes
