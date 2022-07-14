@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference types="@types/jest" />;
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest'
 import { schema as defaultSchema } from './utils/schema'
 
 import { promises as fs } from 'fs'
@@ -29,27 +29,27 @@ import { Fragment, Slice } from 'prosemirror-model'
 let counter = 0
 // https://stackoverflow.com/questions/65554910/jest-referenceerror-cannot-access-before-initialization
 // eslint-disable-next-line
-var uuidv4Mock: jest.Mock
+var uuidv4Mock: Mock
 
-jest.mock('../src/utils/uuidv4', () => {
-  const mockOriginal = jest.requireActual('../src/utils/uuidv4')
-  uuidv4Mock = jest.fn(() => `MOCK-ID-${counter++}`)
+vi.mock('../src/utils/uuidv4', () => {
+  const mockOriginal = vi.importActual('../src/utils/uuidv4')
+  uuidv4Mock = vi.fn(() => `MOCK-ID-${counter++}`)
   return {
     __esModule: true,
     ...mockOriginal,
     uuidv4: uuidv4Mock,
   }
 })
-jest.mock('../src/utils/logger')
-jest.useFakeTimers().setSystemTime(new Date('2020-01-01').getTime())
+vi.mock('../src/utils/logger')
+vi.useFakeTimers().setSystemTime(new Date('2020-01-01').getTime())
 
 describe('track changes', () => {
   afterEach(() => {
     counter = 0
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
-  test('should track basic wrapping and unwrapping of blockquotes', async () => {
+  it('should track basic wrapping and unwrapping of blockquotes', async () => {
     const tester = setupEditor({
       doc: docs.defaultDocs[2],
     })
@@ -96,7 +96,7 @@ describe('track changes', () => {
     expect(log.error).toHaveBeenCalledTimes(0)
   })
 
-  test.skip('should mark text inserted/deleted when selection spans various nodes', async () => {
+  it.skip('should mark text inserted/deleted when selection spans various nodes', async () => {
     const tester = setupEditor({
       doc: docs.defaultDocs[2],
     })

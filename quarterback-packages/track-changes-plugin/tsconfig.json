@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es2018",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "types": ["node", "jest"],
+    "types": ["node", "vitest", "vitest/globals"],
     "declaration": true,
     "declarationDir": "./dist",
     "baseUrl": "src"

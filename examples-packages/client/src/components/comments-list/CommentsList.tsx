@@ -24,6 +24,7 @@ import { FiChevronDown, FiChevronRight, FiEdit3, FiTrash } from 'react-icons/fi'
 import styled from 'styled-components'
 import { Stores } from 'stores'
 
+import CommentActions from './CommentActions'
 import { UserCircle } from 'elements/UserCircle'
 
 interface IProps {
@@ -137,6 +138,7 @@ export const CommentsList = inject((stores: Stores, { targetId }) => ({
                   <span>{c.body}</span>
                 )}
               </Text>
+              <CommentActions onReplyClick={() => undefined}/>
             </Body>
           </ListItem>
         ))}
@@ -149,19 +151,21 @@ const List = styled.ul<{ indent?: boolean }>`
   display: flex;
   flex-direction: column;
   list-style: none;
-  margin: 0;
+  margin: 0.5rem 0 0 1rem;
   padding: 0;
   &.hidden {
     display: none;
     visibility: hidden;
   }
-  & > li:nth-child(odd) {
+  /* & > li:nth-child(odd) {
     background: #f3f3f3;
-  }
+  } */
 `
 const ListItem = styled.li`
+  border-bottom: 1px solid rgb(181, 181, 181);
   display: flex;
   margin: 0.5rem 0;
+  padding-bottom: 1rem;
 `
 const CommentAuthor = styled.div`
   margin: 0.5rem 0.75rem;

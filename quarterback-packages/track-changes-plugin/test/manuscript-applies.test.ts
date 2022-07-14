@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference types="@types/jest" />;
+import { afterEach, describe, expect, it, vi, Mock } from 'vitest'
 import { schema as defaultSchema } from './utils/schema'
-import { schema } from '@manuscripts/manuscript-transform'
+// import { schema } from '@manuscripts/manuscript-transform'
+const { schema } = await import('@manuscripts/manuscript-transform')
 import { Node as PMNode, Schema } from 'prosemirror-model'
 import { promises as fs } from 'fs'
 
@@ -36,27 +37,27 @@ import { log } from '../src/utils/logger'
 let counter = 0
 // https://stackoverflow.com/questions/65554910/jest-referenceerror-cannot-access-before-initialization
 // eslint-disable-next-line
-var uuidv4Mock: jest.Mock
+var uuidv4Mock: Mock
 
-jest.mock('../src/utils/uuidv4', () => {
-  const mockOriginal = jest.requireActual('../src/utils/uuidv4')
-  uuidv4Mock = jest.fn(() => `MOCK-ID-${counter++}`)
+vi.mock('../src/utils/uuidv4', () => {
+  const mockOriginal = vi.importActual('../src/utils/uuidv4')
+  uuidv4Mock = vi.fn(() => `MOCK-ID-${counter++}`)
   return {
     __esModule: true,
     ...mockOriginal,
     uuidv4: uuidv4Mock,
   }
 })
-jest.mock('../src/utils/logger')
-jest.useFakeTimers().setSystemTime(new Date('2020-01-01').getTime())
+vi.mock('../src/utils/logger')
+vi.useFakeTimers().setSystemTime(new Date('2020-01-01').getTime())
 
 describe('TC with manuscripts schema', () => {
   afterEach(() => {
     counter = 0
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
-  test('should correctly apply adjacent block changes', async () => {
+  it('should correctly apply adjacent block changes', async () => {
     const tester = setupEditor({
       doc: docs.manuscriptDefaultDocs[0],
       schema: schema as unknown as Schema,

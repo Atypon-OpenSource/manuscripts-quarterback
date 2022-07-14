@@ -22,6 +22,7 @@ import styled from 'styled-components'
 import { stores, Stores } from 'stores'
 
 import { UserCircle } from 'elements/UserCircle'
+import CommentActions from '../comments-list/CommentActions'
 import { CommentsList } from '../comments-list/CommentsList'
 import NewCommentForm from '../comments-list/NewCommentForm'
 
@@ -86,39 +87,35 @@ export const CommentMarkersList = inject((stores: Stores) => ({
         <List className={`${className} ${isVisible ? '' : 'hidden'}`}>
           {markers.map((marker: CommentMarker, i: number) => (
             <ListItem key={`${marker.id}`}>
-              <CommentAuthor>
-                <UserCircle color={'c.user.color'} currentUser={false}>
-                  {'marker.userID'.charAt(0).toUpperCase()}
-                </UserCircle>
-              </CommentAuthor>
-              <Body>
-                <CommentTop>
-                  <CommentName>
-                    <Name>{marker.userID}</Name>
-                    {isEditable(marker) && (
-                      <IconButtons>
-                        <Button onClick={() => handleDelete(marker)}>
-                          <FiTrash size={16} />
-                        </Button>
-                      </IconButtons>
-                    )}
-                  </CommentName>
-                  <Time>{new Date(marker.createdAt).toLocaleString()}</Time>
-                </CommentTop>
-                <Text onClick={() => handleTextClick(marker)} tabIndex={0}>
-                  {marker.text}
-                </Text>
-              </Body>
+              <TopComment>
+                <CommentAuthor>
+                  <UserCircle color={'c.user.color'} currentUser={false}>
+                    {'marker.userID'.charAt(0).toUpperCase()}
+                  </UserCircle>
+                </CommentAuthor>
+                <Body>
+                  <CommentTop>
+                    <CommentName>
+                      <Name>{marker.userID}</Name>
+                      {isEditable(marker) && (
+                        <IconButtons>
+                          <Button onClick={() => handleDelete(marker)}>
+                            <FiTrash size={16} />
+                          </Button>
+                        </IconButtons>
+                      )}
+                    </CommentName>
+                    <Time>{new Date(marker.createdAt).toLocaleString()}</Time>
+                  </CommentTop>
+                  <Text onClick={() => handleTextClick(marker)} tabIndex={0}>
+                    {marker.text}
+                  </Text>
+                <CommentActions onReplyClick={() => undefined}/>
+                </Body>
+              </TopComment>
               <CommentsList targetId={marker.id} />
-              {isNewCommentFormVisible(marker.id) ? (
+              {isNewCommentFormVisible(marker.id) && (
                 <NewCommentForm targetId={marker.id} onCancel={handleAddCommentCancel} />
-              ) : (
-                <ReplyBox>
-                  <div></div>
-                  <Button onClick={() => handleReplyButtonClick(marker)}>
-                    <FiCornerUpLeft size={16} />
-                  </Button>
-                </ReplyBox>
               )}
             </ListItem>
           ))}
@@ -159,7 +156,6 @@ const List = styled.ul`
   display: flex;
   flex-direction: column;
   list-style: none;
-  margin: 0;
   max-height: 300px;
   overflow-y: scroll;
   padding: 0;
@@ -172,17 +168,19 @@ const List = styled.ul`
   }
 `
 const ListItem = styled.li`
+  margin: 0;
+  padding: 0;
+  & > ${NewCommentForm} {
+    margin-top: 1rem;
+  }
+`
+const TopComment = styled.div`
   /* border-width: 1px 1px 1px 4px;
   border-style: solid;
   border-color: rgb(226, 226, 226);
   border-radius: 2px; */
   border: 1px solid rgb(181, 181, 181);
   border-radius: 5px;
-  margin: 0;
-  padding: 0;
-  & > ${NewCommentForm} {
-    margin-top: 1rem;
-  }
 `
 const CommentAuthor = styled.div`
   margin: 0.5rem 0.75rem;
@@ -219,8 +217,11 @@ const Button = styled.button`
 `
 const Body = styled.div`
   flex-grow: 1;
-  margin-right: 0.5rem;
-  padding: 0.25rem;
+  margin: 0 0.5rem;
+  padding: 0;
+  & > ${CommentActions} {
+    margin: 0.5rem 0 0.75rem 0;
+  }
 `
 const Text = styled.div`
   align-items: center;
@@ -228,7 +229,7 @@ const Text = styled.div`
   border-radius: 2px;
   cursor: pointer;
   display: flex;
-  margin: 0.25rem 0 0 0;
+  margin: 0.25rem 0 0.5rem 0;
   padding: 0.25rem;
   white-space: pre-line;
 `
