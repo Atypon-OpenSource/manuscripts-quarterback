@@ -9,6 +9,9 @@ DB_NAME=local_quarterback_db
 # utils / api:watch / api:dev are used to run the scripts in Windows as concurrently fails in Git bash
 
 case "$1" in
+  connect)
+    psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+    ;;
   db:connect)
     psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     ;;
