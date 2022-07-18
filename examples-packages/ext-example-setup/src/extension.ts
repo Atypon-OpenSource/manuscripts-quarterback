@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from '@manuscripts/examples-track-schema'
-import type { EditorProviders } from '$context'
-import type { Extension } from '$typings/extension'
+import { exampleSetup } from 'prosemirror-example-setup'
 
 import { activeNodesMarksPlugin } from './activeNodesMarksPlugin'
-import { exampleSetup } from './exampleSetup'
 
-export const baseExtensionName = 'base' as const
+import type { EditorProps, EditorContext } from '@manuscripts/examples-track-editor'
+import type { ExampleSetupOptions } from './types'
 
-export const baseExtension = () => (ctx: EditorProviders) => {
-  const plugins = exampleSetup({ schema, history: false }).concat([activeNodesMarksPlugin()])
-  return {
-    name: baseExtensionName,
-    commands: {},
-    keymaps: [],
-    plugins,
-    store: {},
+export const exampleSetupExtensionName = 'ext-example-setup' as const
+
+export const exampleSetupExtension =
+  (opts?: ExampleSetupOptions) => (_ctx: EditorContext, props: EditorProps) => {
+    const { schema } = props
+    const plugins = exampleSetup({ schema, ...opts }).concat([activeNodesMarksPlugin()])
+    return {
+      name: exampleSetupExtensionName,
+      commands: {},
+      keymaps: [],
+      plugins,
+    }
   }
-}

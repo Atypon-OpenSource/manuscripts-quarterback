@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { schema } from './schema'
+export { activeNodesMarksPluginKey, activeNodesMarksPlugin } from './activeNodesMarksPlugin'
 
-export function createDefaultDoc() {
-  const created = schema.nodes.doc.createAndFill()
-  if (!created) {
-    throw Error('doc.createAndFill() returned undefined')
-  }
-  return created.toJSON()
-}
+export { exampleSetupExtension, exampleSetupExtensionName } from './extension'
+
+export * from './types'

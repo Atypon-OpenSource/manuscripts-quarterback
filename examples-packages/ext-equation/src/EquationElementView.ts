@@ -1,5 +1,5 @@
 /*!
- * © 2021 Atypon Systems LLC
+ * © 2019 Atypon Systems LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface TrackedUser {
-  id: string
-  name: string
-}
-export interface YjsUser {
-  id: string
-  clientID: number
-  name: string
-  color: string
+import { BaseNodeView } from '@manuscripts/examples-track-editor'
+
+export class EquationElementView extends BaseNodeView {
+  override init = () => {
+    this._dom = document.createElement('figure')
+    this.updateContents()
+    return this
+  }
+
+  override updateContents = () => {
+    const { suppressCaption, suppressTitle } = this.node.attrs
+
+    this.dom.classList.toggle('suppress-caption', suppressCaption)
+    this.dom.classList.toggle('suppress-title', suppressTitle === undefined ? true : suppressTitle)
+  }
 }
