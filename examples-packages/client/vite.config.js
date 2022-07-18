@@ -27,13 +27,13 @@ const require = createRequire(import.meta.url)
 export default defineConfig({
   optimizeDeps: {
     exclude: [
-      'prosemirror-commands',
-      'prosemirror-dropcursor',
+      // 'prosemirror-commands',
+      // 'prosemirror-dropcursor',
       'prosemirror-example-setup',
       'prosemirror-gapcursor',
       'prosemirror-history',
       'prosemirror-inputrules',
-      'prosemirror-keymap',
+      // 'prosemirror-keymap',
       // 'prosemirror-model',
       'prosemirror-schema-list',
       'prosemirror-state',
@@ -58,6 +58,9 @@ export default defineConfig({
       lib0: resolve('node_modules/lib0'),
       'prosemirror-model': resolve(
         'node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-model'
+      ),
+      'prosemirror-state': resolve(
+        'node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-state'
       ),
       'prosemirror-transform': resolve(
         'node_modules/@manuscripts/manuscript-editor/node_modules/prosemirror-transform'
