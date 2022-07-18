@@ -23,6 +23,8 @@ export type Nodes =
   | 'heading'
   | 'comment_marker'
   | 'horizontal_rule'
+  | 'figure'
+  | 'figcaption'
   | 'image'
   | 'paragraph'
   | 'text'

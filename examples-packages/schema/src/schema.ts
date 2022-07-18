@@ -165,6 +165,67 @@ export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
       group: 'inline',
     },
 
+    figure: {
+      content: 'figcaption* paragraph*',
+      attrs: {
+        id: { default: '' },
+        label: { default: '' },
+        src: { default: '' },
+        contentType: { default: '' },
+        listingAttachment: { default: undefined },
+        embedURL: { default: undefined },
+        originalURL: { default: undefined },
+        attribution: { default: undefined },
+        externalFileReferences: { default: undefined },
+        missingImage: { default: undefined },
+        position: { default: undefined },
+        dataTracked: { default: null },
+      },
+      selectable: false,
+      group: 'block',
+      parseDOM: [
+        {
+          tag: 'figure',
+          context: 'figure_element/|multi_graphic_figure_element/', // TODO: match any figure?
+          getAttrs: (dom: HTMLElement | string) => {
+            if (dom instanceof HTMLElement) {
+              const iframe = dom.querySelector('iframe')
+              return {
+                id: dom.getAttribute('id'),
+                // src: img ? img.getAttribute('src') : '',
+                embedURL: iframe ? iframe.getAttribute('src') : undefined,
+              }
+            }
+            return null
+          },
+        },
+      ],
+      toDOM(node: PMNode) {
+        return [
+          'figure',
+          {
+            class: 'figure',
+            id: node.attrs.id,
+          },
+          0,
+        ]
+      },
+    },
+
+    figcaption: {
+      content: 'inline*',
+      group: 'block',
+      attrs: { dataTracked: { default: null } },
+      isolating: true,
+      selectable: false,
+      parseDOM: [
+        {
+          tag: 'figcaption',
+        },
+      ],
+      toDOM: () => ['figcaption', 0],
+    },
+
     // :: NodeSpec An inline image (`<img>`) node. Supports `src`,
     // `alt`, and `href` attributes. The latter two default to the empty
     // string.

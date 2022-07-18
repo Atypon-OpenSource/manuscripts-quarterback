@@ -15,7 +15,8 @@
  */
 import { Plugin, PluginKey } from 'prosemirror-state'
 
-import { getActiveMarks } from './commands'
+import { getActiveMarks } from './getActiveMarks'
+
 import type { ActiveNodesMarksState } from './types'
 
 export const activeNodesMarksPluginKey = new PluginKey<ActiveNodesMarksState>('active-nodes-marks')
@@ -31,7 +32,7 @@ export const activeNodesMarksPlugin = () => {
         }
       },
 
-      apply(tr, pluginState, oldState, newState) {
+      apply(tr, pluginState, _oldState, newState) {
         if (tr.docChanged || tr.selectionSet) {
           const marks = getActiveMarks(newState)
           const eqMarks =

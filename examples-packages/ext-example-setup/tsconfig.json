@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "declaration": true,
+    "declarationDir": "./dist",
+    "baseUrl": "src"
+  },
+  "include": ["src", "global-types.d.ts"],
+  "exclude": ["node_modules"]
+}
