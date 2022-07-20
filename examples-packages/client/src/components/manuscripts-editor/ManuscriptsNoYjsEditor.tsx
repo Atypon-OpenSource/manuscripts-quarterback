@@ -32,7 +32,8 @@ import {
 } from '@manuscripts/manuscript-editor'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
-import { history } from 'prosemirror-history'
+import { history, redo, undo } from 'prosemirror-history'
+import { keymap } from 'prosemirror-keymap'
 import { EditorState } from 'prosemirror-state'
 import React, { useMemo, useRef } from 'react'
 import styled from 'styled-components'
@@ -81,7 +82,14 @@ export const ManuscriptsNoYjsEditor = observer((props: Props) => {
       extensions,
       manuscriptsProps: {
         ...defaultEditorProps,
-        plugins: [history()],
+        plugins: [
+          history(),
+          keymap({
+            'Mod-z': undo,
+            'Mod-y': redo, // Mac
+            'Shift-Mod-z': redo, // PC
+          }),
+        ],
       },
       onEdit,
       onEditorReady: (ctx) => {
