@@ -23,8 +23,7 @@ RUN pnpm i --frozen-lockfile --filter @manuscripts/quarterback-api \
 
 COPY quarterback-packages/db ./quarterback-packages/db
 RUN pnpm --filter @manuscripts/quarterback-db generate
-COPY quarterback-packages/db/prisma/schema.prisma ./node_modules/schema.prisma
-COPY quarterback-packages/db/generated/index.d.ts ./quarterback-packages/types/prisma/index.d.ts
+COPY quarterback-packages/db/prisma/schema.prisma ./quarterback-packages/api/node_modules/schema.prisma
 
 COPY quarterback-packages/types ./quarterback-packages/types
 RUN pnpm --filter @manuscripts/quarterback-types build
@@ -41,4 +40,4 @@ ENV CORS_ENABLED 0
 
 EXPOSE ${PORT}
 
-CMD ./quarterback-packages/api/start.sh
+CMD pnpm --filter @manuscripts/quarterback-db prod:migrate && node ./quarterback-packages/api/dist/index.js
