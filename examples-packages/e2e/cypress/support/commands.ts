@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { setAction, TrackChangesAction } from '@manuscripts/track-changes-plugin'
+import { skipTracking } from '@manuscripts/track-changes-plugin'
 
 Cypress.Commands.add('resetDoc', () => {
   return cy.window().then(async (window) => {
@@ -21,7 +21,7 @@ Cypress.Commands.add('resetDoc', () => {
     const tr = view.state.tr
     const doc = view.state.schema.nodes.manuscript.createAndFill()
     tr.replaceWith(0, view.state.doc.nodeSize - 2, doc)
-    setAction(tr, TrackChangesAction.skipTrack, true)
+    skipTracking(tr)
     view.dispatch(tr)
   })
 })
@@ -31,7 +31,7 @@ Cypress.Commands.add('insertText', (text: string, pos?: number, skipTrack = fals
     const { editorView: view } = window
     const tr = view.state.tr
     tr.insertText(text, pos)
-    skipTrack && setAction(tr, TrackChangesAction.skipTrack, true)
+    skipTrack && skipTracking(tr)
     view.dispatch(tr)
   })
 })
