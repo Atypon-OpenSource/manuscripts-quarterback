@@ -61,7 +61,7 @@ pass: asdfasdf
 
 ## Tests
 
-There are some example Cypress tests in `e2e` package. If you have the client running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`. 
+There are some example Cypress tests in `e2e` package. If you have the client running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`.
 
 ## Working with Git submodules
 

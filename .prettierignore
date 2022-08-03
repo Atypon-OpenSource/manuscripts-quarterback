@@ -1,5 +1,14 @@
+package.json
 pnpm-lock.yaml
 node_modules
 build
 dist
 tmp
+generated
+examples-packages/manuscript-editor
+examples-packages/manuscript-transform
+examples-packages/style-guide
+examples-packages/types/prisma
+quarterback-packages/types/prisma
+.prisma
+.changeset

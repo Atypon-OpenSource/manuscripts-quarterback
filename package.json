@@ -12,7 +12,7 @@
   },
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback#readme",
   "scripts": {
-    "format": "pnpm -r format",
+    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" .",
     "lint:fix": "eslint --ignore-path .gitignore --fix --ext .js,.cjs,.ts,.tsx .",
     "build:ex": "(pnpm --filter @manuscripts/manuscript-transform build 2>/dev/null || true) && (pnpm --filter @manuscripts/style-guide build 2>/dev/null || true) && (pnpm --filter @manuscripts/manuscript-editor build 2>/dev/null || true)",
     "build:api": "pnpm --filter @manuscripts/quarterback-types build && pnpm --filter @manuscripts/quarterback-api build",
