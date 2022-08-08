@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { baseExtension } from './extension'
+import { exampleSetup } from 'prosemirror-example-setup'
 
-export type BaseExtension = ReturnType<ReturnType<typeof baseExtension>>
+import type { exampleSetupExtension } from './extension'
+
+export type exampleSetupExtension = ReturnType<ReturnType<typeof exampleSetupExtension>>
+
+export type ExampleSetupOptions = Omit<Parameters<typeof exampleSetup>[0], 'schema'>
 
 export interface ActiveNodesMarksState {
   activeNodes: string[]

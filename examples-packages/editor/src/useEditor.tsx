@@ -13,16 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import './styles/editor.css'
-import './styles/prosemirror-example-setup.css'
-import './styles/menu.css'
-import './styles/yjs.css'
-
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import React, { useRef } from 'react'
-
-import { schema } from '@manuscripts/examples-track-schema'
 
 import { EditorContext as EditorProviders, useEditorContext } from './context'
 import { useSSRLayoutEffect } from './react'
@@ -46,8 +39,8 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
     oldView?: EditorView | null
   ) {
     ctx.extensionProvider.destroy()
-    ctx.extensionProvider.init(ctx, props.extensions || [])
-    const state = createEditorState(ctx)
+    ctx.extensionProvider.init(ctx, props)
+    const state = createEditorState(ctx, props)
     const view = oldView || createEditorView(element, state, ctx, props)
     if (oldView) {
       view.setProps({
@@ -73,9 +66,9 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
     return view
   }
 
-  function createEditorState(ctx: EditorProviders) {
+  function createEditorState(ctx: EditorProviders, props: EditorProps) {
     return EditorState.create({
-      schema,
+      schema: props.schema,
       plugins: ctx.extensionProvider.plugins,
     })
   }

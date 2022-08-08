@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Schema } from 'prosemirror-model'
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
@@ -21,8 +22,8 @@ import { EditorProviders } from '$context/Providers'
 import type { CreateExtension } from './extension'
 
 export interface EditorProps {
-  className?: string
   extensions: CreateExtension[]
+  schema: Schema
   onEditorReady?: (providers: EditorProviders) => void
   onEdit?: (state: EditorState) => void
 }

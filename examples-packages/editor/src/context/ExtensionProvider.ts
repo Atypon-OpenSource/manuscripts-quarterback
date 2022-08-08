@@ -16,7 +16,7 @@
 import { Observable } from '@manuscripts/examples-track-types'
 import { Plugin } from 'prosemirror-state'
 
-import { Commands } from '$typings/editor'
+import { Commands, EditorProps } from '$typings/editor'
 import { CreateExtension, Extension } from '$typings/extension'
 
 import { EditorProviders } from './Providers'
@@ -28,8 +28,8 @@ export class ExtensionProvider {
   plugins: Plugin[] = []
   commands: Commands = {}
 
-  init(ctx: EditorProviders, createExtensions: CreateExtension[]) {
-    const created = createExtensions.map((ext) => ext(ctx))
+  init(ctx: EditorProviders, props: EditorProps) {
+    const created = props.extensions.map((ext) => ext(ctx, props))
     this.extensions = created
     this.plugins = created.reduce((acc, ext) => [...acc, ...(ext.plugins || [])], [] as Plugin[])
     this.commands = created.reduce((acc, ext) => Object.assign(acc, ext.commands), {} as Commands)

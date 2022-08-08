@@ -24,14 +24,15 @@ import {
   commentsExtension,
   CommentsPluginState,
 } from '@manuscripts/ext-comments'
+import { exampleSetupExtension } from '@manuscripts/ext-example-setup'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
-  baseExtension,
   EditorProps,
   useEditor,
   useEditorContext,
   usePluginState,
 } from '@manuscripts/examples-track-editor'
+import { schema } from '@manuscripts/examples-track-schema'
 import { YJS_WS_URL } from 'config'
 import { observer } from 'mobx-react'
 import { applyDevTools } from 'prosemirror-dev-toolkit'
@@ -50,6 +51,9 @@ import { UsersList } from './UsersList'
 import { useYjsExtension } from './useYjsExtension'
 
 import '@manuscripts/track-changes-plugin/src/styles.css'
+import '@manuscripts/ext-example-setup/prosemirror-example-setup.css'
+import '@manuscripts/ext-example-setup/menu.css'
+import '@manuscripts/ext-yjs/yjs.css'
 
 interface Props {
   className?: string
@@ -73,7 +77,7 @@ export const Editor = observer((props: Props) => {
   const commentsState = usePluginState<CommentsPluginState>(commentsPluginKey, 1)
   const extensions = useMemo(
     () => [
-      baseExtension(),
+      exampleSetupExtension({ schema, history: false }),
       ...(options.disableTrack
         ? []
         : [
@@ -107,6 +111,7 @@ export const Editor = observer((props: Props) => {
   const editorProps = useMemo<EditorProps>(
     () => ({
       initialDoc: initialData.pmDoc,
+      schema,
       extensions,
       onEditorReady: (ctx) => {
         applyDevTools(ctx.viewProvider.view)
@@ -124,7 +129,7 @@ export const Editor = observer((props: Props) => {
         <ViewGrid>
           <LeftSide>
             <Toolbar />
-            <div className="pm-editor" ref={editorDOMRef} />
+            <div ref={editorDOMRef} />
           </LeftSide>
           {viewProvider && (
             <RightPanel
@@ -147,8 +152,24 @@ const ViewGrid = styled.div`
   grid-template-rows: auto auto;
   margin-top: 1rem;
 
-  .pm-editor {
+  .ProseMirror {
     border: 1px solid black;
+    min-height: 140px;
+    overflow-wrap: break-word;
+    outline: none;
+    padding: 10px;
+    white-space: pre-wrap;
+    max-width: 600px;
+    width: 100%;
+  }
+  .ProseMirror img {
+    width: -webkit-fill-available;
+  }
+  .ProseMirror mark {
+    background-color: rgba(250, 224, 150, 0.6);
+  }
+  .ProseMirror mark:focus {
+    background-color: rgb(255 192 13);
   }
 `
 const LeftSide = styled.div`

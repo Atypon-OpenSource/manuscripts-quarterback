@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import type { EditorView } from 'prosemirror-view'
-
 import type { Commands } from './typings/editor'
 
 declare global {
@@ -24,11 +21,8 @@ declare global {
   }
 }
 
-import { baseCommands } from './extensions/base'
-export const commands = { baseCommands }
-
+export * from './BaseNodeView'
 export * from './context'
 export * from './react'
-export * from './extensions/base'
 export * from './typings'
 export { useEditor } from './useEditor'
