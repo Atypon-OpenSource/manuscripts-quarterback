@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Schema } from 'prosemirror-model'
-
-export type Nodes =
-  | 'blockquote'
-  | 'bullet_list'
-  | 'code_block'
-  | 'comment_marker'
-  | 'doc'
-  | 'hard_break'
-  | 'heading'
-  | 'horizontal_rule'
-  | 'list_item'
-  | 'ordered_list'
-  | 'paragraph'
-  | 'table'
-  | 'table_body'
-  | 'table_cell'
-  | 'table_col'
-  | 'table_colgroup'
-  | 'table_row'
-  | 'text'
-
-export type Marks =
-  | 'bold'
-  | 'code'
-  | 'italic'
-  | 'link'
-  | 'strikethrough'
-  | 'tracked_insert'
-  | 'tracked_delete'
-  | 'ychange'
-
-export type QuarterBackSchema = Schema<Nodes, Marks>
+export * from './blockquote'
+export * from './code_block'
+export * from './comment_marker'
+export * from './doc'
+export * from './hard_break'
+export * from './heading'
+export * from './horizontal_rule'
+export * from './lists'
+export * from './paragraph'
+export * from './table'
+export * from './table_body'
+export * from './table_cell'
+export * from './table_col'
+export * from './table_colgroup'
+export * from './table_row'
+export * from './text'

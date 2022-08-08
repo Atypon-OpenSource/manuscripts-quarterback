@@ -17,9 +17,10 @@ import { Observable } from '@manuscripts/examples-track-types'
 import { Plugin } from 'prosemirror-state'
 
 import { Commands, EditorProps } from '$typings/editor'
-import { CreateExtension, Extension } from '$typings/extension'
+import { Extension } from '$typings/extension'
 
 import { EditorProviders } from './Providers'
+import { NodeViewConstructor } from 'prosemirror-view'
 
 export class ExtensionProvider {
   _observable = new Observable<'update'>()
@@ -27,12 +28,17 @@ export class ExtensionProvider {
   extensions: Extension[] = []
   plugins: Plugin[] = []
   commands: Commands = {}
+  nodeViews?: { [node: string]: NodeViewConstructor } = undefined
 
   init(ctx: EditorProviders, props: EditorProps) {
     const created = props.extensions.map((ext) => ext(ctx, props))
     this.extensions = created
     this.plugins = created.reduce((acc, ext) => [...acc, ...(ext.plugins || [])], [] as Plugin[])
     this.commands = created.reduce((acc, ext) => Object.assign(acc, ext.commands), {} as Commands)
+    this.nodeViews = created.reduce(
+      (acc, cur) => ({ ...acc, ...cur.nodeViews }),
+      {} as { [node: string]: NodeViewConstructor }
+    )
     this._observable.emit('update', this)
   }
 

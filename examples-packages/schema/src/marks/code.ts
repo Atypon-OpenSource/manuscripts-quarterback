@@ -1,5 +1,5 @@
 /*!
- * © 2021 Atypon Systems LLC
+ * © 2019 Atypon Systems LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Plugin } from 'prosemirror-state'
+import { Mark, MarkSpec } from 'prosemirror-model'
 
-import type { EditorProviders } from '$context'
-
-import type { Commands, EditorProps } from './editor'
-import { NodeViewConstructor } from 'prosemirror-view'
-
-export type CreateExtension = (ctx: EditorProviders, props: EditorProps) => Extension
-export interface Extension {
-  name: string
-  commands?: Commands
-  keymaps?: any[]
-  plugins?: Plugin[]
-  nodeViews?: { [node: string]: NodeViewConstructor }
-  store?: Record<string, any>
-  onDestroy?: () => void
+export const code: MarkSpec = {
+  attrs: { dataTracked: { default: null } },
+  parseDOM: [{ tag: 'code' }],
+  toDOM() {
+    return ['code', 0]
+  },
 }
