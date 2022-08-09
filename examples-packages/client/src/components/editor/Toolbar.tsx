@@ -15,6 +15,7 @@
  */
 import { trackCommands } from '@manuscripts/track-changes-plugin'
 import { useEditorContext, usePluginState } from '@manuscripts/examples-track-editor'
+import { equationCommands } from '@manuscripts/ext-equation'
 import { activeNodesMarksPluginKey, ActiveNodesMarksState } from '@manuscripts/ext-example-setup'
 import { commentsCommands } from '@manuscripts/ext-comments'
 import { toggleMark } from 'prosemirror-commands'
@@ -124,6 +125,7 @@ export function Toolbar(props: IProps) {
         viewProvider?.execCommand(commentsCommands.insertCommentMarker(userID))
         return
       case 'toggle-split-view':
+        viewProvider?.execCommand(equationCommands.createEquation())
         return
       case 'toggle-track-changes':
         viewProvider?.execCommand(trackCommands.setTrackingStatus())

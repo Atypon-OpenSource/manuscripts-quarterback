@@ -121,6 +121,7 @@ importers:
       '@manuscripts/examples-track-schema': workspace:*
       '@manuscripts/examples-track-types': workspace:*
       '@manuscripts/ext-comments': workspace:*
+      '@manuscripts/ext-equation': workspace:*
       '@manuscripts/ext-example-setup': workspace:*
       '@manuscripts/ext-yjs': workspace:*
       '@manuscripts/manuscript-editor': workspace:*
@@ -151,7 +152,7 @@ importers:
       prosemirror-history: ^1.3.0
       prosemirror-keymap: ^1.2.0
       prosemirror-state: ^1.4.1
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       randomcolor: ^0.6.2
       react: ^17.0.2
       react-dom: ^17.0.2
@@ -174,6 +175,7 @@ importers:
       '@manuscripts/examples-track-schema': link:../schema
       '@manuscripts/examples-track-types': link:../types
       '@manuscripts/ext-comments': link:../ext-comments
+      '@manuscripts/ext-equation': link:../ext-equation
       '@manuscripts/ext-example-setup': link:../ext-example-setup
       '@manuscripts/ext-yjs': link:../ext-yjs
       '@manuscripts/manuscript-editor': link:../manuscript-editor
@@ -192,7 +194,7 @@ importers:
       prosemirror-history: 1.3.0
       prosemirror-keymap: 1.2.0
       prosemirror-state: 1.4.1
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       randomcolor: 0.6.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -205,7 +207,7 @@ importers:
       typescript: 4.4.2
       unique-names-generator: 4.7.1
       uuid: 8.3.2
-      y-prosemirror: 1.1.0_tmij62orzheg6nz2bngi2e76pu
+      y-prosemirror: 1.1.0_2ry63thi3wm5fndcbhzebenbsu
       y-websocket: 1.4.3_yjs@13.5.39
       yjs: 13.5.39
     devDependencies:
@@ -355,7 +357,7 @@ importers:
       prosemirror-state: ^1.4.1
       prosemirror-tables: ^1.1.1
       prosemirror-transform: ^1.6.0
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       randomcolor: ^0.6.2
       rollup: ^2.58.3
       rollup-plugin-postcss: ^4.0.1
@@ -384,10 +386,10 @@ importers:
       prosemirror-state: 1.4.1
       prosemirror-tables: 1.1.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       randomcolor: 0.6.2
       unique-names-generator: 4.7.1
-      y-prosemirror: 1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4
+      y-prosemirror: 1.1.0_jbwijxhzqztdm7ahgp526qt7qq
       y-protocols: 1.0.5
       y-websocket: 1.4.3_yjs@13.5.39
       yjs: 13.5.39
@@ -421,7 +423,7 @@ importers:
       prosemirror-model: ^1.18.1
       prosemirror-state: ^1.4.1
       prosemirror-transform: ^1.6.0
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       react: ^17.0.2
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
@@ -440,11 +442,46 @@ importers:
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       react: 17.0.2
       rollup: 2.74.0
       rollup-plugin-typescript2: 0.30.0_dyu3set7imqii5ytavmnwecwpy
       typescript: 4.6.4
+
+  examples-packages/ext-equation:
+    specifiers:
+      '@manuscripts/examples-track-editor': workspace:*
+      '@rollup/plugin-commonjs': ^20.0.0
+      '@types/dompurify': ^2.3.3
+      '@types/react': ^17.0.20
+      dompurify: ^2.3.10
+      prosemirror-commands: ^1.3.0
+      prosemirror-keymap: ^1.2.0
+      prosemirror-model: ^1.18.1
+      prosemirror-state: ^1.4.1
+      prosemirror-transform: ^1.6.0
+      prosemirror-view: ^1.27.0
+      react: ^17.0.2
+      rollup: ^2.58.3
+      rollup-plugin-typescript2: ^0.30.0
+      typescript: ^4.4.4
+    dependencies:
+      dompurify: 2.3.10
+    devDependencies:
+      '@manuscripts/examples-track-editor': link:../editor
+      '@rollup/plugin-commonjs': 20.0.0_rollup@2.77.0
+      '@types/dompurify': 2.3.3
+      '@types/react': 17.0.45
+      prosemirror-commands: 1.3.0
+      prosemirror-keymap: 1.2.0
+      prosemirror-model: 1.18.1
+      prosemirror-state: 1.4.1
+      prosemirror-transform: 1.6.0
+      prosemirror-view: 1.27.0
+      react: 17.0.2
+      rollup: 2.77.0
+      rollup-plugin-typescript2: 0.30.0_55kiftncucr43pz4hskma6yi2q
+      typescript: 4.7.4
 
   examples-packages/ext-example-setup:
     specifiers:
@@ -456,7 +493,7 @@ importers:
       prosemirror-model: ^1.18.1
       prosemirror-state: ^1.4.1
       prosemirror-transform: ^1.6.0
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       rollup: ^2.77.0
       rollup-plugin-typescript2: ^0.32.1
       typescript: ^4.7.4
@@ -469,7 +506,7 @@ importers:
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.5
+      prosemirror-view: 1.27.0
       rollup: 2.77.0
       rollup-plugin-typescript2: 0.32.1_55kiftncucr43pz4hskma6yi2q
       typescript: 4.7.4
@@ -489,7 +526,7 @@ importers:
       prosemirror-model: ^1.18.1
       prosemirror-state: ^1.4.1
       prosemirror-transform: ^1.6.0
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       randomcolor: ^0.6.2
       react: ^17.0.2
       rollup: ^2.58.3
@@ -507,7 +544,7 @@ importers:
       lib0: 0.2.51
       randomcolor: 0.6.2
       unique-names-generator: 4.7.1
-      y-prosemirror: 1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4
+      y-prosemirror: 1.1.0_jbwijxhzqztdm7ahgp526qt7qq
       y-protocols: 1.0.5
       y-websocket: 1.4.3_yjs@13.5.39
       yjs: 13.5.39
@@ -521,7 +558,7 @@ importers:
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       react: 17.0.2
       rollup: 2.73.0
       rollup-plugin-typescript2: 0.30.0_anzmtkbpu2qkzgkvydr4fm6zcm
@@ -1133,7 +1170,7 @@ importers:
       prosemirror-schema-list: ^1.2.0
       prosemirror-state: ^1.4.1
       prosemirror-transform: ^1.6.0
-      prosemirror-view: ^1.26.2
+      prosemirror-view: ^1.27.0
       rollup: ^2.74.0
       rollup-plugin-typescript2: ^0.31.2
       ts-jest: 27.1.4
@@ -1157,7 +1194,7 @@ importers:
       prosemirror-schema-list: 1.2.0
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       rollup: 2.74.0
       rollup-plugin-typescript2: 0.31.2_dyu3set7imqii5ytavmnwecwpy
       ts-jest: 27.1.4_ibhx3ehxrt2kgmkik4bkzmyeei
@@ -4640,6 +4677,22 @@ packages:
       magic-string: 0.25.9
       resolve: 1.22.1
       rollup: 2.74.0
+    dev: true
+
+  /@rollup/plugin-commonjs/20.0.0_rollup@2.77.0:
+    resolution: {integrity: sha512-5K0g5W2Ol8hAcTHqcTBHiA7M58tfmYi1o9KxeJuuRNpGaTa5iLjcyemBitCBcKXaHamOBBEH2dGom6v6Unmqjg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^2.38.3
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.77.0
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      glob: 7.2.3
+      is-reference: 1.2.1
+      magic-string: 0.25.9
+      resolve: 1.22.1
+      rollup: 2.77.0
     dev: true
 
   /@rollup/plugin-commonjs/21.1.0_rollup@2.73.0:
@@ -10752,6 +10805,10 @@ packages:
 
   /dommatrix/1.0.3:
     resolution: {integrity: sha512-l32Xp/TLgWb8ReqbVJAFIvXmY7go4nTxxlWiAFyhoQw9RKEOHBZNnyGvJWqDVSPmq3Y9HlM4npqF/T6VMOXhww==}
+    dev: false
+
+  /dompurify/2.3.10:
+    resolution: {integrity: sha512-o7Fg/AgC7p/XpKjf/+RC3Ok6k4St5F7Q6q6+Nnm3p2zGWioAY6dh0CbbuwOhH2UcSzKsdniE/YnE2/92JcsA+g==}
     dev: false
 
   /dompurify/2.3.8:
@@ -20053,7 +20110,7 @@ packages:
     dependencies:
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
 
   /prosemirror-example-setup/1.2.1:
     resolution: {integrity: sha512-sxFBVjxP+Mgd7sPigjN4QenrEn8e1vgX/YWsB+Bv6nPZf9Eakx7TDdjLPs+7v/iCXFqCdRX7C20LcYdUQhvWpA==}
@@ -20084,7 +20141,7 @@ packages:
       prosemirror-keymap: 1.2.0
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
 
   /prosemirror-history/1.1.3:
     resolution: {integrity: sha512-zGDotijea+vnfnyyUGyiy1wfOQhf0B/b6zYcCouBV8yo6JmrE9X23M5q7Nf/nATywEZbgRLG70R4DmfSTC+gfg==}
@@ -20182,7 +20239,7 @@ packages:
       prosemirror-model: 1.16.1
       prosemirror-state: 1.3.4
       prosemirror-transform: 1.4.2
-      prosemirror-view: 1.23.13
+      prosemirror-view: 1.27.0
     dev: false
 
   /prosemirror-transform/1.3.4:
@@ -20215,20 +20272,12 @@ packages:
       prosemirror-state: 1.3.4
       prosemirror-transform: 1.4.2
 
-  /prosemirror-view/1.26.2:
-    resolution: {integrity: sha512-CGKw+GadkfSBEwRAJTHCEKJ4DlV6/3IhAdjpwGyZHUHtbP7jX4Ol4zmi7xa2c6GOabDlIJLYXJydoNYLX7lNeQ==}
+  /prosemirror-view/1.27.0:
+    resolution: {integrity: sha512-yNCQW5eiPkrMgjOT5Xa/ItIvcM7JBG7ikZKaHo26hdBW5OLNnIWGZ0BV6/OiBk742teLybLVNPCpYUcW405Ckg==}
     dependencies:
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.6.0
-
-  /prosemirror-view/1.26.5:
-    resolution: {integrity: sha512-SO+AX6WwdbJZHVvuloXI0qfO+YJAnZAat8qrYwfiqTQwL/FewLUnr0m3EXZ6a60hQs8/Q/lzeJXiFR/dOPaaKQ==}
-    dependencies:
-      prosemirror-model: 1.18.1
-      prosemirror-state: 1.4.1
-      prosemirror-transform: 1.6.0
-    dev: true
 
   /proto-list/1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
@@ -21811,6 +21860,21 @@ packages:
       serialize-javascript: 4.0.0
       terser: 4.8.0
     dev: false
+
+  /rollup-plugin-typescript2/0.30.0_55kiftncucr43pz4hskma6yi2q:
+    resolution: {integrity: sha512-NUFszIQyhgDdhRS9ya/VEmsnpTe+GERDMmFo0Y+kf8ds51Xy57nPNGglJY+W6x1vcouA7Au7nsTgsLFj2I0PxQ==}
+    peerDependencies:
+      rollup: '>=1.26.3'
+      typescript: '>=2.4.0'
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      find-cache-dir: 3.3.2
+      fs-extra: 8.1.0
+      resolve: 1.20.0
+      rollup: 2.77.0
+      tslib: 2.1.0
+      typescript: 4.7.4
+    dev: true
 
   /rollup-plugin-typescript2/0.30.0_anzmtkbpu2qkzgkvydr4fm6zcm:
     resolution: {integrity: sha512-NUFszIQyhgDdhRS9ya/VEmsnpTe+GERDMmFo0Y+kf8ds51Xy57nPNGglJY+W6x1vcouA7Au7nsTgsLFj2I0PxQ==}
@@ -25239,21 +25303,7 @@ packages:
     dev: false
     optional: true
 
-  /y-prosemirror/1.1.0_jzascd4egnm6q536yt5eavl4be:
-    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
-    peerDependencies:
-      prosemirror-model: ^1.7.1
-      prosemirror-state: ^1.2.3
-      prosemirror-view: ^1.9.10
-      y-protocols: ^1.0.1
-      yjs: ^13.5.38
-    dependencies:
-      lib0: 0.2.51
-      y-protocols: 1.0.5
-      yjs: 13.5.39
-    dev: false
-
-  /y-prosemirror/1.1.0_tmij62orzheg6nz2bngi2e76pu:
+  /y-prosemirror/1.1.0_2ry63thi3wm5fndcbhzebenbsu:
     resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -25264,11 +25314,11 @@ packages:
     dependencies:
       lib0: 0.2.51
       prosemirror-state: 1.4.1
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
       yjs: 13.5.39
     dev: false
 
-  /y-prosemirror/1.1.0_w4v3nlmaejwiw3v2t2rgfr4kz4:
+  /y-prosemirror/1.1.0_jbwijxhzqztdm7ahgp526qt7qq:
     resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
     peerDependencies:
       prosemirror-model: ^1.7.1
@@ -25280,7 +25330,21 @@ packages:
       lib0: 0.2.51
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
-      prosemirror-view: 1.26.2
+      prosemirror-view: 1.27.0
+      y-protocols: 1.0.5
+      yjs: 13.5.39
+    dev: false
+
+  /y-prosemirror/1.1.0_jzascd4egnm6q536yt5eavl4be:
+    resolution: {integrity: sha512-cH6MsI3U/xAAJrZvuEk1akiAOzUSXjONwbHoKP4y/JtOR3SvdgL36ushKLUdXx+EuMtRrkgBYVLls8oljIQpxw==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.5.38
+    dependencies:
+      lib0: 0.2.51
       y-protocols: 1.0.5
       yjs: 13.5.39
     dev: false

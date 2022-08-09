@@ -25,6 +25,7 @@ import {
   CommentsPluginState,
 } from '@manuscripts/ext-comments'
 import { exampleSetupExtension } from '@manuscripts/ext-example-setup'
+import { equationExtension } from '@manuscripts/ext-equation'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   EditorProps,
@@ -87,6 +88,7 @@ export const Editor = observer((props: Props) => {
               debug: options.debug,
             }),
           ]),
+      equationExtension(),
       yjsExtension({
         document: {
           id: options.documentId,
