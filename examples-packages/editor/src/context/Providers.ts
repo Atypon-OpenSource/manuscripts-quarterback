@@ -17,11 +17,7 @@ import { EditorViewProvider } from './EditorViewProvider'
 import { ExtensionProvider } from './ExtensionProvider'
 import { PluginStateProvider } from './PluginStateProvider'
 
-export { EditorViewProvider } from './EditorViewProvider'
-export { ExtensionProvider } from './ExtensionProvider'
-export { PluginStateProvider } from './PluginStateProvider'
-
-export interface EditorProviders {
+export interface EditorContext {
   viewProvider: EditorViewProvider
   extensionProvider: ExtensionProvider
   pluginStateProvider: PluginStateProvider
@@ -35,7 +31,7 @@ export const emptyProviders = {
   pluginStateProvider: undefined,
 }
 
-export const createDefaultProviders = (): EditorProviders => {
+export const createDefaultProviders = (): EditorContext => {
   const viewProvider = new EditorViewProvider()
   const extensionProvider = new ExtensionProvider()
   const pluginStateProvider = new PluginStateProvider(viewProvider)

@@ -17,14 +17,14 @@ import { Schema } from 'prosemirror-model'
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
-import { EditorProviders } from '$context/Providers'
+import { EditorContext } from '$context'
 
 import type { CreateExtension } from './extension'
 
 export interface EditorProps {
   extensions: CreateExtension[]
   schema: Schema
-  onEditorReady?: (providers: EditorProviders) => void
+  onEditorReady?: (providers: EditorContext) => void
   onEdit?: (state: EditorState) => void
 }
 

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { CreateExtension, EditorProviders } from '@manuscripts/examples-track-editor'
+import type { CreateExtension, EditorContext } from '@manuscripts/examples-track-editor'
 
 import { equationPlugin } from './plugin'
 
 import { equationExtensionName } from './types'
 
-export const equationExtension = () => (ctx: EditorProviders) => {
+export const equationExtension = () => (ctx: EditorContext) => {
   return {
     name: equationExtensionName,
     plugins: [equationPlugin(ctx)],

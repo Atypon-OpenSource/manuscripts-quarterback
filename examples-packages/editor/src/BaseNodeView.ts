@@ -113,16 +113,6 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
       getPos: () => number,
       decorations: readonly Decoration[],
       innerDecorations: DecorationSource
-    ) =>
-      new BaseNodeView(
-        node,
-        view,
-        getPos,
-        decorations,
-        innerDecorations,
-        ctx,
-        props,
-        component
-      ).init()
+    ) => new this(node, view, getPos, decorations, innerDecorations, ctx, props, component).init()
   }
 }

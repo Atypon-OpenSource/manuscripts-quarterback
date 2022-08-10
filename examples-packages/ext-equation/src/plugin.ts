@@ -19,12 +19,12 @@ import { EditorProps } from 'prosemirror-view'
 import { EquationView } from './EquationView'
 import { EquationElementView } from './EquationElementView'
 
-import type { EditorProviders } from '@manuscripts/examples-track-editor'
+import type { EditorContext } from '@manuscripts/examples-track-editor'
 import type { EquationPluginState } from './types'
 
 export const equationPluginKey = new PluginKey<EquationPluginState>('equation')
 
-export const equationPlugin = (ctx: EditorProviders) => {
+export const equationPlugin = (ctx: EditorContext) => {
   return new Plugin<EquationPluginState>({
     key: equationPluginKey,
     props: {
