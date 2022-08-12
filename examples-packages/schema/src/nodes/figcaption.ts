@@ -1,5 +1,5 @@
 /*!
- * © 2021 Atypon Systems LLC
+ * © 2019 Atypon Systems LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Plugin } from 'prosemirror-state'
+import { Node as PMNode, NodeSpec } from 'prosemirror-model'
 
-import type { EditorContext } from '$context'
-
-import type { Commands, EditorProps } from './editor'
-
-export type CreateExtension = (ctx: EditorContext, props: EditorProps) => Extension
-export interface Extension {
-  name: string
-  commands?: Commands
-  keymaps?: any[]
-  plugins?: Plugin[]
-  store?: Record<string, any>
-  onDestroy?: () => void
+export const figcaption: NodeSpec = {
+  content: 'inline*',
+  group: 'block',
+  attrs: { dataTracked: { default: null } },
+  isolating: true,
+  selectable: false,
+  parseDOM: [
+    {
+      tag: 'figcaption',
+    },
+  ],
+  toDOM: () => ['figcaption', 0],
 }

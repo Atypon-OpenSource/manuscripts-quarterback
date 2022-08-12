@@ -25,6 +25,7 @@ import {
   CommentsPluginState,
 } from '@manuscripts/ext-comments'
 import { exampleSetupExtension } from '@manuscripts/ext-example-setup'
+import { equationExtension } from '@manuscripts/ext-equation'
 import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import {
   EditorProps,
@@ -54,9 +55,9 @@ import '@manuscripts/track-changes-plugin/src/styles.css'
 import '@manuscripts/ext-example-setup/prosemirror-example-setup.css'
 import '@manuscripts/ext-example-setup/menu.css'
 import '@manuscripts/ext-yjs/yjs.css'
+import '@manuscripts/ext-equation/styles.css'
 
 interface Props {
-  className?: string
   options: TrackOptions
   initialData: {
     yDoc: Doc
@@ -66,7 +67,7 @@ interface Props {
 }
 
 export const Editor = observer((props: Props) => {
-  const { className = '', options, initialData } = props
+  const { options, initialData } = props
   const {
     commentStore: { toggleCommentListOpen },
   } = stores
@@ -87,6 +88,7 @@ export const Editor = observer((props: Props) => {
               debug: options.debug,
             }),
           ]),
+      equationExtension(),
       yjsExtension({
         document: {
           id: options.documentId,

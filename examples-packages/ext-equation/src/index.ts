@@ -13,18 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Plugin } from 'prosemirror-state'
+export * as equationCommands from './commands'
 
-import type { EditorContext } from '$context'
+export { equationExtension } from './extension'
 
-import type { Commands, EditorProps } from './editor'
-
-export type CreateExtension = (ctx: EditorContext, props: EditorProps) => Extension
-export interface Extension {
-  name: string
-  commands?: Commands
-  keymaps?: any[]
-  plugins?: Plugin[]
-  store?: Record<string, any>
-  onDestroy?: () => void
-}
+export * from './types'

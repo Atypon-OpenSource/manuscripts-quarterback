@@ -15,10 +15,9 @@
  */
 import { createContext, useContext } from 'react'
 
-import { EditorProviders, emptyProviders } from './Providers'
+import { EditorContext, emptyProviders } from './Providers'
 
-export type { EditorProviders } from './Providers'
-export type EditorContext = EditorProviders
+export type { EditorContext } from './Providers'
 
 export const ReactEditorContext = createContext<EditorContext | typeof emptyProviders>(
   emptyProviders
@@ -29,3 +28,4 @@ export { createDefaultProviders } from './Providers'
 export { EditorViewProvider } from './EditorViewProvider'
 export { ExtensionProvider } from './ExtensionProvider'
 export { PluginStateProvider } from './PluginStateProvider'
+export { PopperProvider } from './PopperProvider'

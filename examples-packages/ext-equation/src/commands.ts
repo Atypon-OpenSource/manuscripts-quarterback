@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Plugin } from 'prosemirror-state'
+import type { Command } from 'prosemirror-state'
 
-import type { EditorContext } from '$context'
-
-import type { Commands, EditorProps } from './editor'
-
-export type CreateExtension = (ctx: EditorContext, props: EditorProps) => Extension
-export interface Extension {
-  name: string
-  commands?: Commands
-  keymaps?: any[]
-  plugins?: Plugin[]
-  store?: Record<string, any>
-  onDestroy?: () => void
-}
+export const createEquation =
+  (pos?: number): Command =>
+  (state, dispatch) => {
+    const node = state.schema.nodes.equation_wrapper.createAndFill()
+    if (!node) return false
+    const to = pos || state.selection.head
+    dispatch && dispatch(state.tr.insert(to, node).scrollIntoView())
+    return true
+  }

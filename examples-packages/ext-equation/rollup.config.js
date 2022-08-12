@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Plugin } from 'prosemirror-state'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from 'rollup-plugin-typescript2'
 
-import type { EditorContext } from '$context'
+import pkg from './package.json'
 
-import type { Commands, EditorProps } from './editor'
-
-export type CreateExtension = (ctx: EditorContext, props: EditorProps) => Extension
-export interface Extension {
-  name: string
-  commands?: Commands
-  keymaps?: any[]
-  plugins?: Plugin[]
-  store?: Record<string, any>
-  onDestroy?: () => void
+export default {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: pkg.main,
+      format: 'cjs',
+    },
+    {
+      file: pkg.module,
+      format: 'es',
+    },
+  ],
+  external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+  plugins: [typescript(), commonjs()],
 }

@@ -90,7 +90,6 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
           ctx.pluginStateProvider.updatePluginListeners(oldEditorState, newState)
           props.onEdit && props.onEdit(newState)
         },
-        nodeViews: ctx.extensionProvider.nodeViews,
       }
     )
   }
