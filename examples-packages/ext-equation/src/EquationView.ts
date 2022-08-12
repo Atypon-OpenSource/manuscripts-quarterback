@@ -62,7 +62,7 @@ export class EquationView extends BaseNodeView {
     tr.setNodeMarkup(pos, undefined, {
       ...this.node.attrs,
       TeXRepresentation,
-    }) //.setSelection(NodeSelection.create(tr.doc, pos))
+    })
     this.view.dispatch(tr)
   }
 

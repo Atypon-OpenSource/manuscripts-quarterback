@@ -45,7 +45,6 @@ export class PopperProvider {
 
   close() {
     if (this.#openPopper) {
-      console.log('close popper')
       while (this.#el.hasChildNodes()) {
         this.#el.removeChild(this.#el.firstChild as ChildNode)
       }
