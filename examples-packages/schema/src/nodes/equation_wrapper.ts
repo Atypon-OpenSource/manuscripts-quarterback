@@ -30,6 +30,7 @@ export const equation_wrapper: NodeSpec = {
   content: '(equation | placeholder) figcaption',
   attrs: {
     id: { default: '' },
+    class: { default: 'equation-wrapper' },
     suppressCaption: { default: true },
     suppressTitle: { default: undefined },
     dataTracked: { default: null },
@@ -38,26 +39,22 @@ export const equation_wrapper: NodeSpec = {
   group: 'block element',
   parseDOM: [
     {
-      tag: 'figure.equation',
-      getAttrs: (p) => {
-        const dom = p as HTMLElement
-
-        return {
-          id: dom.getAttribute('id'),
+      tag: 'figure.equation-wrapper',
+      getAttrs: (dom: HTMLElement | string) => {
+        if (dom instanceof HTMLElement) {
+          return {
+            id: dom.getAttribute('id'),
+          }
         }
+        return null
       },
     },
   ],
-  toDOM: (node) => {
-    const equationElementNode = node as EquationElementNode
-
-    return [
-      'figure',
-      {
-        class: 'equation', // TODO: suppress-caption?
-        id: equationElementNode.attrs.id,
-      },
-      0,
-    ]
+  toDOM: (node: PMNode) => {
+    const attrs = {
+      id: node.attrs.id,
+      class: node.attrs.class,
+    }
+    return ['figure', attrs, 0]
   },
 }

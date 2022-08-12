@@ -17,7 +17,6 @@ import { Plugin, PluginKey } from 'prosemirror-state'
 import { EditorProps } from 'prosemirror-view'
 
 import { EquationView } from './EquationView'
-import { EquationElementView } from './EquationElementView'
 
 import type { EditorContext } from '@manuscripts/examples-track-editor'
 import type { EquationPluginState } from './types'
@@ -30,7 +29,6 @@ export const equationPlugin = (ctx: EditorContext) => {
     props: {
       nodeViews: {
         equation: EquationView.fromComponent(ctx),
-        equation_element: EquationElementView.fromComponent(ctx),
       },
     } as EditorProps,
   })

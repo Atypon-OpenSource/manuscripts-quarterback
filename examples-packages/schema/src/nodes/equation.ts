@@ -30,11 +30,9 @@ export interface EquationNode extends PMNode {
 export const equation: NodeSpec = {
   attrs: {
     id: { default: '' },
-    MathMLStringRepresentation: { default: '' },
-    SVGStringRepresentation: { default: '' },
+    class: { default: 'equation' },
     TeXRepresentation: { default: '' },
     dataTracked: { default: null },
-    // placeholder: { default: 'Click to edit equation' },
   },
   group: 'block',
   parseDOM: [
@@ -44,31 +42,19 @@ export const equation: NodeSpec = {
         if (dom instanceof HTMLElement) {
           return {
             id: dom.getAttribute('id'),
-            MathMLStringRepresentation: dom.getAttribute('data-mathml-string-representation'),
-            SVGStringRepresentation: dom.innerHTML,
             TeXRepresentation: dom.getAttribute('data-tex-representation'),
           }
         }
         return null
       },
     },
-    // TODO: convert MathML from pasted math elements?
   ],
-  toDOM: (node) => {
-    const equationNode = node as EquationNode
-
-    const dom = document.createElement('div')
-    dom.setAttribute('id', equationNode.attrs.id)
-    dom.classList.add('equation')
-    if (equationNode.attrs.MathMLStringRepresentation) {
-      dom.setAttribute(
-        'data-mathml-string-representation',
-        equationNode.attrs.MathMLStringRepresentation
-      )
+  toDOM: (node: PMNode) => {
+    const attrs = {
+      id: node.attrs.id,
+      class: node.attrs.class,
+      'data-tex-representation': node.attrs.TeXRepresentation,
     }
-    dom.setAttribute('data-tex-representation', equationNode.attrs.TeXRepresentation)
-    dom.innerHTML = equationNode.attrs.SVGStringRepresentation
-
-    return dom
+    return ['div', attrs]
   },
 }

@@ -62,6 +62,7 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
     }
     return this
   }
+
   /**
    * Override this
    */
@@ -81,7 +82,7 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
     }
     this.node = newNode
     this.updateContents()
-    // this.props.popper.update()
+    this.ctx.popperProvider.update()
     return true
   }
 
@@ -99,11 +100,10 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
 
   deselectNode = () => {
     this.dom.classList.remove('ProseMirror-selectednode')
-    // this.props.popper.destroy()
   }
 
   destroy = () => {
-    // this.props.popper.destroy()
+    this.ctx.popperProvider.close()
   }
 
   static fromComponent<P>(ctx: EditorContext, props?: P, component?: React.ComponentType<any>) {

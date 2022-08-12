@@ -16,11 +16,13 @@
 import { EditorViewProvider } from './EditorViewProvider'
 import { ExtensionProvider } from './ExtensionProvider'
 import { PluginStateProvider } from './PluginStateProvider'
+import { PopperProvider } from './PopperProvider'
 
 export interface EditorContext {
   viewProvider: EditorViewProvider
   extensionProvider: ExtensionProvider
   pluginStateProvider: PluginStateProvider
+  popperProvider: PopperProvider
 }
 
 // By providing default values without providers the Providers are not created twice
@@ -29,15 +31,18 @@ export const emptyProviders = {
   viewProvider: undefined,
   extensionProvider: undefined,
   pluginStateProvider: undefined,
+  popperProvider: undefined,
 }
 
 export const createDefaultProviders = (): EditorContext => {
   const viewProvider = new EditorViewProvider()
   const extensionProvider = new ExtensionProvider()
   const pluginStateProvider = new PluginStateProvider(viewProvider)
+  const popperProvider = new PopperProvider()
   return {
     viewProvider,
     extensionProvider,
     pluginStateProvider,
+    popperProvider,
   }
 }

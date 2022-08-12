@@ -55,6 +55,7 @@ import '@manuscripts/track-changes-plugin/src/styles.css'
 import '@manuscripts/ext-example-setup/prosemirror-example-setup.css'
 import '@manuscripts/ext-example-setup/menu.css'
 import '@manuscripts/ext-yjs/yjs.css'
+import '@manuscripts/ext-equation/styles.css'
 
 interface Props {
   className?: string

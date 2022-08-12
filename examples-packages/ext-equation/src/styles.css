@@ -1,0 +1,114 @@
+.popup {
+  color: #353535;
+  font-family: "PT Sans", sans-serif;
+  min-width: 100px;
+  position: absolute;
+  width: auto;
+  z-index: 5;
+  opacity: 1;
+}
+
+.popup[data-show] {
+  display: inline-block;
+}
+
+.popup-arrow,
+.popup-arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.popup-arrow {
+  visibility: hidden;
+}
+
+.popup-arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.popup[data-popper-placement^="bottom"] > .popup-arrow {
+  top: -5px;
+  left: calc(50% - 5px);
+  border-bottom-color: #e2e2e2;
+  border-top-width: 0;
+  margin: 0 5px;
+}
+
+.popup[data-popper-placement^="top"] > .popup-arrow {
+  bottom: -5px;
+  left: calc(50% - 5px);
+  border-top-color: #e2e2e2;
+  border-bottom-width: 0;
+  margin: 0 5px;
+}
+
+.popup[data-popper-placement^="left"] > .popup-arrow {
+  right: -5px;
+  top: calc(50% - 5px);
+  border-left-color: #e2e2e2;
+  border-right-width: 0;
+  margin: 5px 0;
+}
+
+.popup[data-popper-placement^="right"] > .popup-arrow {
+  left: -5px;
+  top: calc(50% - 5px);
+  border-right-color: #e2e2e2;
+  border-left-width: 0;
+  margin: 5px 0;
+}
+
+.popup .equation-editor {
+  position: relative;
+  min-width: 500px;
+  max-width: 800px;
+}
+
+/* .popup .cm-editor {
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 4px 9px 0 rgba(84, 83, 83, 0.3);
+  height: auto;
+  min-height: 4em;
+} */
+.popup .equation-editor:first-child {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 4px 9px 0 rgb(84 83 83 / 30%);
+  height: auto;
+  min-height: 4em;
+}
+
+.popup .equation-editor-info {
+  align-items: center;
+  border: 1px solid #e2e2e2;
+  border-radius: 50%;
+  bottom: 6px;
+  color: #6e6e6e;
+  display: inline-flex;
+  cursor: pointer;
+  font-size: 12px;
+  height: 16px;
+  justify-content: center;
+  opacity: 0.5;
+  position: absolute;
+  right: 6px;
+  text-decoration: none;
+  width: 16px;
+  z-index: 2;
+}
+
+.popup .equation-editor-info:hover {
+  opacity: 1;
+}
+
+.popup .cm-scroller {
+  max-height: 400px;
+}
+
+.popup .cm-placeholder {
+  color: #999 !important;
+}
