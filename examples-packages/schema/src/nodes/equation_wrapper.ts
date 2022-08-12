@@ -31,8 +31,6 @@ export const equation_wrapper: NodeSpec = {
   attrs: {
     id: { default: '' },
     class: { default: 'equation-wrapper' },
-    suppressCaption: { default: true },
-    suppressTitle: { default: undefined },
     dataTracked: { default: null },
   },
   selectable: false,
