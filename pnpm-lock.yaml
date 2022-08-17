@@ -342,6 +342,7 @@ importers:
       '@zerollup/ts-transform-paths': ^1.7.18
       prosemirror-model: ^1.18.1
       prosemirror-state: ^1.4.1
+      prosemirror-transform: ^1.7.0
       prosemirror-view: ^1.27.0
       rollup: ^2.58.3
       rollup-plugin-typescript2: ^0.30.0
@@ -355,6 +356,7 @@ importers:
       '@popperjs/core': 2.11.5
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
+      prosemirror-transform: 1.7.0
       prosemirror-view: 1.27.0
     devDependencies:
       '@rollup/plugin-alias': 3.1.9_rollup@2.73.0
@@ -17536,6 +17538,12 @@ packages:
     resolution: {integrity: sha512-MAp7AjsjEGEqQY0sSMufNIUuEyB1ZR9Fqlm8dTwwWwpEJRv/plsKjWXBbx52q3Ml8MtaMcd7ic14zAHVB3WaMw==}
     dependencies:
       prosemirror-model: 1.18.1
+
+  /prosemirror-transform/1.7.0:
+    resolution: {integrity: sha512-O4T697Cqilw06Zvc3Wm+e237R6eZtJL/xGMliCi+Uo8VL6qHk6afz1qq0zNjT3eZMuYwnP8ZS0+YxX/tfcE9TQ==}
+    dependencies:
+      prosemirror-model: 1.18.1
+    dev: false
 
   /prosemirror-view/1.18.11:
     resolution: {integrity: sha512-KXUM8UEV+IK4JYWHNyxkPGDGbxeTEUHQv3POApfyTRN5eMcPFbY4cB0mDJr0LPelVvYPghmZDOCqfCIm9mYHtQ==}

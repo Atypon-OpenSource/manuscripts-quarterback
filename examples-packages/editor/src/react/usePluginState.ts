@@ -22,7 +22,7 @@ export function usePluginState<T>(pluginKey: PluginKey, debounce?: number) {
   const { pluginStateProvider } = useEditorContext()
 
   const [state, setState] = useState<T | null>(pluginStateProvider?.getPluginState(pluginKey))
-  const timeout = useRef<NodeJS.Timeout | undefined>()
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>()
   const data = useRef<T | null>(null)
 
   useEffect(() => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Schema } from 'prosemirror-model'
-import { EditorState, Transaction } from 'prosemirror-state'
+import { Command, EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
 import { EditorContext } from '$context'
@@ -30,7 +30,6 @@ export interface EditorProps {
 
 export type Commands = { [name: string]: (...args: any[]) => Command }
 export type CommandDispatch = (tr: Transaction) => void
-export type Command = (state: EditorState, dispatch?: CommandDispatch, view?: EditorView) => boolean
 export type HigherOrderCommand = (command: Command) => Command
 
 export interface JSONEditorState {
