@@ -5,8 +5,8 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "declaration": true,
     "declarationDir": "./dist",
-    "baseUrl": ".",
     "jsx": "react",
+    "baseUrl": ".",
     "paths": {
       "$context": ["src/context"],
       "$context/*": ["src/context/*"],
@@ -16,7 +16,8 @@
       "$react/*": ["src/react/*"],
       "$typings": ["src/typings"],
       "$typings/*": ["src/typings/*"]
-    }
+    },
+    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

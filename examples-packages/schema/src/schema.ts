@@ -51,10 +51,8 @@ import {
   text,
 } from './nodes'
 
-import { Marks, Nodes, QuarterBackSchema } from './types'
-
 // From https://github.com/ProseMirror/prosemirror-schema-basic/blob/master/src/schema-basic.js
-export const schema: QuarterBackSchema = new Schema<Nodes, Marks>({
+export const schema = new Schema({
   nodes: {
     doc,
     paragraph,

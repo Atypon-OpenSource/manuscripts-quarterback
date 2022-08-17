@@ -5,7 +5,6 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "declaration": true,
     "declarationDir": "./dist",
-    "baseUrl": "src",
     "jsx": "react"
   },
   "include": ["src"],

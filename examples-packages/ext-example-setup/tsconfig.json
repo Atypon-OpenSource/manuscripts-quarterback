@@ -4,8 +4,7 @@
     "target": "es2018",
     "lib": ["esnext", "dom", "dom.iterable"],
     "declaration": true,
-    "declarationDir": "./dist",
-    "baseUrl": "."
+    "declarationDir": "./dist"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
