@@ -25,7 +25,7 @@ import { fixInconsistentChanges } from './changes/fixInconsistentChanges'
 import { trackTransaction } from './steps/trackTransaction'
 import { updateChangeAttrs } from './changes/updateChangeAttrs'
 import { TrackChangesOptions, TrackChangesState, TrackChangesStatus } from './types/track'
-import { createDecorations } from 'dom'
+import { createDecorations } from './dom'
 
 export const trackChangesPluginKey = new PluginKey<TrackChangesState>('track-changes')
 
