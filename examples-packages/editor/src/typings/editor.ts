@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 import { Schema } from 'prosemirror-model'
-import { EditorState, Transaction } from 'prosemirror-state'
+import { Command, EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
-import { EditorProviders } from '$context/Providers'
+import { EditorContext } from '$context'
 
 import type { CreateExtension } from './extension'
 
 export interface EditorProps {
   extensions: CreateExtension[]
   schema: Schema
-  onEditorReady?: (providers: EditorProviders) => void
+  onEditorReady?: (providers: EditorContext) => void
   onEdit?: (state: EditorState) => void
 }
 
 export type Commands = { [name: string]: (...args: any[]) => Command }
 export type CommandDispatch = (tr: Transaction) => void
-export type Command = (state: EditorState, dispatch?: CommandDispatch, view?: EditorView) => boolean
 export type HigherOrderCommand = (command: Command) => Command
 
 export interface JSONEditorState {

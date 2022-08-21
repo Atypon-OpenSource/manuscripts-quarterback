@@ -17,8 +17,8 @@ import alias from '@rollup/plugin-alias'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import path from 'path'
-import postcss from 'rollup-plugin-postcss'
 import typescript from 'rollup-plugin-typescript2'
+import ttypescript from 'ttypescript'
 
 import pkg from './package.json'
 
@@ -57,8 +57,9 @@ export default {
     nodeResolve({
       browser: true,
     }),
-    typescript(),
+    typescript({
+      typescript: ttypescript,
+    }),
     commonjs(),
-    postcss(),
   ],
 }

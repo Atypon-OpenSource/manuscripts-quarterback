@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 import { trackCommands } from '@manuscripts/track-changes-plugin'
-import {
-  activeNodesMarksPluginKey,
-  ActiveNodesMarksState,
-  commands,
-  useEditorContext,
-  usePluginState,
-} from '@manuscripts/examples-track-editor'
+import { useEditorContext, usePluginState } from '@manuscripts/examples-track-editor'
+import { equationCommands } from '@manuscripts/ext-equation'
+import { activeNodesMarksPluginKey, ActiveNodesMarksState } from '@manuscripts/ext-example-setup'
 import { commentsCommands } from '@manuscripts/ext-comments'
+import { toggleMark } from 'prosemirror-commands'
 
 import React from 'react'
 import {
@@ -113,14 +110,10 @@ export function Toolbar(props: IProps) {
   function handleIconClick(title: IconType) {
     switch (title) {
       case 'bold':
-        viewProvider?.execCommand(
-          commands.baseCommands.toggleMark(viewProvider?.view.state.schema.marks.bold)
-        )
+        viewProvider?.execCommand(toggleMark(viewProvider?.view.state.schema.marks.bold))
         return
       case 'italic':
-        viewProvider?.execCommand(
-          commands.baseCommands.toggleMark(viewProvider?.view.state.schema.marks.italic)
-        )
+        viewProvider?.execCommand(toggleMark(viewProvider?.view.state.schema.marks.italic))
         return
       case 'toggle-blockquote':
         return
@@ -132,6 +125,7 @@ export function Toolbar(props: IProps) {
         viewProvider?.execCommand(commentsCommands.insertCommentMarker(userID))
         return
       case 'toggle-split-view':
+        viewProvider?.execCommand(equationCommands.createEquation())
         return
       case 'toggle-track-changes':
         viewProvider?.execCommand(trackCommands.setTrackingStatus())

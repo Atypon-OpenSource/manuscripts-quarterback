@@ -15,11 +15,11 @@
  */
 import type { Plugin } from 'prosemirror-state'
 
-import type { EditorProviders } from '$context'
+import type { EditorContext } from '$context'
 
 import type { Commands, EditorProps } from './editor'
 
-export type CreateExtension = (ctx: EditorProviders, props: EditorProps) => Extension
+export type CreateExtension = (ctx: EditorContext, props: EditorProps) => Extension
 export interface Extension {
   name: string
   commands?: Commands

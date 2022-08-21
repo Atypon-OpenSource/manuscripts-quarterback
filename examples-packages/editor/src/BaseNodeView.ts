@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Node as PMNode } from 'prosemirror-model'
+import { DOMSerializer, Node as PMNode } from 'prosemirror-model'
 import { Decoration, DecorationSource, EditorView, NodeView } from 'prosemirror-view'
 
 import type { EditorContext } from './context'
@@ -41,14 +41,11 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
     this.ctx = ctx
     this.props = _props
     this.component = component
-    this.init()
   }
 
   get dom() {
     if (!this._dom) {
-      throw Error(
-        'Accessing uninitialized dom inside BaseNodeView! Did you forget to add initialize method?'
-      )
+      throw Error('Accessing uninitialized dom inside BaseNodeView! Check your "init" method')
     }
     return this._dom
   }
@@ -57,8 +54,15 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
    * Override this
    */
   init = (): this => {
+    const toDOM = this.node.type.spec.toDOM
+    if (toDOM) {
+      const { dom, contentDOM } = DOMSerializer.renderSpec(document, toDOM(this.node))
+      this._dom = dom as HTMLElement
+      this.contentDOM = contentDOM
+    }
     return this
   }
+
   /**
    * Override this
    */
@@ -78,7 +82,7 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
     }
     this.node = newNode
     this.updateContents()
-    // this.props.popper.update()
+    this.ctx.popperProvider.update()
     return true
   }
 
@@ -96,11 +100,10 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
 
   deselectNode = () => {
     this.dom.classList.remove('ProseMirror-selectednode')
-    // this.props.popper.destroy()
   }
 
   destroy = () => {
-    // this.props.popper.destroy()
+    this.ctx.popperProvider.close()
   }
 
   static fromComponent<P>(ctx: EditorContext, props?: P, component?: React.ComponentType<any>) {
@@ -110,16 +113,6 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
       getPos: () => number,
       decorations: readonly Decoration[],
       innerDecorations: DecorationSource
-    ) =>
-      new BaseNodeView(
-        node,
-        view,
-        getPos,
-        decorations,
-        innerDecorations,
-        ctx,
-        props,
-        component
-      ).init()
+    ) => new this(node, view, getPos, decorations, innerDecorations, ctx, props, component).init()
   }
 }

@@ -22,7 +22,7 @@ export function useYjsExtension(debounce?: number) {
   const { extensionProvider } = useEditorContext()
   const [state, setState] = useState<YjsExtensionState>()
   const [store, setStore] = useState<YjsStore>()
-  const timeout = useRef<NodeJS.Timeout | undefined>()
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>()
   const data = useRef<YjsExtensionState | undefined>()
 
   useEffect(() => {

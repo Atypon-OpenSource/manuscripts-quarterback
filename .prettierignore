@@ -5,6 +5,7 @@ build
 dist
 tmp
 generated
+coverage
 examples-packages/manuscript-editor
 examples-packages/manuscript-transform
 examples-packages/style-guide
