@@ -25,6 +25,7 @@ import { fixInconsistentChanges } from './track/fixInconsistentChanges'
 import { trackTransaction } from './track/trackTransaction'
 import { updateChangeAttrs } from './track/updateChangeAttrs'
 import { TrackChangesOptions, TrackChangesState, TrackChangesStatus } from './types/track'
+import { createDecorations } from 'dom'
 
 export const trackChangesPluginKey = new PluginKey<TrackChangesState>('track-changes')
 
@@ -48,6 +49,10 @@ export const trackChangesPlugin = (
     props: {
       editable(state) {
         return trackChangesPluginKey.getState(state)?.status !== TrackChangesStatus.viewSnapshots
+      },
+
+      decorations(state) {
+        return createDecorations(state)
       },
     } as EditorProps,
     state: {
