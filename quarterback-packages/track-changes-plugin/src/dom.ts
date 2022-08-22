@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { trackChangesPluginKey } from 'plugin'
+import { trackChangesPluginKey } from './plugin'
 import { EditorState } from 'prosemirror-state'
 import { Decoration, DecorationSet } from 'prosemirror-view'
-import { TrackedChange } from 'types/change'
+import { TrackedChange } from './types/change'
 
 const ACCEPT_BUTTON_XLINK = '#track-changes-action-accept'
 
