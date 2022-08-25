@@ -15,6 +15,7 @@
  */
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
+import { Slice } from 'prosemirror-model'
 import React, { useRef } from 'react'
 
 import { EditorContext as EditorProviders, useEditorContext } from './context'
@@ -59,6 +60,8 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
       // @ts-ignore
       window.editorView = view
       window.commands = ctx.extensionProvider.commands
+      // @ts-ignore
+      window.slice = (f, s, e) => new Slice(f, s, e)
     }
     ctx.viewProvider.init(view)
     ctx.viewProvider.updateState(state)

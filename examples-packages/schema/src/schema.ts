@@ -78,6 +78,36 @@ export const schema = new Schema({
     table_col,
     table_colgroup,
     table_row,
+    image: {
+      inline: true,
+      group: 'inline',
+      draggable: true,
+      attrs: {
+        src: {},
+        alt: { default: null },
+        title: { default: null },
+        dataTracked: { default: null },
+      },
+      parseDOM: [
+        {
+          tag: 'img[src]',
+          getAttrs(dom: HTMLElement | string) {
+            if (dom instanceof HTMLElement) {
+              return {
+                src: dom.getAttribute('src'),
+                title: dom.getAttribute('title'),
+                alt: dom.getAttribute('alt'),
+              }
+            }
+            return null
+          },
+        },
+      ],
+      toDOM(node: any) {
+        const { src, alt, title } = node.attrs
+        return ['img', { src, alt, title }]
+      },
+    },
   },
   marks: {
     bold,
