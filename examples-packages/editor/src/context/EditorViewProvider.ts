@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { Observable } from '@manuscripts/examples-track-types'
-import { EditorState } from 'prosemirror-state'
+import { Command, EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 
-import { Command, JSONEditorState } from '$typings/editor'
+import { JSONEditorState } from '$typings/editor'
 
 export class EditorViewProvider {
   _view?: EditorView
