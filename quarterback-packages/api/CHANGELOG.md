@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.10
+
+### Patch Changes
+
+- e0c2677: fix(api): dont copy generated types in Dockerfile incase it doesnt exist locally
+
 ## 0.1.9
 
 ### Patch Changes
