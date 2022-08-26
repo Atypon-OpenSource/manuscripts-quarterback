@@ -24,14 +24,14 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 
 `examples-packages` contain a prototype setup with Manuscript editor that closely follows the track changes implementation in `@manuscripts/manuscript-frontend`. It also includes an example Yjs server that uses Redis persistence.
 
-1. Install all dependencies: `pnpm i -r`
+1. Install all dependencies: `pnpm i`
 2. Start the databases: `docker-compose up -d postgres redis`
 3. Initialize example database: `./scripts.sh db:init-ex`
 4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/client/.example-env ./examples-packages/client/.env`
 5. Migrate the database: `pnpm --filter @manuscripts/examples-track-db migrate`
 6. And seed it with test data: `pnpm --filter @manuscripts/examples-track-db seed`
-7. Build the external manuscripts packages: `pnpm build`
-8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` `pnpm ex:collab` and `pnpm ex:client`.
+7. Build the external manuscripts packages: `pnpm build:mod` NOTE: it seems building them has broke, you probably have to run them by their `build:cjs` `build:es` scripts separately.
+8. Start the example app in http://localhost:4600: `pnpm ex:start`. However since the packages are created out of order, you may have to rerun the command multiple times. Other option is first run `pnpm ex:utils` a few times until the errors are gone. Then in another terminals `pnpm ex:api` `pnpm ex:collab` `pnpm ex:editor` and `pnpm ex:client`. Use `quarterback+ADMIN@atypon.com` and `asdfasdf` to login as admin. `quarterback+USER@atypon.com` `asdfasdf` is the other user.
 
 Also, if you were to remove a package inside `packages` the node_modules in the other packages that import it must be deleted (even after you do `pnpm i`). The symlinks are not always removed properly it seems.
 
