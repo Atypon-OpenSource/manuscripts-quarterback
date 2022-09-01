@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Slice } from 'prosemirror-model'
 import { EditorState, Transaction } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import React, { useRef } from 'react'
@@ -59,6 +60,8 @@ export const useEditor = (editorProps: EditorProps, editorDOMRef: React.RefObjec
       // @ts-ignore
       window.editorView = view
       window.commands = ctx.extensionProvider.commands
+      // @ts-ignore
+      window.slice = Slice
     }
     ctx.viewProvider.init(view)
     ctx.viewProvider.updateState(state)
