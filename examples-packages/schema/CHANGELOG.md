@@ -1,5 +1,15 @@
 # @manuscripts/examples-track-schema
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [8a9c759]
+- Updated dependencies [ad87378]
+- Updated dependencies [baf766c]
+- Updated dependencies [cdde368]
+  - @manuscripts/track-changes-plugin@0.4.1
+
 ## 0.0.9
 
 ### Patch Changes
