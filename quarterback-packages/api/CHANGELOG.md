@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.11
+
+### Patch Changes
+
+- 4baa400: fix(api): change Docker image to slim since prisma breaks with arm64 macbook m1
+
 ## 0.1.10
 
 ### Patch Changes
