@@ -89,19 +89,13 @@ export function diffChangeSteps(
       }
       return acc
     }, Number.MAX_SAFE_INTEGER)
-    const [inDeleted, updatedDel] = matchInserted(
-      deleteStart,
-      updatedDeleted,
-      ins.slice.content,
-      newTr,
-      schema
-    )
-    if (inDeleted === deleteStart) {
+    const [matchedDeleted, updatedDel] = matchInserted(deleteStart, updatedDeleted, ins.slice.content)
+    if (matchedDeleted === deleteStart) {
       updated.push(ins)
       return
     }
     updatedDeleted = updatedDel
-    const [_, newInserted] = cutFragment(0, inDeleted - deleteStart, ins.slice.content)
+    const [_, newInserted] = cutFragment(0, matchedDeleted - deleteStart, ins.slice.content)
     if (newInserted.size > 0) {
       updated.push({
         ...ins,

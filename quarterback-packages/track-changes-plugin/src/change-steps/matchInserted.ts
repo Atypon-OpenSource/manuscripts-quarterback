@@ -68,9 +68,7 @@ function matchText(
 export function matchInserted(
   matchedDeleted: number,
   deleted: ChangeStep[],
-  inserted: ExposedFragment,
-  newTr: Transaction,
-  schema: Schema
+  inserted: ExposedFragment
 ): [number, ChangeStep[]] {
   let matched: [number, ChangeStep[]] = [matchedDeleted, deleted]
   for (let i = 0; ; i += 1) {
@@ -92,9 +90,7 @@ export function matchInserted(
       matched = matchInserted(
         matched[0] + 1,
         matched[1].filter((d) => d !== adjDeleted),
-        insNode.content as ExposedFragment,
-        newTr,
-        schema
+        insNode.content as ExposedFragment
       )
     } else {
       matched = [matched[0] + insNode.nodeSize, matched[1].filter((d) => d !== adjDeleted)]
