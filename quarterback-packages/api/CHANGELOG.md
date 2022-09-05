@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.12
+
+### Patch Changes
+
+- 01739c7: fix(api): increase allowed json payload to 10mb
+
 ## 0.1.11
 
 ### Patch Changes
