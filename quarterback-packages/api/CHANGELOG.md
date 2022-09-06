@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.13
+
+### Patch Changes
+
+- 85552b6: fix(api): update prisma & downgrade nodejs version in Docker image to fix random segmentation fault
+
 ## 0.1.12
 
 ### Patch Changes
