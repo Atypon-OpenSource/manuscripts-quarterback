@@ -2,8 +2,8 @@
 # The Node.js image #
 #####################
 # Not using builder image since it's quite tedious to copy / install everything all over
-# Not using Alpine since installing Prisma is broken on it as of v4.2.1 https://github.com/prisma/prisma/issues/8478
-FROM node:18.8.0-slim
+# Not using Alpine since installing Prisma is broken on it using MBP M1 as of v4.2.1 https://github.com/prisma/prisma/issues/8478
+FROM node:16.10.0-slim
 
 ENV NODE_ENV build
 ENV INSTALL_PATH /usr/local/quarterback_api
