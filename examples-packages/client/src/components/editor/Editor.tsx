@@ -173,6 +173,10 @@ const ViewGrid = styled.div`
   .ProseMirror mark:focus {
     background-color: rgb(255 192 13);
   }
+  .ProseMirror a {
+    color: #0d79d0;
+    cursor: pointer;
+  }
 `
 const LeftSide = styled.div`
   margin-right: 1rem;

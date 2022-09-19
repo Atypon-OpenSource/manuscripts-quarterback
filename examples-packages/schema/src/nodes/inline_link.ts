@@ -49,6 +49,8 @@ export const inline_link: NodeSpec = {
     const attrs = {
       href,
       ...(title && { title }),
+      target: '_blank',
+      contenteditable: 'false',
     }
     return ['a', attrs, 0]
   },

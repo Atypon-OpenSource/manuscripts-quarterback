@@ -33,6 +33,7 @@ import {
 import { GrBlockQuote } from 'react-icons/gr'
 import { MdViewWeek } from 'react-icons/md'
 import styled from 'styled-components'
+import * as cmds from './commands'
 
 import { stores } from 'stores'
 
@@ -118,7 +119,9 @@ export function Toolbar(props: IProps) {
       case 'toggle-blockquote':
         return
       case 'update-attribute':
-        viewProvider?.execCommand(trackCommands.setParagraphTestAttribute())
+        viewProvider?.execCommand(
+          cmds.wrapInInline(viewProvider.state.schema.nodes.link, { href: 'https://google.com' })
+        )
         return
       case 'insert-comment':
         const userID = user?.id || 'anon'

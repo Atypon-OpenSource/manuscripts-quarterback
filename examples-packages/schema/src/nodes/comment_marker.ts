@@ -27,7 +27,7 @@ export const comment_marker: NodeSpec = {
   },
   parseDOM: [
     {
-      tag: 'span',
+      tag: 'span.comment-marker',
       getAttrs: (dom: HTMLElement | string) => {
         if (dom instanceof HTMLElement) {
           return {
@@ -43,6 +43,7 @@ export const comment_marker: NodeSpec = {
   ],
   toDOM: (node: PMNode) => {
     const attrs = {
+      class: 'comment-marker',
       'data-user-id': node.attrs.userID,
       'data-created-at': node.attrs.createdAt,
       'data-position': node.attrs.position,
