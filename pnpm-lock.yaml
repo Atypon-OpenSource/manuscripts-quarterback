@@ -756,11 +756,11 @@ importers:
       '@babel/preset-env': ^7.10.4
       '@babel/preset-typescript': ^7.10.4
       '@jats4r/dtds': ^0.0.7
-      '@manuscripts/data': ^0.1.7
+      '@manuscripts/data': ^0.1.12
       '@manuscripts/eslint-config': ^0.2.2
       '@manuscripts/examples': ^0.0.8
       '@manuscripts/library': ^0.6.2
-      '@manuscripts/manuscripts-json-schema': ^1.49.11
+      '@manuscripts/manuscripts-json-schema': ^1.49.13
       '@manuscripts/publish': ^0.2.2
       '@types/debug': ^4.1.4
       '@types/fs-extra': ^9.0.1
@@ -799,9 +799,9 @@ importers:
       uuid: ^8.2.0
       w3c-xmlserializer: ^2.0.0
     dependencies:
-      '@manuscripts/data': 0.1.10
+      '@manuscripts/data': 0.1.12
       '@manuscripts/library': 0.6.2
-      '@manuscripts/manuscripts-json-schema': 1.49.12
+      '@manuscripts/manuscripts-json-schema': 1.51.0
       debug: 4.3.4
       mathjax-full: 3.2.0
       mime: 2.6.0
@@ -3788,6 +3788,10 @@ packages:
 
   /@manuscripts/data/0.1.10:
     resolution: {integrity: sha512-ytEesiSyZ7oeaxkca+fw9HtkGvyE7axI8CwFNJ621z14ROOsHzK5JeOC7LEenwtndA2GfuSD2qFnG/guprEA/w==}
+    dev: true
+
+  /@manuscripts/data/0.1.12:
+    resolution: {integrity: sha512-zS7RuBXhw8YypwjhT18V//rukLq72oZj2/za35zjfZntql6uJi5PtsLm8CCBkGW4jvqAbNg3JO+avFUy8jcsvQ==}
 
   /@manuscripts/data/0.1.6:
     resolution: {integrity: sha512-qgrVMGy83ki74fRU3pw0Z42L/mYbntx3G9RYyLrsUl5i1RXdpwauWRV/FDNbMjK9tYXttBI0wsNN2Hb0pktvEg==}
@@ -3948,7 +3952,7 @@ packages:
     dependencies:
       '@manuscripts/csl-locales': 0.0.5
       '@manuscripts/csl-styles': 0.2.1
-      '@manuscripts/data': 0.1.10
+      '@manuscripts/data': 0.1.12
       '@manuscripts/manuscript-transform': 0.42.13
       astrocite-bibtex: 0.16.4
       astrocite-ris: 0.16.4
@@ -3960,8 +3964,8 @@ packages:
   /@manuscripts/manuscript-transform/0.42.13:
     resolution: {integrity: sha512-WTtBEccdR5+BSKe87Ze6bHk4Hkolz2BpHyVbvli6qC+E/ar6T4oBZGFzWOFawZsGyKviBwnvnjpPLlOE5U6b3g==}
     dependencies:
-      '@manuscripts/data': 0.1.10
-      '@manuscripts/manuscripts-json-schema': 1.49.12
+      '@manuscripts/data': 0.1.12
+      '@manuscripts/manuscripts-json-schema': 1.51.0
       debug: 4.3.4
       lodash.pickby: 4.6.0
       mathjax-full: 3.2.0
@@ -3990,6 +3994,13 @@ packages:
 
   /@manuscripts/manuscripts-json-schema/1.49.12:
     resolution: {integrity: sha512-ZHb+VunM/884YNZuXFi4EgalKT8aLFK9v+AwgGQhtoVk4Q/LThYV8TqOrevtCbNk/cydWNynDeTpEB3QxWXZzQ==}
+    dependencies:
+      ajv: 6.12.6
+      deepmerge: 3.3.0
+      js-beautify: 1.14.3
+
+  /@manuscripts/manuscripts-json-schema/1.51.0:
+    resolution: {integrity: sha512-YNrqrX8SScXZ5V/3/2Cyy/3SepOkMX/mn18TdKggh+WNN8n3AtKM31/Qw+2jVcF84w9pZ+RU+wuObr2u+GlSUA==}
     dependencies:
       ajv: 6.12.6
       deepmerge: 3.3.0
