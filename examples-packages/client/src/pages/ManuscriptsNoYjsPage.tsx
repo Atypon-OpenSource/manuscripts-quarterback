@@ -17,7 +17,7 @@ import { PmDoc } from '@manuscripts/examples-track-types'
 import useTrackOptions from 'hooks/useTrackOptions'
 import debounce from 'lodash.debounce'
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
@@ -33,7 +33,6 @@ export function ManuscriptsNoYjsPage() {
     documentFlows,
     documentStore: { createDocument, updateCurrentDocument },
   } = stores
-  const history = useHistory()
   const routeParams = useParams<{ documentId: string }>()
   const { options, setOptions } = useTrackOptions('manuscript-no-yjs-track-options', {
     documentId: routeParams.documentId,

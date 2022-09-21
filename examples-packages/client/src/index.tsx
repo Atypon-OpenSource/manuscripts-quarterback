@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import './index.css'
-
 import { Provider } from 'mobx-react'
-import * as React from 'react'
-import { render } from 'react-dom'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from 'styled-components'
 
-import { Routes } from './routes'
+import { Routes } from './Routes'
 import { confMobx } from './stores/mobxConf'
 import { theme } from './theme/theme'
 import { stores } from './stores'
 
+import './index.css'
+
 confMobx()
 
-render(
+const root = createRoot(document.getElementById('root') as HTMLElement)
+root.render(
   <Provider {...stores}>
     <ThemeProvider theme={theme}>
       <Routes />
     </ThemeProvider>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )

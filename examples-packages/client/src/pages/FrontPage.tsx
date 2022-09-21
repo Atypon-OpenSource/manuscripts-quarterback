@@ -17,7 +17,7 @@ import { generateUser, yjsExtension, YjsUser } from '@manuscripts/ext-yjs'
 import { YJS_WS_URL } from 'config'
 import useTrackOptions from 'hooks/useTrackOptions'
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { stores } from 'stores'
 import styled from 'styled-components'
 import { yDocToProsemirrorJSON } from 'y-prosemirror'
@@ -34,7 +34,7 @@ export function FrontPage() {
     documentFlows,
     documentStore: { createDocument },
   } = stores
-  const history = useHistory()
+  const navigateTo = useNavigate()
   const routeParams = useParams<{ documentId: string }>()
   const { options, setOptions } = useTrackOptions('editor-track-options', {
     documentId: routeParams.documentId,
@@ -57,7 +57,7 @@ export function FrontPage() {
       }
     }
 
-    initialData && history.push(documentId)
+    initialData && navigateTo(documentId)
     const yDoc = new Doc({ gc: false })
     const provider = new WebsocketProvider(YJS_WS_URL, documentId, yDoc)
     provider.on('synced', () => {

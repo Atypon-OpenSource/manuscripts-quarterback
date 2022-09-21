@@ -45,7 +45,7 @@ export class PersistedDoc {
   }
 
   async pushUpdateToRedis(update: Uint8Array) {
-    const len = await this.pub.rpushBuffer(this.updateEvent, Buffer.from(update))
+    const len = await this.pub.rpush(this.updateEvent, Buffer.from(update))
     if (len === this._clock + 1) {
       this._clock++
       if (this._fetchingClock < this._clock) {

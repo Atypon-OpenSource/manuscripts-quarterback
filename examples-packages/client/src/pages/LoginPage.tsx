@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 import React from 'react'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { stores } from 'stores'
 import styled from 'styled-components'
 
 import { LoginForm } from '../components/login-page/LoginForm'
 
 function LoginPage() {
-  const history = useHistory()
+  const navigateTo = useNavigate()
   const {
     authStore: { login },
   } = stores
@@ -29,7 +29,7 @@ function LoginPage() {
   async function handleSubmit(data: any) {
     const success = await login!(data)
     if (success) {
-      history.push('/')
+      navigateTo('/')
     }
   }
   return (

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import * as React from 'react'
-import { BrowserRouter, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from 'react-router-dom'
 
-import { WrappedRoute } from './components/WrappedRoute'
+import { DefaultLayout } from './components/Layout'
+
 import { AccountPage } from './pages/AccountPage'
 import { FrontPage } from './pages/FrontPage'
 import LoginPage from './pages/LoginPage'
@@ -25,15 +26,57 @@ import { ManuscriptsPage } from './pages/ManuscriptsPage'
 import { ManuscriptsNoYjsPage } from './pages/ManuscriptsNoYjsPage'
 
 export const Routes = () => (
-  <BrowserRouter>
-    <Switch>
-      <WrappedRoute exact path="/example/:documentId" component={FrontPage} />
-      <WrappedRoute exact path="/login" component={LoginPage} />
-      <WrappedRoute exact path="/account" component={AccountPage} />
-      <WrappedRoute exact path="/docs" component={DocumentListPage} />
-      <WrappedRoute exact path="/manuscripts/:documentId" component={ManuscriptsPage} />
-      <WrappedRoute exact path="/manuscripts-no-yjs/:documentId" component={ManuscriptsNoYjsPage} />
-      <Redirect to="/example/abc123" />
-    </Switch>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <RouterRoutes>
+      <Route
+        path="/example/:documentId"
+        element={
+          <DefaultLayout>
+            <FrontPage />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <DefaultLayout>
+            <LoginPage />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <DefaultLayout>
+            <AccountPage />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/docs"
+        element={
+          <DefaultLayout>
+            <DocumentListPage />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/manuscripts/:documentId"
+        element={
+          <DefaultLayout>
+            <ManuscriptsPage />
+          </DefaultLayout>
+        }
+      />
+      <Route
+        path="/manuscripts-no-yjs/:documentId"
+        element={
+          <DefaultLayout>
+            <ManuscriptsNoYjsPage />
+          </DefaultLayout>
+        }
+      />
+      <Route path="*" element={<Navigate replace to="/example/abc123" />} />
+    </RouterRoutes>
   </BrowserRouter>
 )

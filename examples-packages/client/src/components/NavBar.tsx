@@ -15,12 +15,11 @@
  */
 import { observer } from 'mobx-react'
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import { stores } from 'stores'
 import styled, { css } from 'styled-components'
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   className?: string
 }
 
@@ -33,20 +32,23 @@ export const NavBar = observer((props: IProps) => {
     <Container className={className}>
       <Nav>
         <div>
-          <Link to="/example/abc123" exact activeClassName="current">
+          <Link to="/example/abc123" className={({ isActive }) => (isActive ? 'current' : '')}>
             Front page
           </Link>
-          <Link to="/manuscripts/doc1" exact activeClassName="current">
+          <Link to="/manuscripts/doc1" className={({ isActive }) => (isActive ? 'current' : '')}>
             Manuscripts
           </Link>
-          <Link to="/manuscripts-no-yjs/noyjs1" exact activeClassName="current">
+          <Link
+            to="/manuscripts-no-yjs/noyjs1"
+            className={({ isActive }) => (isActive ? 'current' : '')}
+          >
             Manuscripts no Yjs
           </Link>
-          <Link to="/docs" exact activeClassName="current">
+          <Link to="/docs" className={({ isActive }) => (isActive ? 'current' : '')}>
             Documents
           </Link>
           {user && (
-            <Link to="/account" exact activeClassName="current">
+            <Link to="/account" className={({ isActive }) => (isActive ? 'current' : '')}>
               {user.firstname}
             </Link>
           )}
@@ -54,7 +56,7 @@ export const NavBar = observer((props: IProps) => {
         {user ? (
           <Button onClick={() => logout()}>Logout</Button>
         ) : (
-          <Link to="/login" exact activeClassName="current">
+          <Link to="/login" className={({ isActive }) => (isActive ? 'current' : '')}>
             Login
           </Link>
         )}

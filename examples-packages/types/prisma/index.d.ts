@@ -89,14 +89,6 @@ export type Review = {
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-export const UserRole: {
-  USER: 'USER',
-  ADMIN: 'ADMIN'
-};
-
-export type UserRole = (typeof UserRole)[keyof typeof UserRole]
-
-
 export const DocStatus: {
   EDITABLE: 'EDITABLE',
   WAITING_REVIEW: 'WAITING_REVIEW',
@@ -113,6 +105,14 @@ export const ReviewStatus: {
 };
 
 export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
+
+
+export const UserRole: {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
 /**
@@ -132,7 +132,7 @@ export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
 export class PrismaClient<
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
   U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
-  GlobalReject = 'rejectOnNotFound' extends keyof T
+  GlobalReject extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined = 'rejectOnNotFound' extends keyof T
     ? T['rejectOnNotFound']
     : false
       > {
@@ -317,6 +317,7 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
+  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -343,8 +344,8 @@ export namespace Prisma {
   export import MetricHistogramBucket = runtime.MetricHistogramBucket
 
   /**
-   * Prisma Client JS version: 4.0.0
-   * Query Engine version: da41d2bb3406da22087b849f0e911199ba4fbf11
+   * Prisma Client JS version: 4.3.1
+   * Query Engine version: c875e43600dfe042452e0b868f7a48b817b9640b
    */
   export type PrismaVersion = {
     client: string
@@ -563,7 +564,7 @@ export namespace Prisma {
   ? False
   : T extends Date
   ? False
-  : T extends Buffer
+  : T extends Uint8Array
   ? False
   : T extends BigInt
   ? False
@@ -760,6 +761,11 @@ export namespace Prisma {
    */
   type ExcludeUnderscoreKeys<T extends string> = T extends `_${string}` ? never : T
 
+
+  export import FieldRef = runtime.FieldRef
+
+  type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
+
   class PrismaClientFetcher {
     private readonly prisma;
     private readonly debug;
@@ -825,7 +831,7 @@ export namespace Prisma {
      */
     rejectOnNotFound?: RejectOnNotFound | RejectPerOperation
     /**
-     * Overwrites the datasource url from your prisma.schema file
+     * Overwrites the datasource url from your schema.prisma file
      */
     datasources?: Datasources
 
@@ -1296,18 +1302,18 @@ export namespace Prisma {
     ?'include' extends U
     ? User  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'docs' ? Array < PmDocGetPayload<S['include'][P]>>  :
-        P extends 'reviews' ? Array < ReviewGetPayload<S['include'][P]>>  :
-        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'docs' ? Array < PmDocGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'docs' ? Array < PmDocGetPayload<S['select'][P]>>  :
-        P extends 'reviews' ? Array < ReviewGetPayload<S['select'][P]>>  :
-        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
+        P extends 'docs' ? Array < PmDocGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof User ? User[P] : never
   } 
     : User
   : User
@@ -1319,7 +1325,7 @@ export namespace Prisma {
     }
   >
 
-  export interface UserDelegate<GlobalRejectSettings> {
+  export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one User that matches the filter.
      * @param {UserFindUniqueArgs} args - Arguments to find a User
@@ -1656,6 +1662,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -1709,6 +1716,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -2248,20 +2257,20 @@ export namespace Prisma {
     ?'include' extends U
     ? PmDoc  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'user' ? UserGetPayload<S['include'][P]> :
-        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<S['include'][P]>>  :
-        P extends 'reviews' ? Array < ReviewGetPayload<S['include'][P]>>  :
-        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count' ? PmDocCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'user' ? UserGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? PmDocCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'user' ? UserGetPayload<S['select'][P]> :
-        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<S['select'][P]>>  :
-        P extends 'reviews' ? Array < ReviewGetPayload<S['select'][P]>>  :
-        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count' ? PmDocCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PmDoc ? PmDoc[P] : never
+        P extends 'user' ? UserGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'snapshots' ? Array < PmDocSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'reviews' ? Array < ReviewGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? PmDocCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof PmDoc ? PmDoc[P] : never
   } 
     : PmDoc
   : PmDoc
@@ -2273,7 +2282,7 @@ export namespace Prisma {
     }
   >
 
-  export interface PmDocDelegate<GlobalRejectSettings> {
+  export interface PmDocDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one PmDoc that matches the filter.
      * @param {PmDocFindUniqueArgs} args - Arguments to find a PmDoc
@@ -2610,6 +2619,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, PmDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -2665,6 +2675,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -3188,20 +3200,20 @@ export namespace Prisma {
     ?'include' extends U
     ? PmDocSnapshot  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
-        P extends 'before_snap_review' ? ReviewGetPayload<S['include'][P]> | null :
-        P extends 'after_snap_review' ? ReviewGetPayload<S['include'][P]> | null :
-        P extends 'comments' ? Array < CommentGetPayload<S['include'][P]>>  :
-        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'before_snap_review' ? ReviewGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
+        P extends 'after_snap_review' ? ReviewGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
-        P extends 'before_snap_review' ? ReviewGetPayload<S['select'][P]> | null :
-        P extends 'after_snap_review' ? ReviewGetPayload<S['select'][P]> | null :
-        P extends 'comments' ? Array < CommentGetPayload<S['select'][P]>>  :
-        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof PmDocSnapshot ? PmDocSnapshot[P] : never
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'before_snap_review' ? ReviewGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
+        P extends 'after_snap_review' ? ReviewGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
+        P extends 'comments' ? Array < CommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? PmDocSnapshotCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof PmDocSnapshot ? PmDocSnapshot[P] : never
   } 
     : PmDocSnapshot
   : PmDocSnapshot
@@ -3213,7 +3225,7 @@ export namespace Prisma {
     }
   >
 
-  export interface PmDocSnapshotDelegate<GlobalRejectSettings> {
+  export interface PmDocSnapshotDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one PmDocSnapshot that matches the filter.
      * @param {PmDocSnapshotFindUniqueArgs} args - Arguments to find a PmDocSnapshot
@@ -3550,6 +3562,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, PmDocSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPmDocSnapshotGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -3605,6 +3618,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -4144,16 +4159,16 @@ export namespace Prisma {
     ?'include' extends U
     ? Comment  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'user' ? UserGetPayload<S['include'][P]> :
-        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
-        P extends 'snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> | null :  never
+        P extends 'user' ? UserGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'snapshot' ? PmDocSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]> | null :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'user' ? UserGetPayload<S['select'][P]> :
-        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
-        P extends 'snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> | null :  P extends keyof Comment ? Comment[P] : never
+        P extends 'user' ? UserGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'snapshot' ? PmDocSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]> | null :  P extends keyof Comment ? Comment[P] : never
   } 
     : Comment
   : Comment
@@ -4165,7 +4180,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CommentDelegate<GlobalRejectSettings> {
+  export interface CommentDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one Comment that matches the filter.
      * @param {CommentFindUniqueArgs} args - Arguments to find a Comment
@@ -4502,6 +4517,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -4555,6 +4571,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -5108,18 +5126,18 @@ export namespace Prisma {
     ?'include' extends U
     ? Review  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'user' ? UserGetPayload<S['include'][P]> :
-        P extends 'doc' ? PmDocGetPayload<S['include'][P]> :
-        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> :
-        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<S['include'][P]> | null :  never
+        P extends 'user' ? UserGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]> | null :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'user' ? UserGetPayload<S['select'][P]> :
-        P extends 'doc' ? PmDocGetPayload<S['select'][P]> :
-        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> :
-        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<S['select'][P]> | null :  P extends keyof Review ? Review[P] : never
+        P extends 'user' ? UserGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'doc' ? PmDocGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'before_snapshot' ? PmDocSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'after_snapshot' ? PmDocSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]> | null :  P extends keyof Review ? Review[P] : never
   } 
     : Review
   : Review
@@ -5131,7 +5149,7 @@ export namespace Prisma {
     }
   >
 
-  export interface ReviewDelegate<GlobalRejectSettings> {
+  export interface ReviewDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one Review that matches the filter.
      * @param {ReviewFindUniqueArgs} args - Arguments to find a Review
@@ -5468,6 +5486,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, ReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReviewGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -5523,6 +5542,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -5860,16 +5881,33 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-  export const UserScalarFieldEnum: {
+  export const CommentScalarFieldEnum: {
     id: 'id',
-    email: 'email',
-    firstname: 'firstname',
-    lastname: 'lastname',
-    password: 'password',
-    role: 'role'
+    body: 'body',
+    createdAt: 'createdAt',
+    target_id: 'target_id',
+    user_id: 'user_id',
+    doc_id: 'doc_id',
+    snapshot_id: 'snapshot_id'
   };
 
-  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+  export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const PmDocScalarFieldEnum: {
@@ -5896,17 +5934,12 @@ export namespace Prisma {
   export type PmDocSnapshotScalarFieldEnum = (typeof PmDocSnapshotScalarFieldEnum)[keyof typeof PmDocSnapshotScalarFieldEnum]
 
 
-  export const CommentScalarFieldEnum: {
-    id: 'id',
-    body: 'body',
-    createdAt: 'createdAt',
-    target_id: 'target_id',
-    user_id: 'user_id',
-    doc_id: 'doc_id',
-    snapshot_id: 'snapshot_id'
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
   };
 
-  export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const ReviewScalarFieldEnum: {
@@ -5932,28 +5965,26 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable'
   };
 
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
+  export const UserScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    firstname: 'firstname',
+    lastname: 'lastname',
+    password: 'password',
+    role: 'role'
   };
 
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
   /**
@@ -6745,7 +6776,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
 
   export type JsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -6757,7 +6788,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
   }
 
   export type EnumDocStatusFilter = {
@@ -6828,7 +6859,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
 
   export type JsonWithAggregatesFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -6840,7 +6871,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
     _count?: NestedIntFilter
     _min?: NestedJsonFilter
     _max?: NestedJsonFilter
@@ -7634,7 +7665,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
 
   export type NestedJsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -7646,7 +7677,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
   }
 
   export type NestedEnumDocStatusWithAggregatesFilter = {

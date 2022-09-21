@@ -17,7 +17,7 @@
       "$typings": ["src/typings"],
       "$typings/*": ["src/typings/*"]
     },
-    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

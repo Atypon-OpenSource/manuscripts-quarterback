@@ -69,7 +69,7 @@ export type ManuscriptComment = {
 export class PrismaClient<
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
   U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
-  GlobalReject = 'rejectOnNotFound' extends keyof T
+  GlobalReject extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined = 'rejectOnNotFound' extends keyof T
     ? T['rejectOnNotFound']
     : false
       > {
@@ -234,6 +234,7 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
+  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -260,8 +261,8 @@ export namespace Prisma {
   export import MetricHistogramBucket = runtime.MetricHistogramBucket
 
   /**
-   * Prisma Client JS version: 4.0.0
-   * Query Engine version: da41d2bb3406da22087b849f0e911199ba4fbf11
+   * Prisma Client JS version: 4.3.1
+   * Query Engine version: c875e43600dfe042452e0b868f7a48b817b9640b
    */
   export type PrismaVersion = {
     client: string
@@ -480,7 +481,7 @@ export namespace Prisma {
   ? False
   : T extends Date
   ? False
-  : T extends Buffer
+  : T extends Uint8Array
   ? False
   : T extends BigInt
   ? False
@@ -677,6 +678,11 @@ export namespace Prisma {
    */
   type ExcludeUnderscoreKeys<T extends string> = T extends `_${string}` ? never : T
 
+
+  export import FieldRef = runtime.FieldRef
+
+  type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
+
   class PrismaClientFetcher {
     private readonly prisma;
     private readonly debug;
@@ -740,7 +746,7 @@ export namespace Prisma {
      */
     rejectOnNotFound?: RejectOnNotFound | RejectPerOperation
     /**
-     * Overwrites the datasource url from your prisma.schema file
+     * Overwrites the datasource url from your schema.prisma file
      */
     datasources?: Datasources
 
@@ -1150,16 +1156,16 @@ export namespace Prisma {
     ?'include' extends U
     ? ManuscriptDoc  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<S['include'][P]>>  :
-        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
-        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<S['select'][P]>>  :
-        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
-        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ManuscriptDoc ? ManuscriptDoc[P] : never
+        P extends 'snapshots' ? Array < ManuscriptSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? ManuscriptDocCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof ManuscriptDoc ? ManuscriptDoc[P] : never
   } 
     : ManuscriptDoc
   : ManuscriptDoc
@@ -1171,7 +1177,7 @@ export namespace Prisma {
     }
   >
 
-  export interface ManuscriptDocDelegate<GlobalRejectSettings> {
+  export interface ManuscriptDocDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one ManuscriptDoc that matches the filter.
      * @param {ManuscriptDocFindUniqueArgs} args - Arguments to find a ManuscriptDoc
@@ -1508,6 +1514,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, ManuscriptDocGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptDocGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -1559,6 +1566,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -2078,16 +2087,16 @@ export namespace Prisma {
     ?'include' extends U
     ? ManuscriptSnapshot  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'doc' ? ManuscriptDocGetPayload<S['include'][P]> :
-        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['include'][P]>>  :
-        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'doc' ? ManuscriptDocGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'doc' ? ManuscriptDocGetPayload<S['select'][P]> :
-        P extends 'comments' ? Array < ManuscriptCommentGetPayload<S['select'][P]>>  :
-        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ManuscriptSnapshot ? ManuscriptSnapshot[P] : never
+        P extends 'doc' ? ManuscriptDocGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'comments' ? Array < ManuscriptCommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? ManuscriptSnapshotCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof ManuscriptSnapshot ? ManuscriptSnapshot[P] : never
   } 
     : ManuscriptSnapshot
   : ManuscriptSnapshot
@@ -2099,7 +2108,7 @@ export namespace Prisma {
     }
   >
 
-  export interface ManuscriptSnapshotDelegate<GlobalRejectSettings> {
+  export interface ManuscriptSnapshotDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one ManuscriptSnapshot that matches the filter.
      * @param {ManuscriptSnapshotFindUniqueArgs} args - Arguments to find a ManuscriptSnapshot
@@ -2436,6 +2445,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, ManuscriptSnapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptSnapshotGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -2487,6 +2497,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -3024,14 +3036,14 @@ export namespace Prisma {
     ?'include' extends U
     ? ManuscriptComment  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'doc' ? ManuscriptDocGetPayload<S['include'][P]> :
-        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<S['include'][P]> | null :  never
+        P extends 'doc' ? ManuscriptDocGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<Exclude<S['include'], undefined | null>[P]> | null :  never
   } 
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'doc' ? ManuscriptDocGetPayload<S['select'][P]> :
-        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<S['select'][P]> | null :  P extends keyof ManuscriptComment ? ManuscriptComment[P] : never
+        P extends 'doc' ? ManuscriptDocGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'snapshot' ? ManuscriptSnapshotGetPayload<Exclude<S['select'], undefined | null>[P]> | null :  P extends keyof ManuscriptComment ? ManuscriptComment[P] : never
   } 
     : ManuscriptComment
   : ManuscriptComment
@@ -3043,7 +3055,7 @@ export namespace Prisma {
     }
   >
 
-  export interface ManuscriptCommentDelegate<GlobalRejectSettings> {
+  export interface ManuscriptCommentDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one ManuscriptComment that matches the filter.
      * @param {ManuscriptCommentFindUniqueArgs} args - Arguments to find a ManuscriptComment
@@ -3380,6 +3392,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, ManuscriptCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptCommentGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -3431,6 +3444,8 @@ export namespace Prisma {
      */
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
+
+
 
   // Custom InputTypes
 
@@ -3768,6 +3783,35 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const ManuscriptCommentScalarFieldEnum: {
+    id: 'id',
+    body: 'body',
+    createdAt: 'createdAt',
+    target_id: 'target_id',
+    user_model_id: 'user_model_id',
+    doc_id: 'doc_id',
+    snapshot_id: 'snapshot_id'
+  };
+
+  export type ManuscriptCommentScalarFieldEnum = (typeof ManuscriptCommentScalarFieldEnum)[keyof typeof ManuscriptCommentScalarFieldEnum]
+
+
   export const ManuscriptDocScalarFieldEnum: {
     manuscript_model_id: 'manuscript_model_id',
     user_model_id: 'user_model_id',
@@ -3791,17 +3835,12 @@ export namespace Prisma {
   export type ManuscriptSnapshotScalarFieldEnum = (typeof ManuscriptSnapshotScalarFieldEnum)[keyof typeof ManuscriptSnapshotScalarFieldEnum]
 
 
-  export const ManuscriptCommentScalarFieldEnum: {
-    id: 'id',
-    body: 'body',
-    createdAt: 'createdAt',
-    target_id: 'target_id',
-    user_model_id: 'user_model_id',
-    doc_id: 'doc_id',
-    snapshot_id: 'snapshot_id'
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
   };
 
-  export type ManuscriptCommentScalarFieldEnum = (typeof ManuscriptCommentScalarFieldEnum)[keyof typeof ManuscriptCommentScalarFieldEnum]
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const SortOrder: {
@@ -3812,28 +3851,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable'
   };
 
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
-  };
-
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
   /**
@@ -4220,7 +4245,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
 
   export type JsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -4232,7 +4257,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
   }
 
   export type DateTimeFilter = {
@@ -4316,7 +4341,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
 
   export type JsonWithAggregatesFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -4328,7 +4353,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
     _count?: NestedIntFilter
     _min?: NestedJsonFilter
     _max?: NestedJsonFilter
@@ -4685,7 +4710,7 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
 
   export type NestedJsonFilterBase = {
-    equals?: JsonNullValueFilter | InputJsonValue
+    equals?: InputJsonValue | JsonNullValueFilter
     path?: Array<string>
     string_contains?: string
     string_starts_with?: string
@@ -4697,7 +4722,7 @@ export namespace Prisma {
     lte?: InputJsonValue
     gt?: InputJsonValue
     gte?: InputJsonValue
-    not?: JsonNullValueFilter | InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
   }
 
   export type NestedDateTimeWithAggregatesFilter = {
