@@ -31,7 +31,7 @@ Finally, you should install `pnpm` globally if haven't already: `npm i -g pnpm`.
 4. Copy the environment variables: `cp ./examples-packages/api/.example-env ./examples-packages/api/.env && cp ./examples-packages/collab/.example-env ./examples-packages/collab/.env && cp ./examples-packages/db/.example-env ./examples-packages/db/.env && cp ./examples-packages/client/.example-env ./examples-packages/client/.env`
 5. Migrate the database: `pnpm --filter @manuscripts/examples-track-db migrate`
 6. And seed it with test data: `pnpm --filter @manuscripts/examples-track-db seed`
-7. Build the external manuscripts packages: `pnpm ex:man` NOTE: it seems building them has broke, you probably have to run them by their `build:cjs` `build:es` scripts separately.
+7. Build the external manuscripts packages: `pnpm ex:man` NOTE: their build throws compilation errors but they should compile nonetheless, incase something goes missing from the bundles you might have to run the builds separately eg `pnpm --filter @manuscripts/manuscript-transform build:cjs`
 8. Start API in a terminal session: `pnpm ex:api`
 9. Start Yjs server in a terminal session: `pnpm ex:collab`
 10. Build / watch DB types & track-changes-plugin: `pnpm ex:utils`
@@ -50,7 +50,7 @@ Also, if you were to remove a package inside `packages` the node_modules in the 
 
 ## Commands
 
-You should run commands to individual packages with eg: `pnpm --filter @manuscripts/examples-track-api watch`. To run them recursively for every package you can use `-r` eg: `pnpm -r format`.
+You should run commands to individual packages with eg: `pnpm --filter @manuscripts/examples-track-api watch`. To run them recursively for every package you can use `-r` eg: `pnpm -r build`.
 
 ## Test users
 
@@ -63,10 +63,6 @@ user
 email: quarterback+USER@atypon.com
 pass: asdfasdf
 ```
-
-## Tests
-
-There are some example Cypress tests in `e2e` package. If you have the client running, you can execute them with `pnpm ex:e2e`. Or open the Cypress GUI with `pnpm ex:e2e:open`.
 
 ## Working with Git submodules
 
