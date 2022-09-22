@@ -16,11 +16,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -cw",
-    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
-    "lint": "eslint --cache --ext .js,.ts, ./src",
-    "lint:fix": "eslint --fix --ext .js,.ts, ./src"
+    "build": "rimraf dist && rollup -c",
+    "watch": "rimraf dist && rollup -cw"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
@@ -29,7 +26,7 @@
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
     "rollup": "^2.79.0",
-    "rollup-plugin-typescript2": "^0.34.0",
+    "rollup-plugin-typescript2": "0.31.2",
     "tslib": "^2.4.0",
     "ttypescript": "^1.5.13",
     "typescript": "^4.8.3",
@@ -47,6 +44,6 @@
     "prosemirror-model": "^1.18.1",
     "prosemirror-state": "^1.4.1",
     "prosemirror-transform": "^1.7.0",
-    "prosemirror-view": "^1.28.0"
+    "prosemirror-view": "^1.28.1"
   }
 }

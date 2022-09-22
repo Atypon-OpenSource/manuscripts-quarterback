@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 import { DOMSerializer, Node as PMNode } from 'prosemirror-model'
-import { Decoration, DecorationSource, EditorView, NodeView } from 'prosemirror-view'
+import {
+  Decoration,
+  DecorationSource,
+  EditorView,
+  NodeView,
+  NodeViewConstructor,
+} from 'prosemirror-view'
 
 import type { EditorContext } from './context'
 
@@ -106,7 +112,11 @@ export class BaseNodeView<P extends any = {}> implements NodeView {
     this.ctx.popperProvider.close()
   }
 
-  static fromComponent<P>(ctx: EditorContext, props?: P, component?: React.ComponentType<any>) {
+  static fromComponent<P>(
+    ctx: EditorContext,
+    props?: P,
+    component?: React.ComponentType<any>
+  ): NodeViewConstructor {
     return (
       node: PMNode,
       view: EditorView,

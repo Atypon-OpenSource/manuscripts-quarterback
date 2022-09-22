@@ -18,11 +18,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -cw",
-    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
-    "lint": "eslint --cache --ext .js,.ts, ./src",
-    "lint:fix": "eslint --fix --ext .js,.ts, ./src"
+    "build": "rimraf dist && rollup -c",
+    "watch": "rimraf dist && rollup -cw"
   },
   "devDependencies": {
     "@manuscripts/examples-track-editor": "workspace:*",

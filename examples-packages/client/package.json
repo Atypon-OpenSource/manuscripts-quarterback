@@ -7,10 +7,7 @@
   "scripts": {
     "dev": "vite",
     "start": "node ./builder.js watch",
-    "build": "node ./builder.js build",
-    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
-    "lint": "eslint --cache --ext .js,.ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
+    "build": "node ./builder.js build"
   },
   "dependencies": {
     "@manuscripts/track-changes-plugin": "workspace:*",

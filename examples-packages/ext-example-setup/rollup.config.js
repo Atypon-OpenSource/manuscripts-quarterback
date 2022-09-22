@@ -16,5 +16,5 @@ export default {
     },
   ],
   external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
-  plugins: [typescript(), commonjs()],
+  plugins: [commonjs(), typescript()],
 }

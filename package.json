@@ -22,17 +22,16 @@
     "build": "pnpm --filter \"./quarterback-packages/**\" build",
     "ex:api": "concurrently --kill-others 'pnpm --filter @manuscripts/examples-track-api watch' 'pnpm --filter @manuscripts/examples-track-api dev'",
     "ex:collab": "concurrently --kill-others 'pnpm --filter @manuscripts/examples-track-collab watch' 'pnpm --filter @manuscripts/examples-track-collab dev'",
-    "ex:db": "pnpm --filter examples-track-db build",
+    "ex:db": "pnpm --filter examples-track-db migrate",
+    "ex:man": "(pnpm --filter @manuscripts/manuscript-transform build:es 2>/dev/null || true) && (pnpm --filter @manuscripts/style-guide build:es 2>/dev/null || true) && (pnpm --filter @manuscripts/manuscript-editor build:es 2>/dev/null || true)",
     "ex:utils": "concurrently --kill-others 'pnpm --filter @manuscripts/examples-track-types watch' 'pnpm --filter @manuscripts/track-changes-plugin watch'",
-    "ex:editor": "concurrently --kill-others 'pnpm --filter @manuscripts/examples-track-schema watch' 'pnpm --filter @manuscripts/examples-track-editor watch' 'pnpm --filter @manuscripts/ext-example-setup watch' 'pnpm --filter @manuscripts/ext-yjs watch' 'pnpm --filter @manuscripts/ext-comments watch' 'pnpm --filter @manuscripts/ext-equation watch'",
+    "ex:editor": "concurrently --kill-others 'pnpm --filter @manuscripts/examples-track-schema watch' 'pnpm --filter @manuscripts/examples-track-editor watch' 'sleep 2 && pnpm --filter @manuscripts/ext-example-setup watch' 'sleep 2 && pnpm --filter @manuscripts/ext-yjs watch' 'sleep 2 && pnpm --filter @manuscripts/ext-comments watch' 'sleep 2 && pnpm --filter @manuscripts/ext-equation watch'",
     "ex:client": "pnpm --filter @manuscripts/examples-track-client dev",
     "ex:start": "concurrently --kill-others  'pnpm ex:utils' 'pnpm ex:editor' 'pnpm ex:api' 'pnpm ex:collab' 'pnpm ex:client'",
     "api": "concurrently --kill-others 'pnpm --filter @manuscripts/quarterback-api watch' 'pnpm --filter @manuscripts/quarterback-api dev'",
     "start": "concurrently --kill-others 'pnpm --filter @manuscripts/quarterback-types watch' 'pnpm --filter @manuscripts/track-changes-plugin watch' 'pnpm --filter @manuscripts/quarterback-api watch' 'pnpm --filter @manuscripts/quarterback-api dev'",
     "track": "pnpm --filter @manuscripts/track-changes-plugin watch",
     "test": "pnpm --filter @manuscripts/track-changes-plugin test",
-    "ex:e2e": "pnpm --filter @manuscripts/examples-track-e2e test",
-    "ex:e2e:open": "pnpm --filter @manuscripts/examples-track-e2e start",
     "cs": "changeset && git add .changeset",
     "ci:version": "changeset version",
     "ci:publish": "pnpm --filter \"./quarterback-packages/**\" --no-git-checks publish"
@@ -61,6 +60,7 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2"
   }
 }

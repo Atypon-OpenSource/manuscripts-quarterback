@@ -23,10 +23,7 @@
   },
   "scripts": {
     "build": "rimraf dist && rollup -c",
-    "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
-    "lint": "eslint --cache --ext .js,.ts, ./src ./types",
-    "lint:fix": "eslint --fix --ext .js,.ts, ./src ./types",
-    "watch": "rollup -cw"
+    "watch": "rimraf dist && rollup -cw"
   },
   "devDependencies": {
     "@manuscripts/manuscripts-json-schema": "^1.51.0",
