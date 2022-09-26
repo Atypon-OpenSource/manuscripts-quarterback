@@ -21,7 +21,7 @@ export const table: NodeSpec = {
   isolating: true,
   group: 'block',
   selectable: false,
-  attrs: { dataTracked: { default: null } },
+  attrs: { dataTracked: { default: null }, testAttribute: { default: null } },
   parseDOM: [
     {
       tag: 'table',
