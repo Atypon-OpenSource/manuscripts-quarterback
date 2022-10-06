@@ -42,4 +42,4 @@ ENV CORS_ENABLED 0
 
 EXPOSE ${PORT}
 
-CMD pnpm --filter @manuscripts/quarterback-db prod:migrate && node ./quarterback-packages/api/dist/index.js
+CMD pnpm --filter @manuscripts/quarterback-db prod:reset && pnpm --filter @manuscripts/quarterback-db prod:migrate && node ./quarterback-packages/api/dist/index.js
