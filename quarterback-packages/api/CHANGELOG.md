@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.15
+
+### Patch Changes
+
+- 16fa03b: refactor(api): remove db prod:reset
+
 ## 0.1.14
 
 ### Patch Changes
