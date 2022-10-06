@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.1.14
+
+### Patch Changes
+
+- 530e590: fix(api): reset prod db
+
 ## 0.1.13
 
 ### Patch Changes
