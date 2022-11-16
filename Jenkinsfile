@@ -1,7 +1,8 @@
+#! groovy
 node("cisanta && !cisc03") {
     def imageTagBadge = addEmbeddableBadgeConfiguration(id: "dockerImage", subject: "image")
     def versionIdBadge = addEmbeddableBadgeConfiguration(id: "versionId", subject: "version")
-    REGISTRY="us-central1-docker.pkg.dev/atypon-artifact/docker-registry-public"
+    REGISTRY="${env.PRIVATE_ARTIFACT_REGISTRY}" // this is set globally on Jenkins
     stage("Checkout") {
         VARS = checkout scm
         DOCKER_IMAGE="leanworkflow/quarterback"
