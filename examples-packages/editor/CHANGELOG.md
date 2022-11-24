@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [9dddd9f]
-  - @manuscripts/track-changes-plugin@0.5.0
+  - @manuscripts/track-changes-plugin@0.4.4-LEAN-1839
   - @manuscripts/examples-track-schema@0.0.14
 
 ## 0.0.13
