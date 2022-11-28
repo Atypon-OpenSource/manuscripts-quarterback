@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [80562e8]
-  - @manuscripts/track-changes-plugin@0.5.0
+  - @manuscripts/track-changes-plugin@0.4.4-LEAN-1839-v3
   - @manuscripts/examples-track-editor@0.0.16
   - @manuscripts/ext-yjs@0.0.16
   - @manuscripts/manuscript-editor@0.92.5
