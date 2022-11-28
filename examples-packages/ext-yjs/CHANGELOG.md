@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [a96c272]
-  - @manuscripts/track-changes-plugin@0.5.0
+  - @manuscripts/track-changes-plugin@0.4.4-LEAN-1839-v2
   - @manuscripts/manuscript-editor@0.92.5
 
 ## 0.0.14
