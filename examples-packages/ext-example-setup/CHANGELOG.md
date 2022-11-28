@@ -1,5 +1,11 @@
 # @manuscripts/ext-example-setup
 
+## 0.0.9
+
+### Patch Changes
+
+- @manuscripts/examples-track-editor@0.0.16
+
 ## 0.0.8
 
 ### Patch Changes

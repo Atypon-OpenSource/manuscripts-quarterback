@@ -1,5 +1,13 @@
 # @manuscripts/ext-yjs
 
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies [80562e8]
+  - @manuscripts/track-changes-plugin@0.4.4-LEAN-1839-v3
+  - @manuscripts/manuscript-editor@0.92.5
+
 ## 0.0.15
 
 ### Patch Changes

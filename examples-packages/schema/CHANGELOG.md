@@ -1,5 +1,12 @@
 # @manuscripts/examples-track-schema
 
+## 0.0.16
+
+### Patch Changes
+
+- Updated dependencies [80562e8]
+  - @manuscripts/track-changes-plugin@0.4.4-LEAN-1839-v3
+
 ## 0.0.15
 
 ### Patch Changes
