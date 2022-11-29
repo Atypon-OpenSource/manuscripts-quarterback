@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [3db2ab4]
-  - @manuscripts/track-changes-plugin@0.5.0
+  - @manuscripts/track-changes-plugin@0.4.5
   - @manuscripts/examples-track-editor@0.0.17
   - @manuscripts/ext-yjs@0.0.17
   - @manuscripts/manuscript-editor@0.92.5
