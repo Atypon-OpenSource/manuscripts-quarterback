@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /// <reference types="@types/jest" />;
-import { schema } from '@manuscripts/manuscript-transform'
+import { schema } from '@manuscripts/transform'
 import { Node as PMNode, Schema } from 'prosemirror-model'
 
 import { promises as fs } from 'fs'
