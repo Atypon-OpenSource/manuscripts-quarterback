@@ -6,7 +6,7 @@
 
 - Updated dependencies [351c53e]
 - Updated dependencies [5986fa1]
-  - @manuscripts/track-changes-plugin@0.5.0
+  - @manuscripts/track-changes-plugin@0.4.7
   - @manuscripts/examples-track-editor@0.0.19
   - @manuscripts/ext-yjs@0.0.19
   - @manuscripts/manuscript-editor@0.92.5
