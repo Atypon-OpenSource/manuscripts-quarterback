@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@manuscripts/data": "^0.1.12",
-    "@manuscripts/json-schema": "^1.0.0",
+    "@manuscripts/json-schema": "^1.1.0",
     "@manuscripts/transform": "^1.0.1",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@types/debug": "^4.1.7",
