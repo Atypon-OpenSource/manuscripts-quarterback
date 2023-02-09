@@ -14,7 +14,7 @@ First you should check you have Node.js >=16 installed: `node -v`. If not, I rec
 
 This project uses Docker and Docker Compose. You should have at least version 17 / 1.13 installed: `docker -v`. Then you might have to add this repository to the shared folders in your Docker settings (macOS or Windows - not Ubuntu though) eg `Preferences > Resources > File sharing` in macOS Docker Desktop.
 
-Also this project imports https://gitlab.com/mpapp-public/manuscripts-manuscript-editor https://gitlab.com/mpapp-public/manuscripts-manuscript-transform (now https://github.com/Atypon-OpenSource/manuscripts-schema havent migrated / removed since still works & not urgent) and https://github.com/Atypon-OpenSource/manuscripts-style-guide as git submodules which you should checkout with: `git submodule update --init --recursive`
+Also this project imports https://gitlab.com/mpapp-public/manuscrsdsdipts-manuscript-editor https://gitlab.com/mpapp-public/manuscripts-manuscript-transform (now https://github.com/Atypon-OpenSource/manuscripts-schema havent migrated / removed since still works & not urgent) and https://github.com/Atypon-OpenSource/manuscripts-style-guide as git submodules which you should checkout with: `git submodule update --init --recursive`
 
 NOTE: it is a good idea to run `git submodule update --remote` once in a while incase the `quarterback-integration` branches in the git submodules have been updated. Incase a submodule was deleted it does not seem to update itself automatically and a manual removal is needed. Should not happen in general but be aware.
 
