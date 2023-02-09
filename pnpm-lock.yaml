@@ -1100,7 +1100,9 @@ importers:
 
   quarterback-packages/track-changes-plugin:
     specifiers:
-      '@manuscripts/manuscript-transform': ^0.54.0
+      '@manuscripts/data': ^0.1.12
+      '@manuscripts/json-schema': ^1.0.0
+      '@manuscripts/transform': ^1.0.1
       '@rollup/plugin-commonjs': ^22.0.2
       '@types/debug': ^4.1.7
       '@types/jest': 27.5.1
@@ -1109,15 +1111,15 @@ importers:
       jest: 27.5.1
       jest-environment-jsdom: 27.5.1
       jsdom: ^20.0.0
-      prosemirror-commands: ^1.3.1
+      prosemirror-commands: ^1.5.0
       prosemirror-example-setup: ^1.2.1
       prosemirror-history: ^1.3.0
       prosemirror-keymap: ^1.2.0
-      prosemirror-model: ^1.18.1
+      prosemirror-model: ^1.18.3
       prosemirror-schema-list: ^1.2.2
-      prosemirror-state: ^1.4.1
+      prosemirror-state: ^1.4.2
       prosemirror-transform: ^1.7.0
-      prosemirror-view: ^1.28.1
+      prosemirror-view: ^1.29.1
       rollup: ^2.79.0
       rollup-plugin-typescript2: ^0.34.0
       ts-jest: 27.1.4
@@ -1126,7 +1128,9 @@ importers:
     dependencies:
       debug: 4.3.4
     devDependencies:
-      '@manuscripts/manuscript-transform': 0.54.0
+      '@manuscripts/data': 0.1.12
+      '@manuscripts/json-schema': 1.0.0
+      '@manuscripts/transform': 1.0.1_t7x25oh5mucmwqo45ilnfes52i
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
       '@types/debug': 4.1.7
       '@types/jest': 27.5.1
@@ -1134,15 +1138,15 @@ importers:
       jest: 27.5.1
       jest-environment-jsdom: 27.5.1
       jsdom: 20.0.0
-      prosemirror-commands: 1.3.1
+      prosemirror-commands: 1.5.0
       prosemirror-example-setup: 1.2.1
       prosemirror-history: 1.3.0
       prosemirror-keymap: 1.2.0
-      prosemirror-model: 1.18.1
+      prosemirror-model: 1.18.3
       prosemirror-schema-list: 1.2.2
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
       prosemirror-transform: 1.7.0
-      prosemirror-view: 1.28.1
+      prosemirror-view: 1.29.1
       rollup: 2.79.0
       rollup-plugin-typescript2: 0.34.0_ihkqvyh37tzxtjmovjyy2yrv7m
       ts-jest: 27.1.4_w4uruqm4xt6kmncnce55e665tu
@@ -1151,13 +1155,11 @@ importers:
 
   quarterback-packages/types:
     specifiers:
-      '@manuscripts/manuscripts-json-schema': ^1.51.0
       rimraf: ^3.0.2
       rollup: ^2.79.0
       rollup-plugin-typescript2: ^0.34.0
       typescript: ^4.8.3
     devDependencies:
-      '@manuscripts/manuscripts-json-schema': 1.51.0
       rimraf: 3.0.2
       rollup: 2.79.0
       rollup-plugin-typescript2: 0.34.0_ihkqvyh37tzxtjmovjyy2yrv7m
@@ -3921,6 +3923,14 @@ packages:
     resolution: {integrity: sha512-hCmYSKgflejywcX1A8eTwU3MnKTaq5fHgTA7EciYG8HFm3qIST4rk+tTPvNhZ/JkwbZqs2hSTPhKbUR3IwwcDQ==}
     dev: true
 
+  /@manuscripts/json-schema/1.0.0:
+    resolution: {integrity: sha512-2514pjCDqPLLisy0xL/H6Y1vPTesZYHkw7SQa5Cuehx57CmLk3NAxFI3EJkLIFslJDNJes886+U+TLwHGMxrCg==}
+    dependencies:
+      ajv: 6.12.6
+      deepmerge: 4.2.2
+      js-beautify: 1.14.7
+    dev: true
+
   /@manuscripts/library/0.6.2:
     resolution: {integrity: sha512-W6sTpI5lRG7m2/cmAwfChr/U4PurP4aNM25SA94mYh13P5dHYq6pBKGP/Ee2iscLcWfiYOpZkUvAUOBSu+NevA==}
     dependencies:
@@ -3949,22 +3959,6 @@ packages:
       w3c-xmlserializer: 2.0.0
     transitivePeerDependencies:
       - supports-color
-
-  /@manuscripts/manuscript-transform/0.54.0:
-    resolution: {integrity: sha512-Zyn6NsHhT8IMwm1KJyZdHBBZrmjKJtZXfn2h3RaKlfCrpyjhy+9tlli8WyxA+FsKL1nQivVwAQdbn2z4WKhVeQ==}
-    dependencies:
-      '@manuscripts/data': 0.1.12
-      '@manuscripts/library': 0.6.2
-      '@manuscripts/manuscripts-json-schema': 1.51.0
-      debug: 4.3.4
-      mathjax-full: 3.2.0
-      mime: 2.6.0
-      prosemirror-model: 1.14.3
-      uuid: 8.3.2
-      w3c-xmlserializer: 2.0.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /@manuscripts/manuscripts-json-schema/1.49.12:
     resolution: {integrity: sha512-ZHb+VunM/884YNZuXFi4EgalKT8aLFK9v+AwgGQhtoVk4Q/LThYV8TqOrevtCbNk/cydWNynDeTpEB3QxWXZzQ==}
@@ -4015,6 +4009,29 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       styled-components: 5.3.5_mdz3marskokvq6744hhidi3r5a
     dev: false
+
+  /@manuscripts/transform/1.0.1_t7x25oh5mucmwqo45ilnfes52i:
+    resolution: {integrity: sha512-cI89dy3vY2+81TjiHRE6cxK4EDJbI21np0ueUeZGK+8wA4/8+QVh0pj1qdt+ZCiSV2XYh7epXQV9WAwajTYQ1g==}
+    peerDependencies:
+      '@manuscripts/data': ^0.1.12
+      '@manuscripts/json-schema': ^1.0.0
+      prosemirror-model: ^1.18.3
+      prosemirror-state: ^1.4.2
+      prosemirror-view: ^1.29.1
+    dependencies:
+      '@manuscripts/data': 0.1.12
+      '@manuscripts/json-schema': 1.0.0
+      debug: 4.3.4
+      mathjax-full: 3.2.2
+      mime: 3.0.0
+      prosemirror-model: 1.18.3
+      prosemirror-state: 1.4.2
+      prosemirror-view: 1.29.1
+      uuid: 9.0.0
+      w3c-xmlserializer: 4.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /@manypkg/find-root/1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -7640,6 +7657,12 @@ packages:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
+
+  /brace-expansion/2.0.1:
+    resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
+    dependencies:
+      balanced-match: 1.0.2
+    dev: true
 
   /braces/2.3.2:
     resolution: {integrity: sha512-aNdbnj9P8PjdXU4ybaWLK2IF3jc/EoDYbC7AazW6to3TRsfXxscC9UXOB5iDiEQrkyIbWp2SLQda4+QAa7nc3w==}
@@ -11823,6 +11846,17 @@ packages:
       once: 1.4.0
       path-is-absolute: 1.0.1
 
+  /glob/8.0.3:
+    resolution: {integrity: sha512-ull455NHSHI/Y1FqGaaYFaLGkNMMJbavMrEGFXG/PGrg6y7sutWHUHrz6gy6WEBH6akM1M414dWKCNs+IhKdiQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      fs.realpath: 1.0.0
+      inflight: 1.0.6
+      inherits: 2.0.4
+      minimatch: 5.1.2
+      once: 1.4.0
+    dev: true
+
   /global-modules/2.0.0:
     resolution: {integrity: sha512-NGbfmJBp9x8IxyJSd1P+otYK8vonoJactOogrVfFRIAEY1ukil8RSKDz2Yo7wh1oihl51l/r6W4epkeKJHqL8A==}
     engines: {node: '>=6'}
@@ -13765,6 +13799,17 @@ packages:
       glob: 7.2.3
       nopt: 5.0.0
 
+  /js-beautify/1.14.7:
+    resolution: {integrity: sha512-5SOX1KXPFKx+5f6ZrPsIPEY7NwKeQz47n3jm2i+XeHx9MoRsfQenlOP13FQhWvg8JRS0+XLO6XYUQ2GX+q+T9A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      config-chain: 1.1.13
+      editorconfig: 0.15.3
+      glob: 8.0.3
+      nopt: 6.0.0
+    dev: true
+
   /js-sdsl/4.1.4:
     resolution: {integrity: sha512-Y2/yD55y5jteOAmY50JbUZYwk3CP3wnLPEZnlR1w9oKhITrBEtAxwuWKebFf8hMrPMgbYwFoWK/lH2sBkErELw==}
     dev: true
@@ -14641,6 +14686,15 @@ packages:
       mj-context-menu: 0.6.1
       speech-rule-engine: 3.3.3
 
+  /mathjax-full/3.2.2:
+    resolution: {integrity: sha512-+LfG9Fik+OuI8SLwsiR02IVdjcnRCy5MufYLi0C3TdMT56L/pjB0alMVGgoWJF8pN9Rc7FESycZB9BMNWIid5w==}
+    dependencies:
+      esm: 3.2.25
+      mhchemparser: 4.1.1
+      mj-context-menu: 0.6.1
+      speech-rule-engine: 4.0.7
+    dev: true
+
   /md5.js/1.3.5:
     resolution: {integrity: sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5U2+3rELYpEhHhzdkg==}
     dependencies:
@@ -15170,6 +15224,12 @@ packages:
     engines: {node: '>=4.0.0'}
     hasBin: true
 
+  /mime/3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    dev: true
+
   /mimic-fn/1.2.0:
     resolution: {integrity: sha512-jf84uxzwiuiIVKiOLpfYk7N46TSy8ubTonmneY9vrpHNAnp0QBt2BxWV9dO3/j+BoVAb+a5G6YDPW3M5HOdMWQ==}
     engines: {node: '>=4'}
@@ -15233,6 +15293,13 @@ packages:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
       brace-expansion: 1.1.11
+
+  /minimatch/5.1.2:
+    resolution: {integrity: sha512-bNH9mmM9qsJ2X4r2Nat1B//1dJVcn3+iBLa3IgqJ7EbGaDNepL9QSHOxN4ng33s52VMMhhIfgCYDk3C4ZmlDAg==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
 
   /minimist-options/4.1.0:
     resolution: {integrity: sha512-Q4r8ghd80yhO/0j1O3B2BjweX3fiHg9cdOwjJd2J76Q135c+NDxGCqdYKQ1SKBuFfgWbAUzBfvYjPUEeNgqN1A==}
@@ -15606,6 +15673,14 @@ packages:
     hasBin: true
     dependencies:
       abbrev: 1.1.1
+
+  /nopt/6.0.0:
+    resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
+    hasBin: true
+    dependencies:
+      abbrev: 1.1.1
+    dev: true
 
   /normalize-package-data/2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -17074,6 +17149,14 @@ packages:
       prosemirror-state: 1.4.1
       prosemirror-transform: 1.7.0
 
+  /prosemirror-commands/1.5.0:
+    resolution: {integrity: sha512-zL0Fxbj3fh71GPNHn5YdYgYGX2aU2XLecZYk2ekEF0oOD259HcXtM+96VjPVi5o3h4sGUdDfEEhGiREXW6U+4A==}
+    dependencies:
+      prosemirror-model: 1.18.3
+      prosemirror-state: 1.4.2
+      prosemirror-transform: 1.7.0
+    dev: true
+
   /prosemirror-dev-toolkit/1.0.3:
     resolution: {integrity: sha512-XD3MC0W9Q8QVG9qkaOZEaoZ7hdd+Xti9LNwIt3/l9/yODloUPk/B4sIitmrvZ2hrZJF+60hh7PwvEwkvqJ373g==}
     dependencies:
@@ -17121,15 +17204,15 @@ packages:
   /prosemirror-dropcursor/1.5.0:
     resolution: {integrity: sha512-vy7i77ddKyXlu8kKBB3nlxLBnsWyKUmQIPB5x8RkYNh01QNp/qqGmdd5yZefJs0s3rtv5r7Izfu2qbtr+tYAMQ==}
     dependencies:
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
       prosemirror-transform: 1.7.0
-      prosemirror-view: 1.28.1
+      prosemirror-view: 1.29.1
     dev: true
 
   /prosemirror-example-setup/1.2.1:
     resolution: {integrity: sha512-sxFBVjxP+Mgd7sPigjN4QenrEn8e1vgX/YWsB+Bv6nPZf9Eakx7TDdjLPs+7v/iCXFqCdRX7C20LcYdUQhvWpA==}
     dependencies:
-      prosemirror-commands: 1.3.1
+      prosemirror-commands: 1.5.0
       prosemirror-dropcursor: 1.5.0
       prosemirror-gapcursor: 1.3.1
       prosemirror-history: 1.3.0
@@ -17137,7 +17220,7 @@ packages:
       prosemirror-keymap: 1.2.0
       prosemirror-menu: 1.2.1
       prosemirror-schema-list: 1.2.2
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
     dev: true
 
   /prosemirror-gapcursor/1.2.2:
@@ -17153,9 +17236,9 @@ packages:
     resolution: {integrity: sha512-GKTeE7ZoMsx5uVfc51/ouwMFPq0o8YrZ7Hx4jTF4EeGbXxBveUV8CGv46mSHuBBeXGmvu50guoV2kSnOeZZnUA==}
     dependencies:
       prosemirror-keymap: 1.2.0
-      prosemirror-model: 1.18.1
-      prosemirror-state: 1.4.1
-      prosemirror-view: 1.28.1
+      prosemirror-model: 1.18.3
+      prosemirror-state: 1.4.2
+      prosemirror-view: 1.29.1
     dev: true
 
   /prosemirror-history/1.1.3:
@@ -17176,15 +17259,15 @@ packages:
   /prosemirror-history/1.3.0:
     resolution: {integrity: sha512-qo/9Wn4B/Bq89/YD+eNWFbAytu6dmIM85EhID+fz9Jcl9+DfGEo8TTSrRhP15+fFEoaPqpHSxlvSzSEbmlxlUA==}
     dependencies:
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
       prosemirror-transform: 1.7.0
       rope-sequence: 1.3.3
 
   /prosemirror-inputrules/1.1.3:
     resolution: {integrity: sha512-ZaHCLyBtvbyIHv0f5p6boQTIJjlD6o2NPZiEaZWT2DA+j591zS29QQEMT4lBqwcLW3qRSf7ZvoKNbf05YrsStw==}
     dependencies:
-      prosemirror-state: 1.4.1
-      prosemirror-transform: 1.6.0
+      prosemirror-state: 1.4.2
+      prosemirror-transform: 1.7.0
 
   /prosemirror-keymap/1.1.5:
     resolution: {integrity: sha512-8SZgPH3K+GLsHL2wKuwBD9rxhsbnVBTwpHCO4VUO5GmqUQlxd/2GtBVWTsyLq4Dp3N9nGgPd3+lZFKUDuVp+Vw==}
@@ -17195,16 +17278,16 @@ packages:
   /prosemirror-keymap/1.2.0:
     resolution: {integrity: sha512-TdSfu+YyLDd54ufN/ZeD1VtBRYpgZnTPnnbY+4R08DDgs84KrIPEPbJL8t1Lm2dkljFx6xeBE26YWH3aIzkPKg==}
     dependencies:
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
       w3c-keyname: 2.2.4
 
   /prosemirror-menu/1.2.1:
     resolution: {integrity: sha512-sBirXxVfHalZO4f1ZS63WzewINK4182+7dOmoMeBkqYO8wqMBvBS7wQuwVOHnkMWPEh0+N0LJ856KYUN+vFkmQ==}
     dependencies:
       crelt: 1.0.5
-      prosemirror-commands: 1.3.1
+      prosemirror-commands: 1.5.0
       prosemirror-history: 1.3.0
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
     dev: true
 
   /prosemirror-model/1.14.3:
@@ -17222,6 +17305,11 @@ packages:
     dependencies:
       orderedmap: 2.0.0
 
+  /prosemirror-model/1.18.3:
+    resolution: {integrity: sha512-yUVejauEY3F1r7PDy4UJKEGeIU+KFc71JQl5sNvG66CLVdKXRjhWpBW6KMeduGsmGOsw85f6EGrs6QxIKOVILA==}
+    dependencies:
+      orderedmap: 2.0.0
+
   /prosemirror-schema-list/1.1.6:
     resolution: {integrity: sha512-aFGEdaCWmJzouZ8DwedmvSsL50JpRkqhQ6tcpThwJONVVmCgI36LJHtoQ4VGZbusMavaBhXXr33zyD2IVsTlkw==}
     dependencies:
@@ -17232,8 +17320,8 @@ packages:
   /prosemirror-schema-list/1.2.2:
     resolution: {integrity: sha512-rd0pqSDp86p0MUMKG903g3I9VmElFkQpkZ2iOd3EOVg1vo5Cst51rAsoE+5IPy0LPXq64eGcCYlW1+JPNxOj2w==}
     dependencies:
-      prosemirror-model: 1.18.1
-      prosemirror-state: 1.4.1
+      prosemirror-model: 1.18.3
+      prosemirror-state: 1.4.2
       prosemirror-transform: 1.7.0
     dev: true
 
@@ -17248,6 +17336,13 @@ packages:
     dependencies:
       prosemirror-model: 1.18.1
       prosemirror-transform: 1.7.0
+
+  /prosemirror-state/1.4.2:
+    resolution: {integrity: sha512-puuzLD2mz/oTdfgd8msFbe0A42j5eNudKAAPDB0+QJRw8cO1ygjLmhLrg9RvDpf87Dkd6D4t93qdef00KKNacQ==}
+    dependencies:
+      prosemirror-model: 1.18.3
+      prosemirror-transform: 1.7.0
+      prosemirror-view: 1.29.1
 
   /prosemirror-tables/1.1.1:
     resolution: {integrity: sha512-LmCz4jrlqQZRsYRDzCRYf/pQ5CUcSOyqZlAj5kv67ZWBH1SVLP2U9WJEvQfimWgeRlIz0y0PQVqO1arRm1+woA==}
@@ -17270,15 +17365,10 @@ packages:
     dependencies:
       prosemirror-model: 1.18.1
 
-  /prosemirror-transform/1.6.0:
-    resolution: {integrity: sha512-MAp7AjsjEGEqQY0sSMufNIUuEyB1ZR9Fqlm8dTwwWwpEJRv/plsKjWXBbx52q3Ml8MtaMcd7ic14zAHVB3WaMw==}
-    dependencies:
-      prosemirror-model: 1.18.1
-
   /prosemirror-transform/1.7.0:
     resolution: {integrity: sha512-O4T697Cqilw06Zvc3Wm+e237R6eZtJL/xGMliCi+Uo8VL6qHk6afz1qq0zNjT3eZMuYwnP8ZS0+YxX/tfcE9TQ==}
     dependencies:
-      prosemirror-model: 1.18.1
+      prosemirror-model: 1.18.3
 
   /prosemirror-view/1.18.11:
     resolution: {integrity: sha512-KXUM8UEV+IK4JYWHNyxkPGDGbxeTEUHQv3POApfyTRN5eMcPFbY4cB0mDJr0LPelVvYPghmZDOCqfCIm9mYHtQ==}
@@ -17300,6 +17390,13 @@ packages:
     dependencies:
       prosemirror-model: 1.18.1
       prosemirror-state: 1.4.1
+      prosemirror-transform: 1.7.0
+
+  /prosemirror-view/1.29.1:
+    resolution: {integrity: sha512-OhujVZSDsh0l0PyHNdfaBj6DBkbhYaCfbaxmTeFrMKd/eWS+G6IC+OAbmR9IsLC8Se1HSbphMaXnsXjupHL3UQ==}
+    dependencies:
+      prosemirror-model: 1.18.3
+      prosemirror-state: 1.4.2
       prosemirror-transform: 1.7.0
 
   /proto-list/1.2.4:
@@ -19220,6 +19317,15 @@ packages:
       wicked-good-xpath: 1.3.0
       xmldom-sre: 0.1.31
 
+  /speech-rule-engine/4.0.7:
+    resolution: {integrity: sha512-sJrL3/wHzNwJRLBdf6CjJWIlxC04iYKkyXvYSVsWVOiC2DSkHmxsqOhEeMsBA9XK+CHuNcsdkbFDnoUfAsmp9g==}
+    hasBin: true
+    dependencies:
+      commander: 9.2.0
+      wicked-good-xpath: 1.3.0
+      xmldom-sre: 0.1.31
+    dev: true
+
   /split-string/3.1.0:
     resolution: {integrity: sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==}
     engines: {node: '>=0.10.0'}
@@ -20738,7 +20844,6 @@ packages:
   /uuid/9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
-    dev: false
 
   /uvu/0.5.6:
     resolution: {integrity: sha512-+g8ENReyr8YsOc6fv/NVJs2vFdHBnBNdfE49rshrTzDWOlUx4Gq7KOS2GD8eqhy2j+Ejq29+SbKH8yjkAqXqoA==}
@@ -20919,6 +21024,13 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       xml-name-validator: 4.0.0
+
+  /w3c-xmlserializer/4.0.0:
+    resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}
+    engines: {node: '>=14'}
+    dependencies:
+      xml-name-validator: 4.0.0
+    dev: true
 
   /walker/1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
