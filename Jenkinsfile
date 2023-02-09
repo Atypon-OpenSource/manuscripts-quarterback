@@ -29,7 +29,7 @@ node("cisanta && !cisc03") {
     }
 
     stage("Build quarterback-api docker image") {
-        // build docker image with native docker 
+        // build docker image with native docker
         sh("""
         docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
         """)
@@ -39,7 +39,7 @@ node("cisanta && !cisc03") {
         // }
     }
 
-    if (VARS.GIT_BRANCH == "origin/main") {
+    if (VARS.GIT_BRANCH == "origin/master") {
         stage("Push Docker image to registry") {
             echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
 
