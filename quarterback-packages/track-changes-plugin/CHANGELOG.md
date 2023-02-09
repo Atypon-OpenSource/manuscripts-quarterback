@@ -1,10 +1,6 @@
 # @manuscripts/track-changes-plugin
 
-## 0.5.0
-
-### Minor Changes
-
-- 5986fa1: Version bump
+## 0.4.7
 
 ### Patch Changes
 
