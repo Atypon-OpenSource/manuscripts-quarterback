@@ -20,25 +20,22 @@ node {
             sh (script: "pnpm --filter @manuscripts/track-changes-plugin test")
         }
     }
-    stage("Build quarterback-api docker image") {
+    stage("Build docker image") {
         // build docker image with native docker
         sh("""
-        docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
-        """)
+            docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
+            """)
     }
 
-    stage("Push Docker image to registry") {
+    stage("Publish") {
         echo "Pushing ${DOCKER_IMAGE}:${IMG_TAG} to ${REGISTRY}"
 
         // push to registry
         sh("""
-                docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} && \
-                docker push ${REGISTRY}/${DOCKER_IMAGE}
-                """)
-        // }
-      }
+            docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} && \
+            docker push ${REGISTRY}/${DOCKER_IMAGE}
+            """)
 
-    stage("Publish") {
         withCredentials([string(credentialsId: 'NPM_TOKEN_MANUSCRIPTS_OSS', variable: 'NPM_TOKEN')]) {
             nodejs(nodeJSInstallationName: 'node_16_14_2') {
                 sh ("./publish.sh")

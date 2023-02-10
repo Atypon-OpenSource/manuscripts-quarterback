@@ -18,9 +18,9 @@ node {
         }
     }
 
-    stage("Build quarterback-api docker image") {
+    stage("Build docker image") {
         sh("""
-        docker build -f quarterback-packages/api/Dockerfile .
-        """)
+            docker build -f quarterback-packages/api/Dockerfile .
+            """)
     }
 }
