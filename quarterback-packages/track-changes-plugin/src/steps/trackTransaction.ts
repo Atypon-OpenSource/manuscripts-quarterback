@@ -79,7 +79,11 @@ export function trackTransaction(
   const wasNodeSelection = tr.selection instanceof NodeSelectionClass
   let iters = 0
   log.info('ORIGINAL transaction', tr)
-  tr.steps.forEach((step) => {
+
+  for (let i = tr.steps.length - 1; i >= 0; i--) {
+    const step = tr.steps[i]
+    // }
+    // tr.steps.forEach((step, i) => {})
     log.info('transaction step', step)
     iters += 1
     if (iters > 20) {
@@ -88,13 +92,13 @@ export function trackTransaction(
           'This is probably an error with the library, please report back to maintainers with a reproduction if possible',
         newTr
       )
-      return
+      continue
     } else if (!(step instanceof ReplaceStep) && step.constructor.name === 'ReplaceStep') {
       console.error(
         '@manuscripts/track-changes-plugin: Multiple prosemirror-transform packages imported, alias/dedupe them ' +
           'or instanceof checks fail as well as creating new steps'
       )
-      return
+      continue
     } else if (step instanceof ReplaceStep) {
       const { slice } = step as ExposedReplaceStep
       if (
@@ -102,14 +106,16 @@ export function trackTransaction(
         isHighlightMarkerNode(slice.content.content[0])
       ) {
         // don't track highlight marker nodes
-        return
+        continue
       }
-      let [steps, startPos] = trackReplaceStep(step, oldState, newTr, emptyAttrs)
+      const newStep = step.invert(tr.docs[i])
+      const stepResult = newTr.maybeStep(newStep)
+      let [steps, startPos] = trackReplaceStep(step, oldState, newTr, emptyAttrs, stepResult)
       if (steps.length === 1) {
         const step: any = steps[0] // eslint-disable-line @typescript-eslint/no-explicit-any
         if (isHighlightMarkerNode(step?.node || step?.slice?.content?.content[0])) {
           // don't track deleted highlight marker nodes
-          return
+          continue
         }
       }
       log.info('CHANGES: ', steps)
@@ -160,7 +166,7 @@ export function trackTransaction(
     // after track-changes plugin.
     tr.getMeta('inputType') && newTr.setMeta('inputType', tr.getMeta('inputType'))
     tr.getMeta('uiEvent') && newTr.setMeta('uiEvent', tr.getMeta('uiEvent'))
-  })
+  }
   // This is kinda hacky solution at the moment to maintain NodeSelections over transactions
   // These are required by at least cross-references and links to activate their selector pop-ups
   if (wasNodeSelection) {
