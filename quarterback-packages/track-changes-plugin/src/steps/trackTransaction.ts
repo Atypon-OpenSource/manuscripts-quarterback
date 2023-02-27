@@ -110,7 +110,14 @@ export function trackTransaction(
       }
       const newStep = step.invert(tr.docs[i])
       const stepResult = newTr.maybeStep(newStep)
-      let [steps, startPos] = trackReplaceStep(step, oldState, newTr, emptyAttrs, stepResult)
+      let [steps, startPos] = trackReplaceStep(
+        step,
+        oldState,
+        newTr,
+        emptyAttrs,
+        stepResult,
+        tr.docs[i]
+      )
       if (steps.length === 1) {
         const step: any = steps[0] // eslint-disable-line @typescript-eslint/no-explicit-any
         if (isHighlightMarkerNode(step?.node || step?.slice?.content?.content[0])) {

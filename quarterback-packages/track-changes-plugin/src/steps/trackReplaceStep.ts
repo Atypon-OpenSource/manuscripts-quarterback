@@ -31,7 +31,8 @@ export function trackReplaceStep(
   oldState: EditorState,
   newTr: Transaction,
   attrs: NewEmptyAttrs,
-  stepResult: StepResult
+  stepResult: StepResult,
+  currentStepDoc: PMNode
 ) {
   log.info('###### ReplaceStep ######')
   let selectionPos = 0,
@@ -58,7 +59,7 @@ export function trackReplaceStep(
       fromA,
       toA,
       undefined,
-      oldState.doc,
+      currentStepDoc,
       newTr,
       oldState.schema,
       attrs,
