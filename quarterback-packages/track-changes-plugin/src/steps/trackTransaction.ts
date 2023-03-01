@@ -82,8 +82,6 @@ export function trackTransaction(
 
   for (let i = tr.steps.length - 1; i >= 0; i--) {
     const step = tr.steps[i]
-    // }
-    // tr.steps.forEach((step, i) => {})
     log.info('transaction step', step)
     iters += 1
     if (iters > 20) {

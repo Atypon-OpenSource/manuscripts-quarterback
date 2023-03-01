@@ -45,7 +45,6 @@ export function deleteTextIfInserted(
 ) {
   const start = from ? Math.max(pos, from) : pos
   const nodeEnd = pos + node.nodeSize
-  // const end = to || nodeEnd
   const end = to ? Math.min(nodeEnd, to) : nodeEnd
   if (node.marks.find((m) => m.type === schema.marks.tracked_insert)) {
     // Math.max(pos, from) is for picking always the start of the node,

@@ -117,7 +117,6 @@ export const trackChangesPlugin = (
         const setChangeStatuses = getAction(tr, TrackChangesAction.setChangeStatuses)
 
         if (setChangeStatuses) {
-          console.log('GOING INTO setChangeStatuses')
           const { status, ids } = setChangeStatuses
           ids.forEach((changeId: string) => {
             const change = changeSet?.get(changeId)

@@ -56,8 +56,6 @@ export function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, 
   const fromStartOfMark = pos - nodeBefore.nodeSize
   const toEndOfMark = pos + nodeAfter.nodeSize
 
-  console.log('GETTING TO CHANGING NEW TRANSACTION')
-
   newTr.addMark(
     fromStartOfMark,
     toEndOfMark,

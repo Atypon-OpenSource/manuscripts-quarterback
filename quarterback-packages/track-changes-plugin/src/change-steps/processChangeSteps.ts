@@ -65,11 +65,7 @@ export function processChangeSteps(
         mapping.map(c.from),
         mapping.map(c.to)
       )
-      console.log(where)
       mergeTrackedMarks(where, newTr.doc, newTr, schema)
-
-      console.log('=== NEW TRANSACTION ===')
-      console.log(newTr)
     } else if (c.type === 'merge-fragment') {
       let insertPos = mapping.map(c.mergePos)
       // The default insert position for block nodes is either the start of the merged content or the end.
