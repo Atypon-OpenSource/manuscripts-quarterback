@@ -14,7 +14,6 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh 'printenv'
                         sh 'pnpm --frozen-lockfile --filter "./quarterback-packages/**" i'
                         sh 'pnpm --filter @manuscripts/quarterback-types build'
                         sh 'pnpm --filter @manuscripts/quarterback-db build'
@@ -66,7 +65,7 @@ pipeline {
 }
 
 def getImgTag(env) {
-    def branch = env.GIT_BRANCH;
+    def branch = env.ghprbSourceBranch;
     def commit = env.GIT_COMMIT;
     if ('master'.equals(branch)) {
         return sh('jq .version < package.json | tr -d \"').trim();
