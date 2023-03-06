@@ -6,22 +6,25 @@ pipeline {
     stages {
         stage('NPM') {
             agent {
-                dockerfile {
-                    filename 'Dockerfile.build'
-                    args '--userns=host -v /home/ci/.npm:/.npm'
+                docker {
+                    image 'node:18'
+                    args '--userns=host \
+                          -v /home/ci/.cache/yarn:/.cache/yarn \
+                          -v /home/ci/.npm:/.npm'
                 }
             }
             stages {
                 stage('Build') {
                     steps {
-                        sh 'pnpm --frozen-lockfile --filter "./quarterback-packages/**" i'
-                        sh 'pnpm --filter @manuscripts/quarterback-types build'
-                        sh 'pnpm --filter @manuscripts/quarterback-db build'
-                        sh 'pnpm --filter @manuscripts/quarterback-api build'
-                        sh 'pnpm --filter @manuscripts/quarterback-api test'
-                        sh 'pnpm --filter @manuscripts/track-changes-plugin build'
-                        sh 'pnpm --filter @manuscripts/track-changes-plugin typecheck'
-                        sh 'pnpm --filter @manuscripts/track-changes-plugin test'
+                        sh npm install pnpm@7 -g
+                        sh pnpm --frozen-lockfile --filter "./quarterback-packages/**" i
+                        sh pnpm --filter @manuscripts/quarterback-types build
+                        sh pnpm --filter @manuscripts/quarterback-db build
+                        sh pnpm --filter @manuscripts/quarterback-api build
+                        sh pnpm --filter @manuscripts/quarterback-api test
+                        sh pnpm --filter @manuscripts/track-changes-plugin build
+                        sh pnpm --filter @manuscripts/track-changes-plugin typecheck
+                        sh pnpm --filter @manuscripts/track-changes-plugin test
                     }
                 }
                 stage ('Publish') {
@@ -40,23 +43,23 @@ pipeline {
         stage ('Docker') {
             agent any
             environment {
-                REGISTRY = "${env.PRIVATE_ARTIFACT_REGISTRY}"
+                REGISTRY = ${env.PRIVATE_ARTIFACT_REGISTRY}
                 DOCKER_IMAGE = 'manuscripts/quarterback'
                 IMG_TAG = getImgTag(env)
             }
             stages {
-                stage('Build docker image') {
+                stage('Build') {
                     steps {
-                        sh 'docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .'
+                        sh docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
                     }
                 }
-                stage('Publish docker image') {
+                stage('Publish') {
                     when {
                         expression { params.PUBLISH == true }
                     }
                     steps {
-                        sh 'docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG}'
-                        sh 'docker push ${REGISTRY}/${DOCKER_IMAGE}'
+                        sh docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG}
+                        sh docker push ${REGISTRY}/${DOCKER_IMAGE}
                     }
                 }
             }
@@ -65,7 +68,7 @@ pipeline {
 }
 
 def getImgTag(env) {
-    def branch = env.ghprbSourceBranch;
+    def branch = env.GIT_LOCAL_BRANCH;
     def commit = env.GIT_COMMIT;
     if ('master'.equals(branch)) {
         return sh('jq .version < package.json | tr -d \"').trim();
