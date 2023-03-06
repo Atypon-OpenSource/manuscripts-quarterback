@@ -50,7 +50,7 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .
+                        sh 'docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .'
                     }
                 }
                 stage('Publish') {
@@ -58,8 +58,8 @@ pipeline {
                         expression { params.PUBLISH == true }
                     }
                     steps {
-                        sh docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG}
-                        sh docker push ${REGISTRY}/${DOCKER_IMAGE}
+                        sh 'docker push ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG}'
+                        sh 'docker push ${REGISTRY}/${DOCKER_IMAGE}'
                     }
                 }
             }
