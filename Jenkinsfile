@@ -14,6 +14,7 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
+                        sh 'printenv'
                         sh 'pnpm --frozen-lockfile --filter "./quarterback-packages/**" i'
                         sh 'pnpm --filter @manuscripts/quarterback-types build'
                         sh 'pnpm --filter @manuscripts/quarterback-db build'
