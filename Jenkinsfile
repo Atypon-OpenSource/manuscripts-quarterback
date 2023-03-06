@@ -8,9 +8,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile.build'
-                    args '--userns=host \
-                          -v /home/ci/.cache/yarn:/.cache/yarn \
-                          -v /home/ci/.npm:/.npm'
+                    args '--userns=host -v /home/ci/.npm:/.npm'
                 }
             }
             stages {
@@ -47,12 +45,12 @@ pipeline {
                 IMG_TAG = getImgTag(env)
             }
             stages {
-                stage('Build') {
+                stage('Build docker image') {
                     steps {
                         sh 'docker build -t ${REGISTRY}/${DOCKER_IMAGE}:${IMG_TAG} -f quarterback-packages/api/Dockerfile .'
                     }
                 }
-                stage('Publish') {
+                stage('Publish docker image') {
                     when {
                         expression { params.PUBLISH == true }
                     }
@@ -67,7 +65,7 @@ pipeline {
 }
 
 def getImgTag(env) {
-    def branch = env.GIT_LOCAL_BRANCH;
+    def branch = env.GIT_BRANCH;
     def commit = env.GIT_COMMIT;
     if ('master'.equals(branch)) {
         return sh('jq .version < package.json | tr -d \"').trim();
