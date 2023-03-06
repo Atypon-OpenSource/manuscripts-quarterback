@@ -16,15 +16,15 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh npm install pnpm@7 -g
-                        sh pnpm --frozen-lockfile --filter "./quarterback-packages/**" i
-                        sh pnpm --filter @manuscripts/quarterback-types build
-                        sh pnpm --filter @manuscripts/quarterback-db build
-                        sh pnpm --filter @manuscripts/quarterback-api build
-                        sh pnpm --filter @manuscripts/quarterback-api test
-                        sh pnpm --filter @manuscripts/track-changes-plugin build
-                        sh pnpm --filter @manuscripts/track-changes-plugin typecheck
-                        sh pnpm --filter @manuscripts/track-changes-plugin test
+                        sh 'npm install pnpm@7 -g'
+                        sh 'pnpm --frozen-lockfile --filter "./quarterback-packages/**" i'
+                        sh 'pnpm --filter @manuscripts/quarterback-types build'
+                        sh 'pnpm --filter @manuscripts/quarterback-db build'
+                        sh 'pnpm --filter @manuscripts/quarterback-api build'
+                        sh 'pnpm --filter @manuscripts/quarterback-api test'
+                        sh 'pnpm --filter @manuscripts/track-changes-plugin build'
+                        sh 'pnpm --filter @manuscripts/track-changes-plugin typecheck'
+                        sh 'pnpm --filter @manuscripts/track-changes-plugin test'
                     }
                 }
                 stage ('Publish') {
