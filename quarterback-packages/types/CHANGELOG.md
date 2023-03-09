@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-types
 
+## 1.0.0
+
+### Major Changes
+
+- 10d9758: Update json-schema and transform versions
+
 ## 0.2.2
 
 ### Patch Changes

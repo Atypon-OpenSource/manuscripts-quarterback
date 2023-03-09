@@ -1,5 +1,12 @@
 # @manuscripts/quarterback-api
 
+## 0.1.16
+
+### Patch Changes
+
+- Updated dependencies [10d9758]
+  - @manuscripts/quarterback-types@1.0.0
+
 ## 0.1.15
 
 ### Patch Changes
