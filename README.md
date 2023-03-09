@@ -5,7 +5,7 @@ Quarterback is a service to manage tracking of changes and their related metadat
 ## How to run Quarterback locally
 
 You need Docker & Docker Compose.
-
+d
 1. `docker-compose up -d api postgres`
 
 ## How to install for local development
