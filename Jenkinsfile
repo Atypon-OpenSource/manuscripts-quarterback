@@ -65,7 +65,7 @@ pipeline {
 }
 
 def getImgTag(env) {
-    def branch = env.GIT_LOCAL_BRANCH;
+    def branch = env.GIT_BRANCH;
     def commit = env.GIT_COMMIT;
     if ('master'.equals(branch)) {
         return sh('jq .version < package.json | tr -d \"').trim();
