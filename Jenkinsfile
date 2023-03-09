@@ -43,7 +43,7 @@ pipeline {
             environment {
                 REGISTRY = "${env.PRIVATE_ARTIFACT_REGISTRY}"
                 DOCKER_IMAGE = 'manuscripts/quarterback'
-                IMG_TAG = getImgTag(params.GIT_BRANCH, env.GIT_COMMIT)
+                IMG_TAG = getImgTag(params.GIT_BRANCH)
             }
             stages {
                 stage('Build docker image') {
@@ -65,10 +65,11 @@ pipeline {
     }
 }
 
-def getImgTag(branch, commit) {
+def getImgTag(branch) {
     if ('master'.equals(branch)) {
         return sh('jq .version < package.json | tr -d \"').trim();
     } else {
+        def commit = env.GIT_COMMIT
         return branch + '-' + commit.substring(0, 6);
     }
 }
