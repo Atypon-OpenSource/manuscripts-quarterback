@@ -1032,7 +1032,7 @@ importers:
 
   quarterback-packages/api:
     specifiers:
-      '@manuscripts/json-schema': ^2.0.0
+      '@manuscripts/json-schema': ^2.0.1
       '@manuscripts/quarterback-db': workspace:*
       '@manuscripts/quarterback-types': workspace:*
       '@rollup/plugin-alias': ^3.1.9
@@ -1057,7 +1057,7 @@ importers:
       typescript: ^4.8.3
       winston: ^3.8.2
     dependencies:
-      '@manuscripts/json-schema': 2.0.0
+      '@manuscripts/json-schema': 2.0.1
       '@manuscripts/quarterback-db': link:../db
       '@manuscripts/quarterback-types': link:../types
       cors: 2.8.5
@@ -1100,9 +1100,9 @@ importers:
 
   quarterback-packages/track-changes-plugin:
     specifiers:
-      '@manuscripts/data': ^0.1.12
-      '@manuscripts/json-schema': ^2.0.0
-      '@manuscripts/transform': ^1.2.0
+      '@manuscripts/data': ^1.0.2
+      '@manuscripts/json-schema': ^2.0.1
+      '@manuscripts/transform': ^1.2.3
       '@rollup/plugin-commonjs': ^22.0.2
       '@types/debug': ^4.1.7
       '@types/jest': 27.5.1
@@ -1137,9 +1137,9 @@ importers:
       prosemirror-transform: 1.7.0
       prosemirror-view: 1.29.1
     devDependencies:
-      '@manuscripts/data': 0.1.12
-      '@manuscripts/json-schema': 2.0.0
-      '@manuscripts/transform': 1.2.0_54uyesjijkjau6szjehemgy4jy
+      '@manuscripts/data': 1.0.2
+      '@manuscripts/json-schema': 2.0.1
+      '@manuscripts/transform': 1.2.3_ohwykgjmvq226iuaewaucpbyge
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
       '@types/debug': 4.1.7
       '@types/jest': 27.5.1
@@ -3773,6 +3773,10 @@ packages:
     resolution: {integrity: sha512-qgrVMGy83ki74fRU3pw0Z42L/mYbntx3G9RYyLrsUl5i1RXdpwauWRV/FDNbMjK9tYXttBI0wsNN2Hb0pktvEg==}
     dev: true
 
+  /@manuscripts/data/1.0.2:
+    resolution: {integrity: sha512-mEZM3bkHYGkgz7DK92+6jhOlqmufoKqAK166YlO7GswKspzcg1bM+2+T8O9QuMhYGcma1mnC93EwLPhOFJ5Vjw==}
+    dev: true
+
   /@manuscripts/eslint-config/0.2.2_4q6w4as3yz6zr3q36nucbk3uai:
     resolution: {integrity: sha512-n5TUiBoFd6TAVOG6zziu7I4odVQ3/JmJ3SZ07DpU+q5op+CZOcx4sIKDlJAYJ4a2M7IwG5K8a3d++w56//KIhg==}
     peerDependencies:
@@ -3923,8 +3927,8 @@ packages:
     resolution: {integrity: sha512-hCmYSKgflejywcX1A8eTwU3MnKTaq5fHgTA7EciYG8HFm3qIST4rk+tTPvNhZ/JkwbZqs2hSTPhKbUR3IwwcDQ==}
     dev: true
 
-  /@manuscripts/json-schema/2.0.0:
-    resolution: {integrity: sha512-l/HjcDLCVbMZBa+i3Xqkdt4dl88rcbPNGJ2H5SAo1vRUsLjxfo68GFObG5Y7KmJKGCgf/IY9k/1Q4YTSK3IQ1w==}
+  /@manuscripts/json-schema/2.0.1:
+    resolution: {integrity: sha512-nsH3UA6Cl3gqLAdbE0xrMLVRiynzsnxhSi5X+Q9GGB4VtkiA7UDXFAunkce7VZucCoa2OZeqNoUOZtwoJxUeyQ==}
     dependencies:
       ajv: 8.12.0
       deepmerge: 4.3.1
@@ -4008,16 +4012,16 @@ packages:
       styled-components: 5.3.5_mdz3marskokvq6744hhidi3r5a
     dev: false
 
-  /@manuscripts/transform/1.2.0_54uyesjijkjau6szjehemgy4jy:
-    resolution: {integrity: sha512-uMUqoSHVfFAcQdipcOY7iKqxLtIodRk2RpY9FNXetBmDBC7CVIzUReyFj5LweWx79W38TMXDzJHHn8DNToIFwA==}
+  /@manuscripts/transform/1.2.3_ohwykgjmvq226iuaewaucpbyge:
+    resolution: {integrity: sha512-LcatsFDB/Sf1U3FyMgPWljyDKpgfB34qw81Hn/GdELLNgCoO1jUDOY7WQ2KW78BdtvqDUSu5eR4zKP3vKyiw5w==}
     peerDependencies:
-      '@manuscripts/data': ^0.1.12
+      '@manuscripts/data': ^1.0.2
       prosemirror-model: ^1.18.3
       prosemirror-state: ^1.4.2
       prosemirror-view: ^1.29.1
     dependencies:
-      '@manuscripts/data': 0.1.12
-      '@manuscripts/json-schema': 2.0.0
+      '@manuscripts/data': 1.0.2
+      '@manuscripts/json-schema': 2.0.1
       debug: 4.3.4
       jszip: 3.10.1
       mathjax-full: 3.2.2
