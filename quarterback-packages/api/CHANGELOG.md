@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.2.1
+
+### Patch Changes
+
+- bd31a9b: update json-schema version
+
 ## 0.2.0
 
 ### Minor Changes
