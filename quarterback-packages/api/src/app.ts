@@ -21,8 +21,8 @@ import { config } from './common/config'
 import { logStream, CustomError } from './common'
 import { errorHandler } from './middlewares'
 import routes from './routes'
-import apiMetrics from 'prometheus-api-metrics'
-import {configurePromClientRegistry} from "./PromClientRegistryConfig";
+import promBundle from 'express-prom-bundle'
+import { configurePromClientRegistry } from './PromClientRegistryConfig'
 
 const app = express()
 
@@ -36,11 +36,11 @@ const corsOptions: cors.CorsOptions = {
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }
-
+const metricsMiddleware = promBundle({ promClient: { collectDefaultMetrics: {} } })
 app.use(cors(corsOptions))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json({ limit: '10mb' }))
-app.use(apiMetrics())
+app.use(metricsMiddleware)
 
 configurePromClientRegistry()
 
