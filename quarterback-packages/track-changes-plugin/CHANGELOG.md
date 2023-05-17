@@ -1,5 +1,17 @@
 # @manuscripts/track-changes-plugin
 
+## 1.3.1
+
+### Patch Changes
+
+- bd31a9b: update json-schema version
+
+## 1.3.0
+
+### Minor Changes
+
+- 290d2fa: LEAN-2495 - update json-schema version
+
 ## 1.2.0
 
 ### Minor Changes

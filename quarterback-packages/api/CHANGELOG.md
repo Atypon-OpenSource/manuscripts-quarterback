@@ -1,5 +1,17 @@
 # @manuscripts/quarterback-api
 
+## 0.2.1
+
+### Patch Changes
+
+- bd31a9b: update json-schema version
+
+## 0.2.0
+
+### Minor Changes
+
+- 290d2fa: LEAN-2495 - update json-schema version
+
 ## 0.1.16
 
 ### Patch Changes
