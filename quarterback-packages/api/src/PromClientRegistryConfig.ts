@@ -74,7 +74,7 @@ export async function configurePromClientRegistry(): Promise<void> {
 
 async function getVersion(packageName: string): Promise<SemVer | null> {
   const packageFile = await fs.readFile(
-    `./node_modules/@manuscripts/${packageName}/package.json`,
+    `./quarterback-packages/api/node_modules/@manuscripts/${packageName}/package.json`,
     'utf-8'
   )
   const pJson = JSON.parse(packageFile)
