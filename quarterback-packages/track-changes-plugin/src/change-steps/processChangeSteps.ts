@@ -56,7 +56,7 @@ export function processChangeSteps(
         log.error(`processChangeSteps: no text node found for text-change`, c)
         return
       }
-      deleteTextIfInserted(
+      const where = deleteTextIfInserted(
         node,
         mapping.map(c.pos),
         newTr,
@@ -65,6 +65,7 @@ export function processChangeSteps(
         mapping.map(c.from),
         mapping.map(c.to)
       )
+      mergeTrackedMarks(where, newTr.doc, newTr, schema)
     } else if (c.type === 'merge-fragment') {
       let insertPos = mapping.map(c.mergePos)
       // The default insert position for block nodes is either the start of the merged content or the end.
