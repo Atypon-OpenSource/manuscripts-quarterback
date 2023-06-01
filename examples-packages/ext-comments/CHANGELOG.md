@@ -1,5 +1,11 @@
 # @manuscripts/ext-comments
 
+## 0.0.19
+
+### Patch Changes
+
+- @manuscripts/manuscript-editor@0.92.5
+
 ## 0.0.18
 
 ### Patch Changes

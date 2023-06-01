@@ -1,5 +1,13 @@
 # @manuscripts/examples-track-editor
 
+## 0.0.25
+
+### Patch Changes
+
+- Updated dependencies [3a3bd11]
+  - @manuscripts/track-changes-plugin@1.4.0
+  - @manuscripts/examples-track-schema@0.0.25
+
 ## 0.0.24
 
 ### Patch Changes

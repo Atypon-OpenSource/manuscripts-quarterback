@@ -1,5 +1,19 @@
 # @manuscripts/examples-track-client
 
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [3a3bd11]
+  - @manuscripts/track-changes-plugin@1.4.0
+  - @manuscripts/examples-track-editor@0.0.25
+  - @manuscripts/ext-yjs@0.0.25
+  - @manuscripts/manuscript-editor@0.92.5
+  - @manuscripts/examples-track-schema@0.0.25
+  - @manuscripts/ext-equation@0.0.18
+  - @manuscripts/ext-example-setup@0.0.18
+  - @manuscripts/ext-comments@0.0.19
+
 ## 0.0.25
 
 ### Patch Changes
