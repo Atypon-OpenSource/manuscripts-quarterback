@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [24038f1]
-  - @manuscripts/track-changes-plugin@1.5.0
+  - @manuscripts/track-changes-plugin@1.4.1
   - @manuscripts/examples-track-editor@0.0.26
   - @manuscripts/ext-yjs@0.0.26
   - @manuscripts/manuscript-editor@0.92.5
