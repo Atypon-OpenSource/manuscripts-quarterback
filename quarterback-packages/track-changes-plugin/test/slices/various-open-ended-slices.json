@@ -18,26 +18,6 @@
               "type": "text",
               "marks": [
                 {
-                  "type": "tracked_delete",
-                  "attrs": {
-                    "dataTracked": {
-                      "id": "MOCK-ID-2",
-                      "authorID": "1-mike",
-                      "reviewedByID": null,
-                      "createdAt": 1577836800000,
-                      "updatedAt": 1577836800000,
-                      "status": "pending",
-                      "operation": "delete"
-                    }
-                  }
-                }
-              ],
-              "text": "paragraph"
-            },
-            {
-              "type": "text",
-              "marks": [
-                {
                   "type": "tracked_insert",
                   "attrs": {
                     "dataTracked": {
@@ -48,6 +28,26 @@
                       "updatedAt": 1577836800000,
                       "status": "pending",
                       "operation": "insert"
+                    }
+                  }
+                }
+              ],
+              "text": "replaced"
+            },
+            {
+              "type": "text",
+              "marks": [
+                {
+                  "type": "tracked_delete",
+                  "attrs": {
+                    "dataTracked": {
+                      "id": "MOCK-ID-2",
+                      "authorID": "1-mike",
+                      "reviewedByID": null,
+                      "createdAt": 1577836800000,
+                      "updatedAt": 1577836800000,
+                      "status": "pending",
+                      "operation": "delete"
                     }
                   }
                 }
