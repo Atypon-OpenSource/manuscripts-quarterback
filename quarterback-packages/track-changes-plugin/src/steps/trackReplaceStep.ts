@@ -69,8 +69,8 @@ export function trackReplaceStep(
     log.info('TR: steps after applying delete', [...newTr.steps])
     log.info('DELETE STEPS: ', changeSteps)
 
-    console.log('CHANGE STEPS AT THIS POINT:')
-    console.log(JSON.parse(JSON.stringify(changeSteps)))
+    // console.log('CHANGE STEPS AT THIS POINT:')
+    // console.log(JSON.parse(JSON.stringify(changeSteps)))
 
     function sameThingBackSpaced() {
       /*
@@ -80,10 +80,12 @@ export function trackReplaceStep(
       the backspace key, the second delete and the insert are a misinterpretation of the moved text. So these last 2 steps have to be caught
       and removed as they are not meaningful.
       */
-      if (changeSteps.length > 1 && newSliceContent) {
+
+      if (changeSteps.length == 2 && newSliceContent.size > 0) {
+        // or jus thangeSteps.length == 2
         const correspondingDeletion = changeSteps.find(
           // @ts-ignore
-          (step) => step.node.text === newSliceContent.content[0].text
+          (step) => step.node.text === newSliceContent.content[0].text //  @TODO - get more precise proof of match. E.g.: position approximation
         )
         return correspondingDeletion
       }
@@ -93,16 +95,18 @@ export function trackReplaceStep(
     const backSpacedText = sameThingBackSpaced()
     if (backSpacedText) {
       changeSteps.splice(changeSteps.indexOf(backSpacedText))
-      newSliceContent
     }
 
     const textWasDeleted = !!changeSteps.length
     if (!backSpacedText && newSliceContent.size > 0) {
       log.info('newSliceContent', newSliceContent)
-      console.log('Sliced Content:')
-      console.log(newSliceContent)
+      //
+      // console.log('Sliced Content:')
+      // console.log(newSliceContent)
       // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any merged nodes,
       // the sides should be equal. TODO can they be other than 0?
+      // the sides should be equal. TODO can they be other than 0?
+      //
       const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
       const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
       changeSteps.push({
