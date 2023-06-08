@@ -85,7 +85,6 @@ export function trackReplaceStep(
           // @ts-ignore
           (step) => step.node.text === newSliceContent.content[0].text // @ts-ignore
         )
-        console.log(correspondingDeletion)
         return correspondingDeletion
       }
       return undefined
