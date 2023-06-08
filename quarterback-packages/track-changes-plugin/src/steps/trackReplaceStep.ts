@@ -109,8 +109,8 @@ export function trackReplaceStep(
         to: textWasDeleted ? toB - 1 : fromB,
         /* it's not entirely clear why using "fromB" is needed at all but in cases where there areno content deleted before
             - it will gointo infinite loop if toB -1 is used
-      
-        sliceWasSpli  */ t,
+        */
+        sliceWasSplit,
         slice: new Slice(
           setFragmentAsInserted(
             newSliceContent,
