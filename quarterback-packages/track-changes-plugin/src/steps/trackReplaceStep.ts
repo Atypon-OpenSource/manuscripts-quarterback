@@ -69,8 +69,8 @@ export function trackReplaceStep(
     log.info('TR: steps after applying delete', [...newTr.steps])
     log.info('DELETE STEPS: ', changeSteps)
 
-    console.log('CHANGE STEPS AT THIS POINT:')
-    console.log(JSON.parse(JSON.stringify(changeSteps)))
+    // console.log('CHANGE STEPS AT THIS POINT:')
+    // console.log(JSON.parse(JSON.stringify(changeSteps)))
 
     function sameThingBackSpaced() {
       /*
@@ -83,7 +83,7 @@ export function trackReplaceStep(
       if (changeSteps.length > 1 && newSliceContent) {
         const correspondingDeletion = changeSteps.find(
           // @ts-ignore
-          (step) => step.node.text === newSliceContent.content[0].text // @ts-ignore
+          (step) => step.node.text === newSliceContent.content[0].text
         )
         return correspondingDeletion
       }

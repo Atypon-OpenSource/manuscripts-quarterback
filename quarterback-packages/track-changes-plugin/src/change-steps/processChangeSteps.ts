@@ -97,6 +97,10 @@ export function processChangeSteps(
       const newStep = new ReplaceStep(mapping.map(c.from), mapping.map(c.to), c.slice, false)
       const stepResult = newTr.maybeStep(newStep)
       if (stepResult.failed) {
+        log.error(
+          `processChangeSteps: insert-slice ReplaceStep failed "${stepResult.failed}"`,
+          newStep
+        )
         return
       }
       mergeTrackedMarks(mapping.map(c.from), newTr.doc, newTr, schema)
