@@ -1,5 +1,11 @@
 # @manuscripts/ext-equation
 
+## 0.0.20
+
+### Patch Changes
+
+- @manuscripts/examples-track-editor@0.0.27
+
 ## 0.0.19
 
 ### Patch Changes

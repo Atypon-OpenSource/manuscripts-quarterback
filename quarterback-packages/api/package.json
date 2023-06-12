@@ -1,6 +1,6 @@
 {
   "name": "@manuscripts/quarterback-api",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
@@ -32,7 +32,7 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@manuscripts/json-schema": "^2.0.1",
+    "@manuscripts/json-schema": "^2.0.2",
     "@manuscripts/quarterback-db": "workspace:*",
     "@manuscripts/quarterback-types": "workspace:*",
     "cors": "^2.8.5",
