@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.3.0
+
+### Minor Changes
+
+- a860547: update json-schema and transform version
+
 ## 0.2.1
 
 ### Patch Changes
