@@ -10,6 +10,7 @@ pipeline {
         stage('NPM') {
             agent {
                 dockerfile {
+                    reuseNode true
                     filename 'Dockerfile.build'
                     args '--userns=host -v /home/ci/.npm:/.npm'
                 }
