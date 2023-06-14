@@ -1,5 +1,7 @@
 pipeline {
-    agent none
+    agent {
+        label 'cisc10'
+    }
     parameters {
         string(name: 'GIT_BRANCH', defaultValue: 'master')
         booleanParam(name: 'PUBLISH', defaultValue: false)
@@ -8,6 +10,7 @@ pipeline {
         stage('NPM') {
             agent {
                 dockerfile {
+                    reuseNode true
                     filename 'Dockerfile.build'
                     args '--userns=host -v /home/ci/.npm:/.npm'
                 }
@@ -39,7 +42,6 @@ pipeline {
             }
         }
         stage ('Docker') {
-            agent any
             environment {
                 REGISTRY = "${env.PRIVATE_ARTIFACT_REGISTRY}"
                 DOCKER_IMAGE = 'manuscripts/quarterback'
