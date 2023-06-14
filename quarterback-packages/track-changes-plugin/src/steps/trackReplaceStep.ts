@@ -74,15 +74,14 @@ export function trackReplaceStep(
 
     function sameThingBackSpaced() {
       /*
-      When deleting text with backspace and getting to the point of when a space and a character before the space is deleted
+      When deleting text with backspace and getting to the point of when a space and a character before a deleted piece of text is deleted
       the prosemirror would interpret it as moving the <del> node (this is a tracked deletion) one characted behind.       
-      It normally results in [delete, delete, insert] set of ChangSteps where 1st delete is for the delete done by
+      It normally results in [delete, delete, insert] set of ChangSteps where the 1st delete is for the delete done by
       the backspace key, the second delete and the insert are a misinterpretation of the moved text. So these last 2 steps have to be caught
       and removed as they are not meaningful.
       */
 
       if (changeSteps.length == 2 && newSliceContent.size > 0) {
-        // or jus thangeSteps.length == 2
         const correspondingDeletion = changeSteps.find(
           // @ts-ignore
           (step) => step.node.text === newSliceContent.content[0].text //  @TODO - get more precise proof of match. E.g.: position approximation
@@ -100,10 +99,10 @@ export function trackReplaceStep(
     const textWasDeleted = !!changeSteps.length
     if (!backSpacedText && newSliceContent.size > 0) {
       log.info('newSliceContent', newSliceContent)
+
       // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any merged nodes,
       // the sides should be equal. TODO can they be other than 0?
-      // the sides should be equal. TODO can they be other than 0?
-      //
+
       const openStart = slice.openStart !== slice.openEnd ? 0 : slice.openStart
       const openEnd = slice.openStart !== slice.openEnd ? 0 : slice.openEnd
       changeSteps.push({
