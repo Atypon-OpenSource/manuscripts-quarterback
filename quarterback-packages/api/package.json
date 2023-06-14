@@ -24,6 +24,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/morgan": "^1.9.3",
     "@types/node": "^18.7.18",
+    "@types/semver": "^7.3.13",
     "dotenv": "^16.0.2",
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
@@ -40,6 +41,9 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "prom-client": "^14.2.0",
+    "express-prom-bundle": "^6.6.0",
+    "semver": "^7.5.0",
     "winston": "^3.8.2"
   }
 }
