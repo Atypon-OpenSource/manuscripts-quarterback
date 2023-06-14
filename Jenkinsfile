@@ -9,7 +9,8 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile.build'
-                    args '--userns=host --security-opt seccomp:unconfined -v /home/ci/.npm:/.npm'
+                    additionalBuildArgs  '--security-opt seccomp:unconfined'
+                    args '--userns=host -v /home/ci/.npm:/.npm'
                 }
             }
             stages {
