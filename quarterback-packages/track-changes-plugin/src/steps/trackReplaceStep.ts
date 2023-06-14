@@ -100,9 +100,6 @@ export function trackReplaceStep(
     const textWasDeleted = !!changeSteps.length
     if (!backSpacedText && newSliceContent.size > 0) {
       log.info('newSliceContent', newSliceContent)
-      //
-      // console.log('Sliced Content:')
-      // console.log(newSliceContent)
       // Since deleteAndMergeSplitBlockNodes modified the slice to not to contain any merged nodes,
       // the sides should be equal. TODO can they be other than 0?
       // the sides should be equal. TODO can they be other than 0?
