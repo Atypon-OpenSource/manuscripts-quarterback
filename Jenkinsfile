@@ -1,5 +1,7 @@
 pipeline {
-    agent none
+    agent {
+        label 'cisc10'
+    }
     parameters {
         string(name: 'GIT_BRANCH', defaultValue: 'master')
         booleanParam(name: 'PUBLISH', defaultValue: false)
