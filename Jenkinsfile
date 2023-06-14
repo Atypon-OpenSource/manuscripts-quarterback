@@ -41,7 +41,6 @@ pipeline {
             }
         }
         stage ('Docker') {
-            agent any
             environment {
                 REGISTRY = "${env.PRIVATE_ARTIFACT_REGISTRY}"
                 DOCKER_IMAGE = 'manuscripts/quarterback'
