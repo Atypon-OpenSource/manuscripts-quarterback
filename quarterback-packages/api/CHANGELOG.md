@@ -1,5 +1,11 @@
 # @manuscripts/quarterback-api
 
+## 0.4.0
+
+### Minor Changes
+
+- 435852b: LEAN-2367
+
 ## 0.3.0
 
 ### Minor Changes
