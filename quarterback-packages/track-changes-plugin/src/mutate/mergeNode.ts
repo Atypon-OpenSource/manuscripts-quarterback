@@ -28,6 +28,7 @@ export function mergeNode(node: PMNode, pos: number, tr: Transaction) {
   if (canJoin(tr.doc, pos)) {
     return tr.join(pos)
   } else if (!tr.doc.resolve(pos).nodeBefore) {
+    // for this case will just delete that node in `deleteNode.ts` as the join will not work
     return undefined
   }
   // TODO is this the same thing as join to above?
