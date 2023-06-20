@@ -43,7 +43,7 @@ pipeline {
         }
         stage ('Docker') {
             environment {
-                NAME = '${env.PRIVATE_ARTIFACT_REGISTRY}/manuscripts/quarterback'
+                NAME = "${env.PRIVATE_ARTIFACT_REGISTRY}/manuscripts/quarterback"
                 TAG = getImageTag(params.GIT_BRANCH)
                 GROUP_TAG = getImageGroupTag(params.GIT_BRANCH)
             }
