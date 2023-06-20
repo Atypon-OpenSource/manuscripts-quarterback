@@ -50,7 +50,7 @@ pipeline {
             stages {
                 stage('Build docker image') {
                     steps {
-                        sh 'docker build -t ${NAME}:${TAG} -t ${NAME}:${GROUP_TAG} . -f quarterback-packages/api/Dockerfile .'
+                        sh 'docker build -t ${NAME}:${TAG} -t ${NAME}:${GROUP_TAG} -f quarterback-packages/api/Dockerfile .'
                     }
                 }
                 stage('Publish docker image') {
