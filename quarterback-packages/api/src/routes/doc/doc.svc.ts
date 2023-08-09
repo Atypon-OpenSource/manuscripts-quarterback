@@ -46,12 +46,11 @@ export const docService = {
   },
   async createDocument(
     payload: ICreateDocRequest,
-    userId: string
   ): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const saved = await prisma.manuscriptDoc.create({
       data: {
         manuscript_model_id: payload.manuscript_model_id,
-        user_model_id: userId,
+        user_model_id: payload.user_model_id,
         project_model_id: payload.project_model_id,
         doc: payload.doc,
       },

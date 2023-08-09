@@ -14,32 +14,11 @@
  * limitations under the License.
  */
 import { NextFunction, Request, Response } from 'express'
-
-import { CustomError, jwtService } from '$common'
-
-function parseJwtFromHeaders(req: Request) {
-  // @TODO use non-standard header while istio is enabled but not configured properly
-  // https://jira.atypon.com/browse/LEAN-1274
-  const authHeader = req.headers.authorization || req.headers['x-authorization'] || ''
-  if (typeof authHeader === 'string' && authHeader.toLowerCase().includes('bearer')) {
-    return authHeader.split(' ')[1]
-  }
-  return null
-}
+import { config, CustomError } from '$common'
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
-  const jwtToken = parseJwtFromHeaders(req)
-  if (!jwtToken) {
-    // Without return this method would continue processing and generate TWO errors
-    // of which the next one wouldn't get caught by the errorHandler
-    // -> always remember to return next() inside if
-    return next(new CustomError('Missing authorization header with Bearer token', 401))
+  if (req.headers['quarterback-api-key'] !== config.API_KEY) {
+    next(new CustomError('Incorrect API key', 401))
   }
-  const decrypted = jwtService.decryptSessionToken(jwtToken)
-  if ('err' in decrypted) {
-    next(new CustomError(decrypted.err, decrypted.code))
-  } else {
-    res.locals.user = decrypted.data.user
-    next()
-  }
+  next()
 }

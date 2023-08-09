@@ -13,43 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IAuthenticateParams } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
-import Joi from 'joi'
-
-import { CustomError, jwtService } from '$common'
+import { NextFunction, Response } from 'express'
 import { IRequest } from '$typings/request'
-
-import { authService } from './auth.svc'
-
 import { version } from '../../../package.json'
-
-export const AUTHENTICATE_SCHEMA = Joi.object({
-  token: Joi.string().min(8).max(255).required(),
-})
-
-export const authenticate = async (
-  req: IRequest<IAuthenticateParams>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const user = await authService.authenticateUser(req.body)
-    if (!user) {
-      throw new CustomError('Authentication failed', 401)
-    }
-    const expires = jwtService.createSessionExpiration()
-    res.json({
-      user,
-      jwt: {
-        expires,
-        token: jwtService.createSessionToken(user, expires),
-      },
-    })
-  } catch (err) {
-    next(err)
-  }
-}
 
 export const stats = async (req: IRequest, res: Response, next: NextFunction) => {
   try {

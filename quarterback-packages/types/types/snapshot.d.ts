@@ -31,7 +31,6 @@ export type IGetSnapshotResponse = ManuscriptSnapshot
 export interface ISaveSnapshotRequest {
   docId: string
   name: string
-  snapshot: Record<string, any>
 }
 export interface ISaveSnapshotResponse {
   snapshot: ManuscriptSnapshot

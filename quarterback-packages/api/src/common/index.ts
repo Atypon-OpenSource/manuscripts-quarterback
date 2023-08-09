@@ -15,6 +15,5 @@
  */
 export * from './config'
 export * from './error'
-export * from './jwt.svc'
 export * from './logger'
 export * from './prisma'

@@ -2,6 +2,7 @@ NODE_ENV=local
 PORT=5500
 LOG_LEVEL=debug
 JWT_SECRET=verysecret
+API_KEY=something-random
 CORS_ENABLED=0
 CORS_WHITELIST=[]
 DATABASE_URL=postgresql://pg-user:pg-password@localhost:5402/local_quarterback_db?schema=public
