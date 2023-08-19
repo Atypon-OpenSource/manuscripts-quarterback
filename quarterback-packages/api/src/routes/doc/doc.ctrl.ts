@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/transform'
+import { Step } from 'prosemirror-transform'
 import {
   IGetDocumentResponse,
   ICreateDocRequest,
   ICreateDocResponse,
   IUpdateDocumentRequest,
+  ISaveSteps,
 } from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -100,4 +103,127 @@ export const deleteDocument = async (
   } catch (err) {
     next(err)
   }
+}
+
+/* THIS IS ONLY FOR DEMO */
+
+type Client = {
+  id: number
+  res: AuthResponse<string>
+}
+
+type DocData = {
+  steps: Step[]
+  version: number
+  clientIDs: string[]
+}
+
+declare global {
+  namespace globalThis {
+    var tempDocs: Map<string, DocData>
+    var clients: Client[]
+  }
+}
+
+/* END OF THIS IS ONLY FOR DEMO */
+
+const getGlobalTemp = () => {
+  global.tempDocs = global.tempDocs || new Map<string, DocData>()
+  return global.tempDocs
+}
+
+const getDocHistory = (docId: string) => {
+  const temp = getGlobalTemp()
+  const docData = temp.get(docId)
+  if (!docData) {
+    const template = {
+      steps: [], // steps have to be dropped at some point
+      version: 0,
+      clientIDs: [], // needs to be dropped along with steps
+    }
+    temp.set(docId, template)
+    return template
+  }
+  return docData
+}
+
+/* THIS IS ONLY FOR DEMO */
+
+export const receiveSteps = async (
+  req: AuthRequest<ISaveSteps>,
+  res: AuthResponse,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const newSteps = req.body.steps
+    const clientID = req.body.clientID // clientID is not the same as userID, it's an ID of the client exactly (app instance running in the browser)
+    const prevVersionFromClient = req.body.version // client the version on top of which it updates, in other words it says last version known to it
+
+    const docSearch = await docService.findDocument(documentId)
+    if ('data' in docSearch) {
+      const { version } = docSearch.data
+      if (version != prevVersionFromClient) {
+        /* 
+        if client is based on an older version we deny his request. At some point in time client should receive update and will then
+        resend his steps after rebasing them. Client will persist its steps.
+        */
+        return
+      }
+
+      const { steps, clientIDs } = getDocHistory(documentId)
+
+      let pmDoc = schema.nodeFromJSON(docSearch.data.doc)
+
+      newSteps.forEach((step) => {
+        pmDoc = step.apply(pmDoc).doc
+        steps.push(step)
+        clientIDs.push(clientID)
+      })
+      res.sendStatus(200)
+
+      // Signal server side listener
+      sendStepsToAll({ steps: newSteps, clientIDs, version })
+    } else {
+      next(new CustomError('Unable to save steps', 500))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+function sendStepsToAll(data: unknown) {
+  global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}\n\n`))
+}
+
+export const stepsEventHandler = (
+  req: AuthRequest,
+  res: AuthResponse<string>,
+  next: NextFunction
+) => {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+  }
+
+  // initial response
+  const { documentId } = req.params
+  const historyData = getDocHistory(documentId)
+  const data = `data: ${JSON.stringify(historyData)}\n\n`
+  res.writeHead(200, headers)
+  res.write(data)
+
+  const clientId = Date.now()
+
+  const newClient = {
+    id: clientId,
+    res,
+  }
+  global.clients.push(newClient)
+
+  req.on('close', () => {
+    console.log(`${clientId} Connection closed`)
+    clients = clients.filter((client) => client.id !== clientId)
+  })
 }

@@ -54,6 +54,7 @@ export const docService = {
         user_model_id: userId,
         project_model_id: payload.project_model_id,
         doc: payload.doc,
+        version: 0,
       },
     })
     return { data: { ...saved, snapshots: [] } }

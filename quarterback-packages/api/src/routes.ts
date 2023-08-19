@@ -29,8 +29,11 @@ router.get('/stats', authCtrl.stats)
 
 router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)
+router.post('/doc/:documentId/steps', authenticate, docCtrl.receiveSteps)
 router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
+
+router.get('/doc/:documentId/listen', authenticate, docCtrl.stepsEventHandler)
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)

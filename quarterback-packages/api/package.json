@@ -36,13 +36,16 @@
     "@manuscripts/json-schema": "^2.0.2",
     "@manuscripts/quarterback-db": "workspace:*",
     "@manuscripts/quarterback-types": "workspace:*",
+    "@manuscripts/transform": "^1.2.5",
+    "@rollup/plugin-inject": "^5.0.3",
     "cors": "^2.8.5",
     "express": "^4.18.1",
+    "express-prom-bundle": "^6.6.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "prom-client": "^14.2.0",
-    "express-prom-bundle": "^6.6.0",
+    "prosemirror-transform": "^1.7.4",
     "semver": "^7.5.0",
     "winston": "^3.8.2"
   }
