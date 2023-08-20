@@ -70,15 +70,16 @@ export const saveSnapshot = async (
 ) => {
   try {
     const payload: ISaveSnapshotRequest = req.body
-    const document: any = await docService.findDocument(payload.docId)
-    if (!document) {
-      next(new CustomError("Document not found"))
-    }
-    const result = await snapService.saveSnapshot(payload, document.data.doc)
-    if ('data' in result) {
-      res.json({ snapshot: result.data })
+    const document = await docService.findDocument(payload.docID)
+    if (!('data' in document)) {
+      next(new CustomError(document.err, document.code))
     } else {
-      next(new CustomError(result.err, result.code))
+      const result = await snapService.saveSnapshot({ snapshot: document.data, ...payload })
+      if ('data' in result) {
+        res.json({ snapshot: result.data })
+      } else {
+        next(new CustomError(result.err, result.code))
+      }
     }
   } catch (err) {
     next(err)

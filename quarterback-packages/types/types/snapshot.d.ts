@@ -18,6 +18,7 @@ import { ManuscriptSnapshot } from '../prisma'
 export { ManuscriptSnapshot } from '../prisma'
 
 export type SnapshotLabel = Pick<ManuscriptSnapshot, 'id' | 'name' | 'createdAt'>
+export type SaveSnapshotModel = ISaveSnapshotRequest & { snapshot: Record<string, any> }
 
 // GET /doc/:documentId/snapshot/labels
 export interface IGetSnapshotLabelsResponse {
@@ -29,7 +30,7 @@ export type IGetSnapshotResponse = ManuscriptSnapshot
 
 // POST /snapshot
 export interface ISaveSnapshotRequest {
-  docId: string
+  docID: string
   name: string
 }
 export interface ISaveSnapshotResponse {

@@ -17,14 +17,11 @@ import { Router } from 'express'
 
 import { authenticate, validateBody } from '$middlewares'
 
-import * as statsCtrl from '$routes/stats/stats.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
 import * as snapCtrl from './routes/snapshot/snap.ctrl'
 
 const router = Router()
-
-router.get('/stats', statsCtrl.stats)
 
 router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)
