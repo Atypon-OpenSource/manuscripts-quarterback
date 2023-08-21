@@ -20,7 +20,6 @@ import {
   ICreateDocRequest,
   ICreateDocResponse,
   IUpdateDocumentRequest,
-  ISaveSteps,
 } from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
@@ -137,7 +136,7 @@ const getDocHistory = (docId: string) => {
 /* THIS IS ONLY FOR DEMO */
 
 export const receiveSteps = async (
-  req: AuthRequest<ISaveSteps>,
+  req: AuthRequest<any>,
   res: AuthResponse,
   next: NextFunction
 ) => {
@@ -149,6 +148,7 @@ export const receiveSteps = async (
 
     const docSearch = await docService.findDocument(documentId)
     if ('data' in docSearch) {
+      // @ts-ignore
       const { version } = docSearch.data
       if (version != prevVersionFromClient) {
         /* 
@@ -211,6 +211,6 @@ export const stepsEventHandler = (
 
   req.on('close', () => {
     console.log(`${clientId} Connection closed`)
-    clients = clients.filter((client) => client.id !== clientId)
+    global.clients = global.clients.filter((client) => client.id !== clientId)
   })
 }

@@ -5,16 +5,17 @@
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && rollup -c",
     "watch": "rimraf dist && rollup -cw",
-    "build2": "tsc --build tsconfig.json",
-    "dev2": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec ts-node --files --transpile-only --require src/index.ts",
-    "dev": "nodemon --watch dist dist/index.js"
+    "build2": "NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.json",
+    "dev2": "node dist/index.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec ts-node --files --transpile-only --require dotenv/config src/index.ts"
+    
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
@@ -36,8 +37,8 @@
   },
   "dependencies": {
     "@manuscripts/json-schema": "^2.0.2",
-    "@manuscripts/quarterback-db": "workspace:*",
-    "@manuscripts/quarterback-types": "workspace:*",
+    "@manuscripts/quarterback-db": "file:../db",
+    "@manuscripts/quarterback-types": "1.6.1",
     "@manuscripts/transform": "^1.2.5",
     "@rollup/plugin-inject": "^5.0.3",
     "@types/jsdom": "^21.1.1",

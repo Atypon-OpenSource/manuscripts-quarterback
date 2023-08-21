@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
@@ -22,7 +23,7 @@ import { logStream, CustomError } from './common'
 import { errorHandler } from './middlewares'
 import routes from './routes'
 import promBundle from 'express-prom-bundle'
-import { configurePromClientRegistry } from './PromClientRegistryConfig'
+// import { configurePromClientRegistry } from './PromClientRegistryConfig'
 
 const app = express()
 
@@ -42,7 +43,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json({ limit: '10mb' }))
 app.use(metricsMiddleware)
 
-configurePromClientRegistry()
+// configurePromClientRegistry()
 
 // By adding this route before morgan prevents it being logged which in production setting
 // is annoying and pollutes the logs with gazillion "GET /health" lines

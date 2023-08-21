@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 import { JSDOM } from 'jsdom'
-import { AuthResponse } from './typings/request'
-import { DocData } from './routes/doc/doc.ctrl'
 
-type Client = {
-  id: number
-  res: AuthResponse<string>
-}
-
-declare global {
-  namespace globalThis {
-    var tempDocs: Map<string, DocData>
-    var clients: Client[]
-  }
-}
-
-// this is needed to support manuscripts-transform
 export const defineGlobals = (): void => {
   const { window } = new JSDOM()
 
-  Object.defineProperties(global, {
+  Object.defineProperties(globalThis, {
     window: {
       value: window,
     },
