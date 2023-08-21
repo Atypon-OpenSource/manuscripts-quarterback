@@ -21,7 +21,7 @@ import {
   IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
+import { CustomError, log, prisma } from '../../common'
 
 export const docService = {
   async findDocument(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {

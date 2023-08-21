@@ -16,6 +16,8 @@
 import alias from '@rollup/plugin-alias'
 import json from '@rollup/plugin-json'
 import path from 'path'
+import commonjs from '@rollup/plugin-commonjs'
+import inject from 'rollup-plugin-inject'
 import typescript from 'rollup-plugin-typescript2'
 
 import pkg from './package.json'
@@ -44,8 +46,10 @@ export default {
         },
       ],
     }),
+    inject({
+      window: 'global.window',
+    }),
     typescript(),
-    // commonjs(),
     json(),
   ],
 }

@@ -15,7 +15,7 @@
  */
 import { Router } from 'express'
 
-import { authenticate, validateBody } from '$middlewares'
+import { authenticate, validateBody } from './middlewares'
 
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'

@@ -25,8 +25,8 @@ import {
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 
 import { docService } from './doc.svc'
 
@@ -107,24 +107,11 @@ export const deleteDocument = async (
 
 /* THIS IS ONLY FOR DEMO */
 
-type Client = {
-  id: number
-  res: AuthResponse<string>
-}
-
-type DocData = {
+export type DocData = {
   steps: Step[]
   version: number
   clientIDs: string[]
 }
-
-declare global {
-  namespace globalThis {
-    var tempDocs: Map<string, DocData>
-    var clients: Client[]
-  }
-}
-
 /* END OF THIS IS ONLY FOR DEMO */
 
 const getGlobalTemp = () => {

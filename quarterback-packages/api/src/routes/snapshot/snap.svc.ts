@@ -20,7 +20,7 @@ import {
   IUpdateSnapshotRequest,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
+import { CustomError, log, prisma } from '../../common'
 import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 
 export const snapService = {

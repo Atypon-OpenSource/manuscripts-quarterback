@@ -15,7 +15,7 @@
  */
 import { IAuthenticateParams, User } from '@manuscripts/quarterback-types'
 
-import { CustomError, prisma } from '$common'
+import { CustomError, prisma } from '../../common'
 
 export const authService = {
   authenticateUser: async (params: IAuthenticateParams): Promise<any> => {

@@ -17,12 +17,12 @@ import { IAuthenticateParams } from '@manuscripts/quarterback-types'
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
-import { CustomError, jwtService } from '$common'
-import { IRequest } from '$typings/request'
+import { CustomError, jwtService } from '../../common'
+import { IRequest } from '../../typings/request'
 
 import { authService } from './auth.svc'
 
-import { version } from '../../../package.json'
+import pkg from '../../../package.json'
 
 export const AUTHENTICATE_SCHEMA = Joi.object({
   token: Joi.string().min(8).max(255).required(),
@@ -59,7 +59,7 @@ export const stats = async (req: IRequest, res: Response, next: NextFunction) =>
     const up_d = Math.floor(up_s / 60 / 60 / 24)
     const started = new Date(Date.now() - up_s * 1000)
     res.json({
-      version,
+      version: pkg.version,
       process: {
         started: started.toISOString(),
         up_seconds: Math.floor(up_s),

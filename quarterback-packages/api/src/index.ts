@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { app } from './app'
 import { config } from './common/config'
 import { log } from './common/logger'
+import { defineGlobals } from './define-globals'
+defineGlobals()
 
 app.listen(config.PORT, () => {
   log.info(`Quarterback API started at port: ${config.PORT}`)
