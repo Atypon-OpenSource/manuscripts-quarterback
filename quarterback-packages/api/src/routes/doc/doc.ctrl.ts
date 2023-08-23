@@ -143,20 +143,18 @@ export const receiveSteps = async (
     const clientVersion = req.body.version // client the version on top of which it updates, in other words it says last version known to it
 
     const docSearch = await docService.findDocument(documentId)
-    console.log('docSearch.data')
-    console.log(docSearch.data)
     if ('data' in docSearch) {
       // @ts-ignore
       const { version } = docSearch.data
 
       // this is needed, commented for testing only
-      // if (version != clientVersion) {
-      //   /*
-      //   if client is based on an older version we deny his request. At some point in time client should receive update and will then
-      //   resend his steps after rebasing them. Client will persist its steps.
-      //   */
-      //   return
-      // }
+      if (version != clientVersion) {
+        /*
+        if client is based on an older version we deny his request. At some point in time client should receive update and will then
+        resend his steps after rebasing them. Client will persist its steps.
+        */
+        return
+      }
 
       const cachedItem = getDocHistory(documentId)
 
@@ -168,7 +166,6 @@ export const receiveSteps = async (
         cachedItem.steps.push(step)
         cachedItem.clientIDs.push(clientID)
       })
-      console.log('version from request: ' + req.body.version)
       cachedItem.version = clientVersion
       cachedItem.doc = pmDoc
 
