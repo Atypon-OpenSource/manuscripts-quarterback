@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 import { JSDOM } from 'jsdom'
+import { AuthResponse } from './typings/request'
+
+type Client = {
+  id: string
+  res: AuthResponse<string>
+}
 
 export const defineGlobals = (): void => {
   const { window } = new JSDOM()
 
   Object.defineProperties(globalThis, {
+    clients: {
+      value: [],
+    },
     window: {
       value: window,
     },

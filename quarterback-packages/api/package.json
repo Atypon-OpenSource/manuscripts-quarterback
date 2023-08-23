@@ -13,7 +13,6 @@
     "build": "rimraf dist && rollup -c",
     "watch": "rimraf dist && rollup -cw",
     "build2": "NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.json",
-    "dev2": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec ts-node --files --transpile-only --require dotenv/config src/index.ts"
     
   },

@@ -34,6 +34,7 @@ router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 
 router.get('/doc/:documentId/listen', authenticate, docCtrl.stepsEventHandler)
+router.get('/doc/:documentId/version/:versionId', authenticate, docCtrl.getVersion)
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
