@@ -61,6 +61,8 @@ export function applyAcceptedRejectedChanges(
       const attrs = { ...node.attrs, dataTracked: null }
       tr.setNodeMarkup(from, undefined, attrs, node.marks)
       updateChangeChildrenAttributes(change.children, tr, deleteMap)
+      tr.removeNodeMark(from, schema.marks.tracked_insert)
+      tr.removeNodeMark(from, schema.marks.tracked_delete)
     } else if (ChangeSet.isNodeChange(change)) {
       // Try first moving the node children to either nodeAbove, nodeBelow or its parent.
       // Then try unwrapping it with lift or just hacky-joining by replacing the border between

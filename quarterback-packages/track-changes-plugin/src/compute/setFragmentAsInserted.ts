@@ -20,6 +20,22 @@ import { CHANGE_OPERATION } from '../types/change'
 import { NewInsertAttrs, NewTrackedAttrs } from '../types/track'
 import { addTrackIdIfDoesntExist, equalMarks, getTextNodeTrackedMarkData } from './nodeHelpers'
 
+function getBlockNodeMark(node: PMNode, newTrackAttrs: NewTrackedAttrs, schema: Schema) {
+  if (node.type === schema.nodes.bibliography_item) {
+    const mark =
+      newTrackAttrs.operation === CHANGE_OPERATION.insert
+        ? schema.marks.tracked_insert
+        : schema.marks.tracked_delete
+    return [
+      mark.create({
+        isBlock: node.isBlock,
+        dataTracked: addTrackIdIfDoesntExist(newTrackAttrs),
+      }),
+    ]
+  }
+  return node.marks
+}
+
 function markInlineNodeChange(node: PMNode, newTrackAttrs: NewTrackedAttrs, schema: Schema) {
   const filtered = node.marks.filter(
     (m) => m.type !== schema.marks.tracked_insert && m.type !== schema.marks.tracked_delete
@@ -78,7 +94,7 @@ function recurseNodeContent(node: PMNode, newTrackAttrs: NewTrackedAttrs, schema
         dataTracked: [addTrackIdIfDoesntExist(newTrackAttrs)],
       },
       Fragment.fromArray(updatedChildren),
-      node.marks
+      getBlockNodeMark(node, newTrackAttrs, schema)
     )
   } else {
     log.error(`unhandled node type: "${node.type.name}"`, node)

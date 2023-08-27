@@ -18,6 +18,7 @@ import type { Transaction } from 'prosemirror-state'
 
 import { shouldMergeTrackedAttributes } from '../compute/nodeHelpers'
 import type { TrackedAttrs } from '../types/change'
+import {NewDeleteAttrs} from "../types/track";
 
 /**
  * Merges tracked marks between text nodes at a position
@@ -61,4 +62,26 @@ export function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, 
     toEndOfMark,
     leftMark.type.create({ ...leftMark.attrs, dataTracked })
   )
+}
+
+/** This will be just for the bibliography_item and citation as for other block nodes we need to update
+ *  there marks in the schema.
+ *  and for figure, table, sections, paragraph we add marks just to the inline text inside of them
+ **/
+export function addMarkToBlockNode(
+  pos: number,
+  node: PMNode,
+  newTr: Transaction,
+  deleteAttrs: NewDeleteAttrs,
+  schema: Schema
+) {
+  if (node.type === schema.nodes.bibliography_item || node.type === schema.nodes.citation) {
+    newTr.addNodeMark(
+      pos,
+      schema.marks.tracked_delete.create({
+        isBlock: node.isBlock,
+        dataTracked: { deleteAttrs },
+      })
+    )
+  }
 }

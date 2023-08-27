@@ -42,15 +42,16 @@ export function updateChangeAttrs(
     change.type === 'text-change'
       ? getTextNodeTrackedMarkData(node, schema)
       : getBlockInlineTrackedData(node)
+  const oldMark = node.marks.find(
+    (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
+  )
+
   if (!operation) {
     log.warn('updateChangeAttrs: unable to determine operation of change ', change)
   } else if (!oldTrackData) {
     log.warn('updateChangeAttrs: no old dataTracked for change ', change)
   }
   if (change.type === 'text-change') {
-    const oldMark = node.marks.find(
-      (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
-    )
     if (!oldMark) {
       log.warn('updateChangeAttrs: no track marks for a text-change ', change)
       return tr
@@ -71,11 +72,18 @@ export function updateChangeAttrs(
       }
       return oldTrack
     })
+    const updatedMark = oldMark && [
+      oldMark.type.create({
+        ...oldMark.attrs,
+        dataTracked: { ...oldTrackData, ...trackedAttrs },
+      }),
+    ]
+
     tr.setNodeMarkup(
       change.from,
       undefined,
       { ...node.attrs, dataTracked: newDataTracked.length === 0 ? null : newDataTracked },
-      node.marks
+      updatedMark
     )
   }
   return tr

@@ -23,7 +23,7 @@ import { ChangeStep } from '../types/step'
 import { NewEmptyAttrs } from '../types/track'
 import { deleteOrSetNodeDeleted } from '../mutate/deleteNode'
 import { deleteTextIfInserted } from '../mutate/deleteText'
-import { mergeTrackedMarks } from '../mutate/mergeTrackedMarks'
+import { addMarkToBlockNode, mergeTrackedMarks } from '../mutate/mergeTrackedMarks'
 import { addTrackIdIfDoesntExist, getBlockInlineTrackedData } from '../compute/nodeHelpers'
 import * as trackUtils from '../utils/track-utils'
 
@@ -49,7 +49,8 @@ export function processChangeSteps(
         mapping.appendMap(newestStep.getMap())
         step = newestStep
       }
-      mergeTrackedMarks(mapping.map(c.pos), newTr.doc, newTr, schema)
+      //  TODO: create a test case
+      addMarkToBlockNode(c.pos, c.node, newTr, deleteAttrs, schema)
     } else if (c.type === 'delete-text') {
       const node = newTr.doc.nodeAt(mapping.map(c.pos))
       if (!node) {
