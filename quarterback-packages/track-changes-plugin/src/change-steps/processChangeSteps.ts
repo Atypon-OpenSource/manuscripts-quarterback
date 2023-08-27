@@ -49,7 +49,6 @@ export function processChangeSteps(
         mapping.appendMap(newestStep.getMap())
         step = newestStep
       }
-      //  TODO: create a test case
       addMarkToBlockNode(c.pos, c.node, newTr, deleteAttrs, schema)
     } else if (c.type === 'delete-text') {
       const node = newTr.doc.nodeAt(mapping.map(c.pos))
