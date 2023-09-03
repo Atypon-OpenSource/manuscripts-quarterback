@@ -75,7 +75,7 @@ export function addMarkToBlockNode(
   deleteAttrs: NewDeleteAttrs,
   schema: Schema
 ) {
-  if (node.type === schema.nodes.bibliography_item || node.type === schema.nodes.citation) {
+  if (node.type === schema.nodes.bibliography_item) {
     newTr.addNodeMark(
       pos,
       schema.marks.tracked_delete.create({
