@@ -15,7 +15,7 @@
  */
 import { Router } from 'express'
 
-import { authenticate, validateBody } from '$middlewares'
+import { authenticate } from '$middlewares'
 
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
@@ -31,6 +31,10 @@ router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)
 router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
+router.post('/doc/:documentId/steps', authenticate, docCtrl.receiveSteps)
+router.get('/doc/:documentId/listen', authenticate, docCtrl.stepsEventHandler)
+router.get('/doc/:documentId/version/:versionId', authenticate, docCtrl.getDocOfVersion)
+
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)

@@ -20,10 +20,51 @@ import {
   ICreateDocRequest,
   IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
+import { schema } from '@manuscripts/transform'
+import { Step } from "prosemirror-transform"
 
 import { CustomError, log, prisma } from '$common'
+import {createDocumentStorage, getDocumentHistory} from "$common/redix.svc";
 
+const documentStorage = createDocumentStorage()
 export const docService = {
+
+  async processCollaborationSteps(document: { data: any }, documentId: string, steps: Step[], clientId: number, clientVersion: number) {
+    const documentData = await getDocumentHistory(documentId)
+    let pmDocument = documentData.doc || schema.nodeFromJSON(document.data.doc)
+    steps.forEach((jsonStep: Step) => {
+      // @ts-ignore
+      const step = Step.fromJSON(schema, jsonStep)
+      pmDocument = step.apply(pmDocument).doc || pmDocument
+      documentData.steps.push(step)
+      documentData.clientIds.push(clientId)
+    })
+    documentData.version = clientVersion
+    documentData.doc = pmDocument
+    await documentStorage.set(documentId, documentData)
+    await docService.updateDocument(documentId, {doc: pmDocument.toJSON()})
+    return documentData
+  },
+  async initializeStepsEventHandler(documentId:string){
+    const documentHistory = await getDocumentHistory(documentId)
+    const initialEventData = `data: ${JSON.stringify(documentHistory)}\n\n`
+    const clientId = Date.now()
+    return {initialEventData: initialEventData, clientId}
+  },
+  async getDataOfVersion(documentId: string, versionId: string) {
+    const document = await documentStorage.get(documentId)
+    if (document) {
+      const data = {
+        // get all changes starting from the versionId
+        steps: document.steps.slice(parseInt(versionId)),
+        clientIds: document.clientIds.slice(parseInt(versionId)),
+        version: document.version,
+      }
+      return data
+    }
+    return null
+  },
+
   async findDocument(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const found = await prisma.manuscriptDoc.findUnique({
       where: {
@@ -79,3 +120,4 @@ export const docService = {
     return { data: deleted }
   },
 }
+

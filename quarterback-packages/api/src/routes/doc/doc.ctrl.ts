@@ -19,12 +19,10 @@ import {
   ICreateDocResponse,
   IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
-import Joi from 'joi'
-
+import { NextFunction } from 'express'
+import {Step} from "prosemirror-transform"
 import { CustomError } from '$common'
 import { AuthRequest, AuthResponse } from '$typings/request'
-
 import { docService } from './doc.svc'
 
 export const findDocument = async (
@@ -100,4 +98,93 @@ export const deleteDocument = async (
   } catch (err) {
     next(err)
   }
+}
+
+export const receiveSteps = async (req: AuthRequest<any>, res: AuthResponse, next: NextFunction) => {
+  try {
+    const { documentId } = req.params
+    const steps = req.body.steps as Step[]
+    const clientId = req.body.clientId
+    const clientVersion = req.body.version
+
+    if(!steps || steps.length === 0 || clientId || !clientVersion) {
+      res.status(400)
+    }
+    const document = await docService.findDocument(documentId)
+    if ('data' in document) {
+      const {version} = document.data
+      if (version != clientVersion) {
+         res.status(409)
+      }
+      const documentData = await docService.processCollaborationSteps(document, documentId, steps, clientId, clientVersion)
+      res.sendStatus(200)
+      signalListenerClients({steps: steps, clientIds: documentData.clientIds, version: clientVersion})
+    } else {
+      next(new CustomError('Unable to save steps', 500))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+export const  stepsEventHandler = async (
+    req: AuthRequest, res: AuthResponse<string>,
+    next: NextFunction
+) => {
+try {
+  const { documentId } = req.params
+  const { initialEventData, clientId } = await docService.initializeStepsEventHandler(documentId)
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Connection', 'keep-alive')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.status(200).write(initialEventData)
+  const newClient = {
+    id: clientId,
+    res
+  }
+  global.clients.push(newClient)
+  req.on('close', () => {
+    const index = global.clients.findIndex((client) => client.id == clientId)
+    if (index !== -1) {
+      global.clients.splice(index, 1)
+    }
+  })
+}
+  catch (err) {
+    next(err)
+  }
+
+}
+export const getDocOfVersion = async (req: AuthRequest, res: AuthResponse<StepsSince>, next: NextFunction) => {
+  try {
+    const { documentId, versionId } = req.params
+    const data = await docService.getDataOfVersion(documentId, versionId)
+    if(data){
+      res.json(data)
+    } else {
+      res.sendStatus(404)
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+type StepJsonArray = Array<Record<string, unknown>>
+type StepsSince = {
+  steps: StepJsonArray[]
+  clientIds: string[] | number[]
+  version: number | string
+}
+
+
+
+
+function signalListenerClients(data: stepsData) {
+  // @ts-ignore
+  global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}`))
+}
+
+type stepsData = {
+  steps: Step[]
+  clientIds: number[]
+  version: number
 }
