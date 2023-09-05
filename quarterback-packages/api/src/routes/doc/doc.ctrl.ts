@@ -109,12 +109,14 @@ export const receiveSteps = async (req: AuthRequest<any>, res: AuthResponse, nex
 
     if(!steps || steps.length === 0 || clientId || !clientVersion) {
       res.status(400)
+      return
     }
     const document = await docService.findDocument(documentId)
     if ('data' in document) {
       const {version} = document.data
       if (version != clientVersion) {
          res.status(409)
+        return
       }
       const documentData = await docService.processCollaborationSteps(document, documentId, steps, clientId, clientVersion)
       res.sendStatus(200)
