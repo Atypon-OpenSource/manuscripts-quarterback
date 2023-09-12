@@ -21,7 +21,7 @@ import { NewInsertAttrs, NewTrackedAttrs } from '../types/track'
 import { addTrackIdIfDoesntExist, equalMarks, getTextNodeTrackedMarkData } from './nodeHelpers'
 
 function getBlockNodeMark(node: PMNode, newTrackAttrs: NewTrackedAttrs, schema: Schema) {
-  if (node.type === schema.nodes.bibliography_item) {
+  if (node.type.spec.isMetaNode) {
     const mark =
       newTrackAttrs.operation === CHANGE_OPERATION.insert
         ? schema.marks.tracked_insert

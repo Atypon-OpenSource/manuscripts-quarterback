@@ -537,10 +537,10 @@
     ajv "^8.12.0"
     deepmerge "^4.3.1"
 
-"@manuscripts/transform@1.3.11-LEAN-2723":
-  version "1.3.11-LEAN-2723"
-  resolved "https://registry.yarnpkg.com/@manuscripts/transform/-/transform-1.3.11-LEAN-2723.tgz#f09eeb8face6716669a76b32a00826b33da4513a"
-  integrity sha512-ktPm8YHeEP0v0ryjASBwnGHyEx1CFEMqhDMKefTa0FFu5GOVEvvC58f672XwgflB3tVEhkRcO9kiGXL1bg149g==
+"@manuscripts/transform@1.3.11-LEAN-2723-1":
+  version "1.3.11-LEAN-2723-1"
+  resolved "https://registry.yarnpkg.com/@manuscripts/transform/-/transform-1.3.11-LEAN-2723-1.tgz#06c21f2372c98b636ead71540f4c91b67040d0c3"
+  integrity sha512-amDoFbqN3xG0HbJQkyKxXfI4BPR7JJlNauiNVyPmMxED0R5ZO8MzFU7BoxfgwEKAH7e1xuoy54pITlV6is9T+Q==
   dependencies:
     "@manuscripts/json-schema" "^2.1.1"
     debug "^4.3.4"
