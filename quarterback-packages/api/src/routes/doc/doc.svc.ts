@@ -45,7 +45,6 @@ export const docService = {
     steps.forEach((jsonStep: Step) => {
       const step = Step.fromJSON(schema, jsonStep)
       pmDocument = step.apply(pmDocument).doc || pmDocument
-      document.data.authority
       document.data.steps.push(step.toJSON())
       document.data.client_ids.push(clientId)
     })

@@ -6,5 +6,5 @@ export type Client = {
 }
 
 declare global {
-    let clients: Client[]
+    var clients: Client[]
 }
