@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { IAuthenticateParams } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import Joi from 'joi'
 
-import { CustomError, jwtService } from '$common'
-import { IRequest } from '$typings/request'
+import { CustomError, jwtService } from '../../common'
+import { IRequest } from '../../typings/request'
 
 import { authService } from './auth.svc'
 

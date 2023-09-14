@@ -20,7 +20,7 @@ import {
   IUpdateCommentRequest,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
+import { prisma } from '../../common'
 import { ManuscriptComment } from '@manuscripts/quarterback-db'
 
 export const commentService = {

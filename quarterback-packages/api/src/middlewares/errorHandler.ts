@@ -15,9 +15,7 @@
  */
 import { NextFunction, Request, Response } from 'express'
 
-import { config } from '$common/config'
-import { IError } from '$common/error'
-import { log } from '$common/logger'
+import { config, IError, log } from '../common'
 
 export function errorHandler(err: IError, req: Request, res: Response, next: NextFunction): void {
   if (err) {

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ManuscriptDoc } from '../prisma'
+import { ManuscriptDoc, Prisma } from '../prisma'
 import { SnapshotLabel } from './snapshot'
+import JsonValue = Prisma.JsonValue
 
 export { ManuscriptDoc } from '../prisma'
 
@@ -36,4 +37,7 @@ export type ICreateDocResponse = ManuscriptDocWithSnapshots
 // PUT /doc/:documentId
 export type IUpdateDocumentRequest = {
   doc: Record<string, any>
+  client_ids?: number[]
+  steps?: JsonValue[]
+  version?: number
 }

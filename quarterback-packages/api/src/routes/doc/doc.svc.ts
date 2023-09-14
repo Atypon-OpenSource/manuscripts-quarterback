@@ -14,17 +14,113 @@
  * limitations under the License.
  */
 import {
-  Maybe,
-  ManuscriptDoc,
-  ManuscriptDocWithSnapshots,
   ICreateDocRequest,
   IUpdateDocumentRequest,
+  ManuscriptDoc,
+  ManuscriptDocWithSnapshots,
+  Maybe,
 } from '@manuscripts/quarterback-types'
+import { schema } from '@manuscripts/transform'
+import { Step } from 'prosemirror-transform'
 
-import { CustomError, log, prisma } from '$common'
+import { prisma } from '../../common'
 
 export const docService = {
-  async findDocument(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
+  async processCollaborationSteps(
+    documentId: string,
+    steps: Step[],
+    clientId: number,
+    clientVersion: number
+  ) {
+    const document = await this.findDocument(documentId)
+
+    if ('err' in document) {
+      return { err: 'Document not found', code: 404 }
+    }
+    const { version } = document.data
+    if (version != clientVersion) {
+      return { err: 'Version is behind', code: 409 }
+    }
+    let pmDocument = schema.nodeFromJSON(document.data.doc)
+    steps.forEach((jsonStep: Step) => {
+      const step = Step.fromJSON(schema, jsonStep)
+      pmDocument = step.apply(pmDocument).doc || pmDocument
+      document.data.authority
+      document.data.steps.push(step.toJSON())
+      document.data.client_ids.push(clientId)
+    })
+    document.data.version = clientVersion
+    document.data.doc = pmDocument.toJSON()
+
+    await docService.updateDocument(documentId, {
+      doc: pmDocument,
+      client_ids: document.data.client_ids,
+      steps: document.data.steps,
+      version: document.data.version,
+    })
+    return { data: document.data }
+  },
+  async initializeStepsEventHandler(documentId: string) {
+    const documentHistory = await this.findDocumentHistory(documentId)
+    if ('data' in documentHistory) {
+      const initialEventData = `data: ${JSON.stringify(documentHistory.data)}\n\n`
+      const clientId = Date.now()
+      return { initialEventData: initialEventData, clientId }
+    } else {
+      return { err: 'Document not found', code: 404 }
+    }
+  },
+  async getDataOfVersion(documentId: string, versionId: string) {
+    const document = await this.findDocumentHistory(documentId)
+    if (
+      'data' in document &&
+      document.data.steps &&
+      document.data.client_ids &&
+      document.data.version
+    ) {
+      return {
+        data: {
+          steps: document.data.steps.slice(parseInt(versionId)),
+          clientIds: document.data.client_ids.slice(parseInt(versionId)),
+          version: document.data.version,
+        },
+      }
+    }
+    return { err: 'Document not found', code: 404 }
+  },
+
+  async findDocumentHistory(id: string): Promise<Maybe<Partial<ManuscriptDoc>>> {
+    const data = await prisma.manuscriptDoc.findUnique({
+      where: {
+        manuscript_model_id: id,
+      },
+      select: {
+        steps: true,
+        client_ids: true,
+        version: true,
+        doc: true,
+      },
+    })
+
+    if (!data) {
+      return { err: 'Document not found', code: 404 }
+    }
+    return { data: data }
+  },
+
+  async findDocument(id: string): Promise<Maybe<ManuscriptDoc>> {
+    const data = await prisma.manuscriptDoc.findUnique({
+      where: {
+        manuscript_model_id: id,
+      },
+    })
+    if (!data) {
+      return { err: 'Document not found', code: 404 }
+    }
+    return { data: data }
+  },
+
+  async findDocumentWithSnapshot(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const found = await prisma.manuscriptDoc.findUnique({
       where: {
         manuscript_model_id: id,
@@ -54,6 +150,7 @@ export const docService = {
         user_model_id: userId,
         project_model_id: payload.project_model_id,
         doc: payload.doc,
+        version: 0,
       },
     })
     return { data: { ...saved, snapshots: [] } }

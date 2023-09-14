@@ -1,17 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "$common": ["src/common"],
-      "$common/*": ["src/common/*"],
-      "$middlewares": ["src/middlewares"],
-      "$routes": ["src/routes"],
-      "$routes/*": ["src/routes/*"],
-      "$typings": ["src/typings"],
-      "$typings/*": ["src/typings/*"]
-    }
+    "module": "commonjs",
+    "outDir": "dist/",
+    "baseUrl": "."
   },
-  "include": ["src"],
+
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

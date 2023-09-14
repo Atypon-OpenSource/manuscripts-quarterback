@@ -16,9 +16,8 @@
 import { NextFunction, Response } from 'express'
 import { ObjectSchema } from 'joi'
 
-import { ValidationError } from '$common/error'
-import { log } from '$common/logger'
-import { AnyRequest } from '$typings/request'
+import { ValidationError, log } from '../common'
+import { AnyRequest } from '../typings/request'
 
 export const validateBody =
   (schema: ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {

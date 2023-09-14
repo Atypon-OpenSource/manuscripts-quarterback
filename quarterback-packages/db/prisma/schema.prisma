@@ -20,6 +20,9 @@ model ManuscriptDoc {
   updatedAt           DateTime             @updatedAt
   snapshots           ManuscriptSnapshot[] @relation("ManuscriptSnapshotToManuscriptDoc")
   comments            ManuscriptComment[]  @relation("ManuscriptCommentToManuscriptDoc")
+  version             Int                  @default(0)
+  client_ids          Int[]                @default([])
+  steps               Json[]               @default([])
 
   @@map("manuscript_doc")
 }
