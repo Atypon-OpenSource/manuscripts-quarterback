@@ -2,27 +2,97 @@
   "type": "doc",
   "content": [
     {
-      "type": "figure_element",
+      "type": "paragraph",
       "attrs": {
-        "figureLayout": "",
-        "figureStyle": "",
-        "id": "MPFigureElement:2BDCDBD5-6AF1-43F7-8742-B8671344BAD7",
-        "label": "Fig. 1",
-        "sizeFraction": 0,
-        "suppressCaption": false,
-        "suppressTitle": true,
-        "dataTracked": null,
-        "comments": []
+        "testAttribute": null
       },
       "content": [
         {
-          "type": "figure",
-          "attrs": {
-            "id": "MPFigure:40EF67F0-5A09-4AD4-B62A-47B1F6B93FD0",
-            "src": "attachment:ab4c315f-f1d6-4c73-9741-cf701150daad",
-            "contentType": "",
-            "dataTracked": null
-          }
+          "type": "text",
+          "text": "Hello World"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "attrs": {
+        "testAttribute": null
+      },
+      "content": [
+        {
+          "type": "table_body",
+          "content": [
+            {
+              "type": "table_row",
+              "content": [
+                {
+                  "type": "table_cell",
+                  "attrs": {
+                    "celltype": "td",
+                    "colspan": 1,
+                    "rowspan": 1
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1st row 1st cell"
+                    }
+                  ]
+                },
+                {
+                  "type": "table_cell",
+                  "attrs": {
+                    "celltype": "td",
+                    "colspan": 1,
+                    "rowspan": 1
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "1st row 2nd cell"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_row",
+              "attrs": {
+                "dataTracked": null
+              },
+              "content": [
+                {
+                  "type": "table_cell",
+                  "attrs": {
+                    "dataTracked": null,
+                    "celltype": "td",
+                    "colspan": 1,
+                    "rowspan": 1
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2nd row 1st cell"
+                    }
+                  ]
+                },
+                {
+                  "type": "table_cell",
+                  "attrs": {
+                    "celltype": "td",
+                    "colspan": 1,
+                    "rowspan": 1
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "2nd row 2nd cell"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
