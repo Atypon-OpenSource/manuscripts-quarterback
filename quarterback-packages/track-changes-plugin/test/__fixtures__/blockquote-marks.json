@@ -1,84 +1,206 @@
 {
-  "type": "doc",
+  "attrs": {
+    "id": "MPManuscript:A05A2501-8BE3-44C8-AA30-B148444FDC18"
+  },
+  "type": "manuscript",
   "content": [
     {
-      "type": "paragraph",
+      "type": "section",
       "attrs": {
+        "id": "MPSection:97E99737-8432-40F3-880F-C099D1CAEA19",
+        "category": "MPSectionCategory:abstracts",
+        "titleSuppressed": false,
         "dataTracked": null,
-        "testAttribute": null
+        "comments": []
       },
       "content": [
         {
-          "type": "text",
-          "text": "Hello world"
-        }
-      ]
-    },
-    {
-      "type": "blockquote",
-      "attrs": {
-        "dataTracked": null
-      },
-      "content": [
-        {
-          "type": "paragraph",
+          "type": "section_title",
           "attrs": {
+            "dataTracked": null
+          }
+        },
+        {
+          "type": "section",
+          "attrs": {
+            "id": "MPSection:32D1BE11-B041-41B7-BF0C-5E5345253B59",
+            "category": "MPSectionCategory:abstract",
+            "titleSuppressed": false,
             "dataTracked": null,
-            "testAttribute": null
+            "comments": []
           },
           "content": [
             {
-              "type": "text",
-              "text": "I am a quote"
+              "type": "section_title",
+              "attrs": {
+                "dataTracked": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Abstract"
+                }
+              ]
+            },
+            {
+              "type": "figure_element",
+              "attrs": {
+                "figureLayout": "",
+                "figureStyle": "",
+                "id": "MPFigureElement:2E8DBF4B-85AA-480B-9E83-1B3A7156FAA0",
+                "label": "Fig. 2",
+                "sizeFraction": 0,
+                "suppressCaption": false,
+                "suppressTitle": true,
+                "dataTracked": null,
+                "comments": []
+              },
+              "content": [
+                {
+                  "type": "figure",
+                  "attrs": {
+                    "id": "MPFigure:54D0CA83-ED3A-4AA2-B028-C0AE4EBED5F0",
+                    "src": "attachment:9fa85afc-a881-43d4-a9a3-10c957cb2be5",
+                    "contentType": "",
+                    "dataTracked": null
+                  }
+                },
+                {
+                  "type": "figcaption",
+                  "attrs": {
+                    "dataTracked": null
+                  },
+                  "content": [
+                    {
+                      "type": "caption_title",
+                      "attrs": {
+                        "placeholder": "Title...",
+                        "dataTracked": null
+                      }
+                    },
+                    {
+                      "type": "caption",
+                      "attrs": {
+                        "placeholder": "Caption...",
+                        "dataTracked": null
+                      },
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Time series of the model inputs at the different plots used for model simulations (N13, S16, S19 and S22): soil water potential ("
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "italic"
+                            }
+                          ],
+                          "text": "ψ"
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "subscript"
+                            }
+                          ],
+                          "text": "soil"
+                        },
+                        {
+                          "type": "text",
+                          "text": ", black dashed lines), nighttime trunk water potential ("
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "italic"
+                            }
+                          ],
+                          "text": "ψ"
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "subscript"
+                            }
+                          ],
+                          "text": "trunk"
+                        },
+                        {
+                          "type": "text",
+                          "text": ") of larch (red) and spruce (blue) and nighttime air temperature ("
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "italic"
+                            }
+                          ],
+                          "text": "T"
+                        },
+                        {
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "subscript"
+                            }
+                          ],
+                          "text": "air"
+                        },
+                        {
+                          "type": "text",
+                          "text": ", grey). Periods used for model simulations (i.e. from DOY 80 to 300) are denoted by a white background."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listing",
+                  "attrs": {
+                    "id": "MPListing:5D58FFB2-9B43-4499-A3F0-8D92C834B685",
+                    "contents": "",
+                    "language": "",
+                    "languageKey": "null",
+                    "isExpanded": false,
+                    "isExecuting": false,
+                    "dataTracked": null,
+                    "comments": []
+                  }
+                }
+              ]
             }
           ]
         }
       ]
     },
     {
-      "type": "paragraph",
+      "type": "meta_section",
       "attrs": {
-        "dataTracked": null,
-        "testAttribute": null
+        "id": "META_SECTION"
       },
       "content": [
         {
-          "type": "text",
-          "marks": [
-            {
-              "type": "bold"
-            }
-          ],
-          "text": "Bolded"
+          "type": "affiliation_list",
+          "attrs": {
+            "id": "AFFILIATION_LIST"
+          }
         },
         {
-          "type": "text",
-          "text": " "
+          "type": "contributor_list",
+          "attrs": {
+            "id": "CONTRIBUTOR_LIST"
+          }
         },
         {
-          "type": "text",
-          "marks": [
-            {
-              "type": "italic"
-            }
-          ],
-          "text": "italic"
-        },
-        {
-          "type": "text",
-          "text": " "
-        },
-        {
-          "type": "text",
-          "marks": [
-            {
-              "type": "italic"
-            },
-            {
-              "type": "bold"
-            }
-          ],
-          "text": "both"
+          "type": "comment_list",
+          "attrs": {
+            "id": "COMMENT_LIST"
+          }
         }
       ]
     }

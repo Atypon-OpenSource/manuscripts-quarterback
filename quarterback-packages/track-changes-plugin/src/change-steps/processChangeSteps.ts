@@ -142,6 +142,21 @@ export function processChangeSteps(
         },
         c.node.marks
       )
+
+      if (c.node.type.spec.isMetaNode) {
+        const mark = c.node.marks.find(
+          (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
+        )
+        if (!mark) {
+          newTr.addNodeMark(
+            c.pos,
+            schema.marks.tracked_attrs_update.create({
+              isBlock: c.node.isBlock,
+              dataTracked: c.newAttrs,
+            })
+          )
+        }
+      }
     }
     const newestStep = newTr.steps[newTr.steps.length - 1]
     if (step !== newestStep) {

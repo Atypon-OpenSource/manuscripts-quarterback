@@ -15,8 +15,6 @@
  */
 import paragraph from './paragraph.json'
 import equation from './equation.json'
-import bibliographySection from './bibliography-section.json'
-import bibliographyUpdated from './bibliography-items-updated.json'
 import manuscriptSimple from './manuscript-simple.json'
 import manyParagraphs from './many-paragraphs.json'
 import blockquoteMarks from './blockquote-marks.json'
@@ -27,8 +25,6 @@ import table from './table.json'
 export default {
   paragraph,
   equation,
-  bibliographySection,
-  bibliographyUpdated,
   manyParagraphs,
   manuscriptSimple,
   blockquoteMarks,

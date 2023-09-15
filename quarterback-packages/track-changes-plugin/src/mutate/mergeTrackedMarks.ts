@@ -71,7 +71,10 @@ export function addMarkToEmptyBlockNode(
   deleteAttrs: NewDeleteAttrs,
   schema: Schema
 ) {
-  if (node.type.spec.isMetaNode) {
+  if (
+    node.type.spec.isMetaNode &&
+    !node.marks.find((m) => m.type === schema.marks.tracked_insert)
+  ) {
     newTr.addNodeMark(
       pos,
       schema.marks.tracked_delete.create({

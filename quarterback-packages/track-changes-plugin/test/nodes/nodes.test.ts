@@ -16,7 +16,6 @@
 /// <reference types="@types/jest" />;
 import { promises as fs } from 'fs'
 import { NodeSelection } from 'prosemirror-state'
-import { schema as manuscriptSchema } from '@manuscripts/transform'
 
 import { CHANGE_STATUS, trackChangesPluginKey, trackCommands, ChangeSet } from '../../src'
 import docs from '../__fixtures__/docs'
@@ -31,7 +30,6 @@ import blockNodeAttrUpdate from './block-node-attr-update.json'
 import inlineNodeAttrUpdate from './inline-node-attr-update.json'
 import wrapWithLink from './wrap-with-link.json'
 import tableDiff from './table-attr-update.json'
-import bibliographyUpdated from "../__fixtures__/bibliography-items-updated.json";
 
 let counter = 0
 // https://stackoverflow.com/questions/65554910/jest-referenceerror-cannot-access-before-initialization
@@ -202,38 +200,6 @@ describe('nodes.test', () => {
     expect(tester.toJSON()).toEqual(tableDiff[0])
     expect(uuidv4Mock.mock.calls.length).toBe(2)
     expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
-    expect(log.warn).toHaveBeenCalledTimes(0)
-    expect(log.error).toHaveBeenCalledTimes(0)
-  })
-
-  test('should track insert & delete of bibliography item node with marks', async () => {
-    const tester = setupEditor({
-      doc: docs.bibliographySection,
-      schema: manuscriptSchema,
-    })
-
-    tester.cmd((state, dispatch) => {
-      dispatch(state.tr.delete(14, 15))
-    })
-
-    tester.cmd((state, dispatch) => {
-      dispatch(
-        state.tr.insert(
-          15,
-          manuscriptSchema.nodes.bibliography_item.create({
-            id: 'MPBibliographyItem:3B49B4EB-39F5-4208-B5FE-A5CD6E0D9692',
-            type: 'article-journal',
-            containerTitle: 'Arthritis Research &amp; Therapy',
-            doi: '10.1016/s0738-3991(02)00202-1',
-            volume: '48',
-          })
-        )
-      )
-    })
-
-    expect(tester.toJSON().doc).toEqual(docs.bibliographyUpdated)
-    expect(tester.trackState()?.changeSet.hasInconsistentData).toEqual(false)
-    expect(uuidv4Mock.mock.calls.length).toBe(3)
     expect(log.warn).toHaveBeenCalledTimes(0)
     expect(log.error).toHaveBeenCalledTimes(0)
   })

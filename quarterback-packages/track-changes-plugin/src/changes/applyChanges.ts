@@ -77,11 +77,13 @@ export function applyAcceptedRejectedChanges(
       change.dataTracked.status === CHANGE_STATUS.accepted
     ) {
       tr.setNodeMarkup(from, undefined, { ...node.attrs, dataTracked: null }, node.marks)
+      tr.removeNodeMark(from, schema.marks.tracked_attrs_update)
     } else if (
       ChangeSet.isNodeAttrChange(change) &&
       change.dataTracked.status === CHANGE_STATUS.rejected
     ) {
       tr.setNodeMarkup(from, undefined, { ...change.oldAttrs, dataTracked: null }, node.marks)
+      tr.removeNodeMark(from, schema.marks.tracked_attrs_update)
     }
   })
   return deleteMap
