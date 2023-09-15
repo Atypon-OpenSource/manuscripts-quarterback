@@ -529,12 +529,20 @@
     ajv "^8.12.0"
     deepmerge "^4.3.1"
 
-"@manuscripts/transform@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@manuscripts/transform/-/transform-1.2.5.tgz#f5e1867992e58fba41fdb0a3c4f67f74ae855372"
-  integrity sha512-Oe/AdoGRNnTH/6jlZIstohUK6azK2gDugXw1Swgy54yVlPYwqpK+064NpdARXRVrwFyCcWXJt7tqbPvFh96dpA==
+"@manuscripts/json-schema@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@manuscripts/json-schema/-/json-schema-2.1.1.tgz#f37c0c059ade6c001bd4d789deddde293066cd80"
+  integrity sha512-ePFyoeOYymTZLjQAIjr1+DT6RnwKdJZ5dkEvwR7qTLeIlYEwXY1Ho8Xis8PXQz6pmw0QX5EvgjOhGFduZ7irqg==
   dependencies:
-    "@manuscripts/json-schema" "^2.0.2"
+    ajv "^8.12.0"
+    deepmerge "^4.3.1"
+
+"@manuscripts/transform@1.3.11-LEAN-2723-1":
+  version "1.3.11-LEAN-2723-1"
+  resolved "https://registry.yarnpkg.com/@manuscripts/transform/-/transform-1.3.11-LEAN-2723-1.tgz#06c21f2372c98b636ead71540f4c91b67040d0c3"
+  integrity sha512-amDoFbqN3xG0HbJQkyKxXfI4BPR7JJlNauiNVyPmMxED0R5ZO8MzFU7BoxfgwEKAH7e1xuoy54pITlV6is9T+Q==
+  dependencies:
+    "@manuscripts/json-schema" "^2.1.1"
     debug "^4.3.4"
     jszip "^3.10.1"
     mathjax-full "^3.2.2"

@@ -23,7 +23,7 @@ import { ChangeStep } from '../types/step'
 import { NewEmptyAttrs } from '../types/track'
 import { deleteOrSetNodeDeleted } from '../mutate/deleteNode'
 import { deleteTextIfInserted } from '../mutate/deleteText'
-import { mergeTrackedMarks } from '../mutate/mergeTrackedMarks'
+import { addMarkToEmptyBlockNode, mergeTrackedMarks } from '../mutate/mergeTrackedMarks'
 import { addTrackIdIfDoesntExist, getBlockInlineTrackedData } from '../compute/nodeHelpers'
 import * as trackUtils from '../utils/track-utils'
 
@@ -49,7 +49,7 @@ export function processChangeSteps(
         mapping.appendMap(newestStep.getMap())
         step = newestStep
       }
-      mergeTrackedMarks(mapping.map(c.pos), newTr.doc, newTr, schema)
+      addMarkToEmptyBlockNode(c.pos, c.node, newTr, deleteAttrs, schema)
     } else if (c.type === 'delete-text') {
       const node = newTr.doc.nodeAt(mapping.map(c.pos))
       if (!node) {
@@ -142,6 +142,21 @@ export function processChangeSteps(
         },
         c.node.marks
       )
+
+      if (c.node.type.spec.isMetaNode) {
+        const mark = c.node.marks.find(
+          (m) => m.type === schema.marks.tracked_insert || m.type === schema.marks.tracked_delete
+        )
+        if (!mark) {
+          newTr.addNodeMark(
+            c.pos,
+            schema.marks.tracked_attrs_update.create({
+              isBlock: c.node.isBlock,
+              dataTracked: c.newAttrs,
+            })
+          )
+        }
+      }
     }
     const newestStep = newTr.steps[newTr.steps.length - 1]
     if (step !== newestStep) {

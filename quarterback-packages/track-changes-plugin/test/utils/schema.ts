@@ -513,5 +513,20 @@ export const schema = new Schema({
         return ['del', attrs]
       },
     },
+    tracked_attrs_update: {
+      excludes: 'tracked_attrs_update tracked_insert tracked_delete',
+      attrs: {
+        dataTracked: { default: null },
+      },
+      parseDOM: [{ tag: 'div' }],
+      toDOM: (el: Mark) => {
+        const dataTracked: TrackedAttrs | undefined = el.attrs.dataTracked
+        const { status = 'pending' } = dataTracked || {}
+        const attrs = {
+          class: `node-update ${status}`,
+        }
+        return ['del', attrs]
+      },
+    },
   },
 })

@@ -18,6 +18,7 @@ import type { Transaction } from 'prosemirror-state'
 
 import { shouldMergeTrackedAttributes } from '../compute/nodeHelpers'
 import type { TrackedAttrs } from '../types/change'
+import { NewDeleteAttrs } from '../types/track'
 
 /**
  * Merges tracked marks between text nodes at a position
@@ -61,4 +62,25 @@ export function mergeTrackedMarks(pos: number, doc: PMNode, newTr: Transaction, 
     toEndOfMark,
     leftMark.type.create({ ...leftMark.attrs, dataTracked })
   )
+}
+
+export function addMarkToEmptyBlockNode(
+  pos: number,
+  node: PMNode,
+  newTr: Transaction,
+  deleteAttrs: NewDeleteAttrs,
+  schema: Schema
+) {
+  if (
+    node.type.spec.isMetaNode &&
+    !node.marks.find((m) => m.type === schema.marks.tracked_insert)
+  ) {
+    newTr.addNodeMark(
+      pos,
+      schema.marks.tracked_delete.create({
+        isBlock: node.isBlock,
+        dataTracked: { deleteAttrs },
+      })
+    )
+  }
 }
