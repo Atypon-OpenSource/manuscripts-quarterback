@@ -18,6 +18,7 @@ import {
   ICreateDocResponse,
   IGetDocumentResponse,
   IUpdateDocumentRequest,
+  StepsData,
   StepsSince,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
@@ -26,7 +27,9 @@ import { Step } from 'prosemirror-transform'
 import { CustomError } from '../../common'
 import { Client } from '../../global'
 import { AuthRequest, AuthResponse } from '../../typings/request'
-import { docService } from './doc.svc'
+import { docService, CollaborationProcessor } from './doc.svc'
+
+const collaborationProcessor = new CollaborationProcessor()
 export const findDocument = async (
   req: AuthRequest,
   res: AuthResponse<IGetDocumentResponse>,
@@ -113,7 +116,7 @@ export const receiveSteps = async (
     const clientId = req.body.clientId as number
     const clientVersion = req.body.version as number
 
-    const document = await docService.processCollaborationSteps(
+    const document = await collaborationProcessor.processCollaborationSteps(
       documentId,
       steps,
       clientId,
@@ -141,7 +144,7 @@ export const stepsEventHandler = async (
 ) => {
   try {
     const { documentId } = req.params
-    const document = await docService.initializeStepsEventHandler(documentId)
+    const document = await collaborationProcessor.initializeStepsEventHandler(documentId)
     if (document.err) {
       next(new CustomError(document.err, document.code))
     }
@@ -171,7 +174,7 @@ export const getDocOfVersion = async (
 ) => {
   try {
     const { documentId, versionId } = req.params
-    const document = await docService.getDataOfVersion(documentId, versionId)
+    const document = await collaborationProcessor.getDataOfVersion(documentId, versionId)
     if (document.err) {
       next(new CustomError(document.err, document.code))
     }
@@ -183,12 +186,6 @@ export const getDocOfVersion = async (
   }
 }
 
-function signalListenerClients(data: stepsData) {
+function signalListenerClients(data: StepsData) {
   global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}`))
-}
-
-type stepsData = {
-  steps: Step[]
-  clientIds: number[]
-  version: number
 }

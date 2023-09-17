@@ -16,6 +16,7 @@
 import { ManuscriptDoc, Prisma } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 import JsonValue = Prisma.JsonValue
+import { Step } from 'prosemirror-transform'
 
 export { ManuscriptDoc, ManuscriptDocHistory } from '../prisma'
 
@@ -47,5 +48,10 @@ export type IUpdateDocumentHistoryRequest = {
 export type StepsSince = {
   steps: unknown[]
   clientIds: unknown[]
+  version: number
+}
+export type StepsData = {
+  steps: unknown[]
+  clientIds: number[]
   version: number
 }

@@ -28,69 +28,6 @@ import { Step } from 'prosemirror-transform'
 import { prisma } from '../../common'
 
 export const docService = {
-  async processCollaborationSteps(
-    documentId: string,
-    steps: Step[],
-    clientId: number,
-    clientVersion: number
-  ) {
-    const document = await this.findDocument(documentId)
-    const documentHistory = await this.findDocumentHistory(documentId)
-    if ('err' in document || 'err' in documentHistory) {
-      return { err: 'Document not found', code: 404 }
-    }
-
-    const { version } = document.data
-    if (version != clientVersion) {
-      return { err: 'Version is behind', code: 409 }
-    }
-    let pmDocument = schema.nodeFromJSON(document.data.doc)
-
-    steps.forEach((jsonStep: Step) => {
-      const step = Step.fromJSON(schema, jsonStep)
-      pmDocument = step.apply(pmDocument).doc || pmDocument
-      documentHistory.data.steps.push(step.toJSON())
-      documentHistory.data.client_ids.push(clientId)
-    })
-    document.data.version = clientVersion
-    document.data.doc = pmDocument.toJSON()
-
-    await docService.updateDocument(documentId, {
-      doc: pmDocument,
-      version: document.data.version,
-    })
-    await docService.updateDocumentHistory(documentId, documentHistory.data)
-
-    return {
-      data: {
-        clientIds: documentHistory.data.client_ids,
-      },
-    }
-  },
-  async initializeStepsEventHandler(documentId: string) {
-    const documentHistory = await this.findDocumentHistory(documentId)
-    if ('data' in documentHistory) {
-      const initialEventData = `data: ${JSON.stringify(documentHistory.data)}\n\n`
-      const clientId = Date.now()
-      return { initialEventData: initialEventData, clientId }
-    } else {
-      return { err: 'Document not found', code: 404 }
-    }
-  },
-  async getDataOfVersion(documentId: string, versionId: string) {
-    const documentHistory = await this.findDocumentHistory(documentId)
-    const document = await this.findDocument(documentId)
-    if ('data' in documentHistory && 'data' in document) {
-      return {
-        data: {
-          steps: documentHistory.data.steps.slice(parseInt(versionId)),
-          clientIds: documentHistory.data.client_ids.slice(parseInt(versionId)),
-          version: document.data.version,
-        },
-      }
-    }
-    return { err: 'Document history not found', code: 404 }
-  },
   async updateDocumentHistory(
     docId: string,
     payload: IUpdateDocumentHistoryRequest
@@ -182,4 +119,76 @@ export const docService = {
     })
     return { data: deleted }
   },
+}
+
+export class CollaborationProcessor {
+  async processCollaborationSteps(
+    documentId: string,
+    steps: Step[],
+    clientId: number,
+    clientVersion: number
+  ) {
+    const document = await docService.findDocument(documentId)
+    const documentHistory = await docService.findDocumentHistory(documentId)
+    if ('err' in document || 'err' in documentHistory) {
+      return { err: 'Document not found', code: 404 }
+    }
+
+    const { version } = document.data
+    if (version != clientVersion) {
+      return { err: 'Version is behind', code: 409 }
+    }
+    const pmDocument = this.applyStepsToDocument(steps, documentHistory.data, document.data)
+
+    await docService.updateDocument(documentId, {
+      doc: pmDocument,
+      version: clientVersion,
+    })
+
+    documentHistory.data.client_ids.push(clientId)
+    await docService.updateDocumentHistory(documentId, documentHistory.data)
+
+    return {
+      data: {
+        clientIds: documentHistory.data.client_ids,
+      },
+    }
+  }
+  private applyStepsToDocument(
+    steps: Step[],
+    documentHistory: ManuscriptDocHistory,
+    document: ManuscriptDoc
+  ) {
+    let pmDocument = schema.nodeFromJSON(document.doc)
+    steps.forEach((jsonStep: Step) => {
+      const step = Step.fromJSON(schema, jsonStep)
+      pmDocument = step.apply(pmDocument).doc || pmDocument
+      documentHistory.steps.push(step.toJSON())
+    })
+    return pmDocument
+  }
+  async initializeStepsEventHandler(documentId: string) {
+    const documentHistory = await docService.findDocumentHistory(documentId)
+    if ('data' in documentHistory) {
+      const initialEventData = `data: ${JSON.stringify(documentHistory.data)}\n\n`
+      const clientId = Date.now()
+      return { initialEventData: initialEventData, clientId }
+    } else {
+      return { err: 'Document history not found', code: 404 }
+    }
+  }
+  async getDataOfVersion(documentId: string, versionId: string) {
+    const documentHistory = await docService.findDocumentHistory(documentId)
+    const document = await docService.findDocument(documentId)
+    if ('data' in documentHistory && 'data' in document) {
+      return {
+        data: {
+          steps: documentHistory.data.steps.slice(parseInt(versionId)),
+          clientIds: documentHistory.data.client_ids.slice(parseInt(versionId)),
+          version: document.data.version,
+        },
+      }
+    }
+    return { err: 'Document history not found', code: 404 }
+  }
 }
