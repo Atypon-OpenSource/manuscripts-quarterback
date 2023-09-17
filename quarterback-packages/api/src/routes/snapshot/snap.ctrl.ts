@@ -16,15 +16,14 @@
 import {
   IGetSnapshotLabelsResponse,
   IGetSnapshotResponse,
-  ISaveSnapshotResponse,
   ISaveSnapshotRequest,
+  ISaveSnapshotResponse,
   IUpdateSnapshotRequest,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
 
 import { CustomError } from '../../common'
 import { AuthRequest, AuthResponse } from '../../typings/request'
-
 import { snapService } from './snap.svc'
 
 export const listSnapshotLabels = async (

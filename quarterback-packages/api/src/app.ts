@@ -15,14 +15,13 @@
  */
 import cors from 'cors'
 import express from 'express'
+import promBundle from 'express-prom-bundle'
 import morgan from 'morgan'
 
-import { config } from './common/config'
-import { logStream, CustomError } from './common'
+import { CustomError, logStream, config } from './common'
 import { errorHandler } from './middlewares'
-import routes from './routes'
-import promBundle from 'express-prom-bundle'
 import { configurePromClientRegistry } from './PromClientRegistryConfig'
+import routes from './routes'
 
 const app = express()
 

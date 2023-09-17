@@ -16,7 +16,7 @@
 import { NextFunction, Response } from 'express'
 import { ObjectSchema } from 'joi'
 
-import { ValidationError, log } from '../common'
+import { log, ValidationError } from '../common'
 import { AnyRequest } from '../typings/request'
 
 export const validateBody =

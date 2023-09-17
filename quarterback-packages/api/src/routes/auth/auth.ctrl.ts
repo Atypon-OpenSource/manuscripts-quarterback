@@ -17,12 +17,10 @@ import { IAuthenticateParams } from '@manuscripts/quarterback-types'
 import { NextFunction, Response } from 'express'
 import Joi from 'joi'
 
+import { version } from '../../../package.json'
 import { CustomError, jwtService } from '../../common'
 import { IRequest } from '../../typings/request'
-
 import { authService } from './auth.svc'
-
-import { version } from '../../../package.json'
 
 export const AUTHENTICATE_SCHEMA = Joi.object({
   token: Joi.string().min(8).max(255).required(),

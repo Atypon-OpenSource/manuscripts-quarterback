@@ -16,8 +16,7 @@
 import { defineGlobals } from './define-globals'
 defineGlobals()
 import { app } from './app'
-import { config } from './common'
-import { log } from './common'
+import { config, log } from './common'
 
 app.listen(config.PORT, () => {
   log.info(`Quarterback API started at port: ${config.PORT}`)

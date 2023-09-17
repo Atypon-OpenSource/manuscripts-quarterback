@@ -17,7 +17,7 @@ import { ManuscriptDoc, Prisma } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 import JsonValue = Prisma.JsonValue
 
-export { ManuscriptDoc } from '../prisma'
+export { ManuscriptDoc, ManuscriptDocHistory } from '../prisma'
 
 export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
   snapshots: SnapshotLabel[]
@@ -37,7 +37,15 @@ export type ICreateDocResponse = ManuscriptDocWithSnapshots
 // PUT /doc/:documentId
 export type IUpdateDocumentRequest = {
   doc: Record<string, any>
-  client_ids?: number[]
-  steps?: JsonValue[]
   version?: number
+}
+
+export type IUpdateDocumentHistoryRequest = {
+  client_ids: number[]
+  steps: JsonValue[]
+}
+export type StepsSince = {
+  steps: unknown[]
+  clientIds: unknown[]
+  version: number
 }

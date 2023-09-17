@@ -15,9 +15,6 @@
  */
 import { JSDOM } from 'jsdom'
 
-
-
-
 export const defineGlobals = (): void => {
   const { window } = new JSDOM()
 
@@ -26,7 +23,7 @@ export const defineGlobals = (): void => {
       value: window,
     },
     clients: {
-      value: [] ,
+      value: [],
     },
     document: {
       value: window.document,

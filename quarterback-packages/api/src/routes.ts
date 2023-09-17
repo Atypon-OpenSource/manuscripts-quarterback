@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { celebrate } from 'celebrate'
 import { Router } from 'express'
 
 import { authenticate } from './middlewares'
-import { celebrate } from 'celebrate'
-
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
-import * as snapCtrl from './routes/snapshot/snap.ctrl'
 import { getDocOfVersionSchema, listenSchema, receiveStepsSchema } from './routes/doc/doc.schema'
+import * as snapCtrl from './routes/snapshot/snap.ctrl'
 
 const router = Router()
 

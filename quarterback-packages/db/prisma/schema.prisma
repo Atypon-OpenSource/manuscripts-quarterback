@@ -21,10 +21,17 @@ model ManuscriptDoc {
   snapshots           ManuscriptSnapshot[] @relation("ManuscriptSnapshotToManuscriptDoc")
   comments            ManuscriptComment[]  @relation("ManuscriptCommentToManuscriptDoc")
   version             Int                  @default(0)
-  client_ids          Int[]                @default([])
-  steps               Json[]               @default([])
+  history             ManuscriptDocHistory? @relation("ManuscriptDocHistoryToManuscriptDoc")
 
   @@map("manuscript_doc")
+}
+
+model ManuscriptDocHistory{
+  doc_id              String        @unique
+  client_ids         Int[]     @default([])
+  steps              Json[]    @default([])
+  doc                ManuscriptDoc   @relation("ManuscriptDocHistoryToManuscriptDoc", fields: [doc_id], references: [manuscript_model_id], onDelete: Cascade)
+  @@map("manuscript_doc_history")
 }
 
 model ManuscriptSnapshot {

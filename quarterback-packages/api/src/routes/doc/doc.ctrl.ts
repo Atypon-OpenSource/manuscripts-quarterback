@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 import {
-  IGetDocumentResponse,
   ICreateDocRequest,
   ICreateDocResponse,
+  IGetDocumentResponse,
   IUpdateDocumentRequest,
+  StepsSince,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
 import { Step } from 'prosemirror-transform'
+
 import { CustomError } from '../../common'
+import { Client } from '../../global'
 import { AuthRequest, AuthResponse } from '../../typings/request'
 import { docService } from './doc.svc'
-import {Client} from "../../global";
 export const findDocument = async (
   req: AuthRequest,
   res: AuthResponse<IGetDocumentResponse>,
@@ -124,7 +126,7 @@ export const receiveSteps = async (
       res.sendStatus(200)
       signalListenerClients({
         steps: steps,
-        clientIds: document.data.client_ids,
+        clientIds: document.data.clientIds,
         version: clientVersion,
       })
     }
@@ -180,14 +182,8 @@ export const getDocOfVersion = async (
     next(err)
   }
 }
-type StepsSince = {
-  steps: unknown[]
-  clientIds: unknown[]
-  version: number
-}
 
 function signalListenerClients(data: stepsData) {
-  // @ts-ignore
   global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}`))
 }
 
