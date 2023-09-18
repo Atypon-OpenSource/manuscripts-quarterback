@@ -18,14 +18,12 @@ import {
   ICreateDocResponse,
   IGetDocumentResponse,
   IUpdateDocumentRequest,
-  StepsData,
   StepsSince,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
 import { Step } from 'prosemirror-transform'
 
 import { CustomError } from '../../common'
-import { Client } from '../../global'
 import { AuthRequest, AuthResponse } from '../../typings/request'
 import { docService, CollaborationProcessor } from './doc.svc'
 
@@ -127,7 +125,7 @@ export const receiveSteps = async (
     }
     if (document.data) {
       res.sendStatus(200)
-      signalListenerClients({
+      collaborationProcessor.sendDataToClients({
         steps: steps,
         clientIds: document.data.clientIds,
         version: clientVersion,
@@ -147,22 +145,20 @@ export const stepsEventHandler = async (
     const document = await collaborationProcessor.initializeStepsEventHandler(documentId)
     if (document.err) {
       next(new CustomError(document.err, document.code))
-    }
-    res.setHeader('Content-Type', 'text/event-stream')
-    res.setHeader('Connection', 'keep-alive')
-    res.setHeader('Cache-Control', 'no-cache')
-    res.status(200).write(document.initialEventData)
-    const newClient = {
-      id: document.clientId,
-      res,
-    }
-    global.clients.push(newClient as Client)
-    req.on('close', () => {
-      const index = global.clients.findIndex((client) => client.id == document.clientId)
-      if (index !== -1) {
-        global.clients.splice(index, 1)
+    } else if (document.initialEventData && document.clientId) {
+      res.setHeader('Content-Type', 'text/event-stream')
+      res.setHeader('Connection', 'keep-alive')
+      res.setHeader('Cache-Control', 'no-cache')
+      res.status(200).write(document.initialEventData)
+      const newClient = {
+        id: document.clientId,
+        res,
       }
-    })
+      collaborationProcessor.addClient(newClient)
+      req.on('close', () => {
+        collaborationProcessor.removeClientById(newClient.id)
+      })
+    }
   } catch (err) {
     next(err)
   }
@@ -184,8 +180,4 @@ export const getDocOfVersion = async (
   } catch (err) {
     next(err)
   }
-}
-
-function signalListenerClients(data: StepsData) {
-  global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}`))
 }

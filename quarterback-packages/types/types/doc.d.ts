@@ -16,7 +16,7 @@
 import { ManuscriptDoc, Prisma } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 import JsonValue = Prisma.JsonValue
-import { Step } from 'prosemirror-transform'
+import { AuthResponse } from '../../api/src/typings/auth'
 
 export { ManuscriptDoc, ManuscriptDocHistory } from '../prisma'
 
@@ -54,4 +54,8 @@ export type StepsData = {
   steps: unknown[]
   clientIds: number[]
   version: number
+}
+export type Client = {
+  id: number
+  res: AuthResponse<string>
 }

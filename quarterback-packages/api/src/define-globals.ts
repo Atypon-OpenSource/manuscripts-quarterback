@@ -22,9 +22,6 @@ export const defineGlobals = (): void => {
     window: {
       value: window,
     },
-    clients: {
-      value: [],
-    },
     document: {
       value: window.document,
     },

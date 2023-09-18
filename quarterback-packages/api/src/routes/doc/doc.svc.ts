@@ -21,6 +21,8 @@ import {
   ManuscriptDocWithSnapshots,
   ManuscriptDocHistory,
   Maybe,
+  Client,
+  StepsData,
 } from '@manuscripts/quarterback-types'
 import { schema } from '@manuscripts/transform'
 import { Step } from 'prosemirror-transform'
@@ -122,6 +124,26 @@ export const docService = {
 }
 
 export class CollaborationProcessor {
+  private _clients: Client[] = []
+  get clients(): Client[] {
+    return this._clients
+  }
+  addClient(newClient: Client) {
+    this._clients.push(newClient)
+  }
+
+  sendDataToClients(data: StepsData) {
+    this._clients.forEach((client) => {
+      client.res.write(`data: ${JSON.stringify(data)}\n\n`)
+    })
+  }
+  removeClientById(clientId: number): void {
+    const index = this._clients.findIndex((client) => client.id === clientId)
+    if (index !== -1) {
+      this._clients.splice(index)
+    }
+  }
+
   async processCollaborationSteps(
     documentId: string,
     steps: Step[],
