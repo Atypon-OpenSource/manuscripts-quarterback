@@ -2,8 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "dist/",
-    "baseUrl": "."
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths":{
+        "@manuscripts/quarterback-db":["../quarterback-packages/db"],
+        "@manuscripts/quarterback-types": ["../quarterback-packages/types"]
+    }
   },
 
   "include": ["src/**/*.ts"],
