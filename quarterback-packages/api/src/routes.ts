@@ -46,7 +46,7 @@ router.get(
   docCtrl.stepsEventHandler
 )
 router.get(
-  '/doc/:documentId/version/',
+  '/doc/:documentId/version',
   celebrate(getDocOfVersionSchema),
   authenticate,
   docCtrl.getDocOfVersion
