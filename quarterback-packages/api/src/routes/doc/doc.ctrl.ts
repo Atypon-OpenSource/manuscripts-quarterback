@@ -120,16 +120,18 @@ export const receiveSteps = async (
       clientId,
       clientVersion
     )
-    if (document.err) {
-      next(new CustomError(document.err, document.code))
-    }
     if (document.data) {
       res.sendStatus(200)
-      collaborationProcessor.sendDataToClients({
-        steps: steps,
-        clientIds: document.data.clientIds,
-        version: clientVersion,
-      })
+      collaborationProcessor.sendDataToClients(
+        {
+          steps: steps,
+          clientIds: document.data.clientIds,
+          version: clientVersion,
+        },
+        documentId
+      )
+    } else {
+      next(new CustomError(document.err, document.code))
     }
   } catch (err) {
     next(err)
@@ -142,23 +144,30 @@ export const stepsEventHandler = async (
 ) => {
   try {
     const { documentId } = req.params
-    const document = await collaborationProcessor.initializeStepsEventHandler(documentId)
-    if (document.err) {
-      next(new CustomError(document.err, document.code))
-    } else if (document.initialEventData && document.clientId) {
-      res.setHeader('Content-Type', 'text/event-stream')
-      res.setHeader('Connection', 'keep-alive')
-      res.setHeader('Cache-Control', 'no-cache')
-      res.status(200).write(document.initialEventData)
-      const newClient = {
-        id: document.clientId,
-        res,
-      }
-      collaborationProcessor.addClient(newClient)
-      req.on('close', () => {
-        collaborationProcessor.removeClientById(newClient.id)
-      })
+    const { initialData } = await collaborationProcessor.initializeStepsEventHandler(documentId)
+    const headers = {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
     }
+    // res.setHeader('Content-Type', 'text/event-stream')
+    // res.setHeader('Connection', 'keep-alive')
+    // res.setHeader('Cache-Control', 'no-cache')
+    res.writeHead(200, headers)
+    res.write(initialData)
+    const clientId = Date.now()
+
+    const newClient = {
+      id: clientId,
+      res,
+    }
+    collaborationProcessor.addClient(newClient, documentId)
+    console.log('before: ' + collaborationProcessor.documentsClientsMap.get(documentId)?.values)
+
+    req.on('close', () => {
+      collaborationProcessor.removeClientById(newClient.id, documentId)
+      console.log('after: ' + collaborationProcessor.documentsClientsMap.get(documentId)?.values)
+    })
   } catch (err) {
     next(err)
   }

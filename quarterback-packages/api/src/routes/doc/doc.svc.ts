@@ -23,6 +23,7 @@ import {
   Maybe,
   Client,
   StepsData,
+  ICreateDocHistory,
 } from '@manuscripts/quarterback-types'
 import { schema } from '@manuscripts/transform'
 import { Step } from 'prosemirror-transform'
@@ -30,6 +31,16 @@ import { Step } from 'prosemirror-transform'
 import { prisma } from '../../common'
 
 export const docService = {
+  async createDocumentHistory(payload: ICreateDocHistory) {
+    const saved = await prisma.manuscriptDocHistory.create({
+      data: {
+        doc_id: payload.doc_id,
+        steps: payload.steps,
+        client_ids: payload.client_ids,
+      },
+    })
+    return { data: { ...saved } }
+  },
   async updateDocumentHistory(
     docId: string,
     payload: IUpdateDocumentHistoryRequest
@@ -87,16 +98,24 @@ export const docService = {
     }
     return { data: found }
   },
+
   async createDocument(
     payload: ICreateDocRequest,
     userId: string
   ): Promise<Maybe<ManuscriptDocWithSnapshots>> {
+
     const saved = await prisma.manuscriptDoc.create({
       data: {
         manuscript_model_id: payload.manuscript_model_id,
         user_model_id: userId,
         project_model_id: payload.project_model_id,
         doc: payload.doc,
+        history: {
+          create: {
+            client_ids: [],
+            steps: [],
+          },
+        },
       },
     })
     return { data: { ...saved, snapshots: [] } }
@@ -124,23 +143,28 @@ export const docService = {
 }
 
 export class CollaborationProcessor {
-  private _clients: Client[] = []
-  get clients(): Client[] {
-    return this._clients
+  private _documentClientsMap = new Map<string, Client[]>()
+  public get documentsClientsMap (){
+    return this._documentClientsMap
   }
-  addClient(newClient: Client) {
-    this._clients.push(newClient)
+  addClient(newClient: Client, documentId: string) {
+    const clients = this._documentClientsMap.get(documentId) || []
+    clients.push(newClient)
+    this._documentClientsMap.set(documentId, clients)
   }
 
-  sendDataToClients(data: StepsData) {
-    this._clients.forEach((client) => {
+  sendDataToClients(data: StepsData, documentId: string) {
+    const clientsForDocument = this._documentClientsMap.get(documentId)
+    clientsForDocument?.forEach((client) => {
       client.res.write(`data: ${JSON.stringify(data)}\n\n`)
     })
   }
-  removeClientById(clientId: number): void {
-    const index = this._clients.findIndex((client) => client.id === clientId)
+  removeClientById(clientId: number, documentId: string): void {
+    const clients = this._documentClientsMap.get(documentId) || []
+    const index = clients.findIndex((client) => client.id === clientId)
     if (index !== -1) {
-      this._clients.splice(index)
+      clients.splice(index)
+      this._documentClientsMap.set(documentId, clients)
     }
   }
 
@@ -160,44 +184,61 @@ export class CollaborationProcessor {
     if (version != clientVersion) {
       return { err: 'Version is behind', code: 409 }
     }
-    const pmDocument = this.applyStepsToDocument(steps, documentHistory.data, document.data)
-
+    const pmDocument = this.applyStepsToDocument(
+      steps,
+      documentHistory.data,
+      document.data,
+      clientId
+    )
     await docService.updateDocument(documentId, {
       doc: pmDocument,
       version: clientVersion,
     })
-
-    documentHistory.data.client_ids.push(clientId)
-    await docService.updateDocumentHistory(documentId, documentHistory.data)
-
     return {
       data: {
         clientIds: documentHistory.data.client_ids,
       },
     }
   }
+
   private applyStepsToDocument(
     steps: Step[],
-    documentHistory: ManuscriptDocHistory,
-    document: ManuscriptDoc
+    documentHistoryData: ManuscriptDocHistory,
+    documentData: ManuscriptDoc,
+    clientId: number
   ) {
-    let pmDocument = schema.nodeFromJSON(document.doc)
+    let pmDocument = schema.nodeFromJSON(documentData.doc)
     steps.forEach((jsonStep: Step) => {
       const step = Step.fromJSON(schema, jsonStep)
       pmDocument = step.apply(pmDocument).doc || pmDocument
-      documentHistory.steps.push(step.toJSON())
+      documentHistoryData.steps.push(step.toJSON())
+      documentHistoryData.client_ids.push(clientId)
     })
     return pmDocument
   }
+
   async initializeStepsEventHandler(documentId: string) {
+    const document = await docService.findDocument(documentId)
     const documentHistory = await docService.findDocumentHistory(documentId)
-    if ('data' in documentHistory) {
-      const initialEventData = `data: ${JSON.stringify(documentHistory.data)}\n\n`
-      const clientId = Date.now()
-      return { initialEventData: initialEventData, clientId }
-    } else {
-      return { err: 'Document history not found', code: 404 }
+    let historyData
+    if ('err' in documentHistory) {
+      historyData = {
+        steps: [],
+        clientIDs: [],
+        version: 0,
+        doc: undefined,
+      }
     }
+    if ('data' in document && 'data' in documentHistory) {
+      historyData = {
+        steps: documentHistory.data.steps,
+        clientIDs: documentHistory.data.client_ids,
+        version: document.data.version,
+        doc: document.data.doc,
+      }
+    }
+    const initialData = `data: ${JSON.stringify(historyData)}\n\n`
+    return { initialData: initialData }
   }
   async getDataOfVersion(documentId: string, versionId: string) {
     const documentHistory = await docService.findDocumentHistory(documentId)

@@ -26,12 +26,16 @@ export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
 
 //GET /doc/:documentId
 export type IGetDocumentResponse = ManuscriptDocWithSnapshots
-
 // POST /doc
 export interface ICreateDocRequest {
   manuscript_model_id: string
   project_model_id: string
   doc: Record<string, any>
+}
+export interface ICreateDocHistory {
+  doc_id: string
+  client_ids: number[]
+  steps: JsonValue[]
 }
 export type ICreateDocResponse = ManuscriptDocWithSnapshots
 

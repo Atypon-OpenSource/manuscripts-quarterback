@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json({ limit: '10mb' }))
 app.use(metricsMiddleware)
 
-configurePromClientRegistry()
+// configurePromClientRegistry()
 
 // By adding this route before morgan prevents it being logged which in production setting
 // is annoying and pollutes the logs with gazillion "GET /health" lines

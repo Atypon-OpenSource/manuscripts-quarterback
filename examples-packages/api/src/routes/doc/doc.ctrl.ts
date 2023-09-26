@@ -14,51 +14,32 @@
  * limitations under the License.
  */
 import {
-  IListDocumentsResponse,
   ICreateDocRequest,
   ICreateDocResponse,
   IGetDocumentResponse,
-  IUpdateDocRequest,
-} from '@manuscripts/examples-track-types'
+  IUpdateDocumentRequest,
+  StepsSince,
+} from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
-import Joi from 'joi'
+import { Step } from 'prosemirror-transform'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
+import { docService, CollaborationProcessor } from './doc.svc'
 
-import { docService } from './doc.svc'
-
-export const listDocuments = async (
-  req: AuthRequest,
-  res: AuthResponse<IListDocumentsResponse>,
-  next: NextFunction
-) => {
-  try {
-    const result = await docService.listDocuments()
-    if (result.ok) {
-      res.json({
-        docs: result.data,
-      })
-    } else {
-      next(new CustomError(result.error, result.status))
-    }
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const getDocument = async (
+const collaborationProcessor = new CollaborationProcessor()
+export const findDocument = async (
   req: AuthRequest,
   res: AuthResponse<IGetDocumentResponse>,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
-    const result = await docService.getDocument(documentId)
-    if (result.ok) {
+    const result = await docService.findDocumentWithSnapshot(documentId)
+    if ('data' in result) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -71,11 +52,15 @@ export const createDocument = async (
   next: NextFunction
 ) => {
   try {
-    const result = await docService.createDocument(req.body, res.locals.user.id)
-    if (result.ok) {
+    const userId = res.locals.user.id
+    if (!userId) {
+      return next(new CustomError('Missing user.id from res.locals', 401))
+    }
+    const result = await docService.createDocument(req.body, userId)
+    if ('data' in result) {
       res.json(result.data)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -83,17 +68,17 @@ export const createDocument = async (
 }
 
 export const updateDocument = async (
-  req: AuthRequest<IUpdateDocRequest, { documentId: string }>,
+  req: AuthRequest<IUpdateDocumentRequest, { documentId: string }>,
   res: AuthResponse,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
     const result = await docService.updateDocument(documentId, req.body)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -108,30 +93,92 @@ export const deleteDocument = async (
   try {
     const { documentId } = req.params
     const result = await docService.deleteDocument(documentId)
-    if (result.ok) {
+    if ('data' in result) {
       res.sendStatus(200)
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
   }
 }
 
-export const openDocument = async (
-  req: AuthRequest<Record<string, never>, { documentId: string }>,
+export const receiveSteps = async (
+  req: AuthRequest<any>,
   res: AuthResponse,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
-    const result = await docService.openDocument(documentId, res.locals.user.id)
-    if (result.ok) {
-      res.setHeader('Content-Type', 'application/octet-stream')
-      res.write(result.data, 'binary')
-      res.end(null, 'binary')
+    const steps = req.body.steps as Step[]
+    const clientId = req.body.clientId as number
+    const clientVersion = req.body.version as number
+
+    const document = await collaborationProcessor.processCollaborationSteps(
+      documentId,
+      steps,
+      clientId,
+      clientVersion
+    )
+    if (document.data) {
+      res.sendStatus(200)
+      collaborationProcessor.sendDataToClients(
+        {
+          steps: steps,
+          clientIds: document.data.clientIds,
+          version: clientVersion,
+        },
+        documentId
+      )
     } else {
-      next(new CustomError(result.error, result.status))
+      next(new CustomError(document.err, document.code))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+export const stepsEventHandler = async (
+  req: AuthRequest,
+  res: AuthResponse<string>,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const initialData = await collaborationProcessor.initializeStepsEventHandler(documentId)
+    if (initialData.err) {
+      next(new CustomError(initialData.err, initialData.code))
+    }
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.status(200).write(initialData)
+    const clientId = Date.now()
+
+    const newClient = {
+      id: clientId,
+      res,
+    }
+    collaborationProcessor.addClient(newClient, documentId)
+    req.on('close', () => {
+      collaborationProcessor.removeClientById(newClient.id, documentId)
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+export const getDocOfVersion = async (
+  req: AuthRequest,
+  res: AuthResponse<StepsSince>,
+  next: NextFunction
+) => {
+  try {
+    const { documentId, versionId } = req.params
+    const document = await collaborationProcessor.getDataOfVersion(documentId, versionId)
+    if (document.err) {
+      next(new CustomError(document.err, document.code))
+    }
+    if (document.data) {
+      res.json(document.data)
     }
   } catch (err) {
     next(err)
