@@ -25,9 +25,11 @@ import { Step } from 'prosemirror-transform'
 
 import { CustomError } from '../../common'
 import { AuthRequest, AuthResponse } from '../../typings/request'
-import { docService, CollaborationProcessor } from './doc.svc'
+import { docService } from './doc.svc'
+import { CollaborationProcessor } from './collaboration.svc'
 
 const collaborationProcessor = new CollaborationProcessor()
+
 export const findDocument = async (
   req: AuthRequest,
   res: AuthResponse<IGetDocumentResponse>,
@@ -145,16 +147,11 @@ export const stepsEventHandler = async (
   try {
     const { documentId } = req.params
     const { initialData } = await collaborationProcessor.initializeStepsEventHandler(documentId)
-    const headers = {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    }
-    // res.setHeader('Content-Type', 'text/event-stream')
-    // res.setHeader('Connection', 'keep-alive')
-    // res.setHeader('Cache-Control', 'no-cache')
-    res.writeHead(200, headers)
-    res.write(initialData)
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.status(200).write(initialData)
+    console.log('initialData: ' + initialData)
     const clientId = Date.now()
 
     const newClient = {

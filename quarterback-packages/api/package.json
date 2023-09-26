@@ -11,7 +11,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && pnpm exec -- tsc",
-    "dev": "nodemon --watch src -e ts --exec ts-node  src/index.ts"
+    "dev": "nodemon --watch src -e ts --exec ts-node  src/index.ts",
+    "start": "rimraf dist && pnpm exec -- tsc && nodemon --watch src -e ts --exec ts-node  src/index.ts"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
