@@ -29,7 +29,7 @@ export type IGetSnapshotResponse = ManuscriptSnapshot
 
 // POST /snapshot
 export interface ISaveSnapshotRequest {
-  docId: string
+  docID: string
   name: string
   snapshot: Record<string, any>
 }
