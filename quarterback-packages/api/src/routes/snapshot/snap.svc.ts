@@ -49,11 +49,11 @@ export const snapService = {
     return { data: found }
   },
   async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Maybe<ManuscriptSnapshot>> {
-    const { docId, snapshot, name } = payload
+    const { docID, snapshot, name } = payload
     const saved = await prisma.manuscriptSnapshot.create({
       data: {
         snapshot,
-        doc_id: docId,
+        doc_id: docID,
         name,
       },
     })
