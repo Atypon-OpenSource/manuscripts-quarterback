@@ -36,7 +36,6 @@ router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 router.post(
   '/doc/:documentId/steps',
   celebrate(receiveStepsSchema),
-  authenticate,
   docCtrl.receiveSteps
 )
 router.get(

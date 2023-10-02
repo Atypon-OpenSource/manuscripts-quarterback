@@ -21,7 +21,7 @@ export const receiveStepsSchema: Joi.SchemaMap = {
   }),
   body: Joi.object({
     steps: Joi.array().items(Joi.object()),
-    clientId: Joi.number().required(),
+    clientID: Joi.number().required(),
     version: Joi.number().required(),
   }),
 }

@@ -113,7 +113,7 @@ export const receiveSteps = async (
   try {
     const { documentId } = req.params
     const steps = req.body.steps as Step[]
-    const clientId = req.body.clientId as number
+    const clientId = req.body.clientID as number
     const clientVersion = req.body.version as number
 
     const document = await collaborationProcessor.processCollaborationSteps(
@@ -127,7 +127,7 @@ export const receiveSteps = async (
       collaborationProcessor.sendDataToClients(
         {
           steps: steps,
-          clientIds: document.data.clientIds,
+          clientIDs: document.data.clientIDs,
           version: clientVersion,
         },
         documentId
@@ -146,12 +146,11 @@ export const stepsEventHandler = async (
 ) => {
   try {
     const { documentId } = req.params
-    const { initialData } = await collaborationProcessor.initializeStepsEventHandler(documentId)
+    const initialData = await collaborationProcessor.initializeStepsEventHandler(documentId)
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Connection', 'keep-alive')
     res.setHeader('Cache-Control', 'no-cache')
     res.status(200).write(initialData)
-    console.log('initialData: ' + initialData)
     const clientId = Date.now()
 
     const newClient = {
@@ -159,11 +158,8 @@ export const stepsEventHandler = async (
       res,
     }
     collaborationProcessor.addClient(newClient, documentId)
-    console.log('before: ' + collaborationProcessor.documentsClientsMap.get(documentId)?.values)
-
     req.on('close', () => {
       collaborationProcessor.removeClientById(newClient.id, documentId)
-      console.log('after: ' + collaborationProcessor.documentsClientsMap.get(documentId)?.values)
     })
   } catch (err) {
     next(err)

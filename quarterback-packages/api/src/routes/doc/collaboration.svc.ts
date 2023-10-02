@@ -62,7 +62,9 @@ export class CollaborationProcessor {
     }
 
     const { version } = document.data
-    if (version != clientVersion) {
+    console.log('client version: ', clientVersion)
+
+    if (version > clientVersion) {
       return { err: 'Version is behind', code: 409 }
     }
     const pmDocument = this.applyStepsToDocument(
@@ -72,12 +74,16 @@ export class CollaborationProcessor {
       clientId
     )
     await docService.updateDocument(documentId, {
-      doc: pmDocument,
+      doc: pmDocument.toJSON(),
       version: clientVersion,
+    })
+    await docService.updateDocumentHistory(documentId, {
+      client_ids: documentHistory.data.client_ids,
+      steps: documentHistory.data.steps,
     })
     return {
       data: {
-        clientIds: documentHistory.data.client_ids,
+        clientIDs: documentHistory.data.client_ids,
       },
     }
   }
@@ -119,18 +125,23 @@ export class CollaborationProcessor {
       }
     }
     const initialData = `data: ${JSON.stringify(historyData)}\n\n`
-    return { initialData: initialData }
+    return initialData
   }
   async getDataOfVersion(documentId: string, versionId: string) {
     const documentHistory = await docService.findDocumentHistory(documentId)
     const document = await docService.findDocument(documentId)
     if ('data' in documentHistory && 'data' in document) {
+      const steps: Step[] = []
+      documentHistory.data.steps.forEach((step) => {
+        steps.push(Step.fromJSON(schema, step))
+      })
+      const data = {
+        steps: steps.slice(parseInt(versionId)),
+        clientIDs: documentHistory.data.client_ids.slice(parseInt(versionId)),
+        version: document.data.version,
+      }
       return {
-        data: {
-          steps: documentHistory.data.steps.slice(parseInt(versionId)),
-          clientIds: documentHistory.data.client_ids.slice(parseInt(versionId)),
-          version: document.data.version,
-        },
+        data: data,
       }
     }
     return { err: 'Document history not found', code: 404 }

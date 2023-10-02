@@ -51,12 +51,12 @@ export type IUpdateDocumentHistoryRequest = {
 }
 export type StepsSince = {
   steps: unknown[]
-  clientIds: unknown[]
+  clientIDs: unknown[]
   version: number
 }
 export type StepsData = {
   steps: unknown[]
-  clientIds: number[]
+  clientIDs: number[]
   version: number
 }
 export type Client = {
