@@ -25,22 +25,9 @@ import {
   StepsData,
   ICreateDocHistory,
 } from '@manuscripts/quarterback-types'
-import { schema } from '@manuscripts/transform'
-import { Step } from 'prosemirror-transform'
-
 import { prisma } from '../../common'
 
 export const docService = {
-  async createDocumentHistory(payload: ICreateDocHistory) {
-    const saved = await prisma.manuscriptDocHistory.create({
-      data: {
-        doc_id: payload.doc_id,
-        steps: payload.steps,
-        client_ids: payload.client_ids,
-      },
-    })
-    return { data: { ...saved } }
-  },
   async updateDocumentHistory(
     docId: string,
     payload: IUpdateDocumentHistoryRequest

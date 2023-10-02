@@ -62,7 +62,6 @@ export class CollaborationProcessor {
     }
 
     const { version } = document.data
-    console.log('client version: ', clientVersion)
 
     if (version > clientVersion) {
       return { err: 'Version is behind', code: 409 }
@@ -130,13 +129,10 @@ export class CollaborationProcessor {
   async getDataOfVersion(documentId: string, versionId: string) {
     const documentHistory = await docService.findDocumentHistory(documentId)
     const document = await docService.findDocument(documentId)
+
     if ('data' in documentHistory && 'data' in document) {
-      const steps: Step[] = []
-      documentHistory.data.steps.forEach((step) => {
-        steps.push(Step.fromJSON(schema, step))
-      })
       const data = {
-        steps: steps.slice(parseInt(versionId)),
+        steps: documentHistory.data.steps.slice(parseInt(versionId)),
         clientIDs: documentHistory.data.client_ids.slice(parseInt(versionId)),
         version: document.data.version,
       }
