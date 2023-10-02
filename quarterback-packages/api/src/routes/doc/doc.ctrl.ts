@@ -27,6 +27,7 @@ import { CustomError } from '../../common'
 import { AuthRequest, AuthResponse } from '../../typings/request'
 import { docService } from './doc.svc'
 import { CollaborationProcessor } from './collaboration.svc'
+import { schema } from '@manuscripts/transform'
 
 const collaborationProcessor = new CollaborationProcessor()
 
@@ -177,6 +178,8 @@ export const getDocOfVersion = async (
       next(new CustomError(document.err, document.code))
     }
     if (document.data) {
+      console.log(document.data)
+      // console.log(Step.fromJSON(schema, document.data.steps[0]))
       res.json(document.data)
     }
   } catch (err) {

@@ -129,10 +129,13 @@ export class CollaborationProcessor {
   async getDataOfVersion(documentId: string, versionId: string) {
     const documentHistory = await docService.findDocumentHistory(documentId)
     const document = await docService.findDocument(documentId)
-
+    const steps: Step[] = []
     if ('data' in documentHistory && 'data' in document) {
+      documentHistory.data.steps.forEach(step => {
+        steps.push(Step.fromJSON(schema, step))
+      })
       const data = {
-        steps: documentHistory.data.steps.slice(parseInt(versionId)),
+        steps: steps.slice(parseInt(versionId)),
         clientIDs: documentHistory.data.client_ids.slice(parseInt(versionId)),
         version: document.data.version,
       }
