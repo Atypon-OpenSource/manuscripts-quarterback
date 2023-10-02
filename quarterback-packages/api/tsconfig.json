@@ -1,15 +1,38 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "es2017",
+      "dom",
+      "es2019.array"
+    ],
     "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
     "outDir": "dist",
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "target": "es2017",
     "baseUrl": ".",
-    "paths":{
-        "@manuscripts/quarterback-db":["../quarterback-packages/db"],
-        "@manuscripts/quarterback-types": ["../quarterback-packages/types"]
+    "paths": {
+      "@manuscripts/quarterback-db": [
+        "../quarterback-packages/db"
+      ],
+      "@manuscripts/quarterback-types": [
+        "../quarterback-packages/types"
+      ]
     }
   },
-
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "tests/**/*"
+  ]
 }
