@@ -107,6 +107,7 @@ export function processChangeSteps(
     } else if (c.type === 'update-node-attrs') {
       const oldDataTracked = getBlockInlineTrackedData(c.node) || []
       const oldUpdate = oldDataTracked.reverse().find((d) => {
+        // reversing to start from the most recent change
         if (
           d.operation === CHANGE_OPERATION.set_node_attributes &&
           (d.status === CHANGE_STATUS.pending || d.status === CHANGE_STATUS.rejected)
@@ -115,6 +116,9 @@ export function processChangeSteps(
         }
         return false
       }) as UpdateAttrs
+
+      // if the selected last change is with status "rejected" we need to use oldAttrs from it because
+      // node's actual attributes represent the "rejected" values
       const lastChangeRejected = oldUpdate && oldUpdate.status === CHANGE_STATUS.rejected
 
       const sourceAttrs = oldUpdate?.oldAttrs || c.node.attrs
