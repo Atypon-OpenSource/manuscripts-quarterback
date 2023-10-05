@@ -37,7 +37,7 @@
   "dependencies": {
     "@manuscripts/json-schema": "^2.0.2",
     "@manuscripts/quarterback-db": "file:../db",
-    "@manuscripts/quarterback-types": "1.6.1",
+    "@manuscripts/quarterback-types": "file:../types",
     "@manuscripts/transform": "^1.2.5",
     "@rollup/plugin-inject": "^5.0.3",
     "@types/jsdom": "^21.1.1",
