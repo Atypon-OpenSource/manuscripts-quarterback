@@ -66,7 +66,11 @@ export class ChangeSet {
         rootNodes.push(currentNodeChange)
         currentNodeChange = undefined
       }
-      if (currentNodeChange && c.from < currentNodeChange.to) {
+      if (
+        currentNodeChange &&
+        c.from < currentNodeChange.to &&
+        !this.#isSameNodeChange(currentNodeChange, c)
+      ) {
         currentNodeChange.children.push(c)
       } else if (c.type === 'node-change') {
         currentNodeChange = { ...c, children: [] }
@@ -217,5 +221,14 @@ export class ChangeSet {
 
   static isNodeAttrChange(change: TrackedChange): change is NodeAttrChange {
     return change.type === 'node-attr-change'
+  }
+
+  #isSameNodeChange(currentChange: NodeChange, nextChange: TrackedChange) {
+    return (
+      currentChange.from === nextChange.from &&
+      currentChange.to === nextChange.to &&
+      currentChange.dataTracked.operation !== CHANGE_OPERATION.delete &&
+      currentChange.dataTracked.status !== CHANGE_STATUS.pending
+    )
   }
 }
