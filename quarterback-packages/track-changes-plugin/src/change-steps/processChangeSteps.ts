@@ -129,7 +129,9 @@ export function processChangeSteps(
       // Dont add update changes if there exists already an insert change for this node
       if (
         JSON.stringify(oldAttrs) !== JSON.stringify(c.newAttrs) &&
-        !oldDataTracked.find((d) => d.operation === CHANGE_OPERATION.insert)
+        !oldDataTracked.find(
+          (d) => d.operation === CHANGE_OPERATION.insert && d.status === CHANGE_STATUS.pending
+        )
       ) {
         newDataTracked.push(newUpdate)
       }
