@@ -15,56 +15,34 @@
  */
 import {
   ICreateDocRequest,
-  IUpdateDocumentHistoryRequest,
   IUpdateDocumentRequest,
   ManuscriptDoc,
   ManuscriptDocWithSnapshots,
-  ManuscriptDocHistory,
   Maybe,
-  Client,
-  StepsData,
-  ICreateDocHistory,
+  IUpdateDocumentWithHistoryRequest,
 } from '@manuscripts/quarterback-types'
 import { prisma } from '../../common'
 
 export const docService = {
-  async updateDocumentHistory(
-    docId: string,
-    payload: IUpdateDocumentHistoryRequest
-  ): Promise<Maybe<ManuscriptDocHistory>> {
-    const saved = await prisma.manuscriptDocHistory.update({
-      data: payload,
-      where: {
-        doc_id: docId,
-      },
-    })
-    return { data: saved }
-  },
-
-  async findDocumentHistory(id: string): Promise<Maybe<ManuscriptDocHistory>> {
-    const data = await prisma.manuscriptDocHistory.findUnique({
-      where: {
-        doc_id: id,
-      },
-    })
-    if (!data) {
-      return { err: 'Document not found', code: 404 }
-    }
-    return { data: data }
-  },
-
-  async findDocument(id: string): Promise<Maybe<ManuscriptDoc>> {
-    const data = await prisma.manuscriptDoc.findUnique({
+  async findDocumentWithHistory(id: string) {
+    const found = await prisma.manuscriptDoc.findUnique({
       where: {
         manuscript_model_id: id,
       },
+      include: {
+        history: {
+          select: {
+            steps: true,
+            client_ids: true,
+          },
+        },
+      },
     })
-    if (!data) {
+    if (!found) {
       return { err: 'Document not found', code: 404 }
     }
-    return { data: data }
+    return { data: found }
   },
-
   async findDocumentWithSnapshot(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const found = await prisma.manuscriptDoc.findUnique({
       where: {
@@ -116,6 +94,38 @@ export const docService = {
         manuscript_model_id: docId,
       },
     })
+    return { data: saved }
+  },
+  async updateDocumentWithHistory(docId: string, payload: IUpdateDocumentWithHistoryRequest) {
+    const { history, ...restPayload } = payload
+    const currentHistory = await prisma.manuscriptDoc
+      .findUnique({
+        where: {
+          manuscript_model_id: docId,
+        },
+      })
+      .history()
+    const saved = await prisma.manuscriptDoc.update({
+      data: {
+        ...restPayload,
+        history: {
+          upsert: {
+            create: {
+              steps: history?.steps || [],
+              client_ids: history?.client_ids || [],
+            },
+            update: {
+              steps: history?.steps || currentHistory?.steps || [],
+              client_ids: history?.client_ids || currentHistory?.client_ids || [],
+            },
+          },
+        },
+      },
+      where: {
+        manuscript_model_id: docId,
+      },
+    })
+
     return { data: saved }
   },
   async deleteDocument(docId: string): Promise<Maybe<ManuscriptDoc>> {

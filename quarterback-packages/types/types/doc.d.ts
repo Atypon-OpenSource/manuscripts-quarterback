@@ -44,19 +44,17 @@ export type IUpdateDocumentRequest = {
   doc: Record<string, any>
   version?: number
 }
-
-export type IUpdateDocumentHistoryRequest = {
-  client_ids: number[]
-  steps: JsonValue[]
-}
-export type StepsSince = {
-  steps: unknown[]
-  clientIDs: unknown[]
-  version: number
+export type IUpdateDocumentWithHistoryRequest = {
+  doc: Record<string, any>
+  version?: number
+  history?: {
+    steps: JsonValue[]
+    client_ids: bigint[]
+  }
 }
 export type StepsData = {
   steps: unknown[]
-  clientIDs: number[]
+  clientIDs: unkown[]
   version: number
 }
 export type Client = {

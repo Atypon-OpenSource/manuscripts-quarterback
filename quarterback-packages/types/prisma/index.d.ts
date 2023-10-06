@@ -32,7 +32,7 @@ export type ManuscriptDoc = {
  */
 export type ManuscriptDocHistory = {
   doc_id: string
-  client_ids: number[]
+  client_ids: bigint[]
   steps: Prisma.JsonValue[]
 }
 
@@ -1986,7 +1986,7 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistorySumAggregateOutputType = {
-    client_ids: number[] | null
+    client_ids: bigint[] | null
   }
 
   export type ManuscriptDocHistoryMinAggregateOutputType = {
@@ -2122,7 +2122,7 @@ export namespace Prisma {
 
   export type ManuscriptDocHistoryGroupByOutputType = {
     doc_id: string
-    client_ids: number[]
+    client_ids: bigint[]
     steps: JsonValue[]
     _count: ManuscriptDocHistoryCountAggregateOutputType | null
     _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
@@ -4947,7 +4947,7 @@ export namespace Prisma {
     OR?: Enumerable<ManuscriptDocHistoryWhereInput>
     NOT?: Enumerable<ManuscriptDocHistoryWhereInput>
     doc_id?: StringFilter | string
-    client_ids?: IntNullableListFilter
+    client_ids?: BigIntNullableListFilter
     steps?: JsonNullableListFilter
     doc?: XOR<ManuscriptDocRelationFilter, ManuscriptDocWhereInput>
   }
@@ -4979,7 +4979,7 @@ export namespace Prisma {
     OR?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
     doc_id?: StringWithAggregatesFilter | string
-    client_ids?: IntNullableListFilter
+    client_ids?: BigIntNullableListFilter
     steps?: JsonNullableListFilter
   }
 
@@ -5172,43 +5172,43 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
     doc: ManuscriptDocCreateNestedOneWithoutHistoryInput
   }
 
   export type ManuscriptDocHistoryUncheckedCreateInput = {
     doc_id: string
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
     doc?: ManuscriptDocUpdateOneRequiredWithoutHistoryNestedInput
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryCreateManyInput = {
     doc_id: string
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateManyMutationInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateManyInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
@@ -5532,11 +5532,11 @@ export namespace Prisma {
     _max?: NestedIntFilter
   }
 
-  export type IntNullableListFilter = {
-    equals?: Enumerable<number> | null
-    has?: number | null
-    hasEvery?: Enumerable<number>
-    hasSome?: Enumerable<number>
+  export type BigIntNullableListFilter = {
+    equals?: Enumerable<bigint> | Enumerable<number> | null
+    has?: bigint | number | null
+    hasEvery?: Enumerable<bigint> | Enumerable<number>
+    hasSome?: Enumerable<bigint> | Enumerable<number>
     isEmpty?: boolean
   }
   export type JsonNullableListFilter = 
@@ -5804,7 +5804,7 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateclient_idsInput = {
-    set: Enumerable<number>
+    set: Enumerable<bigint> | Enumerable<number>
   }
 
   export type ManuscriptDocHistoryCreatestepsInput = {
@@ -5818,8 +5818,8 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryUpdateclient_idsInput = {
-    set?: Enumerable<number>
-    push?: number | Enumerable<number>
+    set?: Enumerable<bigint> | Enumerable<number>
+    push?: bigint | number | Enumerable<bigint> | Enumerable<number>
   }
 
   export type ManuscriptDocHistoryUpdatestepsInput = {
@@ -6138,12 +6138,12 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedCreateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
@@ -6214,12 +6214,12 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryUpdateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 

@@ -18,16 +18,14 @@ import {
   ICreateDocResponse,
   IGetDocumentResponse,
   IUpdateDocumentRequest,
-  StepsSince,
+  StepsData,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
-import { Step } from 'prosemirror-transform'
 
 import { CustomError } from '../../common'
 import { AuthRequest, AuthResponse } from '../../typings/request'
 import { docService } from './doc.svc'
 import { CollaborationProcessor } from './collaboration.svc'
-import { schema } from '@manuscripts/transform'
 
 const collaborationProcessor = new CollaborationProcessor()
 
@@ -113,28 +111,31 @@ export const receiveSteps = async (
 ) => {
   try {
     const { documentId } = req.params
-    const steps = req.body.steps as Step[]
+    const steps = req.body.steps
     const clientId = req.body.clientID as number
     const clientVersion = req.body.version as number
 
-    const document = await collaborationProcessor.processCollaborationSteps(
+    const { clientIDs, err, code, version } = await collaborationProcessor.handleCollaborationSteps(
       documentId,
       steps,
       clientId,
       clientVersion
     )
-    if (document.data) {
+    if (clientIDs) {
       res.sendStatus(200)
       collaborationProcessor.sendDataToClients(
         {
           steps: steps,
-          clientIDs: document.data.clientIDs,
+          clientIDs: clientIDs,
           version: clientVersion,
         },
         documentId
       )
-    } else {
-      next(new CustomError(document.err, document.code))
+    } else if (version) {
+      console.log(`update denied for: version ${version} vs clientVersion ${clientVersion}`)
+      res.sendStatus(200)
+    } else if (err) {
+      next(new CustomError(err, code))
     }
   } catch (err) {
     next(err)
@@ -148,10 +149,13 @@ export const stepsEventHandler = async (
   try {
     const { documentId } = req.params
     const initialData = await collaborationProcessor.initializeStepsEventHandler(documentId)
-    res.setHeader('Content-Type', 'text/event-stream')
-    res.setHeader('Connection', 'keep-alive')
-    res.setHeader('Cache-Control', 'no-cache')
-    res.status(200).write(initialData)
+    const headers = {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    }
+    res.writeHead(200, headers)
+    res.write(initialData)
     const clientId = Date.now()
 
     const newClient = {
@@ -161,26 +165,24 @@ export const stepsEventHandler = async (
     collaborationProcessor.addClient(newClient, documentId)
     req.on('close', () => {
       collaborationProcessor.removeClientById(newClient.id, documentId)
+      console.log(`${clientId} Connection closed`)
     })
   } catch (err) {
     next(err)
   }
 }
-export const getDocOfVersion = async (
+export const getStepsOfVersion = async (
   req: AuthRequest,
-  res: AuthResponse<StepsSince>,
+  res: AuthResponse<StepsData>,
   next: NextFunction
 ) => {
   try {
     const { documentId, versionId } = req.params
-    const document = await collaborationProcessor.getDataOfVersion(documentId, versionId)
-    if (document.err) {
-      next(new CustomError(document.err, document.code))
-    }
-    if (document.data) {
-      console.log(document.data)
-      // console.log(Step.fromJSON(schema, document.data.steps[0]))
-      res.json(document.data)
+    const { data, err, code } = await collaborationProcessor.getDataOfVersion(documentId, versionId)
+    if (data) {
+      res.json(data)
+    } else {
+      next(new CustomError(err, code))
     }
   } catch (err) {
     next(err)
