@@ -25,6 +25,7 @@ import { NextFunction } from 'express'
 import { CustomError } from '../../common'
 import { AuthRequest, AuthResponse } from '../../typings/request'
 import { snapService } from './snap.svc'
+import { docService } from '../doc/doc.svc'
 
 export const listSnapshotLabels = async (
   req: AuthRequest<Record<string, never>, { documentId: string }>,
@@ -69,7 +70,9 @@ export const saveSnapshot = async (
 ) => {
   try {
     const result = await snapService.saveSnapshot(req.body)
+    const { docId } = req.body
     if ('data' in result) {
+      await docService.clearDocumentHistory(docId)
       res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.err, result.code))

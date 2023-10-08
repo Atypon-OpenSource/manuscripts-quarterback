@@ -37,9 +37,9 @@ export class CollaborationProcessor {
   }
   async removeClientById(clientId: number, documentId: string) {
     const clients = this.documentsClientsMap.get(documentId) || []
-    const index = clients.findIndex((client) => client.id == clientId)
-    if (index != -1) {
-      clients.splice(index)
+    const index = clients.findIndex((client) => client.id === clientId)
+    if (index !== -1) {
+      clients.splice(index, 1)
       this.documentsClientsMap.set(documentId, clients)
     }
   }

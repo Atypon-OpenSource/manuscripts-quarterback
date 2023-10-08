@@ -40,12 +40,12 @@ router.get(
   authenticate,
   docCtrl.stepsEventHandler
 )
-router.get(
-  '/doc/:documentId/version',
-  celebrate(getDocOfVersionSchema),
-  authenticate,
-  docCtrl.getStepsOfVersion
-)
+// router.get(
+//   '/doc/:documentId/version',
+//   celebrate(getDocOfVersionSchema),
+//   authenticate,
+//   docCtrl.getStepsOfVersion
+// )
 
 router.get('/doc/:documentId/listen', authenticate, docCtrl.stepsEventHandler)
 router.get('/doc/:documentId/version/:versionId', authenticate, docCtrl.getStepsOfVersion)

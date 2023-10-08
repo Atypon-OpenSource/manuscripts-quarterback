@@ -63,6 +63,18 @@ export const docService = {
     }
     return { data: found }
   },
+  async clearDocumentHistory(documentId: string) {
+    const updated = await prisma.manuscriptDocHistory.update({
+      where: {
+        doc_id: documentId,
+      },
+      data: {
+        client_ids: [],
+        steps: [],
+      },
+    })
+    return { data: updated }
+  },
 
   async createDocument(
     payload: ICreateDocRequest,
