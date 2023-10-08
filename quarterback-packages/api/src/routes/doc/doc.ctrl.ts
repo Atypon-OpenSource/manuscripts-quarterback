@@ -115,7 +115,7 @@ export const receiveSteps = async (
     const clientId = req.body.clientID
     const clientVersion = req.body.version as number
     const clientIdAsString = clientId.toString()
-    const { clientIDs, err, code, version } = await collaborationProcessor.handleCollaborationSteps(
+    const { clientIDs, err, code } = await collaborationProcessor.handleCollaborationSteps(
       documentId,
       steps,
       clientIdAsString,
@@ -123,32 +123,22 @@ export const receiveSteps = async (
     )
     if (clientIDs) {
       res.sendStatus(200)
-      collaborationProcessor.sendDataToClients(
-        {
-          steps: steps,
-          clientIDs: clientIDs,
-          version: clientVersion,
-        },
-        documentId
-      )
-    } else if (version) {
-      console.log(`update denied for: version ${version} vs clientVersion ${clientVersion}`)
-      res.sendStatus(200)
-    } else if (err) {
+      collaborationProcessor.sendDataToClients({
+        steps: steps,
+        clientIDs: clientIDs,
+        version: clientVersion,
+      })
+    } else {
       next(new CustomError(err, code))
     }
   } catch (err) {
     next(err)
   }
 }
-export const stepsEventHandler = async (
-  req: AuthRequest,
-  res: AuthResponse<string>,
-  next: NextFunction
-) => {
+export const listen = async (req: AuthRequest, res: AuthResponse<string>, next: NextFunction) => {
   try {
     const { documentId } = req.params
-    const initialData = await collaborationProcessor.initializeStepsEventHandler(documentId)
+    const initialData = await collaborationProcessor.getInitialData(documentId)
     const headers = {
       'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
@@ -162,10 +152,9 @@ export const stepsEventHandler = async (
       id: clientId,
       res,
     }
-    collaborationProcessor.addClient(newClient, documentId)
+    collaborationProcessor.addClient(newClient)
     req.on('close', () => {
       collaborationProcessor.removeClientById(newClient.id, documentId)
-      console.log(`${clientId} Connection closed`)
     })
   } catch (err) {
     next(err)

@@ -19,28 +19,16 @@ import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
 
 export class CollaborationProcessor {
-  private _documentClientsMap = new Map<string, Client[]>()
-  get documentsClientsMap() {
-    return this._documentClientsMap
+  addClient(newClient: Client) {
+    global.clients.push(newClient)
   }
-  addClient(newClient: Client, documentId: string) {
-    const clients = this._documentClientsMap.get(documentId) || []
-    clients.push(newClient)
-    this.documentsClientsMap.set(documentId, clients)
-  }
-
-  sendDataToClients(data: StepsData, documentId: string) {
-    const clientsForDocument = this.documentsClientsMap.get(documentId)
-    clientsForDocument?.forEach((client) => {
-      client.res.write(`data: ${JSON.stringify(data)}\n\n`)
-    })
+  sendDataToClients(data: StepsData) {
+    global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}\n\n`))
   }
   async removeClientById(clientId: number, documentId: string) {
-    const clients = this.documentsClientsMap.get(documentId) || []
-    const index = clients.findIndex((client) => client.id === clientId)
+    const index = global.clients.findIndex((client) => client.id === clientId)
     if (index !== -1) {
-      clients.splice(index, 1)
-      this.documentsClientsMap.set(documentId, clients)
+      global.clients.splice(index)
     }
   }
 
@@ -55,7 +43,8 @@ export class CollaborationProcessor {
       const { version } = document.data
       if (version != clientVersion) {
         return {
-          version: version,
+          err: `Update denied for, version is ${version}, and clientVersion is ${clientVersion}`,
+          code: 409,
         }
       }
       const pmDocument = await this.applyStepsToDocument(steps, document, clientId)
@@ -88,7 +77,7 @@ export class CollaborationProcessor {
     return pmDocument.toJSON()
   }
 
-  async initializeStepsEventHandler(documentId: string) {
+  async getInitialData(documentId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     const clientIDs = document.data?.history
       ? convertIdsToNumbers(document.data.history.client_ids)

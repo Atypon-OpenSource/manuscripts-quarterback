@@ -33,22 +33,21 @@ router.post('/doc', authenticate, docCtrl.createDocument)
 router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 
-router.post('/doc/:documentId/steps', celebrate(receiveStepsSchema), docCtrl.receiveSteps)
-router.get(
-  '/doc/:documentId/listen',
-  celebrate(listenSchema),
+router.post(
+  '/doc/:documentId/steps',
+  celebrate(receiveStepsSchema),
   authenticate,
-  docCtrl.stepsEventHandler
+  docCtrl.receiveSteps
 )
+router.get('/doc/:documentId/listen', celebrate(listenSchema), authenticate, docCtrl.listen)
+router.get('/doc/:documentId/version/:versionId', authenticate, docCtrl.getStepsOfVersion)
+
 // router.get(
 //   '/doc/:documentId/version',
 //   celebrate(getDocOfVersionSchema),
 //   authenticate,
 //   docCtrl.getStepsOfVersion
 // )
-
-router.get('/doc/:documentId/listen', authenticate, docCtrl.stepsEventHandler)
-router.get('/doc/:documentId/version/:versionId', authenticate, docCtrl.getStepsOfVersion)
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
