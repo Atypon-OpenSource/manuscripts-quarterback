@@ -112,13 +112,13 @@ export const receiveSteps = async (
   try {
     const { documentId } = req.params
     const steps = req.body.steps
-    const clientId = req.body.clientID as number
+    const clientId = req.body.clientID
     const clientVersion = req.body.version as number
-
+    const clientIdAsString = clientId.toString()
     const { clientIDs, err, code, version } = await collaborationProcessor.handleCollaborationSteps(
       documentId,
       steps,
-      clientId,
+      clientIdAsString,
       clientVersion
     )
     if (clientIDs) {

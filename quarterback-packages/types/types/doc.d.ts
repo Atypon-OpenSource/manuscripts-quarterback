@@ -49,7 +49,7 @@ export type IUpdateDocumentWithHistoryRequest = {
   version?: number
   history?: {
     steps: JsonValue[]
-    client_ids: bigint[]
+    client_ids: string[]
   }
 }
 export type StepsData = {

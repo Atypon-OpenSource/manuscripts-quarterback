@@ -32,7 +32,7 @@ export type ManuscriptDoc = {
  */
 export type ManuscriptDocHistory = {
   doc_id: string
-  client_ids: bigint[]
+  client_ids: string[]
   steps: Prisma.JsonValue[]
 }
 
@@ -1975,18 +1975,8 @@ export namespace Prisma {
 
   export type AggregateManuscriptDocHistory = {
     _count: ManuscriptDocHistoryCountAggregateOutputType | null
-    _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
-    _sum: ManuscriptDocHistorySumAggregateOutputType | null
     _min: ManuscriptDocHistoryMinAggregateOutputType | null
     _max: ManuscriptDocHistoryMaxAggregateOutputType | null
-  }
-
-  export type ManuscriptDocHistoryAvgAggregateOutputType = {
-    client_ids: number | null
-  }
-
-  export type ManuscriptDocHistorySumAggregateOutputType = {
-    client_ids: bigint[] | null
   }
 
   export type ManuscriptDocHistoryMinAggregateOutputType = {
@@ -2004,14 +1994,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type ManuscriptDocHistoryAvgAggregateInputType = {
-    client_ids?: true
-  }
-
-  export type ManuscriptDocHistorySumAggregateInputType = {
-    client_ids?: true
-  }
 
   export type ManuscriptDocHistoryMinAggregateInputType = {
     doc_id?: true
@@ -2071,18 +2053,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: ManuscriptDocHistoryAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ManuscriptDocHistorySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: ManuscriptDocHistoryMinAggregateInputType
@@ -2113,8 +2083,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ManuscriptDocHistoryCountAggregateInputType | true
-    _avg?: ManuscriptDocHistoryAvgAggregateInputType
-    _sum?: ManuscriptDocHistorySumAggregateInputType
     _min?: ManuscriptDocHistoryMinAggregateInputType
     _max?: ManuscriptDocHistoryMaxAggregateInputType
   }
@@ -2122,11 +2090,9 @@ export namespace Prisma {
 
   export type ManuscriptDocHistoryGroupByOutputType = {
     doc_id: string
-    client_ids: bigint[]
+    client_ids: string[]
     steps: JsonValue[]
     _count: ManuscriptDocHistoryCountAggregateOutputType | null
-    _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
-    _sum: ManuscriptDocHistorySumAggregateOutputType | null
     _min: ManuscriptDocHistoryMinAggregateOutputType | null
     _max: ManuscriptDocHistoryMaxAggregateOutputType | null
   }
@@ -4947,7 +4913,7 @@ export namespace Prisma {
     OR?: Enumerable<ManuscriptDocHistoryWhereInput>
     NOT?: Enumerable<ManuscriptDocHistoryWhereInput>
     doc_id?: StringFilter | string
-    client_ids?: BigIntNullableListFilter
+    client_ids?: StringNullableListFilter
     steps?: JsonNullableListFilter
     doc?: XOR<ManuscriptDocRelationFilter, ManuscriptDocWhereInput>
   }
@@ -4968,10 +4934,8 @@ export namespace Prisma {
     client_ids?: SortOrder
     steps?: SortOrder
     _count?: ManuscriptDocHistoryCountOrderByAggregateInput
-    _avg?: ManuscriptDocHistoryAvgOrderByAggregateInput
     _max?: ManuscriptDocHistoryMaxOrderByAggregateInput
     _min?: ManuscriptDocHistoryMinOrderByAggregateInput
-    _sum?: ManuscriptDocHistorySumOrderByAggregateInput
   }
 
   export type ManuscriptDocHistoryScalarWhereWithAggregatesInput = {
@@ -4979,7 +4943,7 @@ export namespace Prisma {
     OR?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
     doc_id?: StringWithAggregatesFilter | string
-    client_ids?: BigIntNullableListFilter
+    client_ids?: StringNullableListFilter
     steps?: JsonNullableListFilter
   }
 
@@ -5172,43 +5136,43 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
     doc: ManuscriptDocCreateNestedOneWithoutHistoryInput
   }
 
   export type ManuscriptDocHistoryUncheckedCreateInput = {
     doc_id: string
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
     doc?: ManuscriptDocUpdateOneRequiredWithoutHistoryNestedInput
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryCreateManyInput = {
     doc_id: string
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateManyMutationInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateManyInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
@@ -5532,11 +5496,11 @@ export namespace Prisma {
     _max?: NestedIntFilter
   }
 
-  export type BigIntNullableListFilter = {
-    equals?: Enumerable<bigint> | Enumerable<number> | null
-    has?: bigint | number | null
-    hasEvery?: Enumerable<bigint> | Enumerable<number>
-    hasSome?: Enumerable<bigint> | Enumerable<number>
+  export type StringNullableListFilter = {
+    equals?: Enumerable<string> | null
+    has?: string | null
+    hasEvery?: Enumerable<string>
+    hasSome?: Enumerable<string>
     isEmpty?: boolean
   }
   export type JsonNullableListFilter = 
@@ -5565,20 +5529,12 @@ export namespace Prisma {
     steps?: SortOrder
   }
 
-  export type ManuscriptDocHistoryAvgOrderByAggregateInput = {
-    client_ids?: SortOrder
-  }
-
   export type ManuscriptDocHistoryMaxOrderByAggregateInput = {
     doc_id?: SortOrder
   }
 
   export type ManuscriptDocHistoryMinOrderByAggregateInput = {
     doc_id?: SortOrder
-  }
-
-  export type ManuscriptDocHistorySumOrderByAggregateInput = {
-    client_ids?: SortOrder
   }
 
   export type ManuscriptSnapshotCountOrderByAggregateInput = {
@@ -5804,7 +5760,7 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateclient_idsInput = {
-    set: Enumerable<bigint> | Enumerable<number>
+    set: Enumerable<string>
   }
 
   export type ManuscriptDocHistoryCreatestepsInput = {
@@ -5818,8 +5774,8 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryUpdateclient_idsInput = {
-    set?: Enumerable<bigint> | Enumerable<number>
-    push?: bigint | number | Enumerable<bigint> | Enumerable<number>
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
   }
 
   export type ManuscriptDocHistoryUpdatestepsInput = {
@@ -6138,12 +6094,12 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryCreateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedCreateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryCreateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
@@ -6214,12 +6170,12 @@ export namespace Prisma {
   }
 
   export type ManuscriptDocHistoryUpdateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateWithoutDocInput = {
-    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<bigint> | Enumerable<number>
+    client_ids?: ManuscriptDocHistoryUpdateclient_idsInput | Enumerable<string>
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 

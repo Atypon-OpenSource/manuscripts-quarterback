@@ -47,7 +47,7 @@ export class CollaborationProcessor {
   async handleCollaborationSteps(
     documentId: string,
     steps: Step[],
-    clientId: number,
+    clientId: string,
     clientVersion: number
   ) {
     const document = await docService.findDocumentWithHistory(documentId)
@@ -67,7 +67,7 @@ export class CollaborationProcessor {
           client_ids: document.data.history.client_ids,
         },
       })
-      const newClientIDs: string[] = convertIdsToStrings(document.data.history.client_ids)
+      const newClientIDs: number[] = convertIdsToNumbers(document.data.history.client_ids)
       return {
         clientIDs: newClientIDs,
       }
@@ -76,7 +76,7 @@ export class CollaborationProcessor {
     }
   }
 
-  private async applyStepsToDocument(steps: Step[], document, clientId: number) {
+  private async applyStepsToDocument(steps: Step[], document, clientId: string) {
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((jsonStep: Step) => {
       const step = Step.fromJSON(schema, jsonStep)
@@ -91,7 +91,7 @@ export class CollaborationProcessor {
   async initializeStepsEventHandler(documentId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     const clientIDs = document.data?.history
-      ? convertIdsToStrings(document.data.history.client_ids)
+      ? convertIdsToNumbers(document.data.history.client_ids)
       : []
     const steps: Step[] = []
     document.data?.history?.steps.forEach((step) => {
@@ -109,7 +109,7 @@ export class CollaborationProcessor {
   async getDataOfVersion(documentId: string, versionId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     if (document.data?.history) {
-      const clientIDs: string[] = convertIdsToStrings(
+      const clientIDs: number[] = convertIdsToNumbers(
         document.data.history.client_ids.slice(parseInt(versionId))
       )
       const data = {
@@ -125,10 +125,10 @@ export class CollaborationProcessor {
   }
 }
 
-const convertIdsToStrings = (ids: bigint[]) => {
-  const newIds: string[] = []
+const convertIdsToNumbers = (ids: string[]) => {
+  const newIds: number[] = []
   ids.forEach((id) => {
-    newIds.push(id.toString())
+    newIds.push(parseInt(id))
   })
   return newIds
 }

@@ -28,7 +28,7 @@ model ManuscriptDoc {
 
 model ManuscriptDocHistory {
   doc_id     String        @unique
-  client_ids BigInt[]      @default([])
+  client_ids String[]      @default([])
   steps      Json[]        @default([])
   doc        ManuscriptDoc @relation("ManuscriptDocHistoryToManuscriptDoc", fields: [doc_id], references: [manuscript_model_id], onDelete: Cascade)
 

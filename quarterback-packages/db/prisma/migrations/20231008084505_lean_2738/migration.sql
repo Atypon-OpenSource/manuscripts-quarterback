@@ -4,7 +4,7 @@ ALTER TABLE "manuscript_doc" ADD COLUMN     "version" INTEGER NOT NULL DEFAULT 0
 -- CreateTable
 CREATE TABLE "manuscript_doc_history" (
     "doc_id" TEXT NOT NULL,
-    "client_ids" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "client_ids" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "steps" JSONB[] DEFAULT ARRAY[]::JSONB[]
 );
 
