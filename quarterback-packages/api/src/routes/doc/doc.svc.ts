@@ -121,15 +121,9 @@ export const docService = {
       data: {
         ...restPayload,
         history: {
-          upsert: {
-            create: {
-              steps: history?.steps || [],
-              client_ids: history?.client_ids || [],
-            },
-            update: {
-              steps: history?.steps || currentHistory?.steps || [],
-              client_ids: history?.client_ids || currentHistory?.client_ids || [],
-            },
+          update: {
+            steps: history?.steps || currentHistory?.steps || [],
+            client_ids: history?.client_ids || currentHistory?.client_ids || [],
           },
         },
       },

@@ -60,15 +60,7 @@ export class CollaborationProcessor {
           code: 409,
         }
       }
-      const pmDocument = this.applyStepsToDocument(steps, document, clientId)
-      await docService.updateDocumentWithHistory(documentId, {
-        doc: pmDocument,
-        version: document.data.version,
-        history: {
-          steps: document.data.history.steps,
-          client_ids: document.data.history.client_ids,
-        },
-      })
+      await this.applyStepsToDocument(steps, document, clientId)
       return {
         clientIDs: convertIdsToNumbers(document.data.history.client_ids),
       }
@@ -77,7 +69,7 @@ export class CollaborationProcessor {
     }
   }
 
-  private applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
+  private async applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
     const steps = hydrateSteps(jsonSteps)
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((step: Step) => {
@@ -86,13 +78,20 @@ export class CollaborationProcessor {
       document.data.history.client_ids.push(clientId)
       document.data.version += 1
     })
-    return pmDocument.toJSON()
+    await docService.updateDocumentWithHistory(document.data.manuscript_model_id, {
+      doc: pmDocument.toJSON(),
+      version: document.data.version,
+      history: {
+        steps: document.data.history.steps,
+        client_ids: document.data.history.client_ids,
+      },
+    })
   }
 
   async getInitialData(documentId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     const historyData = {
-      steps: document.data?.history?.steps ? hydrateSteps(document.data.history.steps) : [],
+      steps: document.data?.history ? hydrateSteps(document.data.history.steps) : [],
       clientIDs: document.data?.history
         ? convertIdsToNumbers(document.data.history.client_ids)
         : [],
