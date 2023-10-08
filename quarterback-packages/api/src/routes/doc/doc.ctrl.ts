@@ -123,11 +123,14 @@ export const receiveSteps = async (
     )
     if (clientIDs) {
       res.sendStatus(200)
-      collaborationProcessor.sendDataToClients({
-        steps: steps,
-        clientIDs: clientIDs,
-        version: clientVersion,
-      })
+      collaborationProcessor.sendDataToClients(
+        {
+          steps: steps,
+          clientIDs: clientIDs,
+          version: clientVersion,
+        },
+        documentId
+      )
     } else {
       next(new CustomError(err, code))
     }
@@ -152,7 +155,7 @@ export const listen = async (req: AuthRequest, res: AuthResponse<string>, next: 
       id: clientId,
       res,
     }
-    collaborationProcessor.addClient(newClient)
+    collaborationProcessor.addClient(newClient, documentId)
     req.on('close', () => {
       collaborationProcessor.removeClientById(newClient.id, documentId)
     })

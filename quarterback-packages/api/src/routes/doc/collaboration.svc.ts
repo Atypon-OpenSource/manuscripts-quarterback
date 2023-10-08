@@ -19,16 +19,29 @@ import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
 
 export class CollaborationProcessor {
-  addClient(newClient: Client) {
-    global.clients.push(newClient)
+  private _documentClientsMap = new Map<string, Client[]>()
+  get documentsClientsMap() {
+    return this._documentClientsMap
   }
-  sendDataToClients(data: StepsData) {
-    global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}\n\n`))
+
+  addClient(newClient: Client, documentId: string) {
+    const clients = this._documentClientsMap.get(documentId) || []
+    clients.push(newClient)
+    this.documentsClientsMap.set(documentId, clients)
+  }
+
+  sendDataToClients(data: StepsData, documentId: string) {
+    const clientsForDocument = this.documentsClientsMap.get(documentId)
+    clientsForDocument?.forEach((client) => {
+      client.res.write(`data: ${JSON.stringify(data)}\n\n`)
+    })
   }
   async removeClientById(clientId: number, documentId: string) {
-    const index = global.clients.findIndex((client) => client.id === clientId)
+    const clients = this.documentsClientsMap.get(documentId) || []
+    const index = clients.findIndex((client) => client.id === clientId)
     if (index !== -1) {
-      global.clients.splice(index)
+      clients.splice(index, 1)
+      this.documentsClientsMap.set(documentId, clients)
     }
   }
 
@@ -65,7 +78,7 @@ export class CollaborationProcessor {
     }
   }
 
-  private async applyStepsToDocument(steps: Step[], document, clientId: string) {
+  private async applyStepsToDocument(steps: Step[], document: any, clientId: string) {
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((jsonStep: Step) => {
       const step = Step.fromJSON(schema, jsonStep)
@@ -101,8 +114,12 @@ export class CollaborationProcessor {
       const clientIDs: number[] = convertIdsToNumbers(
         document.data.history.client_ids.slice(parseInt(versionId))
       )
+      const steps: Step[] = []
+      document.data.history.steps.forEach((step) => {
+        steps.push(Step.fromJSON(schema, step))
+      })
       const data = {
-        steps: document.data.history.steps.slice(parseInt(versionId)),
+        steps: steps.slice(parseInt(versionId)),
         clientIDs: clientIDs,
         version: document.data.version,
       }

@@ -19,9 +19,6 @@ export const defineGlobals = (): void => {
   const { window } = new JSDOM()
 
   Object.defineProperties(globalThis, {
-    clients: {
-      value: [],
-    },
     window: {
       value: window,
     },
