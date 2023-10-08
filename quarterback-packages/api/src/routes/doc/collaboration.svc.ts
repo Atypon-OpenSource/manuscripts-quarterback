@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Client, StepsData } from '@manuscripts/quarterback-types'
+import { Client, StepsData, JsonValue } from '@manuscripts/quarterback-types'
 import { Step } from 'prosemirror-transform'
 import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
@@ -36,7 +36,7 @@ export class CollaborationProcessor {
       client.res.write(`data: ${JSON.stringify(data)}\n\n`)
     })
   }
-  async removeClientById(clientId: number, documentId: string) {
+  removeClientById(clientId: number, documentId: string) {
     const clients = this.documentsClientsMap.get(documentId) || []
     const index = clients.findIndex((client) => client.id === clientId)
     if (index !== -1) {
@@ -47,7 +47,7 @@ export class CollaborationProcessor {
 
   async handleCollaborationSteps(
     documentId: string,
-    steps: Step[],
+    steps: JsonValue[],
     clientId: string,
     clientVersion: number
   ) {
@@ -60,7 +60,7 @@ export class CollaborationProcessor {
           code: 409,
         }
       }
-      const pmDocument = await this.applyStepsToDocument(steps, document, clientId)
+      const pmDocument = this.applyStepsToDocument(steps, document, clientId)
       await docService.updateDocumentWithHistory(documentId, {
         doc: pmDocument,
         version: document.data.version,
@@ -69,19 +69,18 @@ export class CollaborationProcessor {
           client_ids: document.data.history.client_ids,
         },
       })
-      const newClientIDs: number[] = convertIdsToNumbers(document.data.history.client_ids)
       return {
-        clientIDs: newClientIDs,
+        clientIDs: convertIdsToNumbers(document.data.history.client_ids),
       }
     } else {
       return { err: 'Document not found', code: 404 }
     }
   }
 
-  private async applyStepsToDocument(steps: Step[], document: any, clientId: string) {
+  private applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
+    const steps = hydrateSteps(jsonSteps)
     let pmDocument = schema.nodeFromJSON(document.data.doc)
-    steps.forEach((jsonStep: Step) => {
-      const step = Step.fromJSON(schema, jsonStep)
+    steps.forEach((step: Step) => {
       pmDocument = step.apply(pmDocument).doc || pmDocument
       document.data.history.steps.push(step.toJSON())
       document.data.history.client_ids.push(clientId)
@@ -92,35 +91,22 @@ export class CollaborationProcessor {
 
   async getInitialData(documentId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
-    const clientIDs = document.data?.history
-      ? convertIdsToNumbers(document.data.history.client_ids)
-      : []
-    const steps: Step[] = []
-    document.data?.history?.steps.forEach((step) => {
-      steps.push(Step.fromJSON(schema, step))
-    })
     const historyData = {
-      steps: steps || [],
-      clientIDs: clientIDs || [],
+      steps: document.data?.history?.steps ? hydrateSteps(document.data.history.steps) : [],
+      clientIDs: document.data?.history
+        ? convertIdsToNumbers(document.data.history.client_ids)
+        : [],
       version: document.data?.version || 0,
       doc: document.data?.doc || undefined,
     }
-
     return `data: ${JSON.stringify(historyData)}\n\n`
   }
   async getDataOfVersion(documentId: string, versionId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     if (document.data?.history) {
-      const clientIDs: number[] = convertIdsToNumbers(
-        document.data.history.client_ids.slice(parseInt(versionId))
-      )
-      const steps: Step[] = []
-      document.data.history.steps.forEach((step) => {
-        steps.push(Step.fromJSON(schema, step))
-      })
       const data = {
-        steps: steps.slice(parseInt(versionId)),
-        clientIDs: clientIDs,
+        steps: hydrateSteps(document.data.history.steps).slice(parseInt(versionId)),
+        clientIDs: convertIdsToNumbers(document.data.history.client_ids.slice(parseInt(versionId))),
         version: document.data.version,
       }
       return {
@@ -137,4 +123,7 @@ const convertIdsToNumbers = (ids: string[]) => {
     newIds.push(parseInt(id))
   })
   return newIds
+}
+const hydrateSteps = (jsonSteps: JsonValue[]): Step[] => {
+  return jsonSteps.map((s: JsonValue) => Step.fromJSON(schema, s)) as Step[]
 }
