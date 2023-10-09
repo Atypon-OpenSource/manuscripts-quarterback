@@ -114,11 +114,10 @@ export const receiveSteps = async (
     const steps = req.body.steps
     const clientId = req.body.clientID
     const clientVersion = req.body.version as number
-    const clientIdAsString = clientId.toString()
-    const { clientIDs, err, code } = await collaborationProcessor.handleCollaborationSteps(
+    const { clientIDs, err, code } = await collaborationProcessor.receiveSteps(
       documentId,
       steps,
-      clientIdAsString,
+      clientId.toString(),
       clientVersion
     )
     if (clientIDs) {
@@ -149,10 +148,8 @@ export const listen = async (req: AuthRequest, res: AuthResponse<string>, next: 
     }
     res.writeHead(200, headers)
     res.write(initialData)
-    const clientId = Date.now()
-
     const newClient = {
-      id: clientId,
+      id: Date.now(),
       res,
     }
     collaborationProcessor.addClient(newClient, documentId)

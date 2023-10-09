@@ -19,9 +19,13 @@ import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
 
 export class CollaborationProcessor {
+  private _documentVersionMap = new Map<string, number>()
   private _documentClientsMap = new Map<string, Client[]>()
   get documentsClientsMap() {
     return this._documentClientsMap
+  }
+  get documentVersionMap() {
+    return this._documentVersionMap
   }
 
   addClient(newClient: Client, documentId: string) {
@@ -45,31 +49,38 @@ export class CollaborationProcessor {
     }
   }
 
-  async handleCollaborationSteps(
+  async receiveSteps(
     documentId: string,
     steps: JsonValue[],
     clientId: string,
     clientVersion: number
   ) {
     const document = await docService.findDocumentWithHistory(documentId)
-    if (document.data?.history) {
-      const { version } = document.data
-      if (version != clientVersion) {
-        return {
-          err: `Update denied for, version is ${version}, and clientVersion is ${clientVersion}`,
-          code: 409,
-        }
-      }
-      await this.applyStepsToDocument(steps, document, clientId)
-      return {
-        clientIDs: convertIdsToNumbers(document.data.history.client_ids),
-      }
-    } else {
+    if (!document.data?.history) {
       return { err: 'Document not found', code: 404 }
+    }
+    const { version } = document.data
+    const memoryVersion = this.documentVersionMap.get(documentId) || document.data.version
+    if (version != clientVersion) {
+      return {
+        err: `Update denied, version is ${version}, and client version is ${clientVersion}`,
+        code: 200,
+      }
+    }
+    if (version != memoryVersion) {
+      return {
+        err: `Update denied, memory version is ${memoryVersion}, and database version is ${version}`,
+      }
+    }
+    await this.applyStepsToDocument(steps, document, clientId)
+    return {
+      clientIDs: convertIdsToNumbers(document.data.history.client_ids),
     }
   }
 
   private async applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
+    let memoryVersion =
+      this.documentVersionMap.get(document.data.manuscript_model_id) || document.data.version
     const steps = hydrateSteps(jsonSteps)
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((step: Step) => {
@@ -77,7 +88,10 @@ export class CollaborationProcessor {
       document.data.history.steps.push(step.toJSON())
       document.data.history.client_ids.push(clientId)
       document.data.version += 1
+      memoryVersion += 1
+      this.documentVersionMap.set(document.data.manuscript_model_id, memoryVersion)
     })
+
     await docService.updateDocumentWithHistory(document.data.manuscript_model_id, {
       doc: pmDocument.toJSON(),
       version: document.data.version,
