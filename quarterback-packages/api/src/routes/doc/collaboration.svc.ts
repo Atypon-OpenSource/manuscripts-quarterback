@@ -70,6 +70,7 @@ export class CollaborationProcessor {
     if (version != memoryVersion) {
       return {
         err: `Update denied, memory version is ${memoryVersion}, and database version is ${version}`,
+        code: 200,
       }
     }
     await this.applyStepsToDocument(steps, document, clientId)
