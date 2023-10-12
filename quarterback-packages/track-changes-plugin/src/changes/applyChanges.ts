@@ -74,7 +74,7 @@ export function applyAcceptedRejectedChanges(
       ChangeSet.isNodeAttrChange(change) &&
       change.dataTracked.status === CHANGE_STATUS.accepted
     ) {
-      tr.setNodeMarkup(from, undefined, { ...node.attrs, dataTracked: null }, node.marks)
+      tr.setNodeMarkup(from, undefined, { ...change.newAttrs, dataTracked: null }, node.marks)
     } else if (
       ChangeSet.isNodeAttrChange(change) &&
       change.dataTracked.status === CHANGE_STATUS.rejected
