@@ -69,7 +69,10 @@ export class ChangeSet {
       if (
         currentNodeChange &&
         c.from < currentNodeChange.to &&
-        !this.#isSameNodeChange(currentNodeChange, c)
+        !(
+          this.#isSameNodeChange(currentNodeChange, c) &&
+          this.#isNotPendingOrDeleted(currentNodeChange)
+        )
       ) {
         currentNodeChange.children.push(c)
       } else if (c.type === 'node-change') {
@@ -224,11 +227,13 @@ export class ChangeSet {
   }
 
   #isSameNodeChange(currentChange: NodeChange, nextChange: TrackedChange) {
+    return currentChange.from === nextChange.from && currentChange.to === nextChange.to
+  }
+
+  #isNotPendingOrDeleted(change: TrackedChange) {
     return (
-      currentChange.from === nextChange.from &&
-      currentChange.to === nextChange.to &&
-      currentChange.dataTracked.operation !== CHANGE_OPERATION.delete &&
-      currentChange.dataTracked.status !== CHANGE_STATUS.pending
+      change.dataTracked.operation !== CHANGE_OPERATION.delete &&
+      change.dataTracked.status !== CHANGE_STATUS.pending
     )
   }
 }
