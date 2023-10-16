@@ -23,8 +23,8 @@ import {
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 
 import { snapService } from './snap.svc'
 

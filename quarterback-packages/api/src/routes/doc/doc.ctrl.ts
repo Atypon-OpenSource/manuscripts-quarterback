@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { schema } from '@manuscripts/transform'
+import { Step } from 'prosemirror-transform'
 import {
   IGetDocumentResponse,
   ICreateDocRequest,
@@ -22,8 +24,8 @@ import {
 import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 
 import { docService } from './doc.svc'
 
@@ -34,9 +36,15 @@ export const findDocument = async (
 ) => {
   try {
     const { documentId } = req.params
+
+    const cachedItem = getDocHistory(documentId)
     const result = await docService.findDocument(documentId)
     if ('data' in result) {
-      res.json(result.data)
+      const data =
+        cachedItem && cachedItem.doc
+          ? { ...result.data, version: cachedItem.version, doc: cachedItem.doc.toJSON() }
+          : result.data
+      res.json(data)
     } else {
       next(new CustomError(result.err, result.code))
     }
@@ -96,6 +104,154 @@ export const deleteDocument = async (
       res.sendStatus(200)
     } else {
       next(new CustomError(result.err, result.code))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export type DocData = {
+  steps: Step[]
+  version: number
+  clientIDs: number[]
+  doc: any
+}
+const tempDocs = new Map<string, DocData>()
+const getGlobalTemp = () => {
+  return tempDocs
+}
+
+const getDocHistory = (docId: string) => {
+  const temp = getGlobalTemp()
+  const docData = temp.get(docId)
+  if (!docData) {
+    const template = {
+      steps: [], // steps have to be dropped at some point
+      clientIDs: [], // needs to be dropped along with steps
+      version: 0,
+      doc: undefined,
+    }
+    temp.set(docId, template)
+    return template
+  }
+  return docData
+}
+
+export const receiveSteps = async (
+  req: AuthRequest<any>,
+  res: AuthResponse,
+  next: NextFunction
+) => {
+  try {
+    const { documentId } = req.params
+    const newSteps = req.body.steps
+    const clientID = req.body.clientID // clientID is not the same as userID, it's an ID of the client exactly (app instance running in the browser)
+    const clientVersion = req.body.version // client the version on top of which it updates, in other words it says last version known to it
+
+    const docSearch = await docService.findDocument(documentId)
+    const cachedItem = getDocHistory(documentId)
+    if (cachedItem && 'data' in docSearch) {
+      // @ts-ignore
+      const { version } = cachedItem
+
+      // this is needed, commented for testing only
+      if (version != clientVersion) {
+        console.log(`update denied for: version ${version} vs clientVersion ${clientVersion}`)
+        /*
+        if client is based on an older version we deny his request. At some point in time client should receive update and will then
+        resend his steps after rebasing them. Client will persist its steps.
+        */
+        res.sendStatus(200)
+        return
+      }
+
+      let pmDoc = cachedItem.doc || schema.nodeFromJSON(docSearch.data.doc)
+
+      newSteps.forEach((jsonStep) => {
+        const step = Step.fromJSON(schema, jsonStep)
+        pmDoc = step.apply(pmDoc).doc || pmDoc
+        cachedItem.steps.push(step)
+        cachedItem.clientIDs.push(clientID)
+        cachedItem.version += 1
+      })
+      cachedItem.doc = pmDoc
+
+      // docService.updateDocument(documentId, {doc: pmDoc.toJSON()})
+      res.sendStatus(200)
+
+      // Signal server side listener
+      sendStepsToAll({ steps: newSteps, clientIDs: cachedItem.clientIDs, version: clientVersion })
+    } else {
+      next(new CustomError('Unable to save steps', 500))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+function sendStepsToAll(data: unknown) {
+  global.clients.forEach((client) => client.res.write(`data: ${JSON.stringify(data)}\n\n`))
+}
+
+export const stepsEventHandler = (
+  req: AuthRequest,
+  res: AuthResponse<string>,
+  next: NextFunction
+) => {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+  }
+
+  // initial response
+  const { documentId } = req.params
+  const historyData = getDocHistory(documentId)
+  const data = `data: ${JSON.stringify(historyData)}\n\n`
+  res.writeHead(200, headers)
+  res.write(data)
+
+  const clientId = Date.now()
+
+  const newClient = {
+    id: clientId,
+    res,
+  }
+  global.clients.push(newClient)
+
+  req.on('close', () => {
+    console.log(`${clientId} Connection closed`)
+    const index = global.clients.findIndex((client) => client.id == clientId)
+    global.clients.splice(index)
+  })
+}
+
+type StepsSince = {
+  steps: unknown[] // json representaion of Step[]
+  clientIDs: unknown[] // string or integer
+  version: number
+}
+
+export const getVersion = (req: AuthRequest, res: AuthResponse<StepsSince>, next: NextFunction) => {
+  try {
+    const { documentId, versionId } = req.params
+    const temp = getGlobalTemp()
+
+    const item = temp.get(documentId)
+    if (item) {
+      const data = {
+        steps: item.steps.slice(parseInt(versionId)),
+        clientIDs: item.clientIDs.slice(parseInt(versionId)),
+        version: item.version, // sending last version,
+      }
+
+      console.log('getVersion data')
+      console.log(data)
+
+      res.json(data)
+    } else {
+      console.log('item in temp not found, check id')
+      res.sendStatus(404)
     }
   } catch (err) {
     next(err)

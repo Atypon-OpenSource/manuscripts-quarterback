@@ -21,7 +21,7 @@ import {
   IUpdateDocumentRequest,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
+import { CustomError, log, prisma } from '../../common'
 
 export const docService = {
   async findDocument(id: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
@@ -54,6 +54,7 @@ export const docService = {
         user_model_id: userId,
         project_model_id: payload.project_model_id,
         doc: payload.doc,
+        version: 0,
       },
     })
     return { data: { ...saved, snapshots: [] } }

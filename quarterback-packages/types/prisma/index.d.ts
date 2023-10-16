@@ -20,6 +20,7 @@ export type ManuscriptDoc = {
   manuscript_model_id: string
   user_model_id: string
   project_model_id: string
+  version: number
   doc: Prisma.JsonValue
   createdAt: Date
   updatedAt: Date
@@ -966,14 +967,25 @@ export namespace Prisma {
 
   export type AggregateManuscriptDoc = {
     _count: ManuscriptDocCountAggregateOutputType | null
+    _avg: ManuscriptDocAvgAggregateOutputType | null
+    _sum: ManuscriptDocSumAggregateOutputType | null
     _min: ManuscriptDocMinAggregateOutputType | null
     _max: ManuscriptDocMaxAggregateOutputType | null
+  }
+
+  export type ManuscriptDocAvgAggregateOutputType = {
+    version: number | null
+  }
+
+  export type ManuscriptDocSumAggregateOutputType = {
+    version: number | null
   }
 
   export type ManuscriptDocMinAggregateOutputType = {
     manuscript_model_id: string | null
     user_model_id: string | null
     project_model_id: string | null
+    version: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -982,6 +994,7 @@ export namespace Prisma {
     manuscript_model_id: string | null
     user_model_id: string | null
     project_model_id: string | null
+    version: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -990,6 +1003,7 @@ export namespace Prisma {
     manuscript_model_id: number
     user_model_id: number
     project_model_id: number
+    version: number
     doc: number
     createdAt: number
     updatedAt: number
@@ -997,10 +1011,19 @@ export namespace Prisma {
   }
 
 
+  export type ManuscriptDocAvgAggregateInputType = {
+    version?: true
+  }
+
+  export type ManuscriptDocSumAggregateInputType = {
+    version?: true
+  }
+
   export type ManuscriptDocMinAggregateInputType = {
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    version?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1009,6 +1032,7 @@ export namespace Prisma {
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    version?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1017,6 +1041,7 @@ export namespace Prisma {
     manuscript_model_id?: true
     user_model_id?: true
     project_model_id?: true
+    version?: true
     doc?: true
     createdAt?: true
     updatedAt?: true
@@ -1066,6 +1091,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ManuscriptDocAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ManuscriptDocSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ManuscriptDocMinAggregateInputType
@@ -1096,6 +1133,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ManuscriptDocCountAggregateInputType | true
+    _avg?: ManuscriptDocAvgAggregateInputType
+    _sum?: ManuscriptDocSumAggregateInputType
     _min?: ManuscriptDocMinAggregateInputType
     _max?: ManuscriptDocMaxAggregateInputType
   }
@@ -1105,10 +1144,13 @@ export namespace Prisma {
     manuscript_model_id: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonValue
     createdAt: Date
     updatedAt: Date
     _count: ManuscriptDocCountAggregateOutputType | null
+    _avg: ManuscriptDocAvgAggregateOutputType | null
+    _sum: ManuscriptDocSumAggregateOutputType | null
     _min: ManuscriptDocMinAggregateOutputType | null
     _max: ManuscriptDocMaxAggregateOutputType | null
   }
@@ -1131,6 +1173,7 @@ export namespace Prisma {
     manuscript_model_id?: boolean
     user_model_id?: boolean
     project_model_id?: boolean
+    version?: boolean
     doc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3816,6 +3859,7 @@ export namespace Prisma {
     manuscript_model_id: 'manuscript_model_id',
     user_model_id: 'user_model_id',
     project_model_id: 'project_model_id',
+    version: 'version',
     doc: 'doc',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -3873,6 +3917,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFilter | string
     user_model_id?: StringFilter | string
     project_model_id?: StringFilter | string
+    version?: IntFilter | number
     doc?: JsonFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -3884,6 +3929,7 @@ export namespace Prisma {
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    version?: SortOrder
     doc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3899,12 +3945,15 @@ export namespace Prisma {
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    version?: SortOrder
     doc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ManuscriptDocCountOrderByAggregateInput
+    _avg?: ManuscriptDocAvgOrderByAggregateInput
     _max?: ManuscriptDocMaxOrderByAggregateInput
     _min?: ManuscriptDocMinOrderByAggregateInput
+    _sum?: ManuscriptDocSumOrderByAggregateInput
   }
 
   export type ManuscriptDocScalarWhereWithAggregatesInput = {
@@ -3914,6 +3963,7 @@ export namespace Prisma {
     manuscript_model_id?: StringWithAggregatesFilter | string
     user_model_id?: StringWithAggregatesFilter | string
     project_model_id?: StringWithAggregatesFilter | string
+    version?: IntWithAggregatesFilter | number
     doc?: JsonWithAggregatesFilter
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
@@ -4029,6 +4079,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4040,6 +4091,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4051,6 +4103,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4062,6 +4115,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4073,6 +4127,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4082,6 +4137,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4091,6 +4147,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4237,6 +4294,17 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedStringFilter | string
   }
+
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
+  }
   export type JsonFilter = 
     | PatchUndefined<
         Either<Required<JsonFilterBase>, Exclude<keyof Required<JsonFilterBase>, 'path'>>,
@@ -4295,15 +4363,21 @@ export namespace Prisma {
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    version?: SortOrder
     doc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ManuscriptDocAvgOrderByAggregateInput = {
+    version?: SortOrder
   }
 
   export type ManuscriptDocMaxOrderByAggregateInput = {
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4312,8 +4386,13 @@ export namespace Prisma {
     manuscript_model_id?: SortOrder
     user_model_id?: SortOrder
     project_model_id?: SortOrder
+    version?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ManuscriptDocSumOrderByAggregateInput = {
+    version?: SortOrder
   }
 
   export type StringWithAggregatesFilter = {
@@ -4332,6 +4411,22 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedStringFilter
     _max?: NestedStringFilter
+  }
+
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
   }
   export type JsonWithAggregatesFilter = 
     | PatchUndefined<
@@ -4500,6 +4595,14 @@ export namespace Prisma {
     set?: string
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -4664,6 +4767,17 @@ export namespace Prisma {
     not?: NestedStringFilter | string
   }
 
+  export type NestedIntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
+  }
+
   export type NestedDateTimeFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -4692,7 +4806,7 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
-  export type NestedIntFilter = {
+  export type NestedIntWithAggregatesFilter = {
     equals?: number
     in?: Enumerable<number>
     notIn?: Enumerable<number>
@@ -4700,7 +4814,23 @@ export namespace Prisma {
     lte?: number
     gt?: number
     gte?: number
-    not?: NestedIntFilter | number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
   export type NestedJsonFilter = 
     | PatchUndefined<
@@ -4895,6 +5025,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4905,6 +5036,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4953,6 +5085,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4963,6 +5096,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4989,6 +5123,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4999,6 +5134,7 @@ export namespace Prisma {
     manuscript_model_id?: string
     user_model_id: string
     project_model_id: string
+    version: number
     doc: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5040,6 +5176,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5050,6 +5187,7 @@ export namespace Prisma {
     manuscript_model_id?: StringFieldUpdateOperationsInput | string
     user_model_id?: StringFieldUpdateOperationsInput | string
     project_model_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

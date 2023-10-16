@@ -16,7 +16,7 @@
 import { promises as fs } from 'fs'
 import client from 'prom-client'
 import { parse, SemVer } from 'semver'
-import packageJson from '../package.json'
+// import packageJson from '../package.json'
 
 const appMetricMap = {
   name: 'app_version',
@@ -59,24 +59,24 @@ function register(
   }
 }
 
-export async function configurePromClientRegistry(): Promise<void> {
-  const appVersion: SemVer | null = parse(packageJson.version, {})
-  if (appVersion) {
-    register(appMetricMap, appVersion)
-  }
-  for (const metric of metricsMap) {
-    const semver = await getVersion(metric.packageName)
-    if (semver) {
-      register(metric, semver)
-    }
-  }
-}
+// export async function configurePromClientRegistry(): Promise<void> {
+//   const appVersion: SemVer | null = parse('0.0.0', {})
+//   if (appVersion) {
+//     register(appMetricMap, appVersion)
+//   }
+//   for (const metric of metricsMap) {
+//     const semver = await getVersion(metric.packageName)
+//     if (semver) {
+//       register(metric, semver)
+//     }
+//   }
+// }
 
-async function getVersion(packageName: string): Promise<SemVer | null> {
-  const packageFile = await fs.readFile(
-    `./quarterback-packages/api/node_modules/@manuscripts/${packageName}/package.json`,
-    'utf-8'
-  )
-  const pJson = JSON.parse(packageFile)
-  return parse(pJson.version)
-}
+// async function getVersion(packageName: string): Promise<SemVer | null> {
+//   const packageFile = await fs.readFile(
+//     `./quarterback-packages/api/node_modules/@manuscripts/${packageName}/package.json`,
+//     'utf-8'
+//   )
+//   const pJson = JSON.parse(packageFile)
+//   return parse(pJson.version)
+// }

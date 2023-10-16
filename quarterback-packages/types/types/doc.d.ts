@@ -31,6 +31,14 @@ export interface ICreateDocRequest {
   project_model_id: string
   doc: Record<string, any>
 }
+
+// POST /doc steps
+export interface ISaveSteps {
+  clientID: string
+  version: number
+  steps: Step[]
+}
+
 export type ICreateDocResponse = ManuscriptDocWithSnapshots
 
 // PUT /doc/:documentId
