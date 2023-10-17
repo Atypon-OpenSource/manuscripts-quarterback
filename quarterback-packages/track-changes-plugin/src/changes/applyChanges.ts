@@ -24,7 +24,10 @@ import { deleteNode } from '../mutate/deleteNode'
 import { mergeNode } from '../mutate/mergeNode'
 import { updateChangeChildrenAttributes } from './updateChangeAttrs'
 
-function getUpdatedDataTracked(dataTracked: TrackedAttrs[], changeId: string) {
+function getUpdatedDataTracked(dataTracked: TrackedAttrs[] | null, changeId: string) {
+  if (!dataTracked) {
+    return null
+  }
   const newDataTracked = dataTracked.filter((c) => c.id !== changeId)
   return newDataTracked.length ? newDataTracked : null
 }
