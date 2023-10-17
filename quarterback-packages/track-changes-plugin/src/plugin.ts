@@ -116,7 +116,6 @@ export const trackChangesPlugin = (opts: TrackChangesOptions = { userID: 'anonym
             }
           })
         } else if (getAction(tr, TrackChangesAction.applyAndRemoveChanges)) {
-          console.log(changeSet)
           const mapping = applyAcceptedRejectedChanges(createdTr, oldState.schema, changeSet.bothNodeChanges)
           applyAcceptedRejectedChanges(createdTr, oldState.schema, changeSet.textChanges, mapping)
           setAction(createdTr, TrackChangesAction.refreshChanges, true)
