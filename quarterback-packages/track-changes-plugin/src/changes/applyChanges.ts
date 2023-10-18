@@ -71,11 +71,10 @@ export function applyAcceptedRejectedChanges(
           we don't need to remove dataTracked record. We need, however, to make sure we don't restore dataTracked records for
           the previously applied changes. To check for already applied changes we log them into "attrsChangesLog" Map.
         */
-        const { dataTracked, attrs } = change.newAttrs
+        const { dataTracked, ...attrs } = change.newAttrs
         const changeLog = attrsChangesLog.get(node.attrs.id)
-        const newDataTracked = changeLog?.length
-          ? (dataTracked as TrackedAttrs[]).filter((c) => !changeLog.includes(c.id))
-          : dataTracked
+        const newDataTracked =
+          changeLog && changeLog.length ? (dataTracked as TrackedAttrs[]).filter((c) => !changeLog.includes(c.id)) : dataTracked
         tr.setNodeMarkup(from, undefined, { ...attrs, dataTracked: newDataTracked.length ? newDataTracked : null }, node.marks)
         // default is "null" for dataTracked in attrs in pm schema, so codebase generally relies on it being null when empty
       }
