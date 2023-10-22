@@ -17,6 +17,7 @@ import { ManuscriptDoc, Prisma } from '../prisma'
 import { SnapshotLabel } from './snapshot'
 import JsonValue = Prisma.JsonValue
 import { AuthResponse } from '../../api/src/typings/auth'
+import { AuthRequest, NextFunction } from '../../api/src/typings/request'
 export { ManuscriptDoc, ManuscriptDocHistory } from '../prisma'
 export { JsonValue }
 export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
@@ -54,4 +55,9 @@ export type StepsData = {
 export type Client = {
   id: number
   res: AuthResponse<string>
+}
+export type RequestQueueItem = {
+  req: AuthRequest
+  res: AuthResponse<any>
+  next: NextFunction
 }

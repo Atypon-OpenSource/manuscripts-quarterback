@@ -13,42 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Client, StepsData, JsonValue } from '@manuscripts/quarterback-types'
+import { JsonValue } from '@manuscripts/quarterback-types'
 import { Step } from 'prosemirror-transform'
 import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
 
 export class CollaborationProcessor {
-  private _documentVersionMap = new Map<string, number>()
-  private _documentClientsMap = new Map<string, Client[]>()
-  get documentsClientsMap() {
-    return this._documentClientsMap
-  }
-  get documentVersionMap() {
-    return this._documentVersionMap
-  }
-
-  addClient(newClient: Client, documentId: string) {
-    const clients = this._documentClientsMap.get(documentId) || []
-    clients.push(newClient)
-    this.documentsClientsMap.set(documentId, clients)
-  }
-
-  sendDataToClients(data: StepsData, documentId: string) {
-    const clientsForDocument = this.documentsClientsMap.get(documentId)
-    clientsForDocument?.forEach((client) => {
-      client.res.write(`data: ${JSON.stringify(data)}\n\n`)
-    })
-  }
-  removeClientById(clientId: number, documentId: string) {
-    const clients = this.documentsClientsMap.get(documentId) || []
-    const index = clients.findIndex((client) => client.id === clientId)
-    if (index !== -1) {
-      clients.splice(index, 1)
-      this.documentsClientsMap.set(documentId, clients)
-    }
-  }
-
   async receiveSteps(
     documentId: string,
     steps: JsonValue[],
@@ -60,17 +30,10 @@ export class CollaborationProcessor {
       return { err: 'Document not found', code: 404 }
     }
     const { version } = document.data
-    const memoryVersion = this.documentVersionMap.get(documentId) || document.data.version
     if (version != clientVersion) {
       return {
         err: `Update denied, version is ${version}, and client version is ${clientVersion}`,
-        code: 200,
-      }
-    }
-    if (version != memoryVersion) {
-      return {
-        err: `Update denied, memory version is ${memoryVersion}, and database version is ${version}`,
-        code: 200,
+        code: 409,
       }
     }
     await this.applyStepsToDocument(steps, document, clientId)
@@ -80,8 +43,6 @@ export class CollaborationProcessor {
   }
 
   private async applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
-    let memoryVersion =
-      this.documentVersionMap.get(document.data.manuscript_model_id) || document.data.version
     const steps = hydrateSteps(jsonSteps)
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((step: Step) => {
@@ -89,8 +50,6 @@ export class CollaborationProcessor {
       document.data.history.steps.push(step.toJSON())
       document.data.history.client_ids.push(clientId)
       document.data.version += 1
-      memoryVersion += 1
-      this.documentVersionMap.set(document.data.manuscript_model_id, memoryVersion)
     })
 
     await docService.updateDocumentWithHistory(document.data.manuscript_model_id, {
@@ -115,7 +74,7 @@ export class CollaborationProcessor {
     }
     return `data: ${JSON.stringify(historyData)}\n\n`
   }
-  async getDataOfVersion(documentId: string, versionId: string) {
+  async getDataFromVersion(documentId: string, versionId: string) {
     const document = await docService.findDocumentWithHistory(documentId)
     if (document.data?.history) {
       const data = {

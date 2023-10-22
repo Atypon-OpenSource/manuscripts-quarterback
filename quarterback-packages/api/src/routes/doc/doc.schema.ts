@@ -25,16 +25,14 @@ export const receiveStepsSchema: Joi.SchemaMap = {
     version: Joi.number().required(),
   }),
 }
-export const listenSchema: Joi.SchemaMap = {
+export const initialHistorySchema: Joi.SchemaMap = {
   params: Joi.object({
     documentId: Joi.string().required(),
   }),
 }
-export const getDocOfVersionSchema: Joi.SchemaMap = {
+export const getDocFromVersionSchema: Joi.SchemaMap = {
   params: Joi.object({
     documentId: Joi.string().required(),
-  }),
-  body: Joi.object({
     versionId: Joi.number().required(),
   }),
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import type { User } from '@manuscripts/quarterback-types'
-import type { Request, Response } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
-
+export { NextFunction }
 export type IRequest<
   B = Record<string, any>,
   P extends ParamsDictionary = Record<string, any>

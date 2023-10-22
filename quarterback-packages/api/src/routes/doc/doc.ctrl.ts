@@ -19,6 +19,7 @@ import {
   IGetDocumentResponse,
   IUpdateDocumentRequest,
   StepsData,
+  RequestQueueItem,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
 
@@ -106,14 +107,14 @@ export const deleteDocument = async (
 
 export const receiveSteps = async (
   req: AuthRequest<any>,
-  res: AuthResponse,
+  res: AuthResponse<any>,
   next: NextFunction
 ) => {
   try {
     const { documentId } = req.params
     const steps = req.body.steps
     const clientId = req.body.clientID
-    const clientVersion = req.body.version as number
+    const clientVersion = req.body.version
     const { clientIDs, err, code } = await collaborationProcessor.receiveSteps(
       documentId,
       steps,
@@ -121,15 +122,7 @@ export const receiveSteps = async (
       clientVersion
     )
     if (clientIDs) {
-      res.sendStatus(200)
-      collaborationProcessor.sendDataToClients(
-        {
-          steps: steps,
-          clientIDs: clientIDs,
-          version: clientVersion,
-        },
-        documentId
-      )
+      res.json({ clientIDs })
     } else {
       next(new CustomError(err, code))
     }
@@ -137,37 +130,30 @@ export const receiveSteps = async (
     next(err)
   }
 }
-export const listen = async (req: AuthRequest, res: AuthResponse<string>, next: NextFunction) => {
+export const getInitialHistory = async (
+  req: AuthRequest,
+  res: AuthResponse<string>,
+  next: NextFunction
+) => {
   try {
     const { documentId } = req.params
     const initialData = await collaborationProcessor.getInitialData(documentId)
-    const headers = {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    }
-    res.writeHead(200, headers)
-    res.write(initialData)
-    const newClient = {
-      id: Date.now(),
-      res,
-    }
-    collaborationProcessor.addClient(newClient, documentId)
-    req.on('close', () => {
-      collaborationProcessor.removeClientById(newClient.id, documentId)
-    })
+    res.json(initialData)
   } catch (err) {
     next(err)
   }
 }
-export const getStepsOfVersion = async (
+export const getStepsFromVersion = async (
   req: AuthRequest,
   res: AuthResponse<StepsData>,
   next: NextFunction
 ) => {
   try {
     const { documentId, versionId } = req.params
-    const { data, err, code } = await collaborationProcessor.getDataOfVersion(documentId, versionId)
+    const { data, err, code } = await collaborationProcessor.getDataFromVersion(
+      documentId,
+      versionId
+    )
     if (data) {
       res.json(data)
     } else {
@@ -175,5 +161,38 @@ export const getStepsOfVersion = async (
     }
   } catch (err) {
     next(err)
+  }
+}
+
+const queue: RequestQueueItem[] = []
+
+export const queueRequests = async (req: any, res: any, next: any) => {
+  queue.push({ req, res, next })
+
+  if (queue.length === 1) {
+    await processNextRequest()
+  }
+}
+
+const processNextRequest = async () => {
+  const request = queue[0]
+  if (request) {
+    const { req, res, next } = request
+    const { url } = req
+    switch (true) {
+      case url.includes('version'):
+        await getStepsFromVersion(req, res, next)
+        break
+      case url.includes('steps'):
+        await receiveSteps(req, res, next)
+        break
+      case url.includes('history'):
+        await getInitialHistory(req, res, next)
+        break
+    }
+    queue.shift()
+    if (queue.length > 0) {
+      await processNextRequest()
+    }
   }
 }
