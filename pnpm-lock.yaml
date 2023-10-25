@@ -1652,8 +1652,8 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2
       prosemirror-transform:
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.7.4
+        version: 1.8.0
       prosemirror-view:
         specifier: ^1.29.1
         version: 1.29.1
