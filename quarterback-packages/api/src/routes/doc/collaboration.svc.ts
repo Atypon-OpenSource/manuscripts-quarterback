@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { JsonValue } from '@manuscripts/quarterback-types'
+import { Doc, JsonValue } from '@manuscripts/quarterback-types'
 import { Step } from 'prosemirror-transform'
 import { docService } from './doc.svc'
 import { schema } from '@manuscripts/transform'
+import { ManuscriptDocHistory } from '@manuscripts/quarterback-db'
 
 export class CollaborationProcessor {
   async receiveSteps(
@@ -25,68 +26,102 @@ export class CollaborationProcessor {
     clientId: string,
     clientVersion: number
   ) {
-    const document = await docService.findDocumentWithHistory(documentId)
-    if (!document.data?.history) {
+    const document = await docService.findDocument(documentId)
+    if (!document.data) {
       return { err: 'Document not found', code: 404 }
     }
-    const { version } = document.data
+    const mergedHistories = await this.getMergedHistories(documentId)
+    if (!mergedHistories.data) {
+      return { err: 'History not found', code: 404 }
+    }
+    const version = mergedHistories.data.version || 0
     if (version != clientVersion) {
       return {
         err: `Update denied, version is ${version}, and client version is ${clientVersion}`,
         code: 409,
       }
     }
-    await this.applyStepsToDocument(steps, document, clientId)
+    const updatedVersion = await this.applyStepsToDocument(steps, document, version)
+    await docService.createDocumentHistory(
+      document.data.manuscript_model_id,
+      steps,
+      updatedVersion,
+      clientId
+    )
     return {
-      clientIDs: convertIdsToNumbers(document.data.history.client_ids),
+      data: convertIdsToNumbers(mergedHistories.data.clientIds),
     }
   }
 
-  private async applyStepsToDocument(jsonSteps: JsonValue[], document: any, clientId: string) {
+  private async applyStepsToDocument(jsonSteps: JsonValue[], document: Doc, version: number) {
     const steps = hydrateSteps(jsonSteps)
     let pmDocument = schema.nodeFromJSON(document.data.doc)
     steps.forEach((step: Step) => {
       pmDocument = step.apply(pmDocument).doc || pmDocument
-      document.data.history.steps.push(step.toJSON())
-      document.data.history.client_ids.push(clientId)
-      document.data.version += 1
     })
-
-    await docService.updateDocumentWithHistory(document.data.manuscript_model_id, {
+    version += steps.length
+    await docService.updateDocument(document.data.manuscript_model_id, {
       doc: pmDocument.toJSON(),
-      version: document.data.version,
-      history: {
-        steps: document.data.history.steps,
-        client_ids: document.data.history.client_ids,
-      },
     })
+    return version
   }
 
-  async getInitialData(documentId: string) {
-    const document = await docService.findDocumentWithHistory(documentId)
-    const historyData = {
-      steps: document.data?.history ? hydrateSteps(document.data.history.steps) : [],
-      clientIDs: document.data?.history
-        ? convertIdsToNumbers(document.data.history.client_ids)
-        : [],
-      version: document.data?.version || 0,
-      doc: document.data?.doc || undefined,
+  private mergeHistories(histories: ManuscriptDocHistory[]) {
+    let steps: JsonValue[] = []
+    let clientIds: string[] = []
+
+    for (const history of histories) {
+      steps = steps.concat(history.steps)
+      clientIds = clientIds.concat(Array(history.steps.length).fill(history.client_id))
     }
-    return `data: ${JSON.stringify(historyData)}\n\n`
+    const version = steps.length
+    return {
+      steps: steps,
+      clientIds: clientIds,
+      version,
+    }
+  }
+  private async getMergedHistories(documentId: string) {
+    const histories = await docService.findAllDocumentHistories(documentId)
+    if (!histories.data) {
+      return { err: 'History not found', code: 404 }
+    }
+    return { data: this.mergeHistories(histories.data) }
+  }
+
+  async getDocumentHistory(documentId: string) {
+    const document = await docService.findDocument(documentId)
+    if (!document.data) {
+      return { err: 'Document not found', code: 404 }
+    }
+    const mergedHistories = await this.getMergedHistories(documentId)
+    if (!mergedHistories.data) {
+      return { err: 'History not found', code: 404 }
+    }
+    return {
+      data: {
+        steps: hydrateSteps(mergedHistories.data.steps),
+        clientIDs: convertIdsToNumbers(mergedHistories.data.clientIds),
+        version: mergedHistories.data.version,
+        doc: document.data.doc || undefined,
+      },
+    }
   }
   async getDataFromVersion(documentId: string, versionId: string) {
-    const document = await docService.findDocumentWithHistory(documentId)
-    if (document.data?.history) {
-      const data = {
-        steps: hydrateSteps(document.data.history.steps).slice(parseInt(versionId)),
-        clientIDs: convertIdsToNumbers(document.data.history.client_ids.slice(parseInt(versionId))),
-        version: document.data.version,
-      }
-      return {
-        data: data,
-      }
+    const mergedHistories = await this.getMergedHistories(documentId)
+    if (!mergedHistories.data) {
+      return { err: 'History not found', code: 404 }
     }
-    return { err: 'Document history not found', code: 404 }
+    const steps = hydrateSteps(mergedHistories.data.steps).slice(parseInt(versionId))
+    const clientIDs = convertIdsToNumbers(mergedHistories.data.clientIds.slice(parseInt(versionId)))
+    const data = {
+      steps: steps,
+      clientIDs: clientIDs,
+      version: mergedHistories.data.version,
+    }
+    return {
+      data: data,
+    }
   }
 }
 
@@ -98,5 +133,5 @@ const convertIdsToNumbers = (ids: string[]) => {
   return newIds
 }
 const hydrateSteps = (jsonSteps: JsonValue[]): Step[] => {
-  return jsonSteps.map((s: JsonValue) => Step.fromJSON(schema, s)) as Step[]
+  return jsonSteps.map((step: JsonValue) => Step.fromJSON(schema, step)) as Step[]
 }

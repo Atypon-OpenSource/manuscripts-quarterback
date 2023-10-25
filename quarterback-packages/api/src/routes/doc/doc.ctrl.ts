@@ -115,16 +115,16 @@ export const receiveSteps = async (
     const steps = req.body.steps
     const clientId = req.body.clientID
     const clientVersion = req.body.version
-    const { clientIDs, err, code } = await collaborationProcessor.receiveSteps(
+    const result = await collaborationProcessor.receiveSteps(
       documentId,
       steps,
       clientId.toString(),
       clientVersion
     )
-    if (clientIDs) {
-      res.json({ clientIDs })
+    if (result.data) {
+      res.json({ clientIDs: result.data })
     } else {
-      next(new CustomError(err, code))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -137,8 +137,12 @@ export const getInitialHistory = async (
 ) => {
   try {
     const { documentId } = req.params
-    const initialData = await collaborationProcessor.getInitialData(documentId)
-    res.json(initialData)
+    const result = await collaborationProcessor.getDocumentHistory(documentId)
+    if (!result.data) {
+      next(new CustomError(result.err, result.code))
+    }
+    const history = `data: ${JSON.stringify(result.data)}\n\n`
+    res.json(history)
   } catch (err) {
     next(err)
   }
@@ -150,14 +154,11 @@ export const getStepsFromVersion = async (
 ) => {
   try {
     const { documentId, versionId } = req.params
-    const { data, err, code } = await collaborationProcessor.getDataFromVersion(
-      documentId,
-      versionId
-    )
-    if (data) {
-      res.json(data)
+    const result = await collaborationProcessor.getDataFromVersion(documentId, versionId)
+    if (result.data) {
+      res.json(result.data)
     } else {
-      next(new CustomError(err, code))
+      next(new CustomError(result.err, result.code))
     }
   } catch (err) {
     next(err)
@@ -189,6 +190,10 @@ const processNextRequest = async () => {
       case url.includes('history'):
         await getInitialHistory(req, res, next)
         break
+      case url.includes('snapshot'):
+        console.log('entererd here')
+        console.log(req.body.docId)
+        await docService.clearDocumentHistory(req.params.docId)
     }
     queue.shift()
     if (queue.length > 0) {

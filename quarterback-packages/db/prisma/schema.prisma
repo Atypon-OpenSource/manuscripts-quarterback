@@ -12,26 +12,25 @@ generator client {
 }
 
 model ManuscriptDoc {
-  manuscript_model_id String                @id @default(uuid())
+  manuscript_model_id String               @id @default(uuid())
   user_model_id       String
   project_model_id    String
   doc                 Json
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  snapshots           ManuscriptSnapshot[]  @relation("ManuscriptSnapshotToManuscriptDoc")
-  comments            ManuscriptComment[]   @relation("ManuscriptCommentToManuscriptDoc")
-  version             Int                   @default(0)
-  history             ManuscriptDocHistory? @relation("ManuscriptDocHistoryToManuscriptDoc")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  snapshots           ManuscriptSnapshot[] @relation("ManuscriptSnapshotToManuscriptDoc")
+  comments            ManuscriptComment[]  @relation("ManuscriptCommentToManuscriptDoc")
 
   @@map("manuscript_doc")
 }
 
 model ManuscriptDocHistory {
-  doc_id     String        @unique
-  client_ids String[]      @default([])
-  steps      Json[]        @default([])
-  doc        ManuscriptDoc @relation("ManuscriptDocHistoryToManuscriptDoc", fields: [doc_id], references: [manuscript_model_id], onDelete: Cascade)
+  doc_id    String
+  version   Int
+  client_id String
+  steps     Json[]
 
+  @@id([doc_id, version])
   @@map("manuscript_doc_history")
 }
 

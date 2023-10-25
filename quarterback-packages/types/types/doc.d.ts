@@ -23,6 +23,7 @@ export { JsonValue }
 export type ManuscriptDocWithSnapshots = ManuscriptDoc & {
   snapshots: SnapshotLabel[]
 }
+export type Doc = Record<string, any>
 
 //GET /doc/:documentId
 export type IGetDocumentResponse = ManuscriptDocWithSnapshots
@@ -30,22 +31,13 @@ export type IGetDocumentResponse = ManuscriptDocWithSnapshots
 export interface ICreateDocRequest {
   manuscript_model_id: string
   project_model_id: string
-  doc: Record<string, any>
+  doc: Doc
 }
 export type ICreateDocResponse = ManuscriptDocWithSnapshots
 
 // PUT /doc/:documentId
 export type IUpdateDocumentRequest = {
-  doc: Record<string, any>
-  version?: number
-}
-export type IUpdateDocumentWithHistoryRequest = {
-  doc: Record<string, any>
-  version?: number
-  history?: {
-    steps: JsonValue[]
-    client_ids: string[]
-  }
+  doc: Doc
 }
 export type StepsData = {
   steps: unknown[]
@@ -58,6 +50,6 @@ export type Client = {
 }
 export type RequestQueueItem = {
   req: AuthRequest
-  res: AuthResponse<any>
+  res: AuthResponse<unknown>
   next: NextFunction
 }

@@ -1035,7 +1035,7 @@ importers:
       '@manuscripts/json-schema': ^2.0.2
       '@manuscripts/quarterback-db': workspace:*
       '@manuscripts/quarterback-types': workspace:*
-      '@manuscripts/transform': ^1.2.5
+      '@manuscripts/transform': ^1.4.6
       '@rollup/plugin-alias': ^3.1.9
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-json': ^4.1.0
@@ -1061,6 +1061,7 @@ importers:
       prom-client: ^14.2.0
       prosemirror-transform: ^1.7.4
       rimraf: ^3.0.2
+      rollup-plugin-typescript2: ^0.34.0
       semver: ^7.5.0
       ts-node: ^10.9.1
       tsconfig-paths: ^4.2.0
@@ -1070,7 +1071,7 @@ importers:
       '@manuscripts/json-schema': 2.0.2
       '@manuscripts/quarterback-db': link:../db
       '@manuscripts/quarterback-types': link:../types
-      '@manuscripts/transform': 1.2.5
+      '@manuscripts/transform': 1.4.6
       '@types/jsdom': 21.1.4
       celebrate: 15.0.1
       cors: 2.8.5
@@ -1100,6 +1101,7 @@ importers:
       dotenv: 16.0.2
       nodemon: 2.0.20
       rimraf: 3.0.2
+      rollup-plugin-typescript2: 0.34.0_typescript@4.9.5
       ts-node: 10.9.1_xmndcwxz6mkvxko26aixd4gkva
       typescript: 4.9.5
 
@@ -1122,7 +1124,7 @@ importers:
     specifiers:
       '@manuscripts/data': ^1.0.2
       '@manuscripts/json-schema': ^2.0.2
-      '@manuscripts/transform': ^1.2.5
+      '@manuscripts/transform': ^1.4.6
       '@rollup/plugin-commonjs': ^22.0.2
       '@types/debug': ^4.1.7
       '@types/jest': 27.5.1
@@ -1159,7 +1161,7 @@ importers:
     devDependencies:
       '@manuscripts/data': 1.0.2
       '@manuscripts/json-schema': 2.0.2
-      '@manuscripts/transform': 1.2.5_hpkdlyahnjirmkozrexewsoi6i
+      '@manuscripts/transform': 1.4.6_hkkro6tpifoyulhpkhwykmcf4a
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
       '@types/debug': 4.1.7
       '@types/jest': 27.5.1
@@ -3437,7 +3439,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.35
+      '@types/node': 18.7.18
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.8.1
@@ -3963,6 +3965,12 @@ packages:
       ajv: 8.12.0
       deepmerge: 4.3.1
 
+  /@manuscripts/json-schema/2.2.0:
+    resolution: {integrity: sha512-2ooif0jtIld5bA44DHPpsNbDvdoQWaFcNXiBlc7OQ0znY37e5juMipknEtNTvdHCtHpzBkrLJt7k77bBT7VaVQ==}
+    dependencies:
+      ajv: 8.12.0
+      deepmerge: 4.3.1
+
   /@manuscripts/library/0.6.2:
     resolution: {integrity: sha512-W6sTpI5lRG7m2/cmAwfChr/U4PurP4aNM25SA94mYh13P5dHYq6pBKGP/Ee2iscLcWfiYOpZkUvAUOBSu+NevA==}
     dependencies:
@@ -4042,14 +4050,13 @@ packages:
       styled-components: 5.3.5_mdz3marskokvq6744hhidi3r5a
     dev: false
 
-  /@manuscripts/transform/1.2.5:
-    resolution: {integrity: sha512-Oe/AdoGRNnTH/6jlZIstohUK6azK2gDugXw1Swgy54yVlPYwqpK+064NpdARXRVrwFyCcWXJt7tqbPvFh96dpA==}
+  /@manuscripts/transform/1.4.6:
+    resolution: {integrity: sha512-G/HvH5gQejiyKW0lY7Qzwpvj9ZE0PQgmDNmaVhN79x5YVEspU1QykjvWReRE9DerQHVl9Sho23FYuJKve0bwXg==}
     peerDependencies:
-      '@manuscripts/data': ^1.0.2
       prosemirror-state: ^1.4.2
       prosemirror-view: ^1.29.1
     dependencies:
-      '@manuscripts/json-schema': 2.0.2
+      '@manuscripts/json-schema': 2.2.0
       debug: 4.3.4
       jszip: 3.10.1
       mathjax-full: 3.2.2
@@ -4061,15 +4068,13 @@ packages:
       - supports-color
     dev: false
 
-  /@manuscripts/transform/1.2.5_hpkdlyahnjirmkozrexewsoi6i:
-    resolution: {integrity: sha512-Oe/AdoGRNnTH/6jlZIstohUK6azK2gDugXw1Swgy54yVlPYwqpK+064NpdARXRVrwFyCcWXJt7tqbPvFh96dpA==}
+  /@manuscripts/transform/1.4.6_hkkro6tpifoyulhpkhwykmcf4a:
+    resolution: {integrity: sha512-G/HvH5gQejiyKW0lY7Qzwpvj9ZE0PQgmDNmaVhN79x5YVEspU1QykjvWReRE9DerQHVl9Sho23FYuJKve0bwXg==}
     peerDependencies:
-      '@manuscripts/data': ^1.0.2
       prosemirror-state: ^1.4.2
       prosemirror-view: ^1.29.1
     dependencies:
-      '@manuscripts/data': 1.0.2
-      '@manuscripts/json-schema': 2.0.2
+      '@manuscripts/json-schema': 2.2.0
       debug: 4.3.4
       jszip: 3.10.1
       mathjax-full: 3.2.2
@@ -18680,6 +18685,19 @@ packages:
       rollup: 2.79.0
       tslib: 2.4.0
       typescript: 4.8.3
+    dev: true
+
+  /rollup-plugin-typescript2/0.34.0_typescript@4.9.5:
+    resolution: {integrity: sha512-dGtOz2kL6nQVgfIOmnA4Xh+5cFrs3bdu4jja/ej7WKR92RzOOixsn71LY5ZFFmKe1R677nUh+k2++NiY3un2PQ==}
+    peerDependencies:
+      rollup: '>=1.26.3'
+      typescript: '>=2.4.0'
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      find-cache-dir: 3.3.2
+      fs-extra: 10.1.0
+      tslib: 2.4.0
+      typescript: 4.9.5
     dev: true
 
   /rollup/2.78.1:
