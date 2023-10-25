@@ -190,10 +190,6 @@ const processNextRequest = async () => {
       case url.includes('history'):
         await getInitialHistory(req, res, next)
         break
-      case url.includes('snapshot'):
-        console.log('entererd here')
-        console.log(req.body.docId)
-        await docService.clearDocumentHistory(req.params.docId)
     }
     queue.shift()
     if (queue.length > 0) {
