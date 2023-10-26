@@ -34,7 +34,7 @@ export class CollaborationProcessor {
     if (!mergedHistories.data) {
       return { err: 'History not found', code: 404 }
     }
-    const version = mergedHistories.data.version || 0
+    const version = mergedHistories.data.version
     if (version != clientVersion) {
       return {
         err: `Update denied, version is ${version}, and client version is ${clientVersion}`,
@@ -73,6 +73,7 @@ export class CollaborationProcessor {
     for (const history of histories) {
       steps = steps.concat(history.steps)
       clientIds = clientIds.concat(Array(history.steps.length).fill(history.client_id))
+      // clientIds.push(history.client_id)
     }
     const version = steps.length
     return {
