@@ -62,11 +62,27 @@ export const docService = {
     })
     return { data: saved }
   },
-
-  async findAllDocumentHistories(documentId: string) {
+  async findLatestDocumentHistory(documentId: string) {
+    const histories = await prisma.manuscriptDocHistory.findFirst({
+      where: {
+        doc_id: documentId,
+      },
+      orderBy: {
+        version: 'desc',
+      },
+    })
+    if (!histories) {
+      return { err: 'No history found', code: '404' }
+    }
+    return { data: histories }
+  },
+  async findAllDocumentHistories(documentId: string, fromVersion = 0) {
     const histories = await prisma.manuscriptDocHistory.findMany({
       where: {
         doc_id: documentId,
+        version: {
+          gt: fromVersion,
+        },
       },
       orderBy: {
         version: 'asc',
@@ -78,10 +94,7 @@ export const docService = {
     return { data: histories }
   },
 
-  async createDocument(
-    payload: ICreateDocRequest,
-    userId: string
-  ): Promise<Maybe<ManuscriptDocWithSnapshots>> {
+  async createDocument(payload: ICreateDocRequest, userId: string): Promise<Maybe<ManuscriptDocWithSnapshots>> {
     const saved = await prisma.manuscriptDoc.create({
       data: {
         manuscript_model_id: payload.manuscript_model_id,
@@ -92,10 +105,7 @@ export const docService = {
     })
     return { data: { ...saved, snapshots: [] } }
   },
-  async updateDocument(
-    docId: string,
-    payload: IUpdateDocumentRequest
-  ): Promise<Maybe<ManuscriptDoc>> {
+  async updateDocument(docId: string, payload: IUpdateDocumentRequest): Promise<Maybe<ManuscriptDoc>> {
     const saved = await prisma.manuscriptDoc.update({
       data: payload,
       where: {

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 import { celebrate } from 'celebrate'
-import { NextFunction, Request, Response, Router } from 'express'
+import { Router } from 'express'
 
 import { authenticate } from './middlewares'
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
-import {
-  getDocFromVersionSchema,
-  initialHistorySchema,
-  receiveStepsSchema,
-} from './routes/doc/doc.schema'
+import { getStepsFromVersionSchema, getDocumentHistorySchema, receiveStepsSchema } from './routes/doc/doc.schema'
 import * as snapCtrl from './routes/snapshot/snap.ctrl'
-const authenticate2 = async (req: Request, res: Response, next: NextFunction) => {
-  next()
-}
+
 const router = Router()
 
 router.post('/authenticate', authCtrl.authenticate)
@@ -39,24 +33,9 @@ router.post('/doc', authenticate, docCtrl.createDocument)
 router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 
-router.post(
-  '/doc/:documentId/steps',
-  authenticate2,
-  celebrate(receiveStepsSchema),
-  docCtrl.queueRequests
-)
-router.get(
-  '/doc/:documentId/history',
-  authenticate2,
-  celebrate(initialHistorySchema),
-  docCtrl.queueRequests
-)
-router.get(
-  '/doc/:documentId/version/:versionId',
-  authenticate2,
-  celebrate(getDocFromVersionSchema),
-  docCtrl.queueRequests
-)
+router.post('/doc/:documentId/steps', authenticate, celebrate(receiveStepsSchema), docCtrl.queueRequests)
+router.get('/doc/:documentId/history', authenticate, celebrate(getDocumentHistorySchema), docCtrl.queueRequests)
+router.get('/doc/:documentId/version/:versionId', authenticate, celebrate(getStepsFromVersionSchema), docCtrl.queueRequests)
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
