@@ -51,11 +51,7 @@ export const createDocument = async (
   next: NextFunction
 ) => {
   try {
-    const userId = res.locals.user.id
-    if (!userId) {
-      return next(new CustomError('Missing user.id from res.locals', 401))
-    }
-    const result = await docService.createDocument(req.body, userId)
+    const result = await docService.createDocument(req.body)
     if ('data' in result) {
       res.json(result.data)
     } else {

@@ -17,15 +17,11 @@ import { Router } from 'express'
 
 import { authenticate, validateBody } from '$middlewares'
 
-import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
 import * as snapCtrl from './routes/snapshot/snap.ctrl'
 
 const router = Router()
-
-router.post('/authenticate', authCtrl.authenticate)
-router.get('/stats', authCtrl.stats)
 
 router.get('/doc/:documentId', authenticate, docCtrl.findDocument)
 router.post('/doc', authenticate, docCtrl.createDocument)
@@ -34,7 +30,6 @@ router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
-router.put('/snapshot/:snapshotId', authenticate, snapCtrl.updateSnapshot)
 router.delete('/snapshot/:snapshotId', authenticate, snapCtrl.deleteSnapshot)
 router.post('/snapshot', authenticate, snapCtrl.saveSnapshot)
 

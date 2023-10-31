@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Maybe,
-  SnapshotLabel,
-  ISaveSnapshotRequest,
-  IUpdateSnapshotRequest,
-} from '@manuscripts/quarterback-types'
+import { Maybe, SnapshotLabel, SaveSnapshotModel } from '@manuscripts/quarterback-types'
 
 import { CustomError, log, prisma } from '$common'
 import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
@@ -48,25 +43,13 @@ export const snapService = {
     }
     return { data: found }
   },
-  async saveSnapshot(payload: ISaveSnapshotRequest): Promise<Maybe<ManuscriptSnapshot>> {
-    const { docId, snapshot, name } = payload
+  async saveSnapshot(payload: SaveSnapshotModel): Promise<Maybe<ManuscriptSnapshot>> {
+    const { docID, name, snapshot } = payload
     const saved = await prisma.manuscriptSnapshot.create({
       data: {
         snapshot,
-        doc_id: docId,
+        doc_id: docID,
         name,
-      },
-    })
-    return { data: saved }
-  },
-  async updateSnapshot(
-    snapId: string,
-    payload: IUpdateSnapshotRequest
-  ): Promise<Maybe<ManuscriptSnapshot>> {
-    const saved = await prisma.manuscriptSnapshot.update({
-      data: payload,
-      where: {
-        id: snapId,
       },
     })
     return { data: saved }

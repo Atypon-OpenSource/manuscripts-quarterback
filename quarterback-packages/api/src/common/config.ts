@@ -50,14 +50,12 @@ function parseStringArray(env?: string): string[] | undefined {
 export const config = {
   ENV: parseNodeEnv(process.env.NODE_ENV),
   PORT: parseInteger(process.env.PORT) || 5500,
+  API_KEY: process.env.API_KEY || 'something-random',
   CORS: {
     ENABLED: parseInteger(process.env.CORS_ENABLED) === 1,
     WHITELIST: parseStringArray(process.env.CORS_WHITELIST) || [],
   },
   LOG: {
     LEVEL: process.env.LOG_LEVEL || 'info',
-  },
-  JWT: {
-    SECRET: process.env.JWT_SECRET || 'verylongrandomstring',
   },
 }

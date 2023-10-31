@@ -29,6 +29,7 @@ export type IGetDocumentResponse = ManuscriptDocWithSnapshots
 export interface ICreateDocRequest {
   manuscript_model_id: string
   project_model_id: string
+  user_model_id: string
   doc: Record<string, any>
 }
 export type ICreateDocResponse = ManuscriptDocWithSnapshots
