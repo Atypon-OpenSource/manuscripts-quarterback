@@ -30,7 +30,7 @@ export class CollaborationProcessor {
     if (version != clientVersion) {
       return {
         err: `Update denied, version is ${latestDocumentHistory}, and client version is ${clientVersion}`,
-        code: 200,
+        code: 409,
       }
     }
     const updatedVersion = await this.applyStepsToDocument(steps, document, version)
