@@ -1,23 +1,23 @@
 {
   "name": "@manuscripts/quarterback-api",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "author": "Atypon Systems LLC",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Atypon-OpenSource/manuscripts-quarterback",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && rollup -c",
-    "watch": "rimraf dist && rollup -cw",
-    "dev": "nodemon --watch dist dist/index.js"
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.json",
+    "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec ts-node --files --transpile-only --require dotenv/config src/index.ts"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-typescript2": "^0.34.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",
     "@types/express-serve-static-core": "^4.17.31",
@@ -28,22 +28,28 @@
     "dotenv": "^16.0.2",
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
-    "rollup": "^2.79.0",
-    "rollup-plugin-typescript2": "^0.34.0",
-    "typescript": "^4.8.3"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@manuscripts/json-schema": "^2.0.2",
+    "@manuscripts/json-schema": "^2.2.0",
     "@manuscripts/quarterback-db": "workspace:*",
     "@manuscripts/quarterback-types": "workspace:*",
+    "@manuscripts/transform": "^1.4.6",
+    "@types/jsdom": "^21.1.1",
+    "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
+    "express-prom-bundle": "^6.6.0",
+    "jest": "27.5.1",
     "joi": "^17.6.0",
+    "jsdom": "^22.1.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "prom-client": "^14.2.0",
-    "express-prom-bundle": "^6.6.0",
+    "prosemirror-transform": "^1.7.4",
     "semver": "^7.5.0",
+    "tsconfig-paths": "^4.2.0",
     "winston": "^3.8.2"
   }
 }

@@ -16,6 +16,7 @@
 import { promises as fs } from 'fs'
 import client from 'prom-client'
 import { parse, SemVer } from 'semver'
+
 import packageJson from '../package.json'
 
 const appMetricMap = {

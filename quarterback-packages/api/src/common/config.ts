@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 if (process.env.NODE_ENV === undefined || process.env.NODE_ENV !== 'production') {
-  await import('dotenv').then((exports) => {
-    exports.config({
-      // For some reason CORS_SAME_ORIGIN is not parsed otherwise
-      override: true,
+  import('dotenv')
+    .then((exports) => {
+      exports.config({
+        // For some reason CORS_SAME_ORIGIN is not parsed otherwise
+        override: true,
+      })
     })
-  })
+    .catch(() => {
+      console.log('error')
+    })
 }
 
 function parseNodeEnv(NODE_ENV?: string): 'production' | 'dev' {

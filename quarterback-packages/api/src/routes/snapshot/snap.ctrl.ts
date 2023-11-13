@@ -16,17 +16,16 @@
 import {
   IGetSnapshotLabelsResponse,
   IGetSnapshotResponse,
-  ISaveSnapshotResponse,
   ISaveSnapshotRequest,
+  ISaveSnapshotResponse,
   IUpdateSnapshotRequest,
 } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
-import Joi from 'joi'
+import { NextFunction } from 'express'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
-
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 import { snapService } from './snap.svc'
+import { docService } from '../doc/doc.svc'
 
 export const listSnapshotLabels = async (
   req: AuthRequest<Record<string, never>, { documentId: string }>,
@@ -71,8 +70,19 @@ export const saveSnapshot = async (
 ) => {
   try {
     const result = await snapService.saveSnapshot(req.body)
+    const { docId } = req.body
     if ('data' in result) {
-      res.json({ snapshot: result.data })
+      const latestDocumentHistory = await docService.findLatestDocumentHistory(docId)
+      await docService.clearDocumentHistory(docId)
+      // this is to maintain the version of the document even after deleting its history
+      if (latestDocumentHistory.data) {
+        await docService.createDocumentHistory(
+          docId,
+          [],
+          latestDocumentHistory.data.version,
+        )
+      }     
+       res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.err, result.code))
     }

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ManuscriptComment } from '@manuscripts/quarterback-db'
 import {
-  ListedComment,
-  Maybe,
   ICreateCommentRequest,
   IUpdateCommentRequest,
+  ListedComment,
+  Maybe,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
-import { ManuscriptComment } from '@manuscripts/quarterback-db'
+import { prisma } from '../../common'
 
 export const commentService = {
   async listComments(docId: string): Promise<Maybe<ListedComment[]>> {

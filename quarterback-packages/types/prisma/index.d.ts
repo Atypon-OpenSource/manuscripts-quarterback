@@ -26,6 +26,17 @@ export type ManuscriptDoc = {
 }
 
 /**
+ * Model ManuscriptDocHistory
+ * 
+ */
+export type ManuscriptDocHistory = {
+  doc_id: string
+  version: number
+  client_id: string | null
+  steps: Prisma.JsonValue[]
+}
+
+/**
  * Model ManuscriptSnapshot
  * 
  */
@@ -201,6 +212,16 @@ export class PrismaClient<
     * ```
     */
   get manuscriptDoc(): Prisma.ManuscriptDocDelegate<GlobalReject>;
+
+  /**
+   * `prisma.manuscriptDocHistory`: Exposes CRUD operations for the **ManuscriptDocHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ManuscriptDocHistories
+    * const manuscriptDocHistories = await prisma.manuscriptDocHistory.findMany()
+    * ```
+    */
+  get manuscriptDocHistory(): Prisma.ManuscriptDocHistoryDelegate<GlobalReject>;
 
   /**
    * `prisma.manuscriptSnapshot`: Exposes CRUD operations for the **ManuscriptSnapshot** model.
@@ -695,6 +716,7 @@ export namespace Prisma {
 
   export const ModelName: {
     ManuscriptDoc: 'ManuscriptDoc',
+    ManuscriptDocHistory: 'ManuscriptDocHistory',
     ManuscriptSnapshot: 'ManuscriptSnapshot',
     ManuscriptComment: 'ManuscriptComment'
   };
@@ -1894,6 +1916,904 @@ export namespace Prisma {
      * 
     **/
     include?: ManuscriptDocInclude | null
+  }
+
+
+
+  /**
+   * Model ManuscriptDocHistory
+   */
+
+
+  export type AggregateManuscriptDocHistory = {
+    _count: ManuscriptDocHistoryCountAggregateOutputType | null
+    _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
+    _sum: ManuscriptDocHistorySumAggregateOutputType | null
+    _min: ManuscriptDocHistoryMinAggregateOutputType | null
+    _max: ManuscriptDocHistoryMaxAggregateOutputType | null
+  }
+
+  export type ManuscriptDocHistoryAvgAggregateOutputType = {
+    version: number | null
+  }
+
+  export type ManuscriptDocHistorySumAggregateOutputType = {
+    version: number | null
+  }
+
+  export type ManuscriptDocHistoryMinAggregateOutputType = {
+    doc_id: string | null
+    version: number | null
+    client_id: string | null
+  }
+
+  export type ManuscriptDocHistoryMaxAggregateOutputType = {
+    doc_id: string | null
+    version: number | null
+    client_id: string | null
+  }
+
+  export type ManuscriptDocHistoryCountAggregateOutputType = {
+    doc_id: number
+    version: number
+    client_id: number
+    steps: number
+    _all: number
+  }
+
+
+  export type ManuscriptDocHistoryAvgAggregateInputType = {
+    version?: true
+  }
+
+  export type ManuscriptDocHistorySumAggregateInputType = {
+    version?: true
+  }
+
+  export type ManuscriptDocHistoryMinAggregateInputType = {
+    doc_id?: true
+    version?: true
+    client_id?: true
+  }
+
+  export type ManuscriptDocHistoryMaxAggregateInputType = {
+    doc_id?: true
+    version?: true
+    client_id?: true
+  }
+
+  export type ManuscriptDocHistoryCountAggregateInputType = {
+    doc_id?: true
+    version?: true
+    client_id?: true
+    steps?: true
+    _all?: true
+  }
+
+  export type ManuscriptDocHistoryAggregateArgs = {
+    /**
+     * Filter which ManuscriptDocHistory to aggregate.
+     * 
+    **/
+    where?: ManuscriptDocHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManuscriptDocHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ManuscriptDocHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ManuscriptDocHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManuscriptDocHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManuscriptDocHistories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ManuscriptDocHistories
+    **/
+    _count?: true | ManuscriptDocHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ManuscriptDocHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ManuscriptDocHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ManuscriptDocHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ManuscriptDocHistoryMaxAggregateInputType
+  }
+
+  export type GetManuscriptDocHistoryAggregateType<T extends ManuscriptDocHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateManuscriptDocHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateManuscriptDocHistory[P]>
+      : GetScalarType<T[P], AggregateManuscriptDocHistory[P]>
+  }
+
+
+
+
+  export type ManuscriptDocHistoryGroupByArgs = {
+    where?: ManuscriptDocHistoryWhereInput
+    orderBy?: Enumerable<ManuscriptDocHistoryOrderByWithAggregationInput>
+    by: Array<ManuscriptDocHistoryScalarFieldEnum>
+    having?: ManuscriptDocHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ManuscriptDocHistoryCountAggregateInputType | true
+    _avg?: ManuscriptDocHistoryAvgAggregateInputType
+    _sum?: ManuscriptDocHistorySumAggregateInputType
+    _min?: ManuscriptDocHistoryMinAggregateInputType
+    _max?: ManuscriptDocHistoryMaxAggregateInputType
+  }
+
+
+  export type ManuscriptDocHistoryGroupByOutputType = {
+    doc_id: string
+    version: number
+    client_id: string | null
+    steps: JsonValue[]
+    _count: ManuscriptDocHistoryCountAggregateOutputType | null
+    _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
+    _sum: ManuscriptDocHistorySumAggregateOutputType | null
+    _min: ManuscriptDocHistoryMinAggregateOutputType | null
+    _max: ManuscriptDocHistoryMaxAggregateOutputType | null
+  }
+
+  type GetManuscriptDocHistoryGroupByPayload<T extends ManuscriptDocHistoryGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ManuscriptDocHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ManuscriptDocHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ManuscriptDocHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ManuscriptDocHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ManuscriptDocHistorySelect = {
+    doc_id?: boolean
+    version?: boolean
+    client_id?: boolean
+    steps?: boolean
+  }
+
+  export type ManuscriptDocHistoryGetPayload<
+    S extends boolean | null | undefined | ManuscriptDocHistoryArgs,
+    U = keyof S
+      > = S extends true
+        ? ManuscriptDocHistory
+    : S extends undefined
+    ? never
+    : S extends ManuscriptDocHistoryArgs | ManuscriptDocHistoryFindManyArgs
+    ?'include' extends U
+    ? ManuscriptDocHistory 
+    : 'select' extends U
+    ? {
+    [P in TrueKeys<S['select']>]:
+    P extends keyof ManuscriptDocHistory ? ManuscriptDocHistory[P] : never
+  } 
+    : ManuscriptDocHistory
+  : ManuscriptDocHistory
+
+
+  type ManuscriptDocHistoryCountArgs = Merge<
+    Omit<ManuscriptDocHistoryFindManyArgs, 'select' | 'include'> & {
+      select?: ManuscriptDocHistoryCountAggregateInputType | true
+    }
+  >
+
+  export interface ManuscriptDocHistoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ManuscriptDocHistory that matches the filter.
+     * @param {ManuscriptDocHistoryFindUniqueArgs} args - Arguments to find a ManuscriptDocHistory
+     * @example
+     * // Get one ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ManuscriptDocHistoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ManuscriptDocHistoryFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ManuscriptDocHistory'> extends True ? CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>> : CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory | null >, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T> | null >>
+
+    /**
+     * Find the first ManuscriptDocHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryFindFirstArgs} args - Arguments to find a ManuscriptDocHistory
+     * @example
+     * // Get one ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ManuscriptDocHistoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ManuscriptDocHistoryFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ManuscriptDocHistory'> extends True ? CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>> : CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory | null >, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T> | null >>
+
+    /**
+     * Find zero or more ManuscriptDocHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ManuscriptDocHistories
+     * const manuscriptDocHistories = await prisma.manuscriptDocHistory.findMany()
+     * 
+     * // Get first 10 ManuscriptDocHistories
+     * const manuscriptDocHistories = await prisma.manuscriptDocHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `doc_id`
+     * const manuscriptDocHistoryWithDoc_idOnly = await prisma.manuscriptDocHistory.findMany({ select: { doc_id: true } })
+     * 
+    **/
+    findMany<T extends ManuscriptDocHistoryFindManyArgs>(
+      args?: SelectSubset<T, ManuscriptDocHistoryFindManyArgs>
+    ): CheckSelect<T, PrismaPromise<Array<ManuscriptDocHistory>>, PrismaPromise<Array<ManuscriptDocHistoryGetPayload<T>>>>
+
+    /**
+     * Create a ManuscriptDocHistory.
+     * @param {ManuscriptDocHistoryCreateArgs} args - Arguments to create a ManuscriptDocHistory.
+     * @example
+     * // Create one ManuscriptDocHistory
+     * const ManuscriptDocHistory = await prisma.manuscriptDocHistory.create({
+     *   data: {
+     *     // ... data to create a ManuscriptDocHistory
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ManuscriptDocHistoryCreateArgs>(
+      args: SelectSubset<T, ManuscriptDocHistoryCreateArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Create many ManuscriptDocHistories.
+     *     @param {ManuscriptDocHistoryCreateManyArgs} args - Arguments to create many ManuscriptDocHistories.
+     *     @example
+     *     // Create many ManuscriptDocHistories
+     *     const manuscriptDocHistory = await prisma.manuscriptDocHistory.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ManuscriptDocHistoryCreateManyArgs>(
+      args?: SelectSubset<T, ManuscriptDocHistoryCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ManuscriptDocHistory.
+     * @param {ManuscriptDocHistoryDeleteArgs} args - Arguments to delete one ManuscriptDocHistory.
+     * @example
+     * // Delete one ManuscriptDocHistory
+     * const ManuscriptDocHistory = await prisma.manuscriptDocHistory.delete({
+     *   where: {
+     *     // ... filter to delete one ManuscriptDocHistory
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ManuscriptDocHistoryDeleteArgs>(
+      args: SelectSubset<T, ManuscriptDocHistoryDeleteArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Update one ManuscriptDocHistory.
+     * @param {ManuscriptDocHistoryUpdateArgs} args - Arguments to update one ManuscriptDocHistory.
+     * @example
+     * // Update one ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ManuscriptDocHistoryUpdateArgs>(
+      args: SelectSubset<T, ManuscriptDocHistoryUpdateArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Delete zero or more ManuscriptDocHistories.
+     * @param {ManuscriptDocHistoryDeleteManyArgs} args - Arguments to filter ManuscriptDocHistories to delete.
+     * @example
+     * // Delete a few ManuscriptDocHistories
+     * const { count } = await prisma.manuscriptDocHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ManuscriptDocHistoryDeleteManyArgs>(
+      args?: SelectSubset<T, ManuscriptDocHistoryDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ManuscriptDocHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ManuscriptDocHistories
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ManuscriptDocHistoryUpdateManyArgs>(
+      args: SelectSubset<T, ManuscriptDocHistoryUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ManuscriptDocHistory.
+     * @param {ManuscriptDocHistoryUpsertArgs} args - Arguments to update or create a ManuscriptDocHistory.
+     * @example
+     * // Update or create a ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.upsert({
+     *   create: {
+     *     // ... data to create a ManuscriptDocHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ManuscriptDocHistory we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ManuscriptDocHistoryUpsertArgs>(
+      args: SelectSubset<T, ManuscriptDocHistoryUpsertArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Find one ManuscriptDocHistory that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {ManuscriptDocHistoryFindUniqueOrThrowArgs} args - Arguments to find a ManuscriptDocHistory
+     * @example
+     * // Get one ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ManuscriptDocHistoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptDocHistoryFindUniqueOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Find the first ManuscriptDocHistory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryFindFirstOrThrowArgs} args - Arguments to find a ManuscriptDocHistory
+     * @example
+     * // Get one ManuscriptDocHistory
+     * const manuscriptDocHistory = await prisma.manuscriptDocHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ManuscriptDocHistoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ManuscriptDocHistoryFindFirstOrThrowArgs>
+    ): CheckSelect<T, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistory>, Prisma__ManuscriptDocHistoryClient<ManuscriptDocHistoryGetPayload<T>>>
+
+    /**
+     * Count the number of ManuscriptDocHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryCountArgs} args - Arguments to filter ManuscriptDocHistories to count.
+     * @example
+     * // Count the number of ManuscriptDocHistories
+     * const count = await prisma.manuscriptDocHistory.count({
+     *   where: {
+     *     // ... the filter for the ManuscriptDocHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ManuscriptDocHistoryCountArgs>(
+      args?: Subset<T, ManuscriptDocHistoryCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ManuscriptDocHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ManuscriptDocHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ManuscriptDocHistoryAggregateArgs>(args: Subset<T, ManuscriptDocHistoryAggregateArgs>): PrismaPromise<GetManuscriptDocHistoryAggregateType<T>>
+
+    /**
+     * Group by ManuscriptDocHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManuscriptDocHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ManuscriptDocHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ManuscriptDocHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: ManuscriptDocHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ManuscriptDocHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManuscriptDocHistoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ManuscriptDocHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ManuscriptDocHistoryClient<T> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ManuscriptDocHistory base type for findUnique actions
+   */
+  export type ManuscriptDocHistoryFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * Filter, which ManuscriptDocHistory to fetch.
+     * 
+    **/
+    where: ManuscriptDocHistoryWhereUniqueInput
+  }
+
+  /**
+   * ManuscriptDocHistory: findUnique
+   */
+  export interface ManuscriptDocHistoryFindUniqueArgs extends ManuscriptDocHistoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ManuscriptDocHistory base type for findFirst actions
+   */
+  export type ManuscriptDocHistoryFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * Filter, which ManuscriptDocHistory to fetch.
+     * 
+    **/
+    where?: ManuscriptDocHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManuscriptDocHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ManuscriptDocHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ManuscriptDocHistories.
+     * 
+    **/
+    cursor?: ManuscriptDocHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManuscriptDocHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManuscriptDocHistories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ManuscriptDocHistories.
+     * 
+    **/
+    distinct?: Enumerable<ManuscriptDocHistoryScalarFieldEnum>
+  }
+
+  /**
+   * ManuscriptDocHistory: findFirst
+   */
+  export interface ManuscriptDocHistoryFindFirstArgs extends ManuscriptDocHistoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ManuscriptDocHistory findMany
+   */
+  export type ManuscriptDocHistoryFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * Filter, which ManuscriptDocHistories to fetch.
+     * 
+    **/
+    where?: ManuscriptDocHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManuscriptDocHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ManuscriptDocHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ManuscriptDocHistories.
+     * 
+    **/
+    cursor?: ManuscriptDocHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManuscriptDocHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManuscriptDocHistories.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ManuscriptDocHistoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ManuscriptDocHistory create
+   */
+  export type ManuscriptDocHistoryCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * The data needed to create a ManuscriptDocHistory.
+     * 
+    **/
+    data: XOR<ManuscriptDocHistoryCreateInput, ManuscriptDocHistoryUncheckedCreateInput>
+  }
+
+
+  /**
+   * ManuscriptDocHistory createMany
+   */
+  export type ManuscriptDocHistoryCreateManyArgs = {
+    /**
+     * The data used to create many ManuscriptDocHistories.
+     * 
+    **/
+    data: Enumerable<ManuscriptDocHistoryCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ManuscriptDocHistory update
+   */
+  export type ManuscriptDocHistoryUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * The data needed to update a ManuscriptDocHistory.
+     * 
+    **/
+    data: XOR<ManuscriptDocHistoryUpdateInput, ManuscriptDocHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which ManuscriptDocHistory to update.
+     * 
+    **/
+    where: ManuscriptDocHistoryWhereUniqueInput
+  }
+
+
+  /**
+   * ManuscriptDocHistory updateMany
+   */
+  export type ManuscriptDocHistoryUpdateManyArgs = {
+    /**
+     * The data used to update ManuscriptDocHistories.
+     * 
+    **/
+    data: XOR<ManuscriptDocHistoryUpdateManyMutationInput, ManuscriptDocHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ManuscriptDocHistories to update
+     * 
+    **/
+    where?: ManuscriptDocHistoryWhereInput
+  }
+
+
+  /**
+   * ManuscriptDocHistory upsert
+   */
+  export type ManuscriptDocHistoryUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * The filter to search for the ManuscriptDocHistory to update in case it exists.
+     * 
+    **/
+    where: ManuscriptDocHistoryWhereUniqueInput
+    /**
+     * In case the ManuscriptDocHistory found by the `where` argument doesn't exist, create a new ManuscriptDocHistory with this data.
+     * 
+    **/
+    create: XOR<ManuscriptDocHistoryCreateInput, ManuscriptDocHistoryUncheckedCreateInput>
+    /**
+     * In case the ManuscriptDocHistory was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ManuscriptDocHistoryUpdateInput, ManuscriptDocHistoryUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ManuscriptDocHistory delete
+   */
+  export type ManuscriptDocHistoryDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
+    /**
+     * Filter which ManuscriptDocHistory to delete.
+     * 
+    **/
+    where: ManuscriptDocHistoryWhereUniqueInput
+  }
+
+
+  /**
+   * ManuscriptDocHistory deleteMany
+   */
+  export type ManuscriptDocHistoryDeleteManyArgs = {
+    /**
+     * Filter which ManuscriptDocHistories to delete
+     * 
+    **/
+    where?: ManuscriptDocHistoryWhereInput
+  }
+
+
+  /**
+   * ManuscriptDocHistory: findUniqueOrThrow
+   */
+  export type ManuscriptDocHistoryFindUniqueOrThrowArgs = ManuscriptDocHistoryFindUniqueArgsBase
+      
+
+  /**
+   * ManuscriptDocHistory: findFirstOrThrow
+   */
+  export type ManuscriptDocHistoryFindFirstOrThrowArgs = ManuscriptDocHistoryFindFirstArgsBase
+      
+
+  /**
+   * ManuscriptDocHistory without action
+   */
+  export type ManuscriptDocHistoryArgs = {
+    /**
+     * Select specific fields to fetch from the ManuscriptDocHistory
+     * 
+    **/
+    select?: ManuscriptDocHistorySelect | null
   }
 
 
@@ -3812,6 +4732,16 @@ export namespace Prisma {
   export type ManuscriptCommentScalarFieldEnum = (typeof ManuscriptCommentScalarFieldEnum)[keyof typeof ManuscriptCommentScalarFieldEnum]
 
 
+  export const ManuscriptDocHistoryScalarFieldEnum: {
+    doc_id: 'doc_id',
+    version: 'version',
+    client_id: 'client_id',
+    steps: 'steps'
+  };
+
+  export type ManuscriptDocHistoryScalarFieldEnum = (typeof ManuscriptDocHistoryScalarFieldEnum)[keyof typeof ManuscriptDocHistoryScalarFieldEnum]
+
+
   export const ManuscriptDocScalarFieldEnum: {
     manuscript_model_id: 'manuscript_model_id',
     user_model_id: 'user_model_id',
@@ -3917,6 +4847,49 @@ export namespace Prisma {
     doc?: JsonWithAggregatesFilter
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type ManuscriptDocHistoryWhereInput = {
+    AND?: Enumerable<ManuscriptDocHistoryWhereInput>
+    OR?: Enumerable<ManuscriptDocHistoryWhereInput>
+    NOT?: Enumerable<ManuscriptDocHistoryWhereInput>
+    doc_id?: StringFilter | string
+    version?: IntFilter | number
+    client_id?: StringNullableFilter | string | null
+    steps?: JsonNullableListFilter
+  }
+
+  export type ManuscriptDocHistoryOrderByWithRelationInput = {
+    doc_id?: SortOrder
+    version?: SortOrder
+    client_id?: SortOrder
+    steps?: SortOrder
+  }
+
+  export type ManuscriptDocHistoryWhereUniqueInput = {
+    doc_id_version?: ManuscriptDocHistoryDoc_idVersionCompoundUniqueInput
+  }
+
+  export type ManuscriptDocHistoryOrderByWithAggregationInput = {
+    doc_id?: SortOrder
+    version?: SortOrder
+    client_id?: SortOrder
+    steps?: SortOrder
+    _count?: ManuscriptDocHistoryCountOrderByAggregateInput
+    _avg?: ManuscriptDocHistoryAvgOrderByAggregateInput
+    _max?: ManuscriptDocHistoryMaxOrderByAggregateInput
+    _min?: ManuscriptDocHistoryMinOrderByAggregateInput
+    _sum?: ManuscriptDocHistorySumOrderByAggregateInput
+  }
+
+  export type ManuscriptDocHistoryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
+    doc_id?: StringWithAggregatesFilter | string
+    version?: IntWithAggregatesFilter | number
+    client_id?: StringNullableWithAggregatesFilter | string | null
+    steps?: JsonNullableListFilter
   }
 
   export type ManuscriptSnapshotWhereInput = {
@@ -4094,6 +5067,55 @@ export namespace Prisma {
     doc?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManuscriptDocHistoryCreateInput = {
+    doc_id: string
+    version: number
+    client_id?: string | null
+    steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryUncheckedCreateInput = {
+    doc_id: string
+    version: number
+    client_id?: string | null
+    steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryUpdateInput = {
+    doc_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryUncheckedUpdateInput = {
+    doc_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryCreateManyInput = {
+    doc_id: string
+    version: number
+    client_id?: string | null
+    steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryUpdateManyMutationInput = {
+    doc_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
+  }
+
+  export type ManuscriptDocHistoryUncheckedUpdateManyInput = {
+    doc_id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptSnapshotCreateInput = {
@@ -4373,6 +5395,112 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
+  }
+
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableFilter | string | null
+  }
+  export type JsonNullableListFilter = 
+    | PatchUndefined<
+        Either<Required<JsonNullableListFilterBase>, Exclude<keyof Required<JsonNullableListFilterBase>, 'path'>>,
+        Required<JsonNullableListFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableListFilterBase>, 'path'>>
+
+  export type JsonNullableListFilterBase = {
+    equals?: Enumerable<InputJsonValue> | null
+    has?: InputJsonValue | null
+    hasEvery?: Enumerable<InputJsonValue>
+    hasSome?: Enumerable<InputJsonValue>
+    isEmpty?: boolean
+  }
+
+  export type ManuscriptDocHistoryDoc_idVersionCompoundUniqueInput = {
+    doc_id: string
+    version: number
+  }
+
+  export type ManuscriptDocHistoryCountOrderByAggregateInput = {
+    doc_id?: SortOrder
+    version?: SortOrder
+    client_id?: SortOrder
+    steps?: SortOrder
+  }
+
+  export type ManuscriptDocHistoryAvgOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type ManuscriptDocHistoryMaxOrderByAggregateInput = {
+    doc_id?: SortOrder
+    version?: SortOrder
+    client_id?: SortOrder
+  }
+
+  export type ManuscriptDocHistoryMinOrderByAggregateInput = {
+    doc_id?: SortOrder
+    version?: SortOrder
+    client_id?: SortOrder
+  }
+
+  export type ManuscriptDocHistorySumOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
+  }
+
   export type ManuscriptDocRelationFilter = {
     is?: ManuscriptDocWhereInput
     isNot?: ManuscriptDocWhereInput
@@ -4405,21 +5533,6 @@ export namespace Prisma {
     isNot?: ManuscriptSnapshotWhereInput | null
   }
 
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
-  }
-
   export type ManuscriptCommentCountOrderByAggregateInput = {
     id?: SortOrder
     body?: SortOrder
@@ -4448,24 +5561,6 @@ export namespace Prisma {
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
   }
 
   export type ManuscriptSnapshotCreateNestedManyWithoutDocInput = {
@@ -4560,6 +5655,27 @@ export namespace Prisma {
     deleteMany?: Enumerable<ManuscriptCommentScalarWhereInput>
   }
 
+  export type ManuscriptDocHistoryCreatestepsInput = {
+    set: Enumerable<InputJsonValue>
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type ManuscriptDocHistoryUpdatestepsInput = {
+    set?: Enumerable<InputJsonValue>
+    push?: InputJsonValue | Enumerable<InputJsonValue>
+  }
+
   export type ManuscriptDocCreateNestedOneWithoutSnapshotsInput = {
     create?: XOR<ManuscriptDocCreateWithoutSnapshotsInput, ManuscriptDocUncheckedCreateWithoutSnapshotsInput>
     connectOrCreate?: ManuscriptDocCreateOrConnectWithoutSnapshotsInput
@@ -4644,10 +5760,6 @@ export namespace Prisma {
     delete?: boolean
     connect?: ManuscriptSnapshotWhereUniqueInput
     update?: XOR<ManuscriptSnapshotUpdateWithoutCommentsInput, ManuscriptSnapshotUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NestedStringFilter = {
@@ -4751,6 +5863,33 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringNullableFilter | string | null
+  }
+
+  export type NestedIntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
 
   export type NestedStringNullableWithAggregatesFilter = {

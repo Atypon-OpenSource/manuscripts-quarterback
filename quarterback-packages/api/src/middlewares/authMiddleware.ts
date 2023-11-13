@@ -15,7 +15,7 @@
  */
 import { NextFunction, Request, Response } from 'express'
 
-import { CustomError, jwtService } from '$common'
+import { CustomError, jwtService } from '../common'
 
 function parseJwtFromHeaders(req: Request) {
   // @TODO use non-standard header while istio is enabled but not configured properly

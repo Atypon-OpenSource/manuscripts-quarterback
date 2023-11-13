@@ -18,8 +18,7 @@ const { sign, verify } = pkg
 
 import { Maybe, User } from '@manuscripts/quarterback-types'
 
-import { IJwtPayload } from '$typings/auth'
-
+import { IJwtPayload } from '../typings/auth'
 import { config } from './config'
 
 const SECRET = config.JWT.SECRET

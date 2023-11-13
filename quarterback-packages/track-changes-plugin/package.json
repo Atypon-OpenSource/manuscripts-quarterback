@@ -35,8 +35,8 @@
   },
   "devDependencies": {
     "@manuscripts/data": "^1.0.2",
-    "@manuscripts/json-schema": "^2.0.2",
-    "@manuscripts/transform": "^1.2.5",
+    "@manuscripts/json-schema": "^2.2.0",
+    "@manuscripts/transform": "^1.4.6",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@types/debug": "^4.1.7",
     "@types/jest": "27.5.1",
@@ -64,7 +64,7 @@
     "prosemirror-model": "^1.18.3",
     "prosemirror-schema-list": "^1.2.2",
     "prosemirror-state": "^1.4.2",
-    "prosemirror-transform": "^1.7.0",
+    "prosemirror-transform": "^1.7.4",
     "prosemirror-view": "^1.29.1",
     "debug": "^4.3.4"
   }

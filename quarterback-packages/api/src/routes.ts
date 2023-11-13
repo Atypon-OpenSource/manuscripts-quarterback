@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Router } from 'express'
+import { celebrate } from 'celebrate'
+import {  Router } from 'express'
 
-import { authenticate, validateBody } from '$middlewares'
-
+import { authenticate } from './middlewares'
 import * as authCtrl from './routes/auth/auth.ctrl'
 import * as commentCtrl from './routes/comment/comment.ctrl'
 import * as docCtrl from './routes/doc/doc.ctrl'
+import { getStepsFromVersionSchema, getDocumentHistorySchema, receiveStepsSchema } from './routes/doc/doc.schema'
 import * as snapCtrl from './routes/snapshot/snap.ctrl'
-
+import { queueRequests } from './requestsQueue'
 const router = Router()
 
 router.post('/authenticate', authCtrl.authenticate)
@@ -32,11 +33,30 @@ router.post('/doc', authenticate, docCtrl.createDocument)
 router.put('/doc/:documentId', authenticate, docCtrl.updateDocument)
 router.delete('/doc/:documentId', authenticate, docCtrl.deleteDocument)
 
+router.post(
+  '/doc/:documentId/steps',
+  authenticate,
+  celebrate(receiveStepsSchema),
+  queueRequests
+)
+router.get(
+  '/doc/:documentId/history',
+  authenticate,
+  celebrate(getDocumentHistorySchema),
+  queueRequests
+)
+router.get(
+  '/doc/:documentId/version/:versionId',
+  authenticate,
+  celebrate(getStepsFromVersionSchema),
+  queueRequests
+)
+
 router.get('/doc/:documentId/snapshot/labels', authenticate, snapCtrl.listSnapshotLabels)
 router.get('/snapshot/:snapshotId', authenticate, snapCtrl.getSnapshot)
 router.put('/snapshot/:snapshotId', authenticate, snapCtrl.updateSnapshot)
 router.delete('/snapshot/:snapshotId', authenticate, snapCtrl.deleteSnapshot)
-router.post('/snapshot', authenticate, snapCtrl.saveSnapshot)
+router.post('/snapshot', authenticate, queueRequests)
 
 router.get('/doc/:documentId/comments', authenticate, commentCtrl.listComments)
 router.post('/comment', authenticate, commentCtrl.createComment)

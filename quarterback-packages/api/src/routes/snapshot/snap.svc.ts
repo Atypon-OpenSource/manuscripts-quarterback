@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
 import {
-  Maybe,
-  SnapshotLabel,
   ISaveSnapshotRequest,
   IUpdateSnapshotRequest,
+  Maybe,
+  SnapshotLabel,
 } from '@manuscripts/quarterback-types'
 
-import { CustomError, log, prisma } from '$common'
-import { ManuscriptSnapshot } from '@manuscripts/quarterback-db'
+import { prisma } from '../../common'
 
 export const snapService = {
   async listSnapshotLabels(docId: string): Promise<Maybe<SnapshotLabel[]>> {

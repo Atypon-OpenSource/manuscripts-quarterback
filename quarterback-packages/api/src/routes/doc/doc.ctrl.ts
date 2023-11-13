@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 import {
-  IGetDocumentResponse,
   ICreateDocRequest,
   ICreateDocResponse,
+  IGetDocumentResponse,
   IUpdateDocumentRequest,
+  StepsData,
 } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
-import Joi from 'joi'
+import { NextFunction } from 'express'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
-
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 import { docService } from './doc.svc'
+import { CollaborationProcessor } from './collaboration.svc'
 
-export const findDocument = async (
-  req: AuthRequest,
-  res: AuthResponse<IGetDocumentResponse>,
-  next: NextFunction
-) => {
+const collaborationProcessor = new CollaborationProcessor()
+
+export const findDocument = async (req: AuthRequest, res: AuthResponse<IGetDocumentResponse>, next: NextFunction) => {
   try {
     const { documentId } = req.params
-    const result = await docService.findDocument(documentId)
+    const result = await docService.findDocumentWithSnapshot(documentId)
+    const latestDocumentHistory = await docService.findLatestDocumentHistory(documentId)
     if ('data' in result) {
-      res.json(result.data)
+      const data = latestDocumentHistory.data
+        ? { ...result.data, version: latestDocumentHistory.data.version, doc: result.data.doc }
+        : result.data
+      res.json(data)
     } else {
       next(new CustomError(result.err, result.code))
     }
@@ -44,7 +46,6 @@ export const findDocument = async (
     next(err)
   }
 }
-
 export const createDocument = async (
   req: AuthRequest<ICreateDocRequest>,
   res: AuthResponse<ICreateDocResponse>,
@@ -101,3 +102,49 @@ export const deleteDocument = async (
     next(err)
   }
 }
+export const receiveSteps = async (req: AuthRequest<any>, res: AuthResponse<any>, next: NextFunction) => {
+  try {
+    const { documentId } = req.params
+    const steps = req.body.steps
+    const clientId = req.body.clientID
+    const clientVersion = req.body.version
+    const result = await collaborationProcessor.receiveSteps(documentId, steps, clientId.toString(), clientVersion)
+    if (result.data) {
+      res.json({ clientIDs: result.data })
+    } else {
+      next(new CustomError(result.err, result.code))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+export const getDocumentHistory = async (req: AuthRequest, res: AuthResponse<string>, next: NextFunction) => {
+  try {
+    const { documentId } = req.params
+    const result = await collaborationProcessor.getDocumentHistory(documentId, 0)
+    if (result.data) {
+      const history = `data: ${JSON.stringify(result.data)}\n\n`
+      res.json(history)    }
+      else {
+        next(new CustomError(result.err, result.code))
+      }
+ 
+  } catch (err) {
+    next(err)
+  }
+}
+export const getStepsFromVersion = async (req: AuthRequest, res: AuthResponse<StepsData>, next: NextFunction) => {
+  try {
+    const { documentId, versionId } = req.params
+    const result = await collaborationProcessor.getDataFromVersion(documentId, versionId)
+    if (result.data) {
+      res.json(result.data)
+    } else {
+      next(new CustomError(result.err, result.code))
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+

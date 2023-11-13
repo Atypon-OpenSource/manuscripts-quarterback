@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 import {
-  IListCommentsResponse,
   ICreateCommentRequest,
   ICreateCommentResponse,
+  IListCommentsResponse,
   IUpdateCommentRequest,
 } from '@manuscripts/quarterback-types'
-import { NextFunction, Request, Response } from 'express'
-import Joi from 'joi'
+import { NextFunction } from 'express'
 
-import { CustomError } from '$common'
-import { AuthRequest, AuthResponse } from '$typings/request'
-
+import { CustomError } from '../../common'
+import { AuthRequest, AuthResponse } from '../../typings/request'
 import { commentService } from './comment.svc'
 
 export const listComments = async (
