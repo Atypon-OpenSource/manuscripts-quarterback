@@ -32,7 +32,7 @@ export type ManuscriptDoc = {
 export type ManuscriptDocHistory = {
   doc_id: string
   version: number
-  client_id: string
+  client_id: string | null
   steps: Prisma.JsonValue[]
 }
 
@@ -2085,7 +2085,7 @@ export namespace Prisma {
   export type ManuscriptDocHistoryGroupByOutputType = {
     doc_id: string
     version: number
-    client_id: string
+    client_id: string | null
     steps: JsonValue[]
     _count: ManuscriptDocHistoryCountAggregateOutputType | null
     _avg: ManuscriptDocHistoryAvgAggregateOutputType | null
@@ -4855,7 +4855,7 @@ export namespace Prisma {
     NOT?: Enumerable<ManuscriptDocHistoryWhereInput>
     doc_id?: StringFilter | string
     version?: IntFilter | number
-    client_id?: StringFilter | string
+    client_id?: StringNullableFilter | string | null
     steps?: JsonNullableListFilter
   }
 
@@ -4888,7 +4888,7 @@ export namespace Prisma {
     NOT?: Enumerable<ManuscriptDocHistoryScalarWhereWithAggregatesInput>
     doc_id?: StringWithAggregatesFilter | string
     version?: IntWithAggregatesFilter | number
-    client_id?: StringWithAggregatesFilter | string
+    client_id?: StringNullableWithAggregatesFilter | string | null
     steps?: JsonNullableListFilter
   }
 
@@ -5072,49 +5072,49 @@ export namespace Prisma {
   export type ManuscriptDocHistoryCreateInput = {
     doc_id: string
     version: number
-    client_id: string
+    client_id?: string | null
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedCreateInput = {
     doc_id: string
     version: number
-    client_id: string
+    client_id?: string | null
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    client_id?: StringFieldUpdateOperationsInput | string
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    client_id?: StringFieldUpdateOperationsInput | string
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryCreateManyInput = {
     doc_id: string
     version: number
-    client_id: string
+    client_id?: string | null
     steps?: ManuscriptDocHistoryCreatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUpdateManyMutationInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    client_id?: StringFieldUpdateOperationsInput | string
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
   export type ManuscriptDocHistoryUncheckedUpdateManyInput = {
     doc_id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    client_id?: StringFieldUpdateOperationsInput | string
+    client_id?: NullableStringFieldUpdateOperationsInput | string | null
     steps?: ManuscriptDocHistoryUpdatestepsInput | Enumerable<InputJsonValue>
   }
 
@@ -5405,6 +5405,21 @@ export namespace Prisma {
     gte?: number
     not?: NestedIntFilter | number
   }
+
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableFilter | string | null
+  }
   export type JsonNullableListFilter = 
     | PatchUndefined<
         Either<Required<JsonNullableListFilterBase>, Exclude<keyof Required<JsonNullableListFilterBase>, 'path'>>,
@@ -5468,6 +5483,24 @@ export namespace Prisma {
     _max?: NestedIntFilter
   }
 
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
+  }
+
   export type ManuscriptDocRelationFilter = {
     is?: ManuscriptDocWhereInput
     isNot?: ManuscriptDocWhereInput
@@ -5500,21 +5533,6 @@ export namespace Prisma {
     isNot?: ManuscriptSnapshotWhereInput | null
   }
 
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
-  }
-
   export type ManuscriptCommentCountOrderByAggregateInput = {
     id?: SortOrder
     body?: SortOrder
@@ -5543,24 +5561,6 @@ export namespace Prisma {
     user_model_id?: SortOrder
     doc_id?: SortOrder
     snapshot_id?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
   }
 
   export type ManuscriptSnapshotCreateNestedManyWithoutDocInput = {
@@ -5667,6 +5667,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type ManuscriptDocHistoryUpdatestepsInput = {
     set?: Enumerable<InputJsonValue>
     push?: InputJsonValue | Enumerable<InputJsonValue>
@@ -5758,10 +5762,6 @@ export namespace Prisma {
     update?: XOR<ManuscriptSnapshotUpdateWithoutCommentsInput, ManuscriptSnapshotUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type NestedStringFilter = {
     equals?: string
     in?: Enumerable<string>
@@ -5851,6 +5851,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
+  }
+
   export type NestedIntWithAggregatesFilter = {
     equals?: number
     in?: Enumerable<number>
@@ -5876,20 +5890,6 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedFloatFilter | number
-  }
-
-  export type NestedStringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter = {

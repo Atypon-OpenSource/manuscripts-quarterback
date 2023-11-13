@@ -49,7 +49,7 @@ export type Client = {
   res: AuthResponse<string>
 }
 export type RequestQueueItem = {
-  req: AuthRequest
+  req: AuthRequest<unkown>
   res: AuthResponse<unknown>
   next: NextFunction
 }

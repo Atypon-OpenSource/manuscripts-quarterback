@@ -16,6 +16,7 @@
 import {
   ICreateDocRequest,
   IUpdateDocumentRequest,
+  JsonValue,
   ManuscriptDoc,
   ManuscriptDocWithSnapshots,
   Maybe,
@@ -51,7 +52,7 @@ export const docService = {
     })
     return { data: deleted }
   },
-  async createDocumentHistory(documentId: string, steps: any[], version: number, clientId: string) {
+  async createDocumentHistory(documentId: string, steps: JsonValue[], version: number, clientId?: string) {
     const saved = await prisma.manuscriptDocHistory.create({
       data: {
         doc_id: documentId,

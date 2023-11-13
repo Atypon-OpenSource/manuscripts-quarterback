@@ -19,7 +19,6 @@ import {
   IGetDocumentResponse,
   IUpdateDocumentRequest,
   StepsData,
-  RequestQueueItem,
 } from '@manuscripts/quarterback-types'
 import { NextFunction } from 'express'
 
@@ -123,11 +122,13 @@ export const getDocumentHistory = async (req: AuthRequest, res: AuthResponse<str
   try {
     const { documentId } = req.params
     const result = await collaborationProcessor.getDocumentHistory(documentId, 0)
-    if (result.err) {
-      next(new CustomError(result.err, result.code))
-    }
-    const history = `data: ${JSON.stringify(result)}\n\n`
-    res.json(history)
+    if (result.data) {
+      const history = `data: ${JSON.stringify(result.data)}\n\n`
+      res.json(history)    }
+      else {
+        next(new CustomError(result.err, result.code))
+      }
+ 
   } catch (err) {
     next(err)
   }
@@ -146,35 +147,4 @@ export const getStepsFromVersion = async (req: AuthRequest, res: AuthResponse<St
   }
 }
 
-const queue: RequestQueueItem[] = []
 
-export const queueRequests = async (req: AuthRequest<any>, res: AuthResponse<any>, next: NextFunction) => {
-  queue.push({ req, res, next })
-
-  if (queue.length === 1) {
-    await processNextRequest()
-  }
-}
-
-const processNextRequest = async () => {
-  const request = queue[0]
-  if (request) {
-    const { req, res, next } = request
-    const { url } = req
-    switch (true) {
-      case url.includes('version'):
-        await getStepsFromVersion(req, res, next)
-        break
-      case url.includes('steps'):
-        await receiveSteps(req, res, next)
-        break
-      case url.includes('history'):
-        await getDocumentHistory(req, res, next)
-        break
-    }
-    queue.shift()
-    if (queue.length > 0) {
-      await processNextRequest()
-    }
-  }
-}

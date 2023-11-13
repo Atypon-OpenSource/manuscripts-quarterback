@@ -72,8 +72,17 @@ export const saveSnapshot = async (
     const result = await snapService.saveSnapshot(req.body)
     const { docId } = req.body
     if ('data' in result) {
+      const latestDocumentHistory = await docService.findLatestDocumentHistory(docId)
       await docService.clearDocumentHistory(docId)
-      res.json({ snapshot: result.data })
+      // this is to maintain the version of the document even after deleting its history
+      if (latestDocumentHistory.data) {
+        await docService.createDocumentHistory(
+          docId,
+          [],
+          latestDocumentHistory.data.version,
+        )
+      }     
+       res.json({ snapshot: result.data })
     } else {
       next(new CustomError(result.err, result.code))
     }

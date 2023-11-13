@@ -83,14 +83,13 @@ export class CollaborationProcessor {
       return { err: 'Document not found', code: 404 }
     }
     const mergedHistories = await this.getMergedHistories(documentId, fromVersion)
-    const data = {
-      steps: hydrateSteps(mergedHistories.data?.steps || []),
-      clientIDs: convertIdsToNumbers(mergedHistories.data?.clientIds || []),
-      version: mergedHistories.data?.version || 0,
-      doc: document.data.doc || undefined,
-    }
     return {
-      data,
+      data:{
+        steps: hydrateSteps(mergedHistories.data?.steps || []),
+        clientIDs: convertIdsToNumbers(mergedHistories.data?.clientIds || []),
+        version: mergedHistories.data?.version || 0,
+        doc: document.data.doc || undefined,
+      },
     }
   }
   async getDataFromVersion(documentId: string, versionId: string) {
@@ -100,13 +99,12 @@ export class CollaborationProcessor {
     }
     const steps = hydrateSteps(mergedHistories.data.steps)
     const clientIDs = convertIdsToNumbers(mergedHistories.data.clientIds)
-    const data = {
-      steps: steps,
-      clientIDs: clientIDs,
-      version: mergedHistories.data.version,
-    }
     return {
-      data: data,
+      data: {
+        steps: steps,
+        clientIDs: clientIDs,
+        version: mergedHistories.data.version,
+      },
     }
   }
 }
