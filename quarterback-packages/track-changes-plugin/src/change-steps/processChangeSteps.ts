@@ -38,18 +38,23 @@ export function processChangeSteps(
   const deleteAttrs = trackUtils.createNewDeleteAttrs(emptyAttrs)
   let selectionPos = startPos
   // @TODO add custom handler / condition?
-  let deletesCounter = 0 // counter for deletion
+  let deletesCounter = 0  // counter for deletion
+  let isInserted: boolean = false // flag for inserted node
+
   changes.forEach((c) => {
     let step = newTr.steps[newTr.steps.length - 1]
 
     switch ( c.type ) {
       case "delete-node":
         deletesCounter++ // increase the counter for deleted nodes
-        let trackedData = getBlockInlineTrackedData(c.node)
+        const trackedData = getBlockInlineTrackedData(c.node)
         const inserted = trackedData?.find((d) => d.operation === CHANGE_OPERATION.insert)
+        // for tables: not all children nodes have trackedData, so we need to check if the previous node was inserted
+        // if yes, we can suppose that the current node was inserted too
+        isInserted = !!inserted || (!trackedData && isInserted) 
         
         // For inserted node: the top node and its content (children nodes) is deleted in the first step
-        if ( inserted && deletesCounter > 1 ) return false 
+        if ( isInserted  && deletesCounter > 1 ) return false 
         deleteOrSetNodeDeleted(c.node, mapping.map(c.pos), newTr, deleteAttrs)
         const newestStep = newTr.steps[newTr.steps.length - 1]
 
@@ -63,7 +68,6 @@ export function processChangeSteps(
 
       case "delete-text":
         const node = newTr.doc.nodeAt(mapping.map(c.pos))
-
         if (!node) {
           log.error(`processChangeSteps: no text node found for text-change`, c)
           return
@@ -184,7 +188,8 @@ export function processChangeSteps(
     const newestStep = newTr.steps[newTr.steps.length - 1]
     if (step !== newestStep) {
       mapping.appendMap(newestStep.getMap())
-    }   
+    }
   })
+  
   return [mapping, selectionPos] as [Mapping, number]
 }
